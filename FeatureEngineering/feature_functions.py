@@ -141,6 +141,10 @@ def count_fav_dog(df):
         blue_fav_counts.append(fighter_counts[blue_fighter]['fav_counts'])
         blue_dog_counts.append(fighter_counts[blue_fighter]['dog_counts'])
 
+    print(len(red_fav_counts), len(blue_fav_counts))
+    print('=========== fav counts ============')
+
+    assert len(red_fav_counts) == df.shape[0], 'bad fav counts'
     return np.column_stack([red_fav_counts, red_dog_counts, blue_fav_counts, blue_dog_counts])
                      
 def td_ratio(df):
@@ -163,12 +167,12 @@ def td_ratio(df):
 
         ratio_dic[blue_fighter]['fighter_td'].append(row['td_landed_total_blue'])
         ratio_dic[blue_fighter]['opponent_td'].append(row['td_landed_total_red'])
+        
+        red_td = np.sum([v if v is not None and not pd.isna(v) else 0 for v in ratio_dic[red_fighter]['fighter_td']])
+        red_opponent_td = np.sum([v if v is not None and not pd.isna(v) else 0 for v in ratio_dic[red_fighter]['opponent_td']])
 
-        red_td = np.sum([v for v in ratio_dic[red_fighter]['fighter_td'] if v is not None])
-        red_opponent_td = np.sum([v for v in ratio_dic[red_fighter]['opponent_td'] if v is not None])
-
-        blue_td = np.sum([v for v in ratio_dic[blue_fighter]['fighter_td'] if v is not None])
-        blue_opponent_td = np.sum([v for v in ratio_dic[blue_fighter]['opponent_td'] if v is not None])
+        blue_td = np.sum([v if v is not None and not pd.isna(v) else 0 for v in ratio_dic[blue_fighter]['fighter_td']])
+        blue_opponent_td = np.sum([v if v is not None and not pd.isna(v) else 0 for v in ratio_dic[blue_fighter]['opponent_td']])
 
         red_ratio_curr = red_td / red_opponent_td if red_opponent_td != 0 else red_td 
         blue_ratio_curr = blue_td / blue_opponent_td if blue_opponent_td !=0 else blue_td
@@ -200,11 +204,11 @@ def sig_strikes_ratio(df):
         ratio_dic[blue_fighter]['fighter_control'].append(row['sig_str_landed_total_blue'])
         ratio_dic[blue_fighter]['opponent_control'].append(row['sig_str_landed_total_red'])
 
-        red_control = np.sum([v for v in ratio_dic[red_fighter]['fighter_control'] if v is not None])
-        red_opponent_control = np.sum([v for v in ratio_dic[red_fighter]['opponent_control'] if v is not None])
+        red_control = np.sum([v for v in ratio_dic[red_fighter]['fighter_control'] if v is not None and not pd.isna(v)])
+        red_opponent_control = np.sum([v for v in ratio_dic[red_fighter]['opponent_control'] if v is not None and not pd.isna(v)])
 
-        blue_control = np.sum([v for v in ratio_dic[blue_fighter]['fighter_control'] if v is not None])
-        blue_opponent_control = np.sum([v for v in ratio_dic[blue_fighter]['opponent_control'] if v is not None])
+        blue_control = np.sum([v for v in ratio_dic[blue_fighter]['fighter_control'] if v is not None and not pd.isna(v)])
+        blue_opponent_control = np.sum([v for v in ratio_dic[blue_fighter]['opponent_control'] if v is not None and not pd.isna(v)])
 
         red_ratio_curr = red_control / red_opponent_control if red_opponent_control != 0 else red_control 
         blue_ratio_curr = blue_control / blue_opponent_control if blue_opponent_control !=0 else blue_control

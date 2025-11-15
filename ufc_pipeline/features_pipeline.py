@@ -56,18 +56,20 @@ class FeatureEngineering:
         combined_df = pd.concat([empty_df, past_event_stats], axis=0).reset_index(drop=True) # Combine with past event stats
 
         rolling_fp = r'C:\Users\jcmar\my_files\SportsBetting\data\ufc_new_rolling.csv'
-        rolling_df = apply_rolling_stats(combined_df) #sort here 
+        rolling_df = apply_rolling_stats(combined_df) #sort here
+        rolling_df = rolling_df.copy() 
         rolling_df.to_csv(rolling_fp, index=False)
 
         total_df = non_rolling_stats(rolling_df)
         total_df.to_csv(r'C:\Users\jcmar\my_files\SportsBetting\data\new_combined.csv', index=False)
+        total_df = total_df.copy()
 
         merged_df = self.standardized_merge(total_df, total_odds)
         merged_df = merged_df.sort_values(by='date', ascending=True).reset_index(drop=True)
+        merged_df = merged_df.copy()
 
         # counts of fav and dog 
-        merged_df[['fav_counts_red', 'dog_counts_red',
-            'fav_counts_blue', 'dog_counts_blue']] = count_fav_dog(merged_df)
+        merged_df[['fav_counts_red', 'dog_counts_red', 'fav_counts_blue', 'dog_counts_blue']] = count_fav_dog(merged_df)
 
         odds_stats_history = merged_df.iloc[:-upcoming_stats.shape[0], :]
         # odds_stats_history.to_csv(full_file_path)
@@ -118,14 +120,14 @@ class FeatureEngineering:
         odds = odds.dropna(subset=['date']) # remove rows based on rows in 'date' that are NA 
 
         # clean names in stats col 
-        stats['red_clean'] = self.clean_col(stats['red_fighter']) # clean names so that the names in odds and stats match 
-        stats['blue_clean'] = self.clean_col(stats['blue_fighter'])
+        stats['red_clean'] = self.clean_col(stats['fighter_red']) # clean names so that the names in odds and stats match 
+        stats['blue_clean'] = self.clean_col(stats['fighter_blue'])
 
-        stats['red_fighter_stats'] = stats['red_fighter'] # fighter names coming from stats df 
-        stats['blue_fighter_stats'] = stats['blue_fighter']
+        stats['red_fighter_stats'] = stats['fighter_red'] # fighter names coming from stats df 
+        stats['blue_fighter_stats'] = stats['fighter_blue']
 
         # clean names in odds col 
-        odds['red_clean'] = self.clean_col(odds['red_fighter'])
+        odds['red_clean'] = self.clean_col(odds['red_fighter']) # in odds its red_fighter
         odds['blue_clean'] = self.clean_col(odds['blue_fighter'])
 
         odds['red_fighter_odds'] = odds['red_fighter']
@@ -140,11 +142,11 @@ class FeatureEngineering:
         new_df = new_df.loc[:, ~new_df.columns.str.contains('^Unnamed')]
         new_df = new_df.rename(columns={'red_clean': 'red_fighter', 'blue_clean':'blue_fighter'})
 
-        new_df = new_df.drop(columns=['red_fighter_x','red_fighter_y','blue_fighter_x','blue_fighter_y','event_date_y','event_date_x', 
-                                    'og_red_fighter', 'og_blue_name']) # remove cols with _x or _y, these are the uncleaned columns that merged over 
+        # new_df = new_df.drop(columns=['red_fighter_x','red_fighter_y','blue_fighter_x','blue_fighter_y','event_date_y','event_date_x', 
+        #                             'og_red_fighter', 'og_blue_name']) # remove cols with _x or _y, these are the uncleaned columns that merged over 
         
         new_df = new_df.drop_duplicates().reset_index(drop=True) # duplicat rows because of undstandardized fighter name columns 
-        return new_df
+        return new_df.copy()
 
 
 

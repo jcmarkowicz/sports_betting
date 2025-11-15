@@ -8,7 +8,7 @@ from datetime import datetime
 # Add the project root to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))) 
 from features_pipeline import FeatureEngineering
-from scraping_pipeline import UFC_Webscraper
+# from scraping_pipeline import UFC_Webscraper
 
 get_all_stats = False
 get_all_odds = False
@@ -17,11 +17,21 @@ get_next_fight_stats_odds = False
 get_missing_stats = False
 generate_model_df = True 
 
-stats_history_file_string = r'C:\Users\jcmar\my_files\SportsBetting\data\stats_history'
-odds_history_file_string = r'C:\Users\jcmar\my_files\SportsBetting\data\odds_history'
+fp = r'/Users/jmarc/ BU/Github_Repos/sports_betting/data/stats_history_2025-11-05.csv'
+pd.read_csv(fp)
 
-upcoming_stats_string = r'C:\Users\jcmar\my_files\SportsBetting\data\upcoming_stats'
-upcoming_odds_string = r'C:\Users\jcmar\my_files\SportsBetting\data\upcoming_odds'
+# stats_history_file_string = r'C:\Users\jcmar\my_files\SportsBetting\data\stats_history'
+# odds_history_file_string = r'C:\Users\jcmar\my_files\SportsBetting\data\odds_history'
+
+# upcoming_stats_string = r'C:\Users\jcmar\my_files\SportsBetting\data\upcoming_stats'
+# upcoming_odds_string = r'C:\Users\jcmar\my_files\SportsBetting\data\upcoming_odds'
+
+stats_history_file_string  = r'/Users/jmarc/ BU/Github_Repos/sports_betting/data/stats_history'
+odds_history_file_string  = r'/Users/jmarc/ BU/Github_Repos/sports_betting/data/odds_history'
+
+upcoming_stats_file_string  = r'/Users/jmarc/ BU/Github_Repos/sports_betting/data/upcoming_stats'
+upcoming_odds_file_string = r'/Users/jmarc/ BU/Github_Repos/sports_betting/data/upcoming_odds'
+
 
 # find the most recent stats and odds history by most recent date 
 date_today = datetime.now().strftime("%Y-%m-%d") #use this to mark odds 
@@ -34,7 +44,7 @@ odds_history = pd.read_csv(f'{odds_history_file_string}_{recent_date}.csv')
 next_fight_date = r'2025-11-08'
 
 if __name__ == "__main__":
-    scraper = UFC_Webscraper()
+    # scraper = UFC_Webscraper()
     features = FeatureEngineering()
 
     # scrape all stats
@@ -86,8 +96,8 @@ if __name__ == "__main__":
     # Build dfs with all features used for model training and 
     if generate_model_df is True: 
 
-        next_fight_stats = pd.read_csv(f'{upcoming_stats_string}_{next_fight_date}.csv')
-        next_odds_df = pd.read_csv(f'{upcoming_odds_string}_{next_fight_date}.csv')
+        next_fight_stats = pd.read_csv(f'{upcoming_stats_file_string}_{next_fight_date}.csv')
+        next_odds_df = pd.read_csv(f'{upcoming_odds_file_string}_{next_fight_date}.csv')
         next_fight_date = next_fight_stats['event_date'][0]
 
         odds_stats_df, upcoming_df = features.build_all_stats(stats_history, next_fight_stats, odds_history, next_odds_df)

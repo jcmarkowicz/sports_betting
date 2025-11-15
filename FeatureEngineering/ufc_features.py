@@ -492,6 +492,6 @@ def non_rolling_stats(df_):
     df['ratio_control_diff'] = df['ratio_control_red'] - df['ratio_control_blue']
     df['ratio_sigstrike_diff'] = df['ratio_sigstrike_red'] - df['ratio_sigstrike_blue']
 
-    return df
+    return df.copy()
 
 
