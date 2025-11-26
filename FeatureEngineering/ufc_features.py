@@ -14,9 +14,12 @@ from collections import defaultdict
 
 from RatingAlgos.elo import elo_rating
 from RatingAlgos.glicko import glicko_rating
+from RatingAlgos.glicko2 import glicko2_run
+from RatingAlgos.elo_scope import run_elo_on_matches
+
 from FeatureEngineering.feature_functions import total_bonus, sig_strikes_ratio, td_ratio,control_pr_ratio,\
-      womens_fight, mma_math, win_lose_streak, method_wins, months_since_last, method_wins, count_fav_dog, method_win_pct,\
-      avg_fight_time
+      womens_fight, mma_math, win_lose_streak, months_since_last, method_wins, method_win_pct,\
+      avg_fight_time, title_fights_stats_columns, method_losses, max_rating_won_against
 
 # winners_df = pd.read_csv(r'C:\Users\jcmar\my_files\SportsBetting\winners.csv')
 # ufc_df = pd.read_csv(r'C:\Users\jcmar\my_files\SportsBetting\scraped_data_ufc.csv')
@@ -37,12 +40,13 @@ def get_wins_losses(dat):
     losses = int(parts[1])
     return wins, losses 
 
-def current_age(dob, current_year):
+def current_age(dob, current_date):
     if dob == '--':
         return None
-    birthdate = datetime.strptime(dob, "%b %d, %Y")
-    birth_year = birthdate.year
-    age = current_year - birth_year
+    dob = pd.to_datetime(dob)
+    current_date = pd.to_datetime(current_date)
+    
+    age = current_date.year - dob.year
     return age 
 
 def height_inches(height):
@@ -242,7 +246,7 @@ def single_event_features(webscrape_df):
         ufc_df[f"height_{color}"] = ufc_df[f"height_{color}"].apply(height_inches)
         ufc_df[f"reach_{color}"] = ufc_df[f"reach_{color}"].apply(reach_inches)
         ufc_df[[f"wins_{color}", f"losses_{color}"]] = (ufc_df[f"record_{color}"].apply(lambda x: pd.Series(get_wins_losses(x))))
-        ufc_df[f"age_{color}"] = ufc_df[f"dob_{color}"].apply(lambda x: current_age(x, current_year))
+        ufc_df[f"age_{color}"] = ufc_df.apply(lambda row: current_age(row[f"dob_{color}"], row['date']), axis=1)
 
     # --- PERFORMANCE BONUSES ---
     for col in ["performance_bonus_winner", "fight_otn_bonus"]:
@@ -298,7 +302,10 @@ def compute_defense_features(fighter_name, row, feat, color, df_dict, stats_dict
     else: 
         attemtped_against = np.sum(stats_dict[fighter_name][f'{feat}_total_attempted_against'])
         landed_against =  np.sum(stats_dict[fighter_name][f'{feat}_total_landed_against'])
-        pct_feat = 1 - (landed_against / attemtped_against)
+        if attemtped_against == 0:
+            pct_feat = 1
+        else: 
+            pct_feat = 1 - (landed_against / attemtped_against)
 
     df_dict[f'{feat}_defense_pct_{color}'].append(pct_feat)
     df_dict[f'{feat}_total_attempted_against_{color}'].append(attemtped_against) 
@@ -334,14 +341,27 @@ def compute_accuracy_stats(fighter_name, row, feat, color, df_dict, stats_dict, 
     else: 
         total_att = np.sum(stats_dict[fighter_name][f'{feat}_attempted'])
         total_land = np.sum(stats_dict[fighter_name][f'{feat}_landed'])
-        acc_pct = total_land / total_att
+
+        if total_att == 0:
+            acc_pct = 0
+        else:
+            acc_pct = total_land / total_att
 
     df_dict[f'{feat}_accuracy_pct_{color}'].append(acc_pct)
     return df_dict
     
 def apply_rolling_stats(ufc_features): 
-    """Take in df of precomputed features that reflect current fight stats, and apply rolling average to get pre fight stats"""  
+    """
+    Take in df of precomputed features that reflect current fight stats, and apply rolling average to get pre fight stats
     
+    Args: 
+        ufc_features (pd.DataFrame): DataFrame with single event features computed
+    Returns:
+        final_df (pd.DataFrame): DataFrame with rolling features computed
+    """  
+    
+    print('UFC FEATURES WINNER NA:', ufc_features['winner'].isna().sum())
+
     stats_dict = defaultdict(lambda: defaultdict(list))
     df_dict = defaultdict(list)
 
@@ -350,13 +370,13 @@ def apply_rolling_stats(ufc_features):
     per_fight_features = per_fight_features.sort_values(by='date', ascending=True).reset_index(drop=True)
 
     striking_features = ['kd', 'sig_str_landed', 'sig_str_absorbed', 'sig_str_attempted', 'leg_str', 'head_str', 'body_str', 'clinch_str']
-    grapling_features = ['td_landed', 'td_attempted', 'control', 'sub_att', 'reverse']
+    grapling_features = ['td_landed', 'td_attempted', 'td_defended', 'control', 'sub_att', 'reverse']
     defense_features = ['td', 'sig_str']
     accuracy_features = ['td', 'sig_str']
 
     fighter_attr = ['age', 'height', 'reach']
     general_features = ['date', 'event_location', 'weight_class', 'title_fight']
-    win_features = ["performance_bonus_winner", "fight_otn_bonus", 'method','winner', 'fighter_red', 'fighter_blue']
+    win_features = ["performance_bonus_winner", "fight_otn_bonus", 'method', 'winner', 'fighter_red', 'fighter_blue']
     colors = ['red', 'blue']
     time_col = 'fight_minutes'
 
@@ -395,17 +415,24 @@ def apply_rolling_stats(ufc_features):
         for win_feat in win_features:
             if win_feat == 'winner': 
                 if row['winner'] == red_fighter: 
-                    color = 1
+                    color = 1.0
                 elif row['winner'] == blue_fighter:
-                    color = 0
+                    color = 0.0
                 elif row['winner'] == 'NC' or row['winner'] == 'DRAW':
-                    color = 2
+                    color = 2.0
+                elif pd.isna(row['winner']):
+                    color = 3.0
+
                 df_dict['winner'].append(color)
                 df_dict['winner_name'].append(row['winner'])
-                continue 
-            df_dict[win_feat].append(row[win_feat])
 
+            else: 
+                df_dict[win_feat].append(row[win_feat])
+
+    test = [(key, len(value)) for key, value in df_dict.items() if len(value)!=8007]
+    print(test)
     final_df = pd.DataFrame(df_dict)
+    print('WINNER FINAL DF', final_df['winner'])
     return final_df 
 
 def compute_differences(df, feature, type):
@@ -416,6 +443,16 @@ def compute_differences(df, feature, type):
     return df
 
 def non_rolling_stats(df_):
+    """
+    Take in df with rolling features, compute non rolling features that dont depend on time series.
+    See feature_functions.py for helper functions, Rating_Algos folder.
+    Compute differences between red and blue fighter for relevant features.
+
+    Args:
+        df_ (pd.DataFrame): DataFrame with rolling features computed
+    Returns:
+        df (pd.DataFrame): DataFrame with non rolling features computed
+    """
 
     df = df_.copy()
 
@@ -430,7 +467,6 @@ def non_rolling_stats(df_):
 
     for attr in fighter_attr: 
         df = compute_differences(df, attr, None)
-
     # avg fight time in minutes 
     df[['avg_fight_min_red', 'avg_fight_min_blue']] = avg_fight_time(df)
     df['avg_fight_min_diff'] = df['avg_fight_min_red'] - df['avg_fight_min_blue']
@@ -440,11 +476,34 @@ def non_rolling_stats(df_):
     df['total_bonus_diff'] = df['total_bonus_red'] - df['total_bonus_blue']
 
     # rating algorithms 
-    df[['elo_red', 'elo_blue']] = elo_rating(df, 32)
+    # df[['elo_red', 'elo_blue','elo_proba_red','elo_proba_blue']] = elo_rating(df, 130, 320)
+
+    params = {'base_k':55,'mov_mode':'linear', 'cutoff_rating':1800, 'cutoff_k_scale':1.0, 'w90':None, 'regress_to_mean':.05, 'regress_every_n_matches':1000}
+    df_elo = run_elo_on_matches(df,**params)
+    df[['elo_red', 'elo_blue']] = df_elo[['elo_pre_red', 'elo_pre_blue']].values
+    df[['elo_red_proba', 'elo_blue_proba']] = df_elo[['elo_red_proba', 'elo_blue_proba']].values
+
     df['elo_diff'] = df['elo_red'] - df['elo_blue']
-    df[['glicko_red', 'glicko_blue', 'glicko_rd_red', 'glicko_rd_blue']] = glicko_rating(df)
-    df['glicko_rd_diff'] = df['glicko_rd_red'] - df['glicko_rd_blue']
+    df['elo_pred'] = (df['elo_red'] >= df['elo_blue']).astype(int)
+
+    df_glicko, _ = glicko2_run(df, initial_rating=1500.0,
+                                    initial_rd=250.0,
+                                    initial_sigma=0.06,
+                                    tau=.5,
+                                    inactivity_scaling_days=365.0*2)
+    
+    df[['glicko_red', 'glicko_blue', 
+        'glicko_rd_red', 'glicko_rd_blue',
+        'glicko_proba_red']] = df_glicko[['rating_red_pre', 'rating_blue_pre',
+                                        'sigma_red_pre','sigma_blue_pre', 'p_red_pred']]
+                                       
+    # Compute blue win probability
+    df['glicko_proba_blue'] = 1 - df['glicko_proba_red']
     df['glicko_diff'] = df['glicko_red'] - df['glicko_blue']
+
+    # Boolean column: 1 if red is higher rated, else 0
+    df['glicko_pred'] = (df['glicko_red'] >= df['glicko_blue']).astype(int)
+    df['rating_agree'] = (df['glicko_pred'] == df['elo_pred']).astype(int)
 
     # MMA math 
     df[['math_red','math_blue']] = mma_math(df)
@@ -471,10 +530,22 @@ def non_rolling_stats(df_):
     df['win_pct_diff'] = df['win_pct_red'] - df['win_pct_blue']
 
     # method wins 
-    df[['decision_wins_red', 'ko_wins_red','sub_wins_red', 'decision_wins_blue', 'ko_wins_blue', 'sub_wins_blue']] = method_wins(df)
+    df[['decision_wins_red', 'ko_wins_red', 'sub_wins_red', 'decision_wins_blue', 'ko_wins_blue', 'sub_wins_blue']] = method_wins(df)
     win_types = ['decision_wins', 'ko_wins', 'sub_wins']
     for win in win_types: 
         df = compute_differences(df, win, None)
+
+    # method losses
+    df[['decision_losses_red',
+        'ko_losses_red',
+        'sub_losses_red',
+        'decision_losses_blue',
+        'ko_losses_blue',
+        'sub_losses_blue']] = method_losses(df)
+    
+    # max elo/glicko rating won against
+    df[['max_elo_win_red', 'max_elo_win_blue']] = max_rating_won_against(df, 'elo')
+    df[['max_glicko_win_red', 'max_glicko_win_blue']] = max_rating_won_against(df, 'glicko')
 
     # method win pct
     df[['ko_pct_red', 'dec_pct_red', 'sub_pct_red',
@@ -484,14 +555,52 @@ def non_rolling_stats(df_):
     df['womens_fight'] = womens_fight(df)
 
     # ratios for total stats
-    df[['ratio_td_red', 'ratio_td_blue']] = td_ratio(df) # landed/opp landed
-    df[['ratio_control_red', 'ratio_control_blue']] = control_pr_ratio(df)
-    df[['ratio_sigstrike_red', 'ratio_sigstrike_blue']] = sig_strikes_ratio(df)
+    # Compute all new columns
+    td_cols = td_ratio(df)
+    control_cols = control_pr_ratio(df)
+    sigstrike_cols = sig_strikes_ratio(df)
+
+    # Build one DataFrame containing all new columns
+    new_cols = pd.DataFrame({
+        'ratio_td_red': td_cols[:,0],
+        'ratio_td_blue': td_cols[:,1],
+        'ratio_control_red': control_cols[:,0],
+        'ratio_control_blue': control_cols[:,1],
+        'ratio_sigstrike_red': sigstrike_cols[:,0],
+        'ratio_sigstrike_blue': sigstrike_cols[:,1],
+    })
+
+    # Concatenate once to avoid fragmentation
+    print(td_cols.shape, control_cols.shape, sigstrike_cols.shape, df.shape)
+    df = pd.concat([df.reset_index(drop=True), new_cols.reset_index(drop=True)], axis=1)
+
+    # Optional: defragment
+    df = df.copy()
 
     df['ratio_td_diff'] = df['ratio_td_red'] - df['ratio_td_blue']
     df['ratio_control_diff'] = df['ratio_control_red'] - df['ratio_control_blue']
     df['ratio_sigstrike_diff'] = df['ratio_sigstrike_red'] - df['ratio_sigstrike_blue']
 
-    return df.copy()
+    # title fight stats
+    cols_to_add = title_fights_stats_columns(df)
+    new_cols = pd.DataFrame(
+        cols_to_add,
+        columns=[
+            'red_title_fights','blue_title_fights',
+            'red_title_wins','blue_title_wins',
+            'red_title_losses','blue_title_losses',
+            'red_title_win_pct','blue_title_win_pct'
+        ]
+    )
+
+    # Concatenate in one shot -> NO fragmentation warning
+    df = pd.concat([df, new_cols], axis=1)
+    # Defragment
+    df = df.copy()
+
+    # get event age in days
+    df['event_age'] = (pd.Timestamp.today() - df['date']).dt.days
+
+    return df
 
 

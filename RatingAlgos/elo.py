@@ -2,11 +2,13 @@ import numpy as np
 import pandas as pd 
 from collections import defaultdict
 
-def elo_rating(df,k):
+def elo_rating(df, k, w90=400):
     
     elo_dic = defaultdict(list)
     red_elo = []
     blue_elo = []
+    mu_red_col = []
+    mu_blue_col = []
     for _, row in df.iterrows(): 
         red_name = row['fighter_red']
         blue_name = row['fighter_blue']
@@ -25,12 +27,12 @@ def elo_rating(df,k):
         if row['winner'] == 1 and pd.notna(row['winner']):
 
             d = prev_red - prev_blue
-            mu = 1 / (1 + 10**(-d/400))
-            red_new = prev_red + k * (1-mu) #red wins
+            mu_red = 1 / (1 + 10**(-d/w90))
+            red_new = prev_red + k * (1-mu_red) #red wins
 
             d = prev_blue - prev_red
-            mu = 1 / (1 + 10**(-d/400))
-            blue_new = prev_blue + k * (0-mu) #blue loses
+            mu_blue = 1 / (1 + 10**(-d/w90))
+            blue_new = prev_blue + k * (0-mu_blue) #blue loses
             
             elo_dic[red_name].append(red_new)
             elo_dic[blue_name].append(blue_new)
@@ -38,14 +40,17 @@ def elo_rating(df,k):
         if row['winner'] == 0 and pd.notna(row['winner']):
 
             d = prev_blue - prev_red
-            mu = 1 / (1 + 10**(-d/400))
-            blue_new = prev_blue + k * (1-mu) #blue wins
+            mu_blue = 1 / (1 + 10**(-d/w90))
+            blue_new = prev_blue + k * (1-mu_blue) #blue wins
 
             d = prev_red - prev_blue
-            mu = 1 / (1 + 10**(-d/400))
-            red_new = prev_red + k * (0-mu) #red loses
+            mu_red = 1 / (1 + 10**(-d/w90))
+            red_new = prev_red + k * (0-mu_red) #red loses
             
             elo_dic[red_name].append(red_new)
             elo_dic[blue_name].append(blue_new)
+        
+        mu_red_col.append(mu_red)
+        mu_blue_col.append(mu_blue)
 
-    return np.column_stack([red_elo, blue_elo])
+    return np.column_stack([red_elo, blue_elo, mu_red_col, mu_blue_col])

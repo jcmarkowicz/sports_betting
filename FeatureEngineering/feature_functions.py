@@ -114,7 +114,8 @@ def rolling_avg(values): # tune the window for rolling stats
         total = sum(non_none_values) / len(non_none_values) 
         return total
     
-def count_fav_dog(df):
+def count_fav_dog(df_):
+    df = df_.copy()
     fighter_counts = defaultdict(lambda:defaultdict(int))
     red_fav_counts = []
     blue_fav_counts = []
@@ -141,12 +142,18 @@ def count_fav_dog(df):
         blue_fav_counts.append(fighter_counts[blue_fighter]['fav_counts'])
         blue_dog_counts.append(fighter_counts[blue_fighter]['dog_counts'])
 
-    print(len(red_fav_counts), len(blue_fav_counts))
-    print('=========== fav counts ============')
+    print("Shapes of fav counts:")
+    print(np.array(red_fav_counts).shape, np.array(blue_fav_counts).shape, np.array(red_dog_counts).shape, np.array(blue_dog_counts).shape )
 
     assert len(red_fav_counts) == df.shape[0], 'bad fav counts'
-    return np.column_stack([red_fav_counts, red_dog_counts, blue_fav_counts, blue_dog_counts])
-                     
+    assert len(blue_fav_counts) == len(red_fav_counts) == len(red_dog_counts) == len(blue_dog_counts), 'mismatched counts lengths'  
+    r1 = np.array(red_fav_counts, dtype=np.int64)
+    r2 = np.array(red_dog_counts, dtype=np.int64)
+    r3 = np.array(blue_fav_counts, dtype=np.int64)
+    r4 = np.array(blue_dog_counts, dtype=np.int64)
+
+    return np.stack([r1, r2, r3, r4], axis=1)    
+
 def td_ratio(df):
 
     ratio_dic = defaultdict(lambda: defaultdict(lambda: [None]))
@@ -555,6 +562,125 @@ def method_win_pct(df):
         blue_ko_pct, blue_dec_pct, blue_sub_pct
     ])
 
+def method_losses(df):
+    fighter_dic = defaultdict(lambda: defaultdict(int))  # Initialize counts
+    
+    # Lists to store the results
+    decision_losses_red = []
+    ko_losses_red = []
+    sub_losses_red = []
+    total_red = []
+
+    decision_losses_blue = []
+    ko_losses_blue = []
+    sub_losses_blue = []
+    total_blue = []
+
+    for _, row in df.iterrows():
+        red = row['fighter_red']
+        blue = row['fighter_blue']
+
+        # Initialize dictionary for each fighter
+        if red not in fighter_dic:
+            fighter_dic[red] = defaultdict(int)
+        if blue not in fighter_dic:
+            fighter_dic[blue] = defaultdict(int)
+
+        # Append current losses before the fight
+        decision_losses_red.append(fighter_dic[red]['dec_losses'])
+        ko_losses_red.append(fighter_dic[red]['ko_losses'])
+        sub_losses_red.append(fighter_dic[red]['sub_losses'])
+        total_red.append(fighter_dic[red]['total_losses'])
+
+        decision_losses_blue.append(fighter_dic[blue]['dec_losses'])
+        ko_losses_blue.append(fighter_dic[blue]['ko_losses'])
+        sub_losses_blue.append(fighter_dic[blue]['sub_losses'])
+        total_blue.append(fighter_dic[blue]['total_losses'])
+
+        if pd.isna(row['method']):
+            continue
+
+        # Update the loss counts based on the current fight
+        # If red lost
+        if row['winner'] == 0:
+            if 'DEC' in row['method']:
+                fighter_dic[red]['dec_losses'] += 1
+            if 'KO' in row['method']:
+                fighter_dic[red]['ko_losses'] += 1
+            if 'SUB' in row['method']:
+                fighter_dic[red]['sub_losses'] += 1
+            fighter_dic[red]['total_losses'] += 1
+
+        # If blue lost
+        if row['winner'] == 1:
+            if 'DEC' in row['method']:
+                fighter_dic[blue]['dec_losses'] += 1
+            if 'KO' in row['method']:
+                fighter_dic[blue]['ko_losses'] += 1
+            if 'SUB' in row['method']:
+                fighter_dic[blue]['sub_losses'] += 1
+            fighter_dic[blue]['total_losses'] += 1
+
+    # Stack the results into an array for assignment
+    return np.column_stack([
+        decision_losses_red,
+        ko_losses_red,
+        sub_losses_red,
+        decision_losses_blue,
+        ko_losses_blue,
+        sub_losses_blue
+    ])
+
+
+def max_rating_won_against(df: pd.DataFrame, rating_type: str = 'elo'):
+    """
+    Tracks the highest opponent rating each fighter has defeated.
+
+    Args:
+        df (pd.DataFrame): Must contain 'fighter_red', 'fighter_blue', 'winner', and rating columns like
+                           'elo_red', 'elo_blue' or 'glicko_red', 'glicko_blue'.
+        rating_type (str): 'elo' or 'glicko' to select which rating to track.
+
+    Returns:
+        np.ndarray: Two columns: max opponent rating red has beaten, max opponent rating blue has beaten
+    """
+    if rating_type not in ['elo', 'glicko']:
+        raise ValueError("rating_type must be 'elo' or 'glicko'")
+
+    red_col = f"{rating_type}_red"
+    blue_col = f"{rating_type}_blue"
+
+    fighter_max_rating = defaultdict(lambda: 0)  # Default max rating = 0
+
+    max_rating_red = []
+    max_rating_blue = []
+
+    for _, row in df.iterrows():
+        red = row['fighter_red']
+        blue = row['fighter_blue']
+        rating_red = row[red_col]
+        rating_blue = row[blue_col]
+        winner = row['winner']  # 1 = red, 0 = blue
+
+        # Append current max opponent rating before this fight
+        max_rating_red.append(fighter_max_rating[red])
+        max_rating_blue.append(fighter_max_rating[blue])
+
+        # Update max opponent rating if fighter won
+        if winner == 1:  # Red won
+            try: 
+                fighter_max_rating[red] = max(fighter_max_rating[red], rating_blue)
+            except: 
+                fighter_max_rating[red] = None
+        elif winner == 0:  # Blue won
+            try:
+                fighter_max_rating[blue] = max(fighter_max_rating[blue], rating_red)
+            except:
+                fighter_max_rating[blue] = None
+    return np.column_stack([max_rating_red, max_rating_blue])
+
+
+
 def avg_fight_time(df_):
     df = df_.copy()
 
@@ -580,3 +706,39 @@ def avg_fight_time(df_):
         fight_time_dict[blue_fighter].append(row['total_fight_time_blue'])
 
     return np.column_stack([avg_min_red, avg_min_blue])
+
+def title_fights_stats_columns(df_):
+    df = df_.copy()
+    
+    # Ensure title_fight is numeric
+    df['title_fight'] = df['title_fight'].astype(int)
+    
+    # Encode wins for each fighter directly on the main df
+    df['red_win'] = (df['winner'] == 1).astype(int)  # Red won
+    df['blue_win'] = (df['winner'] == 0).astype(int)  # Blue won
+    
+    # Total title fights per fighter (cumulative, excluding current fight)
+    df['red_title_fights'] = df.groupby('fighter_red')['title_fight'].cumsum().shift(fill_value=0)
+    df['blue_title_fights'] = df.groupby('fighter_blue')['title_fight'].cumsum().shift(fill_value=0)
+    
+    # Total title wins per fighter (cumulative, excluding current fight)
+    df['red_title_wins'] = df.groupby('fighter_red')['red_win'].cumsum().shift(fill_value=0)
+    df['blue_title_wins'] = df.groupby('fighter_blue')['blue_win'].cumsum().shift(fill_value=0)
+    
+    # Calculate losses
+    df['red_title_losses'] = df['red_title_fights'] - df['red_title_wins']
+    df['blue_title_losses'] = df['blue_title_fights'] - df['blue_title_wins']
+    
+    # Calculate win percentage
+    df['red_title_win_pct'] = df['red_title_wins'] / df['red_title_fights'].replace(0, np.nan)
+    df['blue_title_win_pct'] = df['blue_title_wins'] / df['blue_title_fights'].replace(0, np.nan)
+    
+    # Fill NaN win pct with 0 for fighters with no prior title fights
+    df['red_title_win_pct'] = df['red_title_win_pct'].fillna(0)
+    df['blue_title_win_pct'] = df['blue_title_win_pct'].fillna(0)
+    
+    # Return as numpy column stack
+    return df[['red_title_fights','blue_title_fights',
+               'red_title_wins','blue_title_wins',
+               'red_title_losses','blue_title_losses',
+               'red_title_win_pct','blue_title_win_pct']].to_numpy()
