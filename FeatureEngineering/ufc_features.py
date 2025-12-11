@@ -467,6 +467,14 @@ def non_rolling_stats(df_):
 
     for attr in fighter_attr: 
         df = compute_differences(df, attr, None)
+
+    striking_features = ['sig_str_defense', 'sig_str_accuracy']
+    grapling_features = ['td_accuracy', 'td_defense']
+    striking_grapling_types = ['pct']
+    for feature in striking_features + grapling_features: 
+        for type in striking_grapling_types:
+            df = compute_differences(df, feature, type)
+
     # avg fight time in minutes 
     df[['avg_fight_min_red', 'avg_fight_min_blue']] = avg_fight_time(df)
     df['avg_fight_min_diff'] = df['avg_fight_min_red'] - df['avg_fight_min_blue']
@@ -481,6 +489,9 @@ def non_rolling_stats(df_):
     params = {'base_k':55,'mov_mode':'linear', 'cutoff_rating':1800, 'cutoff_k_scale':1.0, 'w90':None, 'regress_to_mean':.05, 'regress_every_n_matches':1000}
     df_elo = run_elo_on_matches(df,**params)
     df[['elo_red', 'elo_blue']] = df_elo[['elo_pre_red', 'elo_pre_blue']].values
+
+
+    df[['elo_red', 'elo_blue']] = elo_rating(df, k=100, w90=250)
     df[['elo_red_proba', 'elo_blue_proba']] = df_elo[['elo_red_proba', 'elo_blue_proba']].values
 
     df['elo_diff'] = df['elo_red'] - df['elo_blue']
@@ -543,6 +554,10 @@ def non_rolling_stats(df_):
         'ko_losses_blue',
         'sub_losses_blue']] = method_losses(df)
     
+    df['decision_losses_diff'] = df['decision_losses_red'] - df['decision_losses_blue']
+    df['ko_losses_diff'] = df['ko_losses_red'] - df['ko_losses_blue']
+    df['sub_losses_diff'] = df['sub_losses_red'] - df['sub_losses_blue']
+
     # max elo/glicko rating won against
     df[['max_elo_win_red', 'max_elo_win_blue']] = max_rating_won_against(df, 'elo')
     df[['max_glicko_win_red', 'max_glicko_win_blue']] = max_rating_won_against(df, 'glicko')
@@ -550,6 +565,10 @@ def non_rolling_stats(df_):
     # method win pct
     df[['ko_pct_red', 'dec_pct_red', 'sub_pct_red',
         'ko_pct_blue', 'dec_pct_blue', 'sub_pct_blue']] = method_win_pct(df) 
+    
+    df['ko_pct_diff'] = df['ko_pct_red'] - df['ko_pct_blue']
+    df['dec_pct_diff'] = df['dec_pct_red'] - df['dec_pct_blue']
+    df['sub_pct_diff'] = df['sub_pct_red'] - df['sub_pct_blue']
 
     # womens fight flag 
     df['womens_fight'] = womens_fight(df)

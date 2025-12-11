@@ -82,6 +82,9 @@ class FeatureEngineering:
         for i, col in enumerate(cols):
             merged_df[col] = r[:, i] # work around for bug assigning np arrays directly
 
+        merged_df['fav_counts_diff'] = merged_df['fav_counts_red'] - merged_df['fav_counts_blue']
+        merged_df['dog_counts_diff'] = merged_df['dog_counts_red'] - merged_df['dog_counts_blue']
+
         # seperate the upcoming fight stats/odds from the history
         odds_stats_history = merged_df.iloc[:-upcoming_stats.shape[0], :]
         upcoming_df = merged_df.iloc[-upcoming_stats.shape[0]:, :]

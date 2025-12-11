@@ -53,4 +53,4 @@ def elo_rating(df, k, w90=400):
         mu_red_col.append(mu_red)
         mu_blue_col.append(mu_blue)
 
-    return np.column_stack([red_elo, blue_elo, mu_red_col, mu_blue_col])
+    return np.column_stack([red_elo, blue_elo])

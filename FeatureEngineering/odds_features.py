@@ -124,6 +124,10 @@ def build_odds_features(df_):
         for i in range(1, n_close+1):
             df[f'juice_close{i}_{color}'] = df[f'pimp_close{i}_{color}'] - df[f'proba_fair_close{i}_{color}']
 
+    df['proba_fair_open_diff'] = df['proba_fair_open_red'] - df['proba_fair_open_blue']
+    df['proba_fair_close1_diff'] = df['proba_fair_close1_red'] - df['proba_fair_close1_blue']
+    df['proba_fair_close2_diff'] = df['proba_fair_close2_red'] - df['proba_fair_close2_blue']
+
     df['line_movement_close1_red'] = df['open_red'] - df['close1_red']
     df['line_movement_close1_blue'] = df['open_blue'] - df['close1_blue']
 
