@@ -10,7 +10,8 @@ from sklearn.metrics import brier_score_loss, roc_auc_score, accuracy_score, con
 from sklearn.calibration import calibration_curve
 import statsmodels.api as sm
 
-
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 class DataUtils:
     @staticmethod
@@ -217,7 +218,6 @@ def build_train_test(X_train, X_test, y_train, y_test, open_close=True):
 
     return X_train_lr, X_test_lr, X_train_fav_dog, X_test_fav_dog, X_train_red_blue, X_test_red_blue, y_favdog_train, y_favdog_test
 
-_, _, X_train_fav_dog, X_test_fav_dog, X_train_red_blue, X_test_red_blue, y_favdog_train, y_favdog_test = build_train_test(X_train, X_test, y_train, y_test, open_close=False)
 # _, _, _, _, X_train_red_blue_w, X_test_red_blue_w, _, _ = build_train_test(X_train_women, X_test_women, y_train_women, y_test_women,  open_close=False)
 # X_train_lr, X_test_lr, _, _, X_train_red_blue_m, X_test_red_blue_m, y_favdog_train, y_favdog_test = build_train_test(X_train_men, X_test_men, y_train_men, y_test_men,  open_close=False)
 
@@ -590,7 +590,6 @@ X_test = X_test.reset_index(drop=True)
 
 _, _, X_train_fav_dog, X_test_fav_dog, X_train_red_blue, X_test_red_blue, y_favdog_train, y_favdog_test = build_train_test(X_train, X_test, y_train, y_test, open_close=False)
 
-
 results_open = run_logit_model(
     X_train_red_blue, y_train,
     X_test_red_blue, y_test,
@@ -601,8 +600,6 @@ results_open = run_logit_model(
 y_pred = results_open["train_pred_class"]
 red_probs = results_open["train_pred_proba"]
 plot_model_metrics(y_train, y_pred, red_probs)
-
-
 
 selected_feats = ['proba_fair_close1_diff', 'proba_fair_close2_diff', 'age_diff', 'open_red', 'open_blue', 'reach_diff', 'sig_str_absorbed_total_diff', 
                   'td_attempted_pm_diff', 'elo_diff', 'sig_str_landed_total_diff',
