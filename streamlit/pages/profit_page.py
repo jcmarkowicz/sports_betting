@@ -54,7 +54,7 @@ def plot_backtest(df_results, init_bankroll):
     # CREATE FIGURE WITH 5 SUBPLOTS
     # ----------------------------
     # Create figure
-    fig, axs = plt.subplots(5, 1, figsize=(14, 16), sharex=True)
+    fig, axs = plt.subplots(5, 1, figsize=(16, 12), sharex=True)
 
     label_every = 5  # show every 5th date
 
@@ -121,13 +121,13 @@ def plot_backtest(df_results, init_bankroll):
     # Remove all x tick labels from the upper subplots
     for ax in axs[:-1]:
         ax.label_outer()
-    st.pyplot(fig)
+    st.pyplot(fig, use_container_width=False)
 
 
 def kelly_analysis(df_kelly, x_vars, y_var, bins=8):
 
     # Standardize y_var
-    fig, axes = plt.subplots(2, len(x_vars), figsize=(15, 12))
+    fig, axes = plt.subplots(2, len(x_vars), figsize=(16, 12))
 
     # --- Row 1: Regression plots ---
     for i, x in enumerate(x_vars):
@@ -191,7 +191,7 @@ def kelly_analysis(df_kelly, x_vars, y_var, bins=8):
         axes[1, i].tick_params(axis='x', rotation=45)
 
     plt.tight_layout()
-    st.pyplot(fig)
+    st.pyplot(fig, use_container_width=False)
 
 
 def calc_net_odds(df_test_results, odds_type):
@@ -288,7 +288,7 @@ def plot_juice_histogram(df_, odds_type):
     dog_mean, dog_std = juice_dog.mean(), juice_dog.std()
 
     # Plot histograms with KDE
-    fig, axes = plt.subplots(1, 2, figsize=(14, 6), sharey=True)
+    fig, axes = plt.subplots(1, 2, figsize=(8, 6), sharey=True)
 
     sns.histplot(juice_fav, bins=60, kde=True, color='blue', alpha=0.6, ax=axes[0])
     axes[0].set_title(f'Favorite {odds_type} Juice\nMean={fav_mean:.2f}, Std={fav_std:.2f}')
@@ -302,10 +302,15 @@ def plot_juice_histogram(df_, odds_type):
     sns.despine(ax=axes[1])
 
     plt.tight_layout()
-    st.pyplot(fig)
+    st.pyplot(fig,use_container_width=False)
 
 
 def plot_line_movement(df_, odds_type):
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    import streamlit as st
+    import numpy as np
+
     df = df_.copy()
 
     # Determine if the predicted winner is favorite
@@ -329,18 +334,22 @@ def plot_line_movement(df_, odds_type):
     )
 
     df['choice_line_movement'] = df['choice_close_line'] - df['choice_open_line'] 
+
     # Compute stats
     mean, std = df['choice_line_movement'].mean(), df['choice_line_movement'].std()
 
-    # Plot histograms with KDE
+    # Create figure and axes
+    fig, ax = plt.subplots(figsize=(8, 5))  # You can adjust width and height here
 
-    sns.histplot( df['choice_line_movement'].values, bins=60, kde=True, color='blue', alpha=0.6)
-    plt.title(f'Line Movement {odds_type} \nMean={mean:.2f}, Std={std:.2f}')
-    plt.xlabel('Line Movement')
-    plt.ylabel('Count')
+    # Plot histogram with KDE
+    sns.histplot(df['choice_line_movement'].values, bins=60, kde=True, color='blue', alpha=0.6, ax=ax)
+
+    ax.set_title(f'Line Movement {odds_type} \nMean={mean:.2f}, Std={std:.2f}')
+    ax.set_xlabel('Line Movement')
+    ax.set_ylabel('Count')
 
     plt.tight_layout()
-    st.pyplot()
+    st.pyplot(fig,use_container_width=False)  # Pass the figure object to Streamlit
 
 
 def plot_event_win_pcts(df_results):
@@ -371,7 +380,7 @@ def plot_event_win_pcts(df_results):
     # ----------------------------------------------------
     # 3. Create figure and axes
     # ----------------------------------------------------
-    fig, ax = plt.subplots(figsize=(10, 5))
+    fig, ax = plt.subplots(figsize=(8, 5))
     ax.hist(df_event_acc["event_pred_accuracy"], bins=20, edgecolor='black')
     ax.axvline(avg_event_acc, linestyle='--', color='red')
 
@@ -387,7 +396,7 @@ def plot_event_win_pcts(df_results):
     # ----------------------------------------------------
     # 4. Display in Streamlit
     # ----------------------------------------------------
-    st.pyplot(fig)
+    st.pyplot(fig,use_container_width=False)
 
 
 def plot_event_odds_stats(df_results):
@@ -415,7 +424,7 @@ def plot_event_odds_stats(df_results):
     ci_upper = mean_val + ci_range
 
     # ------------- Create 2 subplots -------------
-    fig, axs = plt.subplots(2, 1, figsize=(10, 6))
+    fig, axs = plt.subplots(2, 1, figsize=(8, 6))
 
     # === SUBPLOT 1: average net odds over time ===
     axs[0].plot(x_positions, avg_odds, marker="o", label="Avg Net Odds per Event")
@@ -447,7 +456,187 @@ def plot_event_odds_stats(df_results):
     axs[1].legend()
 
     plt.tight_layout()
-    st.pyplot(fig)
+    st.pyplot(fig,use_container_width=False)
+
+
+
+def analyze_line_movement_perf(df, odds_type='close', filter_ev=True):
+    df = df.copy()
+
+    # -----------------------------
+    # 0. Extract probability of chosen side
+    # -----------------------------
+    df['proba_choice'] = np.where(
+        df['pred_winner'] == 1,
+        df['proba_red'],
+        df['proba_blue']
+    )
+
+    # -----------------------------
+    # 1. Compute decimal odds
+    # -----------------------------
+    def american_to_decimal(x):
+        if x < 0:
+            return 100 / abs(x) + 1
+        else:
+            return x / 100 + 1
+
+    df['red_decimal']  = df[f'{odds_type}_red'].apply(american_to_decimal)
+    df['blue_decimal'] = df[f'{odds_type}_blue'].apply(american_to_decimal)
+
+    df['choice_decimal_odds'] = np.where(
+        df['pred_winner'] == 1,
+        df['red_decimal'],
+        df['blue_decimal']
+    )
+
+    # Convert to NET odds
+    df['choice_net_odds'] = df['choice_decimal_odds'] - 1.0
+
+    # -----------------------------
+    # 2. Expected Value (EV)
+    # -----------------------------
+    df['EV'] = df['proba_choice'] * df['choice_net_odds'] - (1 - df['proba_choice'])
+
+    # Filter only EV > 0 bets?
+    if filter_ev:
+        df = df[df['EV'] > 0].reset_index(drop=True)
+
+    # -----------------------------
+    # 3. Determine fav/dog at open & close
+    # -----------------------------
+    df['fav_open'] = np.where(df['open_red'] <= df['open_blue'], 1, 0)
+    df['fav_close'] = np.where(df[f'{odds_type}_red'] <= df[f'{odds_type}_blue'], 1, 0)
+
+    df['choice_open_fav'] = np.where(
+        ((df['pred_winner']==1) & (df['fav_open']==1)) |
+        ((df['pred_winner']==0) & (df['fav_open']==0)),
+        1, 0
+    )
+
+    df['choice_close_fav'] = np.where(
+        ((df['pred_winner']==1) & (df['fav_close']==1)) |
+        ((df['pred_winner']==0) & (df['fav_close']==0)),
+        1, 0
+    )
+
+    # -----------------------------
+    # 4. Movement category
+    # -----------------------------
+    def movement_label(row):
+        if row['choice_open_fav']==1 and row['choice_close_fav']==0:
+            return "Fav → Dog"
+        if row['choice_open_fav']==0 and row['choice_close_fav']==1:
+            return "Dog → Fav"
+        if row['choice_open_fav']==1 and row['choice_close_fav']==1:
+            return "Stayed Fav"
+        return "Stayed Dog"
+
+    df['movement_category'] = df.apply(movement_label, axis=1)
+
+    # -----------------------------
+    # 5. Profit
+    # -----------------------------
+    df['correct'] = (df['pred_winner'] == df['winner']).astype(int)
+    df['profit'] = np.where(df['correct'] == 1, df['choice_net_odds'], -1)
+
+    # -----------------------------
+    # 6. Stats by movement category
+    # -----------------------------
+    stats = df.groupby('movement_category').agg(
+        accuracy=('correct', 'mean'),
+        n=('correct', 'count'),
+        total_profit=('profit', 'sum'),
+        mean_EV=('EV', 'mean')
+    ).reset_index()
+
+    # -----------------------------
+    # 7. PLOTS
+    # -----------------------------
+    fig, axs = plt.subplots(1, 2, figsize=(10, 6))
+
+    # Accuracy plot
+    sns.barplot(data=stats, x='movement_category', y='accuracy', ax=axs[0])
+    axs[0].set_title(f"Accuracy by Line Movement Category\nEV filter = {filter_ev}")
+    axs[0].set_xlabel("Category")
+    axs[0].set_ylabel("Accuracy")
+    axs[0].set_ylim(0, 1)
+
+    # Profit plot
+    sns.barplot(data=stats, x='movement_category', y='total_profit', ax=axs[1])
+    axs[1].set_title("Total Net Profit by Category")
+    axs[1].set_xlabel("Category")
+    axs[1].set_ylabel("Total Net Profit")
+
+    plt.tight_layout()
+    st.pyplot(fig, use_container_width=False)
+    return stats
+
+
+
+
+def plot_accuracy_by_variable(df, variable, pred_col="correct_pred"):
+    grouped = df.groupby(variable)[pred_col].agg(["mean", "count"])
+
+    plt.figure(figsize=(10, 6))
+    bars = plt.bar(grouped.index, grouped["mean"], color="skyblue")
+
+    plt.title(f"Prediction Accuracy by {variable}")
+    plt.ylabel("Accuracy")
+    plt.xlabel(variable)
+    plt.ylim(0, 1)
+    plt.xticks(rotation=45, ha="right")
+
+    # Annotate with counts AND accuracy %
+    for bar, (acc, count) in zip(bars, zip(grouped["mean"], grouped["count"])):
+        plt.text(
+            bar.get_x() + bar.get_width() / 2,
+            bar.get_height(),
+            f"n={count}\n{acc*100:.1f}%",
+            ha="center",
+            va="bottom",
+            fontsize=9
+        )
+
+    plt.tight_layout()
+    plt.show()
+
+def plot_accuracy_by_bins(df_, variable, bins=10, pred_col="correct_pred"):
+    df = df_.copy()
+    # Create bins using pandas.cut
+    df["_bins"] = pd.cut(df[variable], bins=bins)
+
+    # Group by bins
+    grouped = df.groupby("_bins")[pred_col].agg(["mean", "count"])
+
+    # Plot
+    plt.figure(figsize=(10, 6))
+    bars = plt.bar(grouped.index.astype(str), grouped["mean"], color="skyblue")
+
+    plt.title(f"Prediction Accuracy by Binned {variable}")
+    plt.ylabel("Accuracy")
+    plt.xlabel(variable)
+    plt.ylim(0, 1)
+    plt.xticks(rotation=45, ha="right")
+
+    # Annotate counts + accuracy %
+    for bar, (acc, count) in zip(bars, zip(grouped["mean"], grouped["count"])):
+        plt.text(
+            bar.get_x() + bar.get_width() / 2,
+            bar.get_height(),
+            f"n={count}\n{acc*100:.1f}%",
+            ha="center",
+            va="bottom",
+            fontsize=9
+        )
+
+    plt.tight_layout()
+    plt.show()
+
+    # Clean temporary column
+    df.drop(columns=["_bins"], inplace=True)
+
+
 
 
 
@@ -537,6 +726,7 @@ plot_event_win_pcts(df_results_close1)
 plot_event_odds_stats(df_results_close1)
 calc_net_odds(df_results_test_close, 'close1')
 plot_juice_histogram(df_results_test_close, 'close1')
+analyze_line_movement_perf(df_results_test_close, 'close1')
 
 st.markdown('## Close2 Odds: Better results from close1 but worse results from close2 ')
 plot_backtest(df_results_close2, init_bankroll)
@@ -545,5 +735,6 @@ plot_event_win_pcts(df_results_close2)
 plot_event_odds_stats(df_results_close2)
 calc_net_odds(df_results_test_close, 'close2')
 plot_juice_histogram(df_results_test_close, 'close2')
+analyze_line_movement_perf(df_results_test_close, 'close2')
 
 

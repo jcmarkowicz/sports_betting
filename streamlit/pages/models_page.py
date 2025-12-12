@@ -5,13 +5,13 @@ import pandas as pd
 import seaborn as sns 
 import matplotlib.pyplot as plt 
 from sklearn.metrics import confusion_matrix, accuracy_score
-from models.get_train_test import TrainTestBuilder
 from sklearn.metrics import brier_score_loss, roc_auc_score, accuracy_score, confusion_matrix, classification_report, roc_curve, auc, f1_score, confusion_matrix, ConfusionMatrixDisplay, silhouette_score
 from sklearn.calibration import calibration_curve
 import statsmodels.api as sm
 
 import sys, os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+from models.get_train_test import TrainTestBuilder
 
 class DataUtils:
     @staticmethod
@@ -92,7 +92,7 @@ st.title("Models Page")
 def plot_accuracy_by_variable(df, variable, pred_col="correct_pred"):
     grouped = df.groupby(variable)[pred_col].agg(["mean", "count"])
 
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(8, 6))
     bars = ax.bar(grouped.index, grouped["mean"], color="skyblue")
 
     ax.set_title(f"Prediction Accuracy by {variable}")
@@ -113,7 +113,7 @@ def plot_accuracy_by_variable(df, variable, pred_col="correct_pred"):
         )
 
     plt.tight_layout()
-    st.pyplot(fig)  # Streamlit display
+    st.pyplot(fig,use_container_width=False)  # Streamlit display
 
 def plot_accuracy_by_bins(df, variable, bins=10, pred_col="correct_pred"):
 
@@ -123,7 +123,7 @@ def plot_accuracy_by_bins(df, variable, bins=10, pred_col="correct_pred"):
     # Group by bins
     grouped = df.groupby("_bins")[pred_col].agg(["mean", "count"])
 
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(8, 6))
     bars = ax.bar(grouped.index.astype(str), grouped["mean"], color="skyblue")
 
     ax.set_title(f"Prediction Accuracy by Binned {variable}")
@@ -144,7 +144,7 @@ def plot_accuracy_by_bins(df, variable, bins=10, pred_col="correct_pred"):
         )
 
     plt.tight_layout()
-    st.pyplot(fig)  # Streamlit display
+    st.pyplot(fig,use_container_width=False)  # Streamlit display
 
     # Clean temporary column
     df.drop(columns=["_bins"], inplace=True)
@@ -415,6 +415,7 @@ def build_train_test(X_train, X_test, y_train, y_test, open_close=True):
 
     return X_train_lr, X_test_lr, X_train_fav_dog, X_test_fav_dog, X_train_red_blue, X_test_red_blue, y_favdog_train, y_favdog_test
 
+
 def plot_model_metrics(y_test, y_pred, probs):
     # Confusion Matrix
     cm = confusion_matrix(y_test, y_pred)
@@ -430,7 +431,7 @@ def plot_model_metrics(y_test, y_pred, probs):
     # ------------------------------
     # Create side-by-side figure
     # ------------------------------
-    fig, axes = plt.subplots(1, 3, figsize=(22, 5))
+    fig, axes = plt.subplots(1, 3, figsize=(12, 5))
     # ---- 1. Confusion Matrix ----
     disp = ConfusionMatrixDisplay(confusion_matrix=cm)
     disp.plot(ax=axes[0], cmap="Blues", colorbar=False)
@@ -476,7 +477,7 @@ def plot_model_metrics(y_test, y_pred, probs):
     # axes[3].text(0.1, 0.5, text, fontsize=14, verticalalignment="center")
 
     plt.tight_layout()
-    st.pyplot(fig)
+    st.pyplot(fig,use_container_width=False)
 
 
 def run_logit_model(
@@ -509,22 +510,30 @@ def run_logit_model(
 
     # --- compute ECE ---
     def plot_calibration_curve(y_true, y_hat, n_bins, title_suffix=""):
+
+        # Compute calibration
         prob_true, prob_pred = calibration_curve(y_true, y_hat, n_bins=n_bins, strategy="quantile")
 
+        # Compute Expected Calibration Error (ECE)
         bin_counts = np.histogram(y_hat, bins=n_bins)[0]
         weights = bin_counts / len(y_hat)
         ece = np.sum(np.abs(prob_true - prob_pred) * weights)
 
-        plt.figure(figsize=(7, 6))
-        plt.plot(prob_pred, prob_true, marker='o', label='Model Calibration')
-        plt.plot([0, 1], [0, 1], linestyle='--', label='Perfect Calibration')
+        # Create figure and axes
+        fig, ax = plt.subplots(figsize=(6, 6))
 
-        plt.title(f'{title_suffix}: Calibration Curve\nECE={ece:.6f}')
-        plt.xlabel("Predicted Probability")
-        plt.ylabel("True Probability")
-        plt.legend()
-        plt.grid(True)
-        st.pyplot()
+        # Plot calibration curve
+        ax.plot(prob_pred, prob_true, marker='o', label='Model Calibration')
+        ax.plot([0, 1], [0, 1], linestyle='--', label='Perfect Calibration')
+
+        ax.set_title(f'{title_suffix}: Calibration Curve\nECE={ece:.6f}')
+        ax.set_xlabel("Predicted Probability")
+        ax.set_ylabel("True Probability")
+        ax.legend()
+        ax.grid(True)
+
+        plt.tight_layout()
+        st.pyplot(fig,use_container_width=False)  # Pass the figure object to Streamlit
 
     plot_calibration_curve(y_test, test_pred, n_bins, 'Test Set')
     plot_calibration_curve(y_train, train_pred, n_bins, 'Train Set')
@@ -552,7 +561,6 @@ def run_logit_model(
     return results
 
 
-
 non_feats = [
     'date','event_date','event_location','fighter_blue','fighter_red',
     'method','og_blue_name','og_red_fighter', 'red_fighter_stats', 'blue_fighter_stats',
@@ -576,6 +584,8 @@ selected_feats = ['proba_fair_open_diff', 'age_diff', 'open_red', 'open_blue', '
                   'td_attempted_pm_diff', 'elo_diff', 'sig_str_landed_total_diff',
                     'ko_losses_diff', 'win_pct_diff', 'kd_total_diff','avg_fight_min_diff', 'height_diff', 'head_str_total_diff', 'losses_diff', 'control_total_diff'
                   ]
+
+
 fp = r'C:\Users\jcmar\my_files\SportsBetting\data\entire_odds_stats_2025-12-04.csv'
 df_model = pd.read_csv(fp)
 y = 'winner'
