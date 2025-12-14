@@ -19,7 +19,7 @@ def plot_backtest(df_results, init_bankroll):
     dates = df_group['date'].tolist()
     x_positions = np.arange(len(dates))
     bankroll_history = df_group['bankroll_postevent'].values
-    group_profit_history = df_group['event_payout'].values
+    group_profit_history = df_group['event_payout_per_fight'].values
     proportion_wins = np.mean(group_profit_history > 0)
 
     # ----------------------------
@@ -33,8 +33,9 @@ def plot_backtest(df_results, init_bankroll):
     # ----------------------------
     # PER-FIGHT NET PROFIT
     # ----------------------------
-    df_group_profit = df_results.groupby('date')['per_fight_bankroll'].first().reset_index()
-    x_per_fight_net = np.cumsum(df_group_profit['per_fight_bankroll'])
+    df_group_profit = df_results.groupby('date')['event_payout_per_fight'].first().reset_index()
+    print(df_group_profit)
+    per_fight_net = np.cumsum(df_group_profit['event_payout_per_fight'].values)
 
     # ----------------------------
     # EVENT NET ODDS (new)
@@ -50,11 +51,13 @@ def plot_backtest(df_results, init_bankroll):
     parlay_net_vals = df_parlay_odds['parlay_net_odds'].values
     parlay_odds_cumsum = np.cumsum(parlay_net_vals)
 
+
+
     # ----------------------------
     # CREATE FIGURE WITH 5 SUBPLOTS
     # ----------------------------
     # Create figure
-    fig, axs = plt.subplots(5, 1, figsize=(16, 12), sharex=True)
+    fig, axs = plt.subplots(5, 1, figsize=(14, 16), sharex=True)
 
     label_every = 5  # show every 5th date
 
@@ -90,7 +93,7 @@ def plot_backtest(df_results, init_bankroll):
     axs[1].set_ylabel("Cumulative Profit")
     axs[1].legend()
 
-    axs[2].plot(x_per_fight_net, marker='o', label='Money Line Bet Profit')
+    axs[2].plot(per_fight_net, marker='o', label='Money Line Bet Profit')
     axs[2].set_title("Per Fight Bet Profit")
     axs[2].set_ylabel("Cumulative Profit")
     axs[2].legend()
@@ -121,7 +124,7 @@ def plot_backtest(df_results, init_bankroll):
     # Remove all x tick labels from the upper subplots
     for ax in axs[:-1]:
         ax.label_outer()
-    st.pyplot(fig, use_container_width=False)
+    st.pyplot(fig,use_container_width=False)
 
 
 def kelly_analysis(df_kelly, x_vars, y_var, bins=8):
@@ -459,7 +462,6 @@ def plot_event_odds_stats(df_results):
     st.pyplot(fig,use_container_width=False)
 
 
-
 def analyze_line_movement_perf(df, odds_type='close', filter_ev=True):
     df = df.copy()
 
@@ -573,8 +575,6 @@ def analyze_line_movement_perf(df, odds_type='close', filter_ev=True):
     return stats
 
 
-
-
 def plot_accuracy_by_variable(df, variable, pred_col="correct_pred"):
     grouped = df.groupby(variable)[pred_col].agg(["mean", "count"])
 
@@ -600,6 +600,7 @@ def plot_accuracy_by_variable(df, variable, pred_col="correct_pred"):
 
     plt.tight_layout()
     plt.show()
+
 
 def plot_accuracy_by_bins(df_, variable, bins=10, pred_col="correct_pred"):
     df = df_.copy()
@@ -637,15 +638,16 @@ def plot_accuracy_by_bins(df_, variable, bins=10, pred_col="correct_pred"):
     df.drop(columns=["_bins"], inplace=True)
 
 
+df_results_open = pd.read_csv(r'data\kelly1.csv')
+df_results_close1 = pd.read_csv(r'data\kelly_close1.csv')
+df_results_close2 = pd.read_csv(r'data\kelly_close2.csv')
 
+df_results_test_open = pd.read_csv(r'data\test_logit_open.csv')
+df_results_test_close = pd.read_csv(r'data\test_logit_close.csv')
 
-
-df_results_open = pd.read_csv(r'C:\Users\jcmar\my_files\SportsBetting\data\results_data\kelly1.csv')
-df_results_close1 = pd.read_csv(r'C:\Users\jcmar\my_files\SportsBetting\data\results_data\kelly_close1.csv')
-df_results_close2 = pd.read_csv(r'C:\Users\jcmar\my_files\SportsBetting\data\results_data\kelly_close2.csv')
-
-df_results_test_open = pd.read_csv(r'C:\Users\jcmar\my_files\SportsBetting\data\test_logit_open.csv')
-df_results_test_close = pd.read_csv(r'C:\Users\jcmar\my_files\SportsBetting\data\test_logit_close.csv')
+df_parlay_open = pd.read_csv(r'data\parlay_open.csv')
+df_parlay_close1 = pd.read_csv(r'data\parlay_close1.csv')
+df_parlay_close2 = pd.read_csv(r'data\parlay_close2.csv')
 
 init_bankroll = 2000
 x_vars = ['mu_portfolio', 'sharpe_portfolio', 'portfolio_sigma']
@@ -701,11 +703,31 @@ calc_net_odds(df_results_test_open, 'open')
 plot_juice_histogram(df_results_test_open, 'open')
 
 
+st.markdown("""
+<p style="font-size:18px; line-height:1.6;">
+Below is the saved data displayed in the plots. The key variable is choice fstar. This is the optimal percentage of bankroll to wager. 
+</p>
+""", unsafe_allow_html=True)
+
+
+
 st.dataframe(
     df_results_open[['fighter_red', 'fighter_blue', 'open_red', 'open_blue',
                           'red_proba', 'blue_proba', 'pred_winner', 'winner',
                           'choice_ev', 'choice_fstar', 'fight_payout']]
 )
+
+
+st.markdown("""
+<p style="font-size:18px; line-height:1.6;">
+Results Data for Parlay Strategy
+</p>
+""", unsafe_allow_html=True)
+
+st.dataframe(
+    df_parlay_open
+)
+
 
 st.markdown("""
 ## Close1 Odds Analysis
@@ -728,7 +750,25 @@ calc_net_odds(df_results_test_close, 'close1')
 plot_juice_histogram(df_results_test_close, 'close1')
 analyze_line_movement_perf(df_results_test_close, 'close1')
 
-st.markdown('## Close2 Odds: Better results from close1 but worse results from close2 ')
+st.dataframe(
+    df_results_close1[['fighter_red', 'fighter_blue', 'open_red', 'open_blue',
+                          'red_proba', 'blue_proba', 'pred_winner', 'winner',
+                          'choice_ev', 'choice_fstar', 'fight_payout']]
+)
+
+
+st.markdown("""
+<p style="font-size:18px; line-height:1.6;">
+Results Data for Parlay Strategy
+</p>
+""", unsafe_allow_html=True)
+
+st.dataframe(
+    df_parlay_close1
+)
+
+
+st.markdown('## Close2 Odds: Better results from close1 but worse results from Open ')
 plot_backtest(df_results_close2, init_bankroll)
 kelly_analysis(df_results_close2, x_vars, y_var)
 plot_event_win_pcts(df_results_close2)
@@ -738,3 +778,19 @@ plot_juice_histogram(df_results_test_close, 'close2')
 analyze_line_movement_perf(df_results_test_close, 'close2')
 
 
+st.dataframe(
+    df_results_close2[['fighter_red', 'fighter_blue', 'open_red', 'open_blue',
+                          'red_proba', 'blue_proba', 'pred_winner', 'winner',
+                          'choice_ev', 'choice_fstar', 'fight_payout']]
+)
+
+
+st.markdown("""
+<p style="font-size:18px; line-height:1.6;">
+Results Data for Parlay Strategy
+</p>
+""", unsafe_allow_html=True)
+
+st.dataframe(
+    df_parlay_close2
+)

@@ -586,7 +586,7 @@ selected_feats = ['proba_fair_open_diff', 'age_diff', 'open_red', 'open_blue', '
                   ]
 
 
-fp = r'C:\Users\jcmar\my_files\SportsBetting\data\entire_odds_stats_2025-12-04.csv'
+fp = r'data\entire_odds_stats_2025-12-04.csv'
 df_model = pd.read_csv(fp)
 y = 'winner'
 builder = TrainTestBuilder(df=df_model, target_col=y, non_features=non_feats, train_size=0.8, random_state=42)
@@ -607,9 +607,15 @@ results_open = run_logit_model(
     n_bins=30,
     vif_func=None
 )
-y_pred = results_open["train_pred_class"]
-red_probs = results_open["train_pred_proba"]
-plot_model_metrics(y_train, y_pred, red_probs)
+
+st.markdown("""
+            <p style="font-size:18px; line-height:1.6;">
+            Results with Open Odds data 
+""")
+
+y_pred = results_open["test_pred_class"]
+red_probs = results_open["test_pred_proba"]
+plot_model_metrics(y_test, y_pred, red_probs)
 
 selected_feats = ['proba_fair_close1_diff', 'proba_fair_close2_diff', 'age_diff', 'open_red', 'open_blue', 'reach_diff', 'sig_str_absorbed_total_diff', 
                   'td_attempted_pm_diff', 'elo_diff', 'sig_str_landed_total_diff',
@@ -628,6 +634,11 @@ X_test = X_test.reset_index(drop=True)
 X_train['open_pred'] = results_open['train_pred_class']
 X_test['open_pred'] = results_open["test_pred_class"]
 
+st.markdown("""
+            <p style="font-size:18px; line-height:1.6;">
+            Results with Close1 and Close 2 Odds data 
+""")
+
 _, _, X_train_fav_dog, X_test_fav_dog, X_train_red_blue, X_test_red_blue, _, _ = build_train_test(X_train, X_test, y_train, y_test, open_close=False)
 results = run_logit_model(
     X_train_red_blue, y_train,
@@ -637,6 +648,6 @@ results = run_logit_model(
     vif_func=None
 )
 
-y_pred = results["train_pred_class"]
-red_probs = results["train_pred_proba"]
-plot_model_metrics(y_train, y_pred, red_probs)
+y_pred = results["test_pred_class"]
+red_probs = results["test_pred_proba"]
+plot_model_metrics(y_test, y_pred, red_probs)
