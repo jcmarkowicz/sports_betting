@@ -1,0 +1,11 @@
+# Core
+streamlit==1.32.0
+
+# Scientific / Data
+numpy
+pandas
+scipy
+statsmodels
+scikit-learn
+seaborn
+matplotlib
