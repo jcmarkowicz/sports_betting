@@ -638,17 +638,21 @@ def plot_accuracy_by_bins(df_, variable, bins=10, pred_col="correct_pred"):
     df.drop(columns=["_bins"], inplace=True)
 
 
-df_results_open = pd.read_csv(r'data\kelly1.csv')
-df_results_close1 = pd.read_csv(r'data\kelly_close1.csv')
-df_results_close2 = pd.read_csv(r'data\kelly_close2.csv')
+from pathlib import Path
 
-df_results_test_open = pd.read_csv(r'data\test_logit_open.csv')
-df_results_test_close = pd.read_csv(r'data\test_logit_close.csv')
+BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = BASE_DIR / "data"
 
-df_parlay_open = pd.read_csv(r'data\parlay_open.csv')
-df_parlay_close1 = pd.read_csv(r'data\parlay_close1.csv')
-df_parlay_close2 = pd.read_csv(r'data\parlay_close2.csv')
+df_results_open = pd.read_csv(DATA_DIR / "kelly1.csv")
+df_results_close1 = pd.read_csv(DATA_DIR / "kelly_close1.csv")
+df_results_close2 = pd.read_csv(DATA_DIR / "kelly_close2.csv")
 
+df_results_test_open = pd.read_csv(DATA_DIR / "test_logit_open.csv")
+df_results_test_close = pd.read_csv(DATA_DIR / "test_logit_close.csv")
+
+df_parlay_open = pd.read_csv(DATA_DIR / "parlay_open.csv")
+df_parlay_close1 = pd.read_csv(DATA_DIR / "parlay_close1.csv")
+df_parlay_close2 = pd.read_csv(DATA_DIR / "parlay_close2.csv")
 init_bankroll = 2000
 x_vars = ['mu_portfolio', 'sharpe_portfolio', 'portfolio_sigma']
 y_var = 'event_net_odds'

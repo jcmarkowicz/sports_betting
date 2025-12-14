@@ -585,8 +585,12 @@ selected_feats = ['proba_fair_open_diff', 'age_diff', 'open_red', 'open_blue', '
                     'ko_losses_diff', 'win_pct_diff', 'kd_total_diff','avg_fight_min_diff', 'height_diff', 'head_str_total_diff', 'losses_diff', 'control_total_diff'
                   ]
 
+from pathlib import Path
+import pandas as pd
 
-fp = r'data\entire_odds_stats_2025-12-04.csv'
+BASE_DIR = Path(__file__).resolve().parent
+fp = BASE_DIR / "data" / "entire_odds_stats_2025-12-04.csv"
+
 df_model = pd.read_csv(fp)
 y = 'winner'
 builder = TrainTestBuilder(df=df_model, target_col=y, non_features=non_feats, train_size=0.8, random_state=42)

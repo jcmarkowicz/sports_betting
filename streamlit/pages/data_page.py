@@ -94,8 +94,16 @@ def display_paginated_df(df, page_size=50, title="Data Viewer", key_prefix=""):
     st.dataframe(paged_df, use_container_width=True)
     st.write(f"Showing rows {start_row + 1} to {end_row} of {total_rows}")
 # Load data using class
-loader_history = DataLoader(r'data\entire_odds_stats_2025-12-04.csv')
-df_history = loader_history.load_csv()
+# loader_history = DataLoader(r'data\entire_odds_stats_2025-12-04.csv')
+
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = BASE_DIR / "data"
+
+csv_path = DATA_DIR / "entire_odds_stats_2025-12-04.csv"
+
+df_history = pd.read_csv(csv_path)
 df_history = df_history.sort_values(by='date', ascending=True)
 df_display = df_history[['date', 'fighter_red', 'fighter_blue', 'elo_red', 'elo_blue', 'glicko_red', 'glicko_blue']]
 
