@@ -649,21 +649,21 @@ BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 
 # Read CSVs
-df_results_open = pd.read_csv(DATA_DIR / "kelly1.csv")
-df_results_close1 = pd.read_csv(DATA_DIR / "kelly_close1.csv")
-df_results_close2 = pd.read_csv(DATA_DIR / "kelly_close2.csv")
+# Read CSVs using relative paths
+df_results_open       = pd.read_csv("./data/kelly1.csv")
+df_results_close1     = pd.read_csv("./data/kelly_close1.csv")
+df_results_close2     = pd.read_csv("./data/kelly_close2.csv")
 
-df_results_test_open = pd.read_csv(DATA_DIR / "test_logit_open.csv")
-df_results_test_close = pd.read_csv(DATA_DIR / "test_logit_close.csv")
+df_results_test_open  = pd.read_csv("./data/test_logit_open.csv")
+df_results_test_close = pd.read_csv("./data/test_logit_close.csv")
 
-df_parlay_open = pd.read_csv(DATA_DIR / "parlay_open.csv")
-df_parlay_close1 = pd.read_csv(DATA_DIR / "parlay_close1.csv")
-df_parlay_close2 = pd.read_csv(DATA_DIR / "parlay_close2.csv")
+df_parlay_open        = pd.read_csv("./data/parlay_open.csv")
+df_parlay_close1      = pd.read_csv("./data/parlay_close1.csv")
+df_parlay_close2      = pd.read_csv("./data/parlay_close2.csv")
 
-# Example for your model/history CSV
-df_history = pd.read_csv(DATA_DIR / "entire_odds_stats_2025-12-04.csv")
-df_model = pd.read_csv(DATA_DIR / "entire_odds_stats_2025-12-04.csv")
-
+# Model/history CSV
+df_history = pd.read_csv("./data/entire_odds_stats_2025-12-04.csv")
+df_model   = pd.read_csv("./data/entire_odds_stats_2025-12-04.csv")
 init_bankroll = 2000
 x_vars = ['mu_portfolio', 'sharpe_portfolio', 'portfolio_sigma']
 y_var = 'event_net_odds'
