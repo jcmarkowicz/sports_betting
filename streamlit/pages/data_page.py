@@ -98,19 +98,13 @@ def display_paginated_df(df, page_size=50, title="Data Viewer", key_prefix=""):
 
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent
-DATA_DIR = BASE_DIR / "data"
+# Correct path to the CSV
+csv_path = "./streamlit/data/entire_odds_stats_2025-12-04.csv"
 
-csv_path = DATA_DIR / "entire_odds_stats_2025-12-04.csv"
+# Read CSV
+df_history = pd.read_csv(csv_path)
 
-st.title("Upload entire_odds_stats_2025-12-04.csv")
-
-df_history = None
-uploaded_file = st.file_uploader("Upload CSV file", type="csv")
-
-if uploaded_file is not None:
-    df_history = pd.read_csv(uploaded_file)
-    st.write(df_history.head()) 
+st.write(df_history) 
 
 df_history = df_history.sort_values(by='date', ascending=True)
 df_display = df_history[['date', 'fighter_red', 'fighter_blue', 'elo_red', 'elo_blue', 'glicko_red', 'glicko_blue']]

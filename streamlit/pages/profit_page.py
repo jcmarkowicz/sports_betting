@@ -670,8 +670,8 @@ df_parlay_close1      = pd.read_csv("./streamlit/data/parlay_close1.csv")
 df_parlay_close2      = pd.read_csv("./streamlit/data/parlay_close2.csv")
 
 # Model/history CSV
-df_history = pd.read_csv("./data/entire_odds_stats_2025-12-04.csv")
-df_model   = pd.read_csv("./data/entire_odds_stats_2025-12-04.csv")
+df_history = pd.read_csv("./streamlit/data/entire_odds_stats_2025-12-04.csv")
+df_model   = pd.read_csv("./streamlit/data/entire_odds_stats_2025-12-04.csv")
 init_bankroll = 2000
 x_vars = ['mu_portfolio', 'sharpe_portfolio', 'portfolio_sigma']
 y_var = 'event_net_odds'

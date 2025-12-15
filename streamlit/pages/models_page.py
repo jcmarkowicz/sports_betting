@@ -588,18 +588,16 @@ selected_feats = ['proba_fair_open_diff', 'age_diff', 'open_red', 'open_blue', '
 from pathlib import Path
 import pandas as pd
 
-BASE_DIR = Path(__file__).resolve().parent
-fp = BASE_DIR / "data" / "entire_odds_stats_2025-12-04.csv"
 
+# Path to CSV in the streamlit/data folder
+csv_path = "./streamlit/data/entire_odds_stats_2025-12-04.csv"
 
-df_model = None
-uploaded_file = st.file_uploader("Upload CSV file", type="csv")
+# Read CSV
+df_model = pd.read_csv(csv_path)
 
-if uploaded_file is not None:
-    df_model = pd.read_csv(uploaded_file)
-    st.write(df_model.head()) 
+# Optional: show first few rows
+print(df_model.head())
 
-    
 y = 'winner'
 builder = TrainTestBuilder(df=df_model, target_col=y, non_features=non_feats, train_size=0.8, random_state=42)
 builder.filter_by_year(2010, date_col='event_date')
