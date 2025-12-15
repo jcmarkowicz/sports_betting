@@ -644,47 +644,26 @@ BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 
 
-# Upload each CSV file individually
-df_results_open = None
-uploaded = st.file_uploader("Upload kelly1.csv", type="csv")
-if uploaded is not None:
-    df_results_open = pd.read_csv(uploaded)
+# Path to this app
+BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = BASE_DIR / "data"
 
-df_results_close1 = None
-uploaded = st.file_uploader("Upload kelly_close1.csv", type="csv")
-if uploaded is not None:
-    df_results_close1 = pd.read_csv(uploaded)
+# Read CSVs
+df_results_open = pd.read_csv(DATA_DIR / "kelly1.csv")
+df_results_close1 = pd.read_csv(DATA_DIR / "kelly_close1.csv")
+df_results_close2 = pd.read_csv(DATA_DIR / "kelly_close2.csv")
 
-df_results_close2 = None
-uploaded = st.file_uploader("Upload kelly_close2.csv", type="csv")
-if uploaded is not None:
-    df_results_close2 = pd.read_csv(uploaded)
+df_results_test_open = pd.read_csv(DATA_DIR / "test_logit_open.csv")
+df_results_test_close = pd.read_csv(DATA_DIR / "test_logit_close.csv")
 
-df_results_test_open = None
-uploaded = st.file_uploader("Upload test_logit_open.csv", type="csv")
-if uploaded is not None:
-    df_results_test_open = pd.read_csv(uploaded)
+df_parlay_open = pd.read_csv(DATA_DIR / "parlay_open.csv")
+df_parlay_close1 = pd.read_csv(DATA_DIR / "parlay_close1.csv")
+df_parlay_close2 = pd.read_csv(DATA_DIR / "parlay_close2.csv")
 
-df_results_test_close = None
-uploaded = st.file_uploader("Upload test_logit_close.csv", type="csv")
-if uploaded is not None:
-    df_results_test_close = pd.read_csv(uploaded)
+# Example for your model/history CSV
+df_history = pd.read_csv(DATA_DIR / "entire_odds_stats_2025-12-04.csv")
+df_model = pd.read_csv(DATA_DIR / "entire_odds_stats_2025-12-04.csv")
 
-df_parlay_open = None
-uploaded = st.file_uploader("Upload parlay_open.csv", type="csv")
-if uploaded is not None:
-    df_parlay_open = pd.read_csv(uploaded)
-
-df_parlay_close1 = None
-uploaded = st.file_uploader("Upload parlay_close1.csv", type="csv")
-if uploaded is not None:
-    df_parlay_close1 = pd.read_csv(uploaded)
-
-df_parlay_close2 = None
-uploaded = st.file_uploader("Upload parlay_close2.csv", type="csv")
-if uploaded is not None:
-    df_parlay_close2 = pd.read_csv(uploaded)
-    
 init_bankroll = 2000
 x_vars = ['mu_portfolio', 'sharpe_portfolio', 'portfolio_sigma']
 y_var = 'event_net_odds'
