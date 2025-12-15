@@ -658,16 +658,16 @@ st.write("Data folder contents:", os.listdir("./data"))
 
 # Read CSVs
 # Read CSVs using relative paths
-df_results_open       = pd.read_csv("./data/kelly1.csv")
-df_results_close1     = pd.read_csv("./data/kelly_close1.csv")
-df_results_close2     = pd.read_csv("./data/kelly_close2.csv")
+df_results_open       = pd.read_csv("./streamlit/data/kelly1.csv")
+df_results_close1     = pd.read_csv("./streamlit/data/kelly_close1.csv")
+df_results_close2     = pd.read_csv("./streamlit/data/kelly_close2.csv")
 
-df_results_test_open  = pd.read_csv("./data/test_logit_open.csv")
-df_results_test_close = pd.read_csv("./data/test_logit_close.csv")
+df_results_test_open  = pd.read_csv("./streamlit/data/test_logit_open.csv")
+df_results_test_close = pd.read_csv("./streamlit/data/test_logit_close.csv")
 
-df_parlay_open        = pd.read_csv("./data/parlay_open.csv")
-df_parlay_close1      = pd.read_csv("./data/parlay_close1.csv")
-df_parlay_close2      = pd.read_csv("./data/parlay_close2.csv")
+df_parlay_open        = pd.read_csv("./streamlit/data/parlay_open.csv")
+df_parlay_close1      = pd.read_csv("./streamlit/data/parlay_close1.csv")
+df_parlay_close2      = pd.read_csv("./streamlit/data/parlay_close2.csv")
 
 # Model/history CSV
 df_history = pd.read_csv("./data/entire_odds_stats_2025-12-04.csv")
