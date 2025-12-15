@@ -651,9 +651,6 @@ DATA_DIR = BASE_DIR / "data"
 import os
 import streamlit as st
 
-st.write("Current working directory:", os.getcwd())
-st.write("Files here:", os.listdir())
-st.write("Data folder contents:", os.listdir("./data"))
 
 
 # Read CSVs
