@@ -134,9 +134,9 @@ def get_fighter_odds(fighter_df):
     
     url = 'https://www.bestfightodds.com'
     user_agents = [
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64)...",
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)...",
-        # add more realistic user agents
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.5845.96 Safari/537.36",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.4 Safari/605.1.15",
+        # add more user agents as needed
     ]
 
     # options = Options()
@@ -145,14 +145,14 @@ def get_fighter_odds(fighter_df):
 
     options = uc.ChromeOptions()
     # options.add_argument('--headless=new')
-    options.add_argument(f'user-agent={random.choice(user_agents)}')
-    options.add_argument("--disable-blink-features=AutomationControlled")
-    options.add_argument("--disable-infobars")
-    options.add_argument("--disable-extensions")
-    options.add_argument("--profile-directory=Default")
-    options.add_argument("--incognito")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
+    # options.add_argument(f'user-agent={random.choice(user_agents)}')
+    # options.add_argument("--disable-blink-features=AutomationControlled")
+    # options.add_argument("--disable-infobars")
+    # options.add_argument("--disable-extensions")
+    # options.add_argument("--profile-directory=Default")
+    # options.add_argument("--incognito")
+    # options.add_argument("--no-sandbox")
+    # options.add_argument("--disable-dev-shm-usage")
     driver = uc.Chrome(options=options)
     driver.get(url)
     print(driver.current_url)  # see where you landed

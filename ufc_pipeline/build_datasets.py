@@ -25,13 +25,13 @@ upcoming_odds_string = r'C:\Users\jcmar\my_files\SportsBetting\data\upcoming_odd
 
 # find the most recent stats and odds history by most recent date 
 date_today = datetime.now().strftime("%Y-%m-%d") #use this to mark odds 
-recent_date = r'2025-11-05'
+recent_date = r'2025-12-21'
 stats_history = pd.read_csv(f'{stats_history_file_string}_{recent_date}.csv') # dataframes BEFORE any feature engineering 
 
-recent_date = r'2025-11-06'
+recent_date = r'2025-12-21'
 odds_history = pd.read_csv(f'{odds_history_file_string}_{recent_date}.csv')
 
-next_fight_date = r'2025-11-08'
+next_fight_date = r'2026-01-24'
 
 if __name__ == "__main__":
     scraper = UFC_Webscraper()
@@ -74,16 +74,19 @@ if __name__ == "__main__":
         missing_odds = scraper.get_fighter_odds(missing_stats) # finds odds based on fighters/date
     
         # merge with stats history, save by current date
-        stats_history = pd.concat([stats_history, missing_stats])
+        stats_history = pd.concat([stats_history, missing_stats], axis=0)
+        stats_history['event_date'] = pd.to_datetime(stats_history['event_date'], errors='coerce')
         stats_history = stats_history.sort_values(by='event_date', ascending=True).reset_index(drop=True)
         stats_history.to_csv(f'{stats_history_file_string}_{date_today}.csv')
 
-        odds_history = pd.concat([odds_history, missing_odds])
+        odds_history = pd.concat([odds_history, missing_odds], axis=0)
+        odds_history['event_date'] = pd.to_datetime(odds_history['event_date'], errors='coerce')
+
         odds_history = odds_history.sort_values(by='event_date', ascending=True).reset_index(drop=True)
         odds_history.to_csv(f'{odds_history_file_string}_{date_today}.csv')
 
     # Take stats_history, odds_history, next_fight_stats, next_fight_odds
-    # Build dfs with all features used for model training and 
+    # Build dfs with all features used for model training 
     if generate_model_df is True: 
 
         next_fight_stats = pd.read_csv(f'{upcoming_stats_string}_{next_fight_date}.csv')

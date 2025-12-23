@@ -119,6 +119,8 @@ def scrape_upcoming(driver, event_rows):
 
             upcoming_dict['dob_red'].append(dobs[0])
             upcoming_dict['dob_blue'].append(dobs[1])
+
+        driver.back()
     
     upcoming_df = pd.DataFrame(upcoming_dict)
     return upcoming_df
@@ -145,10 +147,12 @@ def scrape_ufc(end_date, get_upcoming, start_page=1, end_page=28):
         driver.get(page_url)
     
         # get upcoming card with no fight results, return that data 
-        if get_upcoming == True:
+        if get_upcoming is True:
+            driver.get('http://ufcstats.com/statistics/events/upcoming')
             event_rows = WebDriverWait(driver, 1).until(
-                EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".b-statistics__table-row_type_first"))
+                EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".b-statistics__table-row"))
             )
+            event_rows = event_rows[2:]
             upcoming_df = scrape_upcoming(driver, event_rows)
             return upcoming_df
         

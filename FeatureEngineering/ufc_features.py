@@ -220,8 +220,10 @@ def upcoming_event_features(ufc_df):
     ufc_df['date'] = ufc_df['event_date'].apply(parse_date)
     ufc_df["event_location"] = ufc_df["event_location"].apply(get_event_country)
 
+    print(ufc_df)
     ufc_df['height_red'] = ufc_df['height_red'].apply(height_inches)
     ufc_df['height_blue'] = ufc_df['height_blue'].apply(height_inches)
+
     ufc_df['reach_red'] = ufc_df['reach_red'].apply(reach_inches)
     ufc_df['reach_blue'] = ufc_df['reach_blue'].apply(reach_inches)
     ufc_df['red_age'] = ufc_df['dob_red'].apply(lambda x: current_age(x, current_year))
