@@ -11,7 +11,7 @@ import statsmodels.api as sm
 
 import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
-from models.get_train_test import TrainTestBuilder
+from BettingStrategy.ModelStrategy.LogisticRegression.get_train_test import TrainTestBuilder
 
 class DataUtils:
     @staticmethod

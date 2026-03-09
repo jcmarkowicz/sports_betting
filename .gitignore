@@ -5,3 +5,5 @@ env/
 
 chrome-win64/
 *.dll
+
+OldStuff/
