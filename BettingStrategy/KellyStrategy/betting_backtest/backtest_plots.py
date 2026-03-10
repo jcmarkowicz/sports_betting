@@ -15,8 +15,8 @@ def correlate_with_vegas(df_results):
 
     r = np.corrcoef(vegas_acc, pct_returns)[0,1]
     sns.regplot(x=vegas_acc, y=pct_returns)
-    plt.title(f'Correlation: {r:.2f}')
-    plt.xlabel('vegas acc choice fighter')
+    plt.title(f'Vegas Accuracy for Choice Fighters vs Percent Returns \n Correlation: {r:.2f}')
+    plt.xlabel('vegas accuracy choice fighter')
     plt.ylabel('pct return')
     plt.show()
 
@@ -47,10 +47,11 @@ def pmf_plot(df_kelly):
 
     fig, axes = plt.subplots(2, figsize=(10,6))
     sns.histplot(best_k, ax=axes[0])
+    axes[0].set_title('PMF Binomial Poisson')
 
     r = np.corrcoef(best_k, event_returns)[1,0]
     sns.regplot(x=best_k, y=event_returns)
-    axes[1].set_title(f'r={r:.2f}')
+    axes[1].set_title(f'Number Most Likely Wins vs Percent Returns \n r={r:.2f}')
 
     plt.tight_layout()
     plt.show()
@@ -80,13 +81,13 @@ def summary_stats(df_kelly):
     sns.histplot(event_acc, ax=axes[0,0], bins=20, kde=False)
     axes[0,0].set_xlabel('Event Accuracy')
     axes[0,0].set_ylabel('Count')
-    axes[0,0].set_title('Distribution of Event Accuracy')
+    axes[0,0].set_title(f'Event Choice Fighter Accuracy: Total Avg={np.mean(event_acc):.2f}')
 
     r = np.corrcoef(event_acc, event_returns)[0,1]
     sns.regplot(x=event_acc, y=event_returns, ax=axes[0,1])
     axes[0,1].set_xlabel('Event Accuracy')
     axes[0,1].set_ylabel('Bankroll Pct Return')
-    axes[0,1].set_title(f'r={r:.2f}')
+    axes[0,1].set_title(f'Event Accuracy vs Bankroll Pct Return /n r={r:.2f}')
 
     sns.histplot(event_sizing, ax=axes[1,0], bins=20, kde=False)
     axes[1,0].set_xlabel('Total Percentage Wagered per Event')
@@ -95,9 +96,9 @@ def summary_stats(df_kelly):
 
     r = np.corrcoef(event_acc, event_returns)[1,1]
     sns.regplot(x=event_sizing, y=event_returns, ax=axes[1,1])
-    axes[1,1].set_xlabel('Event totla Fstar')
+    axes[1,1].set_xlabel('Event total Fstar')
     axes[1,1].set_ylabel('Bankroll Pct Return')
-    axes[1,1].set_title(f'r={r:.2f}') 
+    axes[1,1].set_title(f'Pct Total Bankroll Wagered vs Bankroll Pct Return \n r={r:.2f}') 
 
     plt.tight_layout()
     plt.show()

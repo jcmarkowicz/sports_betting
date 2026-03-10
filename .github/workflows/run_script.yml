@@ -24,5 +24,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run script
+        env:
+          EMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
         run: |
           python DataPipeline/build_datasets_github.py

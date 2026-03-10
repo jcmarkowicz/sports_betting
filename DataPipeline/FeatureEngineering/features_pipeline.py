@@ -71,7 +71,7 @@ class FeatureEngineering:
         combined_df = pd.concat([empty_df, past_event_stats], axis=0).reset_index(drop=True) # Combine with past event stats
 
         # compute rolling stats
-        rolling_fp = BASE_DIR / 'data\features_test_files/ufc_new_rolling.csv'
+        rolling_fp = BASE_DIR / 'data/features_test_files/ufc_new_rolling.csv'
         rolling_df = apply_rolling_stats(combined_df) #sort here
         rolling_df.to_csv(rolling_fp, index=False)
         print('Rolling features shape:', rolling_df.shape)
@@ -409,7 +409,7 @@ class FeatureEngineering:
 
         odds = self.standardize_dates(stats, odds)
         odds = odds.drop_duplicates(subset=['red_clean', 'blue_clean', 'date'], keep='first').reset_index(drop=True)
-        odds.to_csv(BASE_DIR / 'data\features_test_files\look_at_odds.csv')
+        odds.to_csv(BASE_DIR / 'data/features_test_files\look_at_odds.csv')
 
         # drop duplicate columns before merge
         columns_to_drop = ['fighter_red', 'fighter_blue']  # list of columns

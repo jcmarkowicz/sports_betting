@@ -67,65 +67,50 @@ def kelly_edge(p, fair_decimal):
     return max(0, f)
 
 
-def parlay_top_ev(data, type,  top_n=2):
+def parlay_top_ev(data, bankroll, type, top_n=[0,1]):
+
+    if data.shape[0] < 2:
+        df_parlay = pd.DataFrame({
+            f'choice_fighter_name_{type}': [pd.NA],
+            f'parlay_fstar_{type}': [pd.NA],
+            f'parlay_odds_{type}': [pd.NA],
+            f'stake_{type}': [pd.NA],
+            f'parlay_ev_{type}': [pd.NA],
+            f'parlay_prob_{type}': [pd.NA]
+        })
+        return df_parlay
     
-    df_top_n = data.sort_values(by='choice_ev', ascending=False).iloc[:top_n]
-    parlay_kelly = df_top_n['choice_fstar'].values.sum()
+    df_top_n = data.sort_values(by='choice_ev', ascending=False).iloc[top_n].copy()
 
     parlay_prob = np.prod(df_top_n['choice_proba'])
-    parlay_ev = parlay_prob * (np.prod(df_top_n['choice_real_odds']) - 1)
-    parlay_avg_edge = np.mean(df_top_n['choice_proba'] - 1/df_top_n['choice_real_odds'])
+    parlay_odds = np.prod(df_top_n['choice_real_odds'])
+    parlay_ev = parlay_prob * parlay_odds - 1
 
-    if df_top_n.shape[0] < top_n or parlay_ev < 0:
-        profit = 0
-        parlay_kelly = 0
+    b = parlay_odds - 1
+    parlay_kelly = max((b * parlay_prob - (1 - parlay_prob)) / b, 0)
+    net_odds = np.prod(df_top_n['choice_real_odds'])-1
 
-    df_top_n[f'parlay_fstar_sum_{type}'] = np.ones(len(df_top_n)) * parlay_kelly
+    stake = bankroll * parlay_kelly
+    parlay_avg_edge = np.mean(df_top_n['choice_proba'] - (1/df_top_n['choice_real_odds']))
 
     df_top_n[f'parlay_prob_{type}'] = np.ones(len(df_top_n)) * parlay_prob
     df_top_n[f'parlay_ev_{type}'] = np.ones(len(df_top_n)) * parlay_ev
-    df_top_n[f'parlay_avg_edge_{type}'] = np.ones(len(df_top_n)) * parlay_avg_edge
     
-    df_top_n['choice_parlay_name'] = np.where(df_top_n['pred_winner']==1, df_top_n['fighter_red'], df_top_n['fighter_blue'])
-    df_top_n[f'choice_fighter_name_{type}'] = df_top_n['choice_parlay_name']
+    df_top_n[f'choice_fighter_name_{type}'] = np.where(df_top_n['pred_winner']==1, df_top_n['fighter_red'], df_top_n['fighter_blue'])
+
+    df_top_n[f'parlay_fstar_{type}'] = np.ones(len(df_top_n)) * parlay_kelly
+    df_top_n[f'stake_{type}'] = np.ones(len(df_top_n)) * stake 
     
-    df_top_n[f'choice_odds_{type}'] = df_top_n['choice_real_odds']
-    df_top_n = df_top_n[[f'choice_fighter_name_{type}', f'parlay_fstar_sum_{type}', 
-                        f'parlay_prob_{type}', f'parlay_ev_{type}', f'parlay_avg_edge_{type}', f'choice_odds_{type}']]
-    
+    df_top_n[f'parlay_odds_{type}'] = np.ones(len(df_top_n)) * net_odds
+
+    df_top_n = df_top_n[[f'choice_fighter_name_{type}', f'parlay_fstar_{type}', f'parlay_odds_{type}', f'stake_{type}', f'parlay_ev_{type}', f'parlay_prob_{type}']]
+           
     return df_top_n
-
-def select_top_parlay(data, bankroll, indices): 
-    df_top_n = data.sort_values(by='choice_ev', ascending=False).iloc[indices]
-    
-    parlay_win = True
-    parlay_kelly = df_top_n['choice_fstar'].values.sum()
-    net_odds = np.prod(df_top_n['choice_real_odds'])-1
-
-    for _, row in df_top_n.iterrows():
-        if row['winner'] != row['pred_winner']:
-            parlay_win = False
-
-    if parlay_win is True:
-        profit = bankroll * parlay_kelly * net_odds
-    
-    else: 
-        profit = bankroll * parlay_kelly * -1
-        net_odds = -1
-
-    parlay_prob = np.prod(df_top_n['choice_proba'])
-    parlay_ev = parlay_prob * np.prod(df_top_n['choice_real_odds']) - 1
-    if parlay_ev < 0: 
-        net_odds = 0
-        profit = 0
-
-    return profit
 
 
 def expected_value(p, o):
     EV = p * (o - 1) - (1 - p) * 1
     return EV 
-
 
 def log_return_volatility(f, b, p):
     """
@@ -200,6 +185,26 @@ def betting_pipeline(upcoming_df, feats_list, model_list, scaler_list, type_list
         # split features by dtype
         num_feats = df[feats].select_dtypes(exclude='category').columns
         cat_feats = df[feats].select_dtypes(include='category').columns
+        df_valid_num = df.loc[valid_mask, num_feats]
+
+        if df_valid_num.shape[0] == 0:
+
+            choice_proba_col = f'choice_proba_{type}'
+            choice_fstar_col = f'fstar_{type}'
+            choice_stake_col = f'stake_{type}'
+            proba_red_col = f'proba_red_{type}'
+            proba_blue_col = f'proba_blue_{type}'
+            pred_winner_col = f'pred_winner_{type}'
+
+            df_bets = pd.DataFrame({f'pred_name_{type}': [pd.NA], pred_winner_col: [pd.NA], 
+                                    choice_proba_col:[pd.NA], choice_fstar_col:[pd.NA], choice_stake_col:[pd.NA]})
+            
+            df_bets_combined = pd.concat([df_bets_combined, df_bets.reset_index(drop=True)], axis=1)
+
+            df_parlay = pd.DataFrame({f'choice_fighter_name_{type}':[pd.NA], f'parlay_fstar_{type}':[pd.NA], f'parlay_odds_{type}':[pd.NA], f'stake_{type}':[pd.NA], f'parlay_ev_{type}':[ pd.NA], f'parlay_prob_{type}':[pd.NA]})
+            df_parlay_combined = pd.concat([df_parlay_combined, df_parlay.reset_index(drop=True)], axis=1)
+
+            continue
 
         # scale numeric features
         scaled_num = pd.DataFrame(
@@ -258,7 +263,8 @@ def betting_pipeline(upcoming_df, feats_list, model_list, scaler_list, type_list
         choice_fstar_col = f'fstar_{type}'
         choice_stake_col = f'stake_{type}'
 
-        df_bets = pd.DataFrame({f'pred_name_{type}': pred_winner_names, pred_winner_col: df[pred_winner_col].values, choice_proba_col:choice_proba, choice_fstar_col:fstar_list, choice_stake_col:stake_list})
+        df_bets = pd.DataFrame({f'pred_name_{type}': pred_winner_names, pred_winner_col: df[pred_winner_col].values, 
+                                choice_proba_col:choice_proba, choice_fstar_col:fstar_list, choice_stake_col:stake_list})
 
         df_bets[pred_winner_col] = df[pred_winner_col].values
         df_bets[choice_proba_col] = choice_proba
@@ -270,9 +276,11 @@ def betting_pipeline(upcoming_df, feats_list, model_list, scaler_list, type_list
 
         parlay_input_df = pd.DataFrame({'pred_winner':df[pred_winner_col], 'choice_ev':choice_ev,
                                     'choice_real_odds':choice_real_odds, 'choice_fstar':df_bets[choice_fstar_col],
-                                    'fighter_red': df['fighter_red'], 'fighter_blue': df['fighter_blue'], 'date':df['date'], 'choice_proba':choice_proba})
+                                    'fighter_red': df['fighter_red'], 
+                                    'fighter_blue': df['fighter_blue'], 
+                                    'date':df['date'], 'choice_proba':choice_proba})
 
-        df_parlay = parlay_top_ev(parlay_input_df, type, top_n=2)
+        df_parlay = parlay_top_ev(parlay_input_df, bankroll, type, top_n=[0,1])
         df_parlay_combined = pd.concat([df_parlay_combined, df_parlay.reset_index(drop=True)], axis=1)
 
     return df_bets_combined, df_parlay_combined
@@ -302,9 +310,7 @@ def check_neighbors(df_history, df_upcoming, feature_cols, n_neighbors=5):
     return neighbors_df
 
 
-
-
-def display_bet_dfs(df_bets, df_parlay, types):
+def seperate_bets_dfs(df_bets, df_parlay, types):
     dfs = []
     dfs_parlay = []
     for type in types: 
@@ -314,6 +320,8 @@ def display_bet_dfs(df_bets, df_parlay, types):
         df_type = df_bets[columns]
         dfs.append(df_type)
 
-        c_parlay = [ f'choice_fighter_name_{type}', f'parlay_prob_{type}', f'parlay_avg_edge_{type}', f'parlay_ev_{type}', f'parlay_ev_{type}']
+        c_parlay = [f'choice_fighter_name_{type}', f'parlay_fstar_{type}', f'parlay_odds_{type}', 
+                    f'stake_{type}', f'parlay_ev_{type}', f'parlay_prob_{type}']
+        
         dfs_parlay.append(df_parlay[c_parlay])
     return dfs, dfs_parlay
