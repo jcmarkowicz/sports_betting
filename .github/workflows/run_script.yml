@@ -22,9 +22,12 @@ jobs:
       - name: Install Google Chrome
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget unzip xvfb
+          sudo apt-get install -y wget xvfb
           wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
           sudo apt install -y ./google-chrome-stable_current_amd64.deb
+          # remove conflicting system chromedriver
+          sudo rm -f /usr/bin/chromedriver
+
 
       - name: Install dependencies
         run: |
