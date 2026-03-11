@@ -30,8 +30,8 @@ get_next_fight_stats_odds = True
 get_missing_stats = False
 generate_model_df = True 
 
-stats_history_file_string = BASE_DIR / "data/history/stats_history"
-odds_history_file_string = BASE_DIR / "data/history/odds_history"
+stats_history_file_string = BASE_DIR / "data" / "history" / f"stats_history_{recent_date}.csv"
+odds_history_file_string = BASE_DIR / "data" / "history" / f"odds_history_{recent_date}.csv"
 
 upcoming_stats_string = BASE_DIR / "data/upcoming_events/upcoming_stats"
 upcoming_odds_string = BASE_DIR / "data/upcoming_events/upcoming_odds"
@@ -44,7 +44,7 @@ recent_date = r'2026-02-26'
 
 next_fight_date = r'2026-03-14'
 
-stats_history = pd.read_csv(f'{stats_history_file_string}_{recent_date}.csv') # dataframes BEFORE any feature engineering 
+stats_history = pd.read_csv(stats_history_file_string) # dataframes BEFORE any feature engineering 
 stats_history = stats_history.drop(columns=[col for col in stats_history.columns if "Unnamed" in col])
 
 num_duplicate = stats_history.duplicated(
@@ -57,7 +57,7 @@ stats_history = stats_history[~stats_history.duplicated(
     keep='first'
 )]
 
-odds_history = pd.read_csv(f'{odds_history_file_string}_{recent_date}.csv')
+odds_history = pd.read_csv(odds_history_file_string)
 odds_history = odds_history.drop(columns=[col for col in odds_history.columns if "Unnamed" in col])
 next_event_folder = BASE_DIR / "data/upcoming_events"
 
