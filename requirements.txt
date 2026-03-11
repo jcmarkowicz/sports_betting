@@ -5,7 +5,7 @@ matplotlib
 seaborn
 
 selenium
-undetected-chromedrive
+undetected-chromedriver
 python-dateutil
 
 joblib
