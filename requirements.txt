@@ -3,6 +3,7 @@ pandas
 statsmodels
 matplotlib
 seaborn
+scikit-learn
 
 selenium
 undetected-chromedriver
