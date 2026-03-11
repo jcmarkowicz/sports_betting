@@ -30,6 +30,7 @@ get_next_fight_stats_odds = True
 get_missing_stats = False
 generate_model_df = True 
 
+recent_date = r'2026-02-26'
 stats_history_file_string = BASE_DIR / "data" / "history" / f"stats_history_{recent_date}.csv"
 odds_history_file_string = BASE_DIR / "data" / "history" / f"odds_history_{recent_date}.csv"
 
@@ -40,7 +41,6 @@ upcoming_odds_string = BASE_DIR / "data/upcoming_events/upcoming_odds"
 # recent date from last merger with missing stats
 # from Data/HISTORY folder 
 date_today = datetime.now().strftime("%Y-%m-%d") #use this to mark odds 
-recent_date = r'2026-02-26'
 
 next_fight_date = r'2026-03-14'
 
