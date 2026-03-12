@@ -139,21 +139,14 @@ def get_fighter_odds(fighter_df):
         # add more user agents as needed
     ]
 
-    # options = Options()
-    # options.add_argument(f'user-agent={random.choice(user_agents)}')
-    # driver = webdriver.Chrome(options=options)
 
-    options = uc.ChromeOptions()
-    # options.add_argument('--headless=new')
-    # options.add_argument(f'user-agent={random.choice(user_agents)}')
-    # options.add_argument("--disable-blink-features=AutomationControlled")
-    # options.add_argument("--disable-infobars")
-    # options.add_argument("--disable-extensions")
-    # options.add_argument("--profile-directory=Default")
-    # options.add_argument("--incognito")
-    # options.add_argument("--no-sandbox")
-    # options.add_argument("--disable-dev-shm-usage")
-    driver = webdriver.Chrome()
+    options = Options()
+    options.add_argument("--headless=new")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+    
+    driver = webdriver.Chrome(options=options)
     driver.get(url)
     print(driver.current_url)  # see where you landed
     print(driver.title)   
