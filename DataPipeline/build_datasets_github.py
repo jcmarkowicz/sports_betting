@@ -125,7 +125,7 @@ SMTP_PORT = 587
 EMAIL_FROM = "jcmarkufc@gmail.com"  # Gmail sender
 
 EMAIL_PASSWORD = os.environ["EMAIL_PASSWORD"]
-EMAIL_TO = "jcmarkowicz@outlook.com"
+EMAIL_TO = ["jcmarkowicz@outlook.com", 'jimmymarkowicz28@gmail.com','jasonszat@gmail.com']
 
 
 def email_bets(df_, date):
@@ -148,7 +148,8 @@ def email_bets(df_, date):
     msg = MIMEMultipart()
     msg["Subject"] = f"Betting Report {date}"
     msg["From"] = EMAIL_FROM
-    msg["To"] = EMAIL_TO
+    # Join the list into a comma-separated string for the header
+    msg["To"] = ", ".join(EMAIL_TO)
 
     # Body text
     msg.attach(MIMEText("See attached betting reports.", "plain"))
@@ -190,7 +191,8 @@ def email_bets(df_, date):
     with smtplib.SMTP("smtp.gmail.com", 587) as server:
         server.starttls()
         server.login(EMAIL_FROM, EMAIL_PASSWORD)
-        server.send_message(msg)
+        # Pass the list of recipients to send_message
+        server.send_message(msg, from_addr=EMAIL_FROM, to_addrs=EMAIL_TO)
 
 
 if __name__ == "__main__":

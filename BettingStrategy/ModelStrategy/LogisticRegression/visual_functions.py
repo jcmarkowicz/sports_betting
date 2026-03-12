@@ -119,61 +119,93 @@ def expected_calibration_error(y_true, y_prob, n_bins=10):
     plt.grid(True)
     plt.show()
 
-def plot_model_metrics(y_test, y_pred, probs):
-    # Confusion Matrix
+def plot_model_metrics(y_test, y_pred, probs, suptitle='', path=None):
+
+    # ---- Confusion Matrix ----
     cm = confusion_matrix(y_test, y_pred)
 
-    # ROC
+    # ---- ROC ----
     fpr, tpr, thresholds_roc = roc_curve(y_test, probs)
     roc_auc = auc(fpr, tpr)
 
-    # F1 vs threshold
+    # ---- F1 vs threshold ----
     thresholds = np.linspace(0, 1, 200)
     f1_scores = [f1_score(y_test, (probs >= t).astype(int)) for t in thresholds]
 
-    # ------------------------------
-    # Create side-by-side figure
-    # ------------------------------
-    fig, axes = plt.subplots(1, 3, figsize=(22, 5))
-    # ---- 1. Confusion Matrix ----
+    # ---- Calibration + ECE/MCE ----
+    bins = np.linspace(0, 1, 11)
+    ece = 0
+    mce = 0
+
+    for i in range(len(bins)-1):
+        start, end = bins[i], bins[i+1]
+        idx = (probs >= start) & (probs < end)
+
+        if np.sum(idx) == 0:
+            continue
+
+        prob_avg = probs[idx].mean()
+        true_avg = y_test[idx].mean()
+
+        gap = abs(prob_avg - true_avg)
+        weight = np.sum(idx) / len(probs)
+
+        ece += weight * gap
+        mce = max(mce, gap)
+
+    prob_true, prob_pred = calibration_curve(y_test, probs, n_bins=10)
+    fig, axes = plt.subplots(1, 4, figsize=(26, 5))
+
+    # ---- 1. Calibration Curve ----
+    axes[0].plot(prob_pred, prob_true, marker='o', label='Model')
+    axes[0].plot([0,1], [0,1], linestyle='--', label='Perfect')
+
+    axes[0].set_title(f'Calibration Curve\nECE={ece:.3f}  MCE={mce:.3f}')
+    axes[0].set_xlabel("Predicted Probability")
+    axes[0].set_ylabel("True Probability")
+    axes[0].legend()
+    axes[0].grid(True)
+
+    # ---- 2. Confusion Matrix ----
     disp = ConfusionMatrixDisplay(confusion_matrix=cm)
-    disp.plot(ax=axes[0], cmap="Blues", colorbar=False)
-    cm = confusion_matrix(y_test, y_pred)
-    disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+    disp.plot(ax=axes[1], cmap="Blues", colorbar=False)
 
-    # Plot on our subplot axis, not a new figure
-    disp.plot(cmap='Blues', ax=axes[0], colorbar=False)
-    axes[0].set_title("Confusion Matrix - Logistic Regression")
+    axes[1].set_title("Confusion Matrix")
+    axes[1].set_xlabel("Predicted Label")
+    axes[1].set_ylabel("True Label")
 
-    # Explicit axis labels
-    axes[0].set_xlabel("Predicted Label")
-    axes[0].set_ylabel("True Label")
+    axes[1].set_xticks([0,1])
+    axes[1].set_yticks([0,1])
+    axes[1].set_xticklabels(["Blue Fighter (0)", "Red Fighter (1)"])
+    axes[1].set_yticklabels(["Blue Fighter (0)", "Red Fighter (1)"])
 
-    axes[0].set_xticks([0, 1])
-    axes[0].set_yticks([0, 1])
-    axes[0].set_xticklabels(["Blue Fighter (0)", "Red Fighter (1)"])
-    axes[0].set_yticklabels(["Blue Fighter (0)", "Red Fighter (1)"])
+    # ---- 3. ROC Curve ----
+    axes[2].plot(fpr, tpr, label=f"AUC = {roc_auc:.3f}")
+    axes[2].plot([0,1], [0,1], linestyle="--")
 
-    # ---- 2. ROC Curve ----
-    axes[1].plot(fpr, tpr, label=f"AUC = {roc_auc:.3f}")
-    axes[1].plot([0, 1], [0, 1], linestyle="--")
-    axes[1].set_xlabel("False Positive Rate")
-    axes[1].set_ylabel("True Positive Rate")
-    axes[1].set_title("ROC Curve")
-    axes[1].grid(True)
-    axes[1].legend()
-
-    # ---- 3. F1 vs Threshold ----
-    axes[2].plot(thresholds, f1_scores)
-    axes[2].set_xlabel("Threshold")
-    axes[2].set_ylabel("F1 Score")
-    axes[2].set_title("F1 Score vs Threshold")
+    axes[2].set_xlabel("False Positive Rate")
+    axes[2].set_ylabel("True Positive Rate")
+    axes[2].set_title("ROC Curve")
+    axes[2].legend()
     axes[2].grid(True)
 
+    # ---- 4. F1 vs Threshold ----
+    axes[3].plot(thresholds, f1_scores)
 
+    axes[3].set_xlabel("Threshold")
+    axes[3].set_ylabel("F1 Score")
+    axes[3].set_title("F1 Score vs Threshold")
+    axes[3].grid(True)
+
+    fig.suptitle(suptitle)
     plt.tight_layout()
-    plt.show()
 
+    if path is not None:
+        fig.savefig(path,
+                    dpi=300,
+                    bbox_inches="tight")
+
+    plt.show()
 
 def plot_calibration_curve(y_true, y_hat, n_bins, title_suffix=""):
     prob_true, prob_pred = calibration_curve(y_true, y_hat, n_bins=n_bins, strategy="quantile")
@@ -188,7 +220,6 @@ def plot_calibration_curve(y_true, y_hat, n_bins, title_suffix=""):
     plt.legend()
     plt.grid(True)
     plt.show()
-
 
 
 def accuracy_by_line_movement(df_results_open, df_results_close, close_col):
@@ -327,9 +358,9 @@ def analyze_line_movement_perf(df, odds_type='close', filter_ev=True):
 
     # Profit plot
     sns.barplot(data=stats, x='movement_category', y='total_profit', ax=axs[1])
-    axs[1].set_title("Total Net Profit by Category")
+    axs[1].set_title("Total Net Odds by Category")
     axs[1].set_xlabel("Category")
-    axs[1].set_ylabel("Total Net Profit")
+    axs[1].set_ylabel("Total Net Odds")
 
     plt.tight_layout()
     plt.show()

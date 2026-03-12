@@ -10,8 +10,8 @@ from scipy.stats import ttest_1samp, sem, t
 
 def correlate_with_vegas(df_results):
 
-    vegas_acc = df_results.groupby('date')['vegas_acc_choice'].first()
-    pct_returns = df_results.groupby('date')['bankroll_pct_change'].first()
+    vegas_acc = df_results.dropna().groupby('date')['vegas_acc_choice'].first()
+    pct_returns = df_results.dropna().groupby('date')['bankroll_pct_change'].first()
 
     r = np.corrcoef(vegas_acc, pct_returns)[0,1]
     sns.regplot(x=vegas_acc, y=pct_returns)
@@ -181,7 +181,7 @@ def plot_mean_feature_histograms(df, mean_cols, date_col='date', win_mask_col='e
     plt.tight_layout()
 
 
-def plot_event_odds_stats(df_results):
+def plot_event_odds_stats(df_results, path=None):
 
 
     df_results = df_results.copy()
@@ -246,6 +246,12 @@ def plot_event_odds_stats(df_results):
         axs[1, col_idx].legend()
 
     plt.tight_layout()
+
+    if path is not None: 
+        fig.savefig(path,
+            dpi=300,
+            bbox_inches="tight")
+
     plt.show()
 
     # return {
@@ -257,7 +263,7 @@ def plot_event_odds_stats(df_results):
     # }
 
 
-def plot_backtest(df_results, init_bankroll):
+def plot_backtest(df_results, init_bankroll, path=None):
     import numpy as np
     import matplotlib.pyplot as plt
 
@@ -379,6 +385,11 @@ def plot_backtest(df_results, init_bankroll):
     # Remove all x tick labels from the upper subplots
     for ax in axs[:-1]:
         ax.label_outer()
+
+    if path is not None: 
+        fig.savefig(path,
+            dpi=300,
+            bbox_inches="tight")
 
 
 def plot_bankroll_distributions(group_stats_, df_parlay):
