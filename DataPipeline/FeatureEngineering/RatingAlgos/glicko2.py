@@ -295,9 +295,6 @@ def glicko2_run(df,
     # Sort descending
     peak_ratings = peak_ratings.sort_values('rating', ascending=False).reset_index(drop=True)
 
-    # Show top 10 fighters by peak rating
-    print(peak_ratings.head(10))
-
     return ratings_history_df, final_ratings
 
 

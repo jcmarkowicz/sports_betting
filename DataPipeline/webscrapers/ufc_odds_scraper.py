@@ -25,9 +25,9 @@ def fighter_odds_search(red_fighter, blue_fighters, event_dates, driver):
     try: 
         table = driver.find_element(By.CSS_SELECTOR, "table.content-list")
     except:
-        print(f"Found ONE matches: {red_fighter}")
+        # print(f"Found ONE matches: {red_fighter}")
         odds_dic = scrape_odds(driver, blue_fighters, event_dates)
-        print(f'Confirming return vals: {odds_dic}')
+        # print(f'Confirming return vals: {odds_dic}')
         driver.back()  # Go back to the search results page
         return odds_dic
 
@@ -44,7 +44,7 @@ def fighter_odds_search(red_fighter, blue_fighters, event_dates, driver):
             possible_matches.append(fighter_link)
 
     if possible_matches:
-        print(f"Found possible matches: {[link.text for link in possible_matches]}")
+        # print(f"Found possible matches: {[link.text for link in possible_matches]}")
         odds_dic = defaultdict(list)
         for link in possible_matches:
             link.click()
@@ -60,7 +60,8 @@ def fighter_odds_search(red_fighter, blue_fighters, event_dates, driver):
         return odds_dic
             # time.sleep(2)  # Allow time for the page to reload
     else:
-        print(f"No match found for '{search_name}'.")
+        pass
+        # print(f"No match found for '{search_name}'.")
 
 
 def scrape_odds(driver, blue_fighters, dates):
@@ -154,7 +155,7 @@ def get_fighter_odds(fighter_df):
 
     odds_df = pd.DataFrame()
     for red_name, group in red_groups:
-        print(red_name)
+        # print(red_name)
         blue_fighters = group['fighter_blue'].values
         # blue_fighters = [clean_string_simple(name) for name in blue_fighters]
         event_dates = group['event_date'].values
