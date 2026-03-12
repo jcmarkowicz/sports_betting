@@ -62,7 +62,8 @@ odds_history = odds_history.drop(columns=[col for col in odds_history.columns if
 next_event_folder = BASE_DIR / "data/upcoming_events"
 
 # Columns you want to send in email
-columns_to_email = ['open_red','open_blue','pred_name_open','pred_winner_open','choice_proba_open','open_red','open_blue','fstar_open','stake_open','ev_open','edge_open']  # adjust to your DataFrame
+columns_to_email = ['fighter_red', 'fighter_blue','pred_name_open','open_red','open_blue','pred_winner_open',
+                    'choice_proba_open','ev_open','edge_open', 'fstar_open','stake_open']  # adjust to your DataFrame
 
 model_open = sm.load(BASE_DIR / "data" / "saved_models" / "logit_model_open.pkl")
 model_close1 = sm.load(BASE_DIR / "data" / "saved_models" / "logit_model_close1.pkl")
