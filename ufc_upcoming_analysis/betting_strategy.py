@@ -178,7 +178,6 @@ def betting_pipeline(upcoming_df, feats_list, model_list, scaler_list, type_list
 
     for model, scaler, feats, type, fair_odds, real_odds in zip(model_list, scaler_list, feats_list, type_list, real_odds_list, fair_odds_list):
 
-        print('here')
         valid_mask = ~df[feats].isna().any(axis=1)
         y_hat = pd.Series(0, index=df.index, dtype=float)
 
@@ -197,7 +196,8 @@ def betting_pipeline(upcoming_df, feats_list, model_list, scaler_list, type_list
             pred_winner_col = f'pred_winner_{type}'
 
             df_bets = pd.DataFrame({f'pred_name_{type}': [pd.NA], pred_winner_col: [pd.NA], 
-                                    choice_proba_col:[pd.NA], choice_fstar_col:[pd.NA], choice_stake_col:[pd.NA]})
+                                    choice_proba_col:[pd.NA], choice_fstar_col:[pd.NA], choice_stake_col:[pd.NA],
+                                    f'edge_{type}':[pd.NA], f'ev_{type}':[pd.NA]})
             
             df_bets_combined = pd.concat([df_bets_combined, df_bets.reset_index(drop=True)], axis=1)
 
@@ -264,16 +264,10 @@ def betting_pipeline(upcoming_df, feats_list, model_list, scaler_list, type_list
         choice_stake_col = f'stake_{type}'
 
         df_bets = pd.DataFrame({f'pred_name_{type}': pred_winner_names, pred_winner_col: df[pred_winner_col].values, 
-                                choice_proba_col:choice_proba, choice_fstar_col:fstar_list, choice_stake_col:stake_list})
-
-        df_bets[pred_winner_col] = df[pred_winner_col].values
-        df_bets[choice_proba_col] = choice_proba
-        df_bets[choice_fstar_col] = fstar_list
-        df_bets[f'edge_{type}'] = choice_edge
-        df_bets[f'ev_{type}'] = choice_ev
+                                choice_proba_col:choice_proba, choice_fstar_col:fstar_list, choice_stake_col:stake_list,
+                                f'edge_{type}':choice_edge, f'ev_{type}':choice_ev})
 
         df_bets_combined = pd.concat([df_bets_combined, df_bets.reset_index(drop=True)], axis=1)
-
         parlay_input_df = pd.DataFrame({'pred_winner':df[pred_winner_col], 'choice_ev':choice_ev,
                                     'choice_real_odds':choice_real_odds, 'choice_fstar':df_bets[choice_fstar_col],
                                     'fighter_red': df['fighter_red'], 
@@ -315,7 +309,8 @@ def seperate_bets_dfs(df_bets, df_parlay, types):
     dfs_parlay = []
     for type in types: 
         columns = [f'fighter_red', f'fighter_blue', f'pred_name_{type}', f'pred_winner_{type}', 
-                   f'choice_proba_{type}', f'{type}_red', f'{type}_blue', f'fstar_{type}', f'stake_{type}', f'ev_{type}', f'edge_{type}']
+                   f'choice_proba_{type}', f'{type}_red', f'{type}_blue', f'fstar_{type}', f'stake_{type}', 
+                   f'ev_{type}', f'edge_{type}']
         
         df_type = df_bets[columns]
         dfs.append(df_type)
