@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
 
 import time
 from datetime import datetime 
@@ -130,8 +131,14 @@ def scrape_ufc(end_date, get_upcoming, start_page=1, end_page=28):
     else:
         end_date = None
 
+    options = Options()
+    options.add_argument("--headless=new")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+    driver = webdriver.Chrome(options=options)
+    
     df_rows = []
-    driver = webdriver.Chrome()
     base_url = 'http://ufcstats.com/statistics/events/completed'
 
     # Loop through each page

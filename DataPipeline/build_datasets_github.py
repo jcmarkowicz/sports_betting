@@ -30,21 +30,21 @@ get_next_fight_stats_odds = True
 get_missing_stats = False
 generate_model_df = True 
 
-stats_history_file_string = BASE_DIR / "data/history/stats_history"
-odds_history_file_string = BASE_DIR / "data/history/odds_history"
+recent_date = r'2026-02-26'
+stats_history_file_string = BASE_DIR / "Data" / "history" / f"stats_history_{recent_date}.csv"
+odds_history_file_string = BASE_DIR / "Data" / "history" / f"odds_history_{recent_date}.csv"
 
-upcoming_stats_string = BASE_DIR / "data/upcoming_events/upcoming_stats"
-upcoming_odds_string = BASE_DIR / "data/upcoming_events/upcoming_odds"
+upcoming_stats_string = BASE_DIR / "Data/upcoming_events/upcoming_stats"
+upcoming_odds_string = BASE_DIR / "Data/upcoming_events/upcoming_odds"
 
 # find the most recent stats and odds history by most recent date 
 # recent date from last merger with missing stats
-# from Data/HISTORY folder 
+# from /HISTORY folder 
 date_today = datetime.now().strftime("%Y-%m-%d") #use this to mark odds 
-recent_date = r'2026-02-26'
 
 next_fight_date = r'2026-03-14'
 
-stats_history = pd.read_csv(f'{stats_history_file_string}_{recent_date}.csv') # dataframes BEFORE any feature engineering 
+stats_history = pd.read_csv(stats_history_file_string) # frames BEFORE any feature engineering 
 stats_history = stats_history.drop(columns=[col for col in stats_history.columns if "Unnamed" in col])
 
 num_duplicate = stats_history.duplicated(
@@ -57,21 +57,21 @@ stats_history = stats_history[~stats_history.duplicated(
     keep='first'
 )]
 
-odds_history = pd.read_csv(f'{odds_history_file_string}_{recent_date}.csv')
+odds_history = pd.read_csv(odds_history_file_string)
 odds_history = odds_history.drop(columns=[col for col in odds_history.columns if "Unnamed" in col])
-next_event_folder = BASE_DIR / "data/upcoming_events"
+next_event_folder = BASE_DIR / "Data/upcoming_events"
 
 # Columns you want to send in email
 columns_to_email = ['fighter_red', 'fighter_blue','pred_name_open','open_red','open_blue','pred_winner_open',
                     'choice_proba_open','ev_open','edge_open', 'fstar_open','stake_open']  # adjust to your DataFrame
 
-model_open = sm.load(BASE_DIR / "data" / "saved_models" / "logit_model_open.pkl")
-model_close1 = sm.load(BASE_DIR / "data" / "saved_models" / "logit_model_close1.pkl")
-model_close2 = sm.load( BASE_DIR / "data" / "saved_models" / "logit_model_close2.pkl")
+model_open = sm.load(BASE_DIR / "Data" / "saved_models" / "logit_model_open.pkl")
+model_close1 = sm.load(BASE_DIR / "Data" / "saved_models" / "logit_model_close1.pkl")
+model_close2 = sm.load( BASE_DIR / "Data" / "saved_models" / "logit_model_close2.pkl")
 
-scaler_open = joblib.load(BASE_DIR / "data" / "saved_models" / "scaler_open.pkl")
-scaler_close1 = joblib.load(BASE_DIR / "data" / "saved_models" / "scaler_close1.pkl")
-scaler_close2 = joblib.load(BASE_DIR / "data" / "saved_models" / "scaler_close2.pkl")
+scaler_open = joblib.load(BASE_DIR / "Data" / "saved_models" / "scaler_open.pkl")
+scaler_close1 = joblib.load(BASE_DIR / "Data" / "saved_models" / "scaler_close1.pkl")
+scaler_close2 = joblib.load(BASE_DIR / "Data" / "saved_models" / "scaler_close2.pkl")
 
 open_feats = [
                 'proba_fair_open_diff', 'reach_diff', 
@@ -258,7 +258,7 @@ if __name__ == "__main__":
         next_odds_df = pd.read_csv(f'{upcoming_odds_string}_{next_fight_date}.csv')
 
         odds_stats_df, upcoming_df = features.build_all_stats(stats_history, next_stats_df, odds_history, next_odds_df)
-        odds_stats_df.to_csv(BASE_DIR / f'data/training_data/entire_odds_stats_{date_today}.csv', index=False)
+        odds_stats_df.to_csv(BASE_DIR / f'Data/training_data/entire_odds_stats_{date_today}.csv', index=False)
         
         upcoming_groups = upcoming_df.groupby('date')
         for date, group in upcoming_groups:

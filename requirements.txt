@@ -1,11 +1,12 @@
-numpy==1.26.4
-pandas==2.2.1
-statsmodels==0.14.2
-matplotlib==3.8.4
-seaborn==0.13.2
+numpy
+pandas
+statsmodels
+matplotlib
+seaborn
+scikit-learn
 
-selenium==4.16.0
-undetected-chromedriver==3.5.5
-python-dateutil==2.8.2
+selenium
+undetected-chromedriver
+python-dateutil
 
 joblib
