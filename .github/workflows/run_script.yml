@@ -41,5 +41,6 @@ jobs:
       - name: Run script
         env:
           EMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # <-- add this
         run: |
           python DataPipeline/build_datasets_github.py
