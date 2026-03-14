@@ -154,8 +154,14 @@ def email_bets(df_, date):
     # Join the list into a comma-separated string for the header
     msg["To"] = ", ".join(EMAIL_TO)
 
-    # Body text
-    msg.attach(MIMEText("See attached betting reports.", "plain"))
+
+    # ---- Body with HTML link ----
+    html_body = """
+    <p>See attached newly announced fights.</p>
+    <p>Click here for all upcoming picks: <a href="https://sportsbetting-cn2kwvhykyrxdw2gxmuifl.streamlit.app/upcoming_picks">Dashboard</a></p>
+    """
+    msg.attach(MIMEText(html_body, "html"))
+
 
     # ---- Straight Bets CSV ----
     bets_csv = df_bets[columns_to_email].to_csv(index=False)
