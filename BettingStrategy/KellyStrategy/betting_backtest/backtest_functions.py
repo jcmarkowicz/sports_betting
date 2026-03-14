@@ -38,7 +38,7 @@ def scale_kelly_for_mdd(p, odds, f_full, N, max_drawdown, tol=1e-4):
     max_drawdown : tolerable drawdown fraction (0 < max_drawdown < 1)
     tol : numerical tolerance for convergence
     """
-    
+
     b = odds - 1
     # binary search between 0 and 1 (fraction of full Kelly)
     low, high = 0.0, 1.0
@@ -305,7 +305,6 @@ def parlay_top_ev(data, bankroll, top_n=[0,1], parlay_mdd=.25):
 
     if parlay_mdd is not None: 
         parlay_kelly = scale_kelly_for_mdd(parlay_prob, parlay_odds, kelly_full, 2000, parlay_mdd)
-    
     else: 
         parlay_kelly = kelly_full
 
@@ -330,8 +329,8 @@ def parlay_top_ev(data, bankroll, top_n=[0,1], parlay_mdd=.25):
     df_top_n['choice_parlay_name'] = np.where(df_top_n['pred_winner']==1, df_top_n['fighter_red'], df_top_n['fighter_blue'])
     df_top_n['choice_fighter_name'] = df_top_n['choice_parlay_name']
     df_top_n['parlay_fstar_sum'] = np.ones(len(df_top_n)) * parlay_kelly
-    df_top_n['parlay_net_odds_top_n'] = np.ones(len(df_top_n)) * net_odds
-    df_top_n['parlay_net_odds'] = df_top_n['parlay_net_odds_top_n']
+    df_top_n['parlay_net_odds'] = np.ones(len(df_top_n)) * net_odds
+
     df_top_n = df_top_n[['choice_fighter_name', 'parlay_fstar_sum', 'parlay_net_odds', 
                          'choice_fstar', 'choice_ev', 'choice_real_odds', 
                          'date', 'winner', 'pred_winner', 'choice_proba',

@@ -87,7 +87,7 @@ def summary_stats(df_kelly):
     sns.regplot(x=event_acc, y=event_returns, ax=axes[0,1])
     axes[0,1].set_xlabel('Event Accuracy')
     axes[0,1].set_ylabel('Bankroll Pct Return')
-    axes[0,1].set_title(f'Event Accuracy vs Bankroll Pct Return /n r={r:.2f}')
+    axes[0,1].set_title(f'AI Pred Fighter Accuracy vs Bankroll Pct Return \n r={r:.2f}')
 
     sns.histplot(event_sizing, ax=axes[1,0], bins=20, kde=False)
     axes[1,0].set_xlabel('Total Percentage Wagered per Event')
@@ -236,11 +236,23 @@ def plot_event_odds_stats(df_results, path=None):
         axs[1, col_idx].axvline(mean_val, linestyle='--', label=f"Mean={mean_val:.3f}")
         axs[1, col_idx].axvline(0, linestyle='--')
 
-        axs[1, col_idx].set_title(
-            f"{titles[col_idx]}\n"
-            f"p={p_one_sided:.4f}, SD={std_val:.3f}, "
-            f"95% CI=[{ci_lower:.3f}, {ci_upper:.3f}]"
-        )
+        if col_idx == 1: 
+            mean_win = values[values>0].mean()
+            mean_loss = values[values<0].mean()
+            axs[1, col_idx].set_title(
+                f"{titles[col_idx]}\n"
+                f"p={p_one_sided:.4f}, SD={std_val:.3f}, "
+                f"95% CI=[{ci_lower:.3f}, {ci_upper:.3f}] \n"
+                f"Mean Win: {mean_win:.2%}, Mean Loss: {mean_loss:.2%}"
+            )
+
+        else: 
+            axs[1, col_idx].set_title(
+                f"{titles[col_idx]}\n"
+                f"p={p_one_sided:.4f}, SD={std_val:.3f}, "
+                f"95% CI=[{ci_lower:.3f}, {ci_upper:.3f}]"
+            )
+
         axs[1, col_idx].set_xlabel("Average Value")
         axs[1, col_idx].set_ylabel("Frequency")
         axs[1, col_idx].legend()

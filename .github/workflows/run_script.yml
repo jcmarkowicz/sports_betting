@@ -2,8 +2,8 @@ name: Run Python Script
 
 on:
   schedule:
-    - cron: "0 6 * * *"   # 6 AM UTC
-    - cron: "0 17 * * *"  # 5 PM UTC
+    - cron: "0 10 * * *"   # 6 AM Eastern (EDT)
+    - cron: "0 21 * * *"   # 5 PM Eastern (EDT)
   workflow_dispatch: 
 
 jobs:

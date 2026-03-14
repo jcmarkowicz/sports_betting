@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd 
 import statsmodels.api as sm
 
+import subprocess
+
 import os
 import sys 
 import joblib
@@ -195,6 +197,26 @@ def email_bets(df_, date):
         # Pass the list of recipients to send_message
         server.send_message(msg, from_addr=EMAIL_FROM, to_addrs=EMAIL_TO)
 
+# Function to commit if changed
+def commit_if_changed(file_path, msg):
+    # Stage file
+    subprocess.run(["git", "add", str(file_path)], check=True)
+
+    # Check if staged changes exist
+    diff_check = subprocess.run(
+        ["git", "diff", "--cached", "--quiet", str(file_path)]
+    )
+
+    if diff_check.returncode != 0:
+        # Configure git
+        subprocess.run(["git", "config", "--global", "user.name", "github-actions[bot]"], check=True)
+        subprocess.run(["git", "config", "--global", "user.email", "github-actions[bot]@users.noreply.github.com"], check=True)
+
+        # Commit and push
+        subprocess.run(["git", "commit", "-m", msg], check=True)
+        subprocess.run(["git", "push"], check=True)
+
+
 
 if __name__ == "__main__":
     scraper = UFC_Webscraper()
@@ -262,19 +284,15 @@ if __name__ == "__main__":
 
         odds_stats_df, upcoming_df = features.build_all_stats(stats_history, next_stats_df, odds_history, next_odds_df)
         odds_stats_df.to_csv(BASE_DIR / f'Data/training_data/entire_odds_stats_{date_today}.csv', index=False)
-        print("SAVING ODDS STATS")
-        
+      
         upcoming_groups = upcoming_df.groupby('date')
         for date, group in upcoming_groups:
 
             date_str = date.strftime("%Y-%m-%d")   # or "%Y%m%d"
             file_path = next_event_folder / f"event_dfs/upcoming_odds_stats_{date_str}.csv"
 
+            # group includes all event fights 
             group = group.reset_index(drop=True)
-            group.to_csv(file_path, index=False)
-
-            print(f'DATE STR: {date_str}')
-            print(f'GROUP SHAPE: {group.shape}')
 
             if (group[['open_red', 'open_blue']].isna().sum() == group.shape[0]).all():
                 pass
@@ -295,6 +313,31 @@ if __name__ == "__main__":
 
                 if not sub_group.empty:
                     email_bets(sub_group, date_str)
+            
+            # save after above else
+            group.to_csv(file_path, index=False)
+            commit_if_changed(file_path, f'Updating Features for {date_str}')
 
+            group['math_red'] = group['math_red'].astype('category')
+            group['math_blue'] = group['math_blue'].astype('category')
+            group['elo_pred'] = group['elo_pred'].astype('category')
 
+            df_bets_all, df_parlay_all = betting_pipeline(group, 
+                                                        feats_list=feats_list, model_list=model_list, scaler_list=scaler_list, type_list=type_list,
+                                                        fair_odds_list=fair_odds_list, real_odds_list=real_odds_list, 
+                                                        bankroll=500, max_drawdown=0.25, N=2000)
+            
+            df_bets_all[['open_red', 'open_blue', 'close1_red', 'close1_blue', 'close2_red', 'close2_blue']] = df[['open_red', 'open_blue', 'close1_red', 'close1_blue', 'close2_red', 'close2_blue']]
+            df_bets_arr, df_parlay_arr = seperate_bets_dfs(df_bets_all, df_parlay_all, type_list)
+  
+            # bets_fp = BASE_DIR / f"/Data/upcoming_events/straight_bets/open_odds_{date_str}"
+            # palray_fp = BASE_DIR / f"Data/upcoming_events/parlays/open_odds_{date_str}"
 
+            straight_path = BASE_DIR / f'/Data/upcoming_events/straight_bets/ml_all_{date_str}'
+            parlay_path = BASE_DIR / f'/Data/upcoming_events/parlays/parlay_all_{date_str}'
+
+            df_bets_all.to_csv(straight_path, index=False)
+            df_parlay_all.to_csv(parlay_path, index=False)
+            
+            commit_if_changed(straight_path, f'Update Bets Open for {date_str}')
+            commit_if_changed(parlay_path, f'Update Parlay Open for {date_str}')
