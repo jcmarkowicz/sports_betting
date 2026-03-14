@@ -63,7 +63,8 @@ next_event_folder = BASE_DIR / "Data/upcoming_events"
 
 # Columns you want to send in email
 columns_to_email = ['fighter_red', 'fighter_blue','pred_name_open','open_red','open_blue','pred_winner_open',
-                    'choice_proba_open','ev_open','edge_open', 'fstar_open','stake_open']  # adjust to your DataFrame
+                    'choice_proba_open','ev_open','edge_open', 'fstar_open','stake_open'
+                    ]  # adjust to your DataFrame
 
 model_open = sm.load(BASE_DIR / "Data" / "saved_models" / "logit_model_open.pkl")
 model_close1 = sm.load(BASE_DIR / "Data" / "saved_models" / "logit_model_close1.pkl")
@@ -125,7 +126,7 @@ SMTP_PORT = 587
 EMAIL_FROM = "jcmarkufc@gmail.com"  # Gmail sender
 
 EMAIL_PASSWORD = os.environ["EMAIL_PASSWORD"]
-EMAIL_TO = ["jcmarkowicz@outlook.com", 'jimmymarkowicz28@gmail.com','jasonszat@gmail.com']
+EMAIL_TO = ["jcmarkowicz@outlook.com"] #, 'jimmymarkowicz28@gmail.com','jasonszat@gmail.com']
 
 
 def email_bets(df_, date):
@@ -261,6 +262,7 @@ if __name__ == "__main__":
 
         odds_stats_df, upcoming_df = features.build_all_stats(stats_history, next_stats_df, odds_history, next_odds_df)
         odds_stats_df.to_csv(BASE_DIR / f'Data/training_data/entire_odds_stats_{date_today}.csv', index=False)
+        print("SAVING ODDS STATS")
         
         upcoming_groups = upcoming_df.groupby('date')
         for date, group in upcoming_groups:
@@ -269,6 +271,7 @@ if __name__ == "__main__":
             file_path = next_event_folder / f"event_dfs/upcoming_odds_stats_{date_str}.csv"
 
             group = group.reset_index(drop=True)
+            group.to_csv(file_path, index=False)
 
             print(f'DATE STR: {date_str}')
             print(f'GROUP SHAPE: {group.shape}')
@@ -280,7 +283,8 @@ if __name__ == "__main__":
                 email_bets(group, date_str)
             
             else:
-                # each time full dataframe is saved, but nas for data 
+
+                # check if new data found  
                 existing_df = pd.read_csv(file_path)
                 
                 mask_na_update = (
@@ -292,6 +296,5 @@ if __name__ == "__main__":
                 if not sub_group.empty:
                     email_bets(sub_group, date_str)
 
-            filename = fr"{next_event_folder}/event_dfs/upcoming_odds_stats_{date_str}.csv"
-            group.to_csv(filename, index=False)
+
 

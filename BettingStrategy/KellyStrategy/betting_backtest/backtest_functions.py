@@ -38,6 +38,7 @@ def scale_kelly_for_mdd(p, odds, f_full, N, max_drawdown, tol=1e-4):
     max_drawdown : tolerable drawdown fraction (0 < max_drawdown < 1)
     tol : numerical tolerance for convergence
     """
+    
     b = odds - 1
     # binary search between 0 and 1 (fraction of full Kelly)
     low, high = 0.0, 1.0
@@ -288,7 +289,7 @@ def pmf_num_wins(choice_proba):
     best_k = np.argmax(pmf_vals)
     return best_k
 
-def parlay_top_ev(data, bankroll, top_n=[0,1]):
+def parlay_top_ev(data, bankroll, top_n=[0,1], parlay_mdd=.25):
     
     df_top_n = data.sort_values(by='choice_ev', ascending=False).iloc[top_n].copy()
     parlay_win = (df_top_n['winner'] == df_top_n['pred_winner']).all()
@@ -298,10 +299,18 @@ def parlay_top_ev(data, bankroll, top_n=[0,1]):
     parlay_ev = parlay_prob * parlay_odds - 1
 
     b = parlay_odds - 1
-    parlay_kelly = max((b * parlay_prob - (1 - parlay_prob)) / b, 0)
     net_odds = np.prod(df_top_n['choice_real_odds'])-1
 
+    kelly_full = max((b * parlay_prob - (1 - parlay_prob)) / b, 0)
+
+    if parlay_mdd is not None: 
+        parlay_kelly = scale_kelly_for_mdd(parlay_prob, parlay_odds, kelly_full, 2000, parlay_mdd)
+    
+    else: 
+        parlay_kelly = kelly_full
+
     stake = bankroll * parlay_kelly
+
     if parlay_win:
         profit = stake * net_odds
     else:
@@ -334,7 +343,7 @@ def parlay_top_ev(data, bankroll, top_n=[0,1]):
 def simulate_kelly(df_final, prob_cols, fair_decimal_cols, real_decimal_cols,
                         pred_winner_col, winner_col='winner', date_col='date',
                         init_bankroll=1000, bankroll_floor=None, portfolio_scaling=False,\
-                        adaptive_scaling=False, max_drawdown=.30, N=1000,
+                        adaptive_scaling=False, max_drawdown=.30, parlay_mdd=.25, N=1000,
                         calc_parlay=False,
                         test_other_ev = False
                         ):
@@ -428,7 +437,7 @@ def simulate_kelly(df_final, prob_cols, fair_decimal_cols, real_decimal_cols,
                                     'choice_real_odds':choice_real_odds, 'choice_fstar':bets_out_df['f_star_scaled'],
                                     'fighter_red': group['fighter_red'], 'fighter_blue': group['fighter_blue'], 'date':group['date'], 'choice_proba':choice_proba})
             
-            parlay_net_money, parlay_net_odds, df_top_n = parlay_top_ev(df_data, bankroll, top_n=[0,1])
+            parlay_net_money, parlay_net_odds, df_top_n = parlay_top_ev(df_data, bankroll, top_n=[0,1], parlay_mdd=parlay_mdd)
             
             kelly_valid = np.where(np.array(df_top_n['choice_ev'])>0, df_top_n['choice_fstar'], 0)
             kelly_net = np.where(df_top_n['pred_winner'] == np.array(df_top_n['winner']).astype(int), kelly_valid, -kelly_valid)
