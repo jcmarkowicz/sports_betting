@@ -19,6 +19,11 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Set up git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Install Google Chrome
         run: |
           sudo apt-get update

@@ -204,7 +204,11 @@ def email_bets(df_, date):
         server.send_message(msg, from_addr=EMAIL_FROM, to_addrs=EMAIL_TO)
 
 # Function to commit if changed
-def commit_if_changed(file_path, msg):
+def commit_if_changed(file_path, msg, branch="main"):
+
+    repo = os.environ["GITHUB_REPOSITORY"]  # e.g., 'username/repo'
+    token = os.environ["GITHUB_TOKEN"]      # Provided automatically in Actions
+
     # Stage file
     subprocess.run(["git", "add", str(file_path)], check=True)
 
@@ -218,9 +222,12 @@ def commit_if_changed(file_path, msg):
         subprocess.run(["git", "config", "--global", "user.name", "github-actions[bot]"], check=True)
         subprocess.run(["git", "config", "--global", "user.email", "github-actions[bot]@users.noreply.github.com"], check=True)
 
-        # Commit and push
+        # Commit changes
         subprocess.run(["git", "commit", "-m", msg], check=True)
-        subprocess.run(["git", "push"], check=True)
+
+        # Push using token authentication
+        push_url = f"https://x-access-token:{token}@github.com/{repo}.git"
+        subprocess.run(["git", "push", push_url, f"HEAD:{branch}"], check=True)
 
 
 
@@ -288,6 +295,7 @@ if __name__ == "__main__":
         next_stats_df = pd.read_csv(f'{upcoming_stats_string}_{next_fight_date}.csv')
         next_odds_df = pd.read_csv(f'{upcoming_odds_string}_{next_fight_date}.csv')
 
+        # odds stats is for events that already happened, upcoming df for future events
         odds_stats_df, upcoming_df = features.build_all_stats(stats_history, next_stats_df, odds_history, next_odds_df)
         odds_stats_df.to_csv(BASE_DIR / f'Data/training_data/entire_odds_stats_{date_today}.csv', index=False)
       
