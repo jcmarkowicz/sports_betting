@@ -7,17 +7,18 @@ import os
 import sys 
 from datetime import datetime
 
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parents[2]
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))) 
 from utils import display_paginated_df
 
-ml_folder = r'C:\Users\jcmar\my_files\SportsBetting\Data\upcoming_events\straight_bets'
-parlay_folder = r'C:\Users\jcmar\my_files\SportsBetting\Data\upcoming_events\parlays'
+ml_folder = BASE_DIR / "Data" / "upcoming_events" / "straight_bets"
+parlay_folder = BASE_DIR / "Data" / "upcoming_events" / "parlays" 
 
 ml_column_order = ['fighter_red', 'fighter_blue', 'open_red', 'open_blue', 'pred_name_open', 'fstar_open', 'stake_open',
                    'close1_red', 'close1_blue', 'pred_name_close1', 'fstar_close1', 'stake_close1', 
                    'close2_red', 'close2_blue', 'pred_name_close2', 'fstar_close2', 'stake_close2']
-
 
 parlay_column_order = ['choice_fighter_name_open', 'parlay_odds_open', 'parlay_ev_open', 'stake_open', 
                        'choice_fighter_name_close1', 'parlay_odds_close1', 'parlay_ev_close1', 'stake_close1',

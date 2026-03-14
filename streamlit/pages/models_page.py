@@ -25,8 +25,8 @@ st.markdown("""
             Results with Open Odds data 
 """)
 
-train_open_fp = r'C:\Users\jcmar\my_files\SportsBetting\Data\plot_pngs\train_open_model_metrics.png'
-test_open_fp = r'C:\Users\jcmar\my_files\SportsBetting\Data\plot_pngs\test_open_model_metrics.png'
+train_open_fp = BASE_DIR / "Data" / "plot_pngs" / "train_open_model_metrics.png" 
+test_open_fp = BASE_DIR / "Data" / "plot_pngs" / "test_open_model_metrics.png" 
 
 show_image(train_open_fp)
 show_image(test_open_fp)
@@ -36,15 +36,14 @@ st.markdown("""
             Results with Close1 and Close 2 Odds data 
 """)
 
-train_close1_fp = r'C:\Users\jcmar\my_files\SportsBetting\Data\plot_pngs\train_close1_model_metrics.png'
-test_close1_fp = r'C:\Users\jcmar\my_files\SportsBetting\Data\plot_pngs\test_close1_model_metrics.png'
+train_close1_fp = BASE_DIR / "Data" / "plot_pngs" / "train_close1_model_metrics.png" 
+test_close1_fp = BASE_DIR / "Data" / "plot_pngs" / "test_close1_model_metrics.png" 
 
 show_image(train_close1_fp)
 show_image(test_close1_fp)
 
-
-train_close2_fp = r'C:\Users\jcmar\my_files\SportsBetting\Data\plot_pngs\train_close2_model_metrics.png'
-test_close2_fp = r'C:\Users\jcmar\my_files\SportsBetting\Data\plot_pngs\test_close2_model_metrics.png'
+train_close2_fp = BASE_DIR / "Data" / "plot_pngs" / "train_close2_model_metrics.png" 
+test_close2_fp = BASE_DIR / "Data" / "plot_pngs" / "test_close2_model_metrics.png" 
 
 show_image(train_close2_fp)
 show_image(test_close2_fp)

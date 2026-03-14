@@ -60,7 +60,7 @@ These odds are unaffected by line movement and market betting behavior.
 path =  BASE_DIR / "Data" / "plot_pngs" / "open_kelly_sim.png"
 show_image(path, title='Open Odds Simulation')
 
-path=r'C:\Users\jcmar\my_files\SportsBetting\Data\plot_pngs\returns_distributions_open.png'
+path = BASE_DIR / "Data" / "plot_pngs" / "returns_distributions_open.png"
 show_image(path, title='Open Returns Distributions')
 
 st.markdown("""
@@ -94,7 +94,7 @@ Plots displaying juice and line movement are for choice fighters with positive E
 path =  BASE_DIR / "Data" / "plot_pngs" / "close1_kelly_sim.png"
 show_image(path, title='Close1 Odds Simulation')
 
-path=r'C:\Users\jcmar\my_files\SportsBetting\Data\plot_pngs\returns_distributions_close1.png'
+path = BASE_DIR / "Data" / "plot_pngs" / "returns_distributions_close1.png"
 show_image(path, title='Close1 Returns Distributions')
 
 
@@ -111,7 +111,7 @@ path =  BASE_DIR / "Data" / "plot_pngs" / "close2_kelly_sim.png"
 show_image(path, title='Close2 Simulation')
 
 
-path=r'C:\Users\jcmar\my_files\SportsBetting\Data\plot_pngs\returns_distributions_close2.png'
+path = BASE_DIR / "Data" / "plot_pngs" / "returns_distributions_close2.png"
 show_image(path, title='Close2 Returns Distributions')
 
 st.markdown("""
