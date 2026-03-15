@@ -326,6 +326,7 @@ if __name__ == "__main__":
 
             date_str = date.strftime("%Y-%m-%d")   # or "%Y%m%d"
             file_path = next_event_folder / f"event_dfs/upcoming_odds_stats_{date_str}.csv"
+            print(date_str)
 
             # group includes all event fights 
             group = group.reset_index(drop=True)

@@ -263,7 +263,6 @@ def betting_pipeline(upcoming_df, feats_list, model_list, scaler_list, type_list
         choice_fstar_col = f'fstar_{type}'
         choice_stake_col = f'stake_{type}'
 
-        print(len(pred_winner_names), len(df[pred_winner_col].values), len(choice_proba), len(fstar_list), len(stake_list), len(choice_edge), len(choice_ev))
 
         df_bets = pd.DataFrame({f'pred_name_{type}': pred_winner_names, pred_winner_col: df[pred_winner_col].values, 
                                 choice_proba_col:choice_proba, choice_fstar_col:fstar_list, choice_stake_col:stake_list,
@@ -271,11 +270,17 @@ def betting_pipeline(upcoming_df, feats_list, model_list, scaler_list, type_list
 
         df_bets_combined = pd.concat([df_bets_combined, df_bets.reset_index(drop=True)], axis=1)
         
-        parlay_input_df = pd.DataFrame({'pred_winner':df[pred_winner_col], 'choice_ev':choice_ev,
-                                    'choice_real_odds':choice_real_odds, 'choice_fstar':df_bets[choice_fstar_col],
-                                    'fighter_red': df['fighter_red'], 
-                                    'fighter_blue': df['fighter_blue'], 
-                                    'date':df['date'], 'choice_proba':choice_proba})
+        print(len(fstar_list), len(choice_ev), len(choice_real_odds), len(df["fighter_red"]))
+        parlay_input_df = pd.DataFrame({
+            "pred_winner": df[pred_winner_col],
+            "choice_ev": choice_ev,
+            "choice_real_odds": choice_real_odds,
+            "choice_fstar": fstar_list,
+            "fighter_red": df["fighter_red"],
+            "fighter_blue": df["fighter_blue"],
+            "date": df["date"],
+            "choice_proba": choice_proba
+        })
 
         df_parlay = parlay_top_ev(parlay_input_df, bankroll, type, top_n=[0,1])
         df_parlay_combined = pd.concat([df_parlay_combined, df_parlay.reset_index(drop=True)], axis=1)
