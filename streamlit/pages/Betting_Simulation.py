@@ -55,7 +55,7 @@ st.markdown("""
 With opening odds, the results are phenomenal with profit at is peak reaching 80 million. However, there are a couple of caveats with this strategy. Bankroll is updated
 after every event meaning current sizing is reflected by the previous event's profit/losses. This will rarely be the case in the real world because opening odds require placing bets potentially weeks in advance in order to 
 avoid shifting lines. Parlays are also effected from the staggered timeline because not all event fights are announced at once. Still, given the accuracy of both money line and parlay bets, I 
-expect these concenrns to not have much of an effect, its likely wealth will grow slower then displayed at first. Still, a fraction of the displayed results is convincing enough to attempt the strategy. 
+expect these concerns to not have much of an effect, its likely wealth will grow slower then displayed at first. Achieving a fraction of the displayed results is convincing enough to attempt the strategy. 
 </p>
 """, unsafe_allow_html=True)
 
