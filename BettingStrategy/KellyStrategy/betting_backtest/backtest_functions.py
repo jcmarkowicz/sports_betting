@@ -25,7 +25,14 @@ def expected_max_drawdown(sigma, N):
     """
     Heuristic for expected maximum drawdown over N bets
     """
-    return sigma * np.sqrt(2 * np.log(N))
+    emdd = sigma * (
+        np.sqrt(
+            2*np.log(N) -
+            (np.log(np.log(N)) + np.log(4*np.pi)) /
+            (2*np.sqrt(2*np.log(N)))
+        )
+    )
+    return emdd
 
 def scale_kelly_for_mdd(p, odds, f_full, N, max_drawdown, tol=1e-4):
     """

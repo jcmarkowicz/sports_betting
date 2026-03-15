@@ -362,7 +362,7 @@ def plot_backtest(df_results, init_bankroll, path=None):
     )
 
     axs[1].plot(x_parlay, parlay_cumsum, marker='o', color='orange', label='Cumulative Parlay Net')
-    axs[1].set_title(f"Cumulative Parlay Net Profit | Parlay Win Rate: {proportion_wins_parlay:.2%}")
+    axs[1].set_title(f"Parlay Net Profit | Parlay Win Rate: {proportion_wins_parlay:.2%}")
     axs[1].set_ylabel("Cumulative Profit")
     axs[1].legend()
 

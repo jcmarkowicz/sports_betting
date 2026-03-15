@@ -131,10 +131,14 @@ def log_return_volatility(f, b, p):
 def expected_max_drawdown(sigma, N):
     """
     Heuristic for expected maximum drawdown over N bets
-
     """
-    # return sigma * np.sqrt(2 * np.log(N))
-    emdd = sigma * (np.sqrt(2*np.log(N) - (np.log(np.log(N)) + np.log(4*np.pi())) / (2*np.sqrt(2*np.log(N)))))
+    emdd = sigma * (
+        np.sqrt(
+            2*np.log(N) -
+            (np.log(np.log(N)) + np.log(4*np.pi)) /
+            (2*np.sqrt(2*np.log(N)))
+        )
+    )
     return emdd
 
 

@@ -36,7 +36,6 @@ jobs:
           # remove conflicting system chromedriver
           sudo rm -f /usr/bin/chromedriver
 
-
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
@@ -44,6 +43,6 @@ jobs:
       - name: Run script
         env:
           EMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # <-- add this
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
         run: |
           python DataPipeline/build_datasets_github.py
