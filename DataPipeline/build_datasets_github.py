@@ -369,8 +369,8 @@ if __name__ == "__main__":
             # bets_fp = BASE_DIR / f"/Data/upcoming_events/straight_bets/open_odds_{date_str}"
             # palray_fp = BASE_DIR / f"Data/upcoming_events/parlays/open_odds_{date_str}"
 
-            straight_path = BASE_DIR / f'/Data/upcoming_events/straight_bets/ml_all_{date_str}'
-            parlay_path = BASE_DIR / f'/Data/upcoming_events/parlays/parlay_all_{date_str}'
+            straight_path = BASE_DIR / f'Data/upcoming_events/straight_bets/ml_all_{date_str}'
+            parlay_path = BASE_DIR / f'Data/upcoming_events/parlays/parlay_all_{date_str}'
 
             df_bets_all.to_csv(straight_path, index=False)
             df_parlay_all.to_csv(parlay_path, index=False)
