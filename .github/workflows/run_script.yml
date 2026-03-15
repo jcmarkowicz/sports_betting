@@ -6,6 +6,9 @@ on:
     - cron: "0 21 * * *"   # 5 PM Eastern (EDT)
   workflow_dispatch: 
 
+permissions:
+  contents: write
+
 jobs:
   run-script:
     runs-on: ubuntu-latest
