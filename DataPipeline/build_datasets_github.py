@@ -65,7 +65,7 @@ next_event_folder = BASE_DIR / "Data/upcoming_events"
 
 # Columns you want to send in email
 columns_to_email = ['fighter_red', 'fighter_blue','pred_name_open','open_red','open_blue','pred_winner_open',
-                    'choice_proba_open','ev_open','edge_open', 'fstar_open','stake_open'
+                    'fstar_open','stake_open'
                     ]  # adjust to your DataFrame
 
 model_open = sm.load(BASE_DIR / "Data" / "saved_models" / "logit_model_open.pkl")
@@ -77,39 +77,63 @@ scaler_close1 = joblib.load(BASE_DIR / "Data" / "saved_models" / "scaler_close1.
 scaler_close2 = joblib.load(BASE_DIR / "Data" / "saved_models" / "scaler_close2.pkl")
 
 open_feats = [
-                'proba_fair_open_diff', 'reach_diff', 
-                
-                'sub_att_pm_red', 'sub_att_pm_blue',
-                'ratio_control_diff',
+                  'proba_fair_open_diff', 'reach_diff', 
+                  
+                  'sub_att_pm_red', 'sub_att_pm_blue',
+                  'ratio_control_diff',
 
-                'td_landed_pm_diff',  
-                'ratio_td_diff', 
-                'adjusted_td_red', 'adjusted_td_blue',
+                  'td_landed_pm_diff',  
+                  'ratio_td_diff', 
+                  'adjusted_td_red', 'adjusted_td_blue',
 
-                'sig_str_absorbed_total_diff', 
-                'sig_str_accuracy_pct_diff',
-                'sig_str_defense_pct_diff',
-                'adjusted_sig_str_blue', 'adjusted_sig_str_red', 
-                
-                'win_pct_red', 'win_pct_blue',
-                'win_streak_diff', 'lose_streak_diff',
-                'elo_red', 'elo_blue', 'elo_pred', 'age_red', 'age_blue'
-                ]
+                  'sig_str_absorbed_total_diff', 
+                  'sig_str_accuracy_pct_diff',
+                  'sig_str_defense_pct_diff',
+                  'adjusted_sig_str_blue', 'adjusted_sig_str_red', 
+                  
+                  'win_pct_red', 'win_pct_blue',
+                  'win_streak_diff', 'lose_streak_diff',
+                  'elo_red', 'elo_blue', 'elo_pred', 'age_red', 'age_blue'
+                  ]
 
 close1_feats = [
                   'proba_fair_close1_diff', 'proba_fair_open_diff', 'reach_diff', 
-                  'td_landed_total_diff', 'ratio_control_diff', 'sig_str_absorbed_total_diff', 'sig_str_landed_pm_diff', 
-                  'sig_str_defense_pct_diff', 'td_attempted_pm_diff',
-                  'lose_streak_diff', 'win_pct_diff', 'kd_pm_diff', 'win_streak_diff', 'ko_wins_diff', 'ko_losses_diff', 
-                  'elo_red', 'elo_blue', 'age_red', 'age_blue'
+                  
+                  'sub_att_pm_red', 'sub_att_pm_blue',
+                  'ratio_control_diff',
+
+                  'td_landed_pm_diff',  
+                  'ratio_td_diff', 
+                  'adjusted_td_red', 'adjusted_td_blue',
+
+                  'sig_str_absorbed_total_diff', 
+                  'sig_str_accuracy_pct_diff',
+                  'sig_str_defense_pct_diff',
+                  'adjusted_sig_str_blue', 'adjusted_sig_str_red', 
+                  
+                  'win_pct_red', 'win_pct_blue',
+                  'win_streak_diff', 'lose_streak_diff',
+                  'elo_red', 'elo_blue', 'elo_pred', 'age_red', 'age_blue',
                   ]
 
 close2_feats = [
                   'proba_fair_close2_diff', 'proba_fair_open_diff', 'reach_diff', 
-                  'td_landed_total_diff', 'ratio_control_diff', 'sig_str_absorbed_total_diff', 'sig_str_landed_pm_diff', 
-                  'sig_str_defense_pct_diff', 'td_attempted_pm_diff',
-                  'win_pct_diff', 
-                  'elo_red', 'elo_blue', 'age_red', 'age_blue'
+                  
+                  'sub_att_pm_red', 'sub_att_pm_blue',
+                  'ratio_control_diff',
+
+                  'td_landed_pm_diff',  
+                  'ratio_td_diff', 
+                  'adjusted_td_red', 'adjusted_td_blue',
+
+                  'sig_str_absorbed_total_diff', 
+                  'sig_str_accuracy_pct_diff',
+                  'sig_str_defense_pct_diff',
+                  'adjusted_sig_str_blue', 'adjusted_sig_str_red', 
+                  
+                  'win_pct_red', 'win_pct_blue',
+                  'win_streak_diff', 'lose_streak_diff',
+                  'elo_red', 'elo_blue', 'elo_pred', 'age_red', 'age_blue',
                   ]
 
 feats_list = [open_feats, close1_feats, close2_feats]
@@ -180,9 +204,7 @@ def email_bets(df_, date):
         'choice_fighter_name_open',
         'parlay_fstar_open',
         'parlay_odds_open',
-        'stake_open',
-        'parlay_ev_open',
-        'parlay_prob_open'
+        'stake_open'
     ]
 
     parlay_csv = df_parlay[parlay_columns].to_csv(index=False)
@@ -341,7 +363,7 @@ if __name__ == "__main__":
                                                         fair_odds_list=fair_odds_list, real_odds_list=real_odds_list, 
                                                         bankroll=500, max_drawdown=0.25, N=2000)
             
-            df_bets_all[['open_red', 'open_blue', 'close1_red', 'close1_blue', 'close2_red', 'close2_blue']] = df[['open_red', 'open_blue', 'close1_red', 'close1_blue', 'close2_red', 'close2_blue']]
+            df_bets_all[['open_red', 'open_blue', 'close1_red', 'close1_blue', 'close2_red', 'close2_blue']] = group[['open_red', 'open_blue', 'close1_red', 'close1_blue', 'close2_red', 'close2_blue']]
             df_bets_arr, df_parlay_arr = seperate_bets_dfs(df_bets_all, df_parlay_all, type_list)
   
             # bets_fp = BASE_DIR / f"/Data/upcoming_events/straight_bets/open_odds_{date_str}"
