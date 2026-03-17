@@ -176,11 +176,9 @@ def scale_kelly_for_mdd(p, odds, f_full, N, max_drawdown, tol=1e-4):
 def betting_pipeline(upcoming_df, feats_list, model_list, scaler_list, type_list, fair_odds_list, real_odds_list, bankroll, max_drawdown=0.15, N=1000):
 
     other_cols = ['fighter_red', 'fighter_blue', 'date', 'close1_red', 'close2_red', 'close1_blue', 'close2_blue']
-    all_feats_list = list(set(feat for outer in feats_list for feat in outer))
     df = upcoming_df.copy()
-    column_names = all_feats_list+other_cols
 
-    df_bets_combined = pd.DataFrame(df[all_feats_list+other_cols].values, columns=column_names)
+    df_bets_combined = pd.DataFrame(df[other_cols].values, columns=other_cols)
     df_parlay_combined = pd.DataFrame()
 
     for model, scaler, feats, type, fair_odds, real_odds in zip(model_list, scaler_list, feats_list, type_list, real_odds_list, fair_odds_list):
@@ -208,7 +206,10 @@ def betting_pipeline(upcoming_df, feats_list, model_list, scaler_list, type_list
             
             df_bets_combined = pd.concat([df_bets_combined, df_bets.reset_index(drop=True)], axis=1)
 
-            df_parlay = pd.DataFrame({f'choice_fighter_name_{type}':[pd.NA], f'parlay_fstar_{type}':[pd.NA], f'parlay_odds_{type}':[pd.NA], f'stake_{type}':[pd.NA], f'parlay_ev_{type}':[ pd.NA], f'parlay_prob_{type}':[pd.NA]})
+            df_parlay = pd.DataFrame({f'choice_fighter_name_{type}':[pd.NA], f'parlay_fstar_{type}':[pd.NA], 
+                                      f'parlay_odds_{type}':[pd.NA], f'stake_{type}':[pd.NA], 
+                                      f'parlay_ev_{type}':[ pd.NA], f'parlay_prob_{type}':[pd.NA]})
+            
             df_parlay_combined = pd.concat([df_parlay_combined, df_parlay.reset_index(drop=True)], axis=1)
 
             continue

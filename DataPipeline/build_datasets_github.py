@@ -84,11 +84,13 @@ if __name__ == "__main__":
         next_stats_path = f'{upcoming_scraped_stats_string}_{next_fight_date}.csv'
         next_fight_stats.to_csv(next_stats_path, index=False)
         next_fight_stats = pd.read_csv(next_stats_path) # read back in to ensure same formatting for odds function
+        commit_if_changed(next_stats_path, f'Updating upcoming scraped stats {next_fight_date}')
 
         # save next_odds 
         next_odds_path = f'{upcoming_scraped_odds_string}_{next_fight_date}.csv' # upcoming odds for the next fight card
         next_odds_df = scraper.get_fighter_odds(next_fight_stats)
         next_odds_df.to_csv(next_odds_path, index=False)
+        commit_if_changed(next_odds_path, f'Updating upcoming scraped odds {next_fight_date}')
 
     # merge stats/odds history 
     # TODO: workflow to run this after every event,
