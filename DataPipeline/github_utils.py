@@ -20,6 +20,13 @@ def commit_if_changed(file_path, msg, branch="main"):
 
     subprocess.run(["git", "add", str(file_path)], check=True)
 
+    result = subprocess.run(
+    ["git", "diff", "--cached", "--quiet", str(file_path)]
+)
+    if result.returncode == 0:
+        # No changes staged → skip commit
+        return
+    
     subprocess.run(
         ["git", "config", "--global", "user.name", "github-actions[bot]"],
         check=True,
