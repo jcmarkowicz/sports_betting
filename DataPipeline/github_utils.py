@@ -15,8 +15,8 @@ def commit_if_changed(file_path, msg, branch="main"):
     repo = os.environ["GITHUB_REPOSITORY"]
     token = os.environ["GITHUB_TOKEN"]
 
-    # if not floats_changed(file_path):
-    #     return
+    if not floats_changed(file_path):
+        return
 
     subprocess.run(["git", "add", str(file_path)], check=True)
 

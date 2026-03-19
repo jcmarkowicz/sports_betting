@@ -171,7 +171,7 @@ if __name__ == "__main__":
             group.to_csv(event_file_path, index=False)
             commit_if_changed(event_file_path, f'Updating Features for {date_str}')
 
-            # generate betting picks 
+            # generate betting picks with latest data 
             df_bets_all, df_parlay_all = generate_bets(group)
 
             straight_path = BASE_DIR / f'Data/upcoming_events/straight_bets/ml_all_{date_str}.csv'
