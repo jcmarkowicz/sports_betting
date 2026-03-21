@@ -1,12 +1,12 @@
 fighter_red,fighter_blue,date,close1_red,close2_red,close1_blue,close2_blue,pred_name_open,pred_winner_open,choice_proba_open,fstar_open,stake_open,edge_open,ev_open,pred_name_close1,pred_winner_close1,choice_proba_close1,fstar_close1,stake_close1,edge_close1,ev_close1,pred_name_close2,pred_winner_close2,choice_proba_close2,fstar_close2,stake_close2,edge_close2,ev_close2,open_red,open_blue
-kevin holland,randy brown,2026-04-11,,,,,randy brown,0,,0.0,0.0,,,randy brown,0,,0.0,0.0,,,randy brown,0,,0.0,0.0,,,,
-cub swanson,nate landwehr,2026-04-11,,,,,nate landwehr,0,,0.0,0.0,,,nate landwehr,0,,0.0,0.0,,,nate landwehr,0,,0.0,0.0,,,,
-mateusz gamrot,esteban ribovics,2026-04-11,,,,,esteban ribovics,0,,0.0,0.0,,,esteban ribovics,0,,0.0,0.0,,,esteban ribovics,0,,0.0,0.0,,,,
-azamat murzakanov,paulo costa,2026-04-11,,,,,paulo costa,0,,0.0,0.0,,,paulo costa,0,,0.0,0.0,,,paulo costa,0,,0.0,0.0,,,,
-tatiana suarez,loopy godinez,2026-04-11,,,,,loopy godinez,0,,0.0,0.0,,,loopy godinez,0,,0.0,0.0,,,loopy godinez,0,,0.0,0.0,,,,
-patricio freire,aaron pico,2026-04-11,,,,,aaron pico,0,,0.0,0.0,,,aaron pico,0,,0.0,0.0,,,aaron pico,0,,0.0,0.0,,,,
-dominick reyes,johnny walker,2026-04-11,,,,,johnny walker,0,,0.0,0.0,,,johnny walker,0,,0.0,0.0,,,johnny walker,0,,0.0,0.0,,,,
-joshua van,tatsuro taira,2026-04-11,,,,,tatsuro taira,0,,0.0,0.0,,,tatsuro taira,0,,0.0,0.0,,,tatsuro taira,0,,0.0,0.0,,,,
-jiri prochazka,carlos ulberg,2026-04-11,-146.0,-120.0,-105.0,114.0,carlos ulberg,0,0.6896790478229569,0.12295580180912155,61.47790090456078,0.06004941819332732,0.12553444763669536,carlos ulberg,0,0.5663342683716054,0.09562181343285164,47.81090671642582,0.054139146420385864,0.23924843201681623,carlos ulberg,0,0.5726287189419399,0.09400693105249061,47.00346552624531,0.10533899931577162,0.2429779871617237,145.0,-170.0
-curtis blaydes,josh hokit,2026-04-11,,,,,josh hokit,0,,0.0,0.0,,,josh hokit,0,,0.0,0.0,,,josh hokit,0,,0.0,0.0,,,,
 kelvin gastelum,vicente luque,2026-04-11,,,,,vicente luque,0,,0.0,0.0,,,vicente luque,0,,0.0,0.0,,,vicente luque,0,,0.0,0.0,,,,
+curtis blaydes,josh hokit,2026-04-11,,,,,josh hokit,0,,0.0,0.0,,,josh hokit,0,,0.0,0.0,,,josh hokit,0,,0.0,0.0,,,,
+kevin holland,randy brown,2026-04-11,,,,,randy brown,0,,0.0,0.0,,,randy brown,0,,0.0,0.0,,,randy brown,0,,0.0,0.0,,,,
+mateusz gamrot,esteban ribovics,2026-04-11,,,,,esteban ribovics,0,,0.0,0.0,,,esteban ribovics,0,,0.0,0.0,,,esteban ribovics,0,,0.0,0.0,,,,
+cub swanson,nate landwehr,2026-04-11,,,,,nate landwehr,0,,0.0,0.0,,,nate landwehr,0,,0.0,0.0,,,nate landwehr,0,,0.0,0.0,,,,
+azamat murzakanov,paulo costa,2026-04-11,,,,,paulo costa,0,,0.0,0.0,,,paulo costa,0,,0.0,0.0,,,paulo costa,0,,0.0,0.0,,,,
+dominick reyes,johnny walker,2026-04-11,,,,,johnny walker,0,,0.0,0.0,,,johnny walker,0,,0.0,0.0,,,johnny walker,0,,0.0,0.0,,,,
+tatiana suarez,loopy godinez,2026-04-11,,,,,loopy godinez,0,,0.0,0.0,,,loopy godinez,0,,0.0,0.0,,,loopy godinez,0,,0.0,0.0,,,,
+joshua van,tatsuro taira,2026-04-11,,,,,tatsuro taira,0,,0.0,0.0,,,tatsuro taira,0,,0.0,0.0,,,tatsuro taira,0,,0.0,0.0,,,,
+jiri prochazka,carlos ulberg,2026-04-11,-146.0,-120.0,-105.0,114.0,carlos ulberg,0,0.689682337126966,0.12295264053080146,61.47632026540073,0.06005270749733649,0.1255398156770654,carlos ulberg,0,0.5663351648253262,0.09561662265591017,47.80831132795509,0.054140042874106675,0.23925039363017764,carlos ulberg,0,0.5726296105008373,0.09400772670003177,47.003863350015884,0.105339890874669,0.24297992242631494,145.0,-170.0
+patricio freire,aaron pico,2026-04-11,,,,,aaron pico,0,,0.0,0.0,,,aaron pico,0,,0.0,0.0,,,aaron pico,0,,0.0,0.0,,,,
