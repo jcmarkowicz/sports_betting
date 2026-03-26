@@ -116,7 +116,6 @@ def betting_pipeline(upcoming_df, feats_list, model_list, scaler_list, type_list
 
         valid_mask = ~df[feats].isna().any(axis=1)
         y_hat = pd.Series(0, index=required_df_idx, dtype=float)
-        y_hat = model_predict(model, df, y_hat, feats, num_feats, cat_feats, valid_mask, scaler, required_df_idx)
 
         # split features by dtype
         num_feats = df[feats].select_dtypes(exclude='category').columns
@@ -131,6 +130,8 @@ def betting_pipeline(upcoming_df, feats_list, model_list, scaler_list, type_list
             df_parlay = set_parlay_cols(type, {}, np.arange(PARLAY_SIZE), all_na=True)
             df_parlay_combined = merge_parlay_types(df_parlay, df_parlay_combined)
             continue
+
+        y_hat = model_predict(model, df, y_hat, feats, num_feats, cat_feats, valid_mask, scaler, required_df_idx)
 
         proba_red = y_hat
         proba_blue = 1 - y_hat
