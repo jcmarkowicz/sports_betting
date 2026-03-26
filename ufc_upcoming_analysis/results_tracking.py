@@ -193,3 +193,7 @@ def get_missing_stats(prev_fight_date):
 
         df_odds_missing.to_csv(non_merged_odds_fp)
         commit_if_changed(f'{non_merged_odds_fp}', f'Updating Non Merged Odds for fight date: {prev_fight_date}')
+
+
+if __name__ == "__main__":
+    archive_results()
