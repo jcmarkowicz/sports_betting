@@ -103,7 +103,7 @@ def betting_pipeline(upcoming_df, feats_list, model_list, scaler_list, type_list
 
     other_cols = ['date', 'fighter_red', 'fighter_blue', 'open_red', 'open_blue', 'close1_red', 'close2_red', 'close1_blue', 'close2_blue']
     df = upcoming_df.copy().reset_index(drop=True)
-    required_df_idx = df.idx
+    required_df_idx = df.index
 
     df_bets_combined = pd.DataFrame(df[other_cols].values, columns=other_cols, index=required_df_idx)
     df_parlay_combined = pd.DataFrame()
