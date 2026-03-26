@@ -130,12 +130,6 @@ if __name__ == "__main__":
         # odds stats is for events that already happened, upcoming df for future events
         odds_stats_df, upcoming_df = features.build_all_stats(stats_history, next_stats_df, odds_history, next_odds_df)
 
-        # if there is new data, save it 
-        if get_missing_stats:
-            odds_stats_df.to_csv(BASE_DIR / f'Data/training_data/entire_odds_stats_{date_today}.csv', index=False)
-            commit_if_changed(BASE_DIR / f'Data/training_data/entire_odds_stats_{date_today}.csv', f'Updating Train/test Features for {date_today}')
-
-
         upcoming_groups = upcoming_df.groupby('date')
         for date, group in upcoming_groups:
 
@@ -144,10 +138,10 @@ if __name__ == "__main__":
 
             date_str = date.strftime("%Y-%m-%d")   # or "%Y%m%d"
             event_file_path = upcoming_events_folder / f"upcoming_odds_stats_{date_str}.csv"
-            print(date_str)
+            # print(date_str)
 
             # no odds available
-            if (group[['open_red', 'open_blue']].isna().sum() == group.shape[0]).all():
+            if group[['open_red', 'open_blue']].isna().all().all():
                 pass
 
             # new event found 
@@ -156,14 +150,21 @@ if __name__ == "__main__":
             
             # else check if different from existing
             else:
-
+                # existing open will be nan if not available 
                 existing_df = pd.read_csv(event_file_path)
+
+                aligned = group.merge(
+                    existing_df[["fighter_red", "fighter_blue", "open_red", "open_blue"]],
+                    on=["fighter_red", "fighter_blue"],
+                    how="left"
+                )
+
                 mask_na_update = (
-                    existing_df[['open_red','open_blue']].isna() & group[['open_red','open_blue']].notna()
-                ).any(axis=1)
+                    (aligned['open_red_y'].isna() & aligned['open_red_x'].notna()) |
+                    (aligned['open_blue_y'].isna() & aligned['open_blue_x'].notna())
+                )
 
                 sub_group = group[mask_na_update]
-
                 if not sub_group.empty:
                     email_bets(sub_group, date_str)
             
@@ -182,5 +183,5 @@ if __name__ == "__main__":
             df_parlay_all.to_csv(parlay_path, index=False)
             
             # commit csv 
-            commit_if_changed(straight_path, f'Update Bets Open for {date_str}')
-            commit_if_changed(parlay_path, f'Update Parlay Open for {date_str}')
+            commit_if_changed(straight_path, f'Update Bets for {date_str}')
+            commit_if_changed(parlay_path, f'Update Parlay for {date_str}')

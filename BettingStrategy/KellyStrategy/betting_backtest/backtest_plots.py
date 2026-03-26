@@ -304,8 +304,9 @@ def plot_backtest(df_results, init_bankroll, path=None):
     )
 
     # proportion of events where parlay won
+    parlay_plus_ev = df_group[df_group['parlay_net'] != 0]
     proportion_wins_parlay = (
-        df_group.groupby('date')['parlay_net']
+        parlay_plus_ev.groupby('date')['parlay_net']
         .first()
         .gt(0)
         .mean()
@@ -588,4 +589,112 @@ def kelly_analysis(df_kelly, x_vars, y_var, bins=8):
         axes[1, i].tick_params(axis='x', rotation=45)
 
     plt.tight_layout()
+    plt.show()
+
+
+def parlay_analysis(df_parlay, path=None):
+    df_parlay['ev_bin'] = pd.cut(df_parlay['parlay_ev'], bins=10)
+
+    # Create subplot
+    fig, axes = plt.subplots(3, 1, figsize=(12,10))
+
+    # ---- 1. Barplot of average parlay_net_odds per bin with CI ----
+    sns.barplot(
+        data=df_parlay,
+        x='ev_bin',
+        y='parlay_net_odds',
+        estimator='mean',
+        errorbar=('ci', 95),
+        ax=axes[0]
+    )
+    axes[0].set_title("Average Net Odds per EV Bin")
+    axes[0].set_xlabel("EV Bin")
+    axes[0].set_ylabel("Average Net Odds")
+    axes[0].tick_params(axis='x', rotation=45)
+
+    # ---- 2. Barplot of counts per EV bin ----
+    ax = axes[1]
+
+    sns.countplot(
+        data=df_parlay,
+        x='ev_bin',
+        ax=ax
+    )
+
+    # scale bar heights
+    for p in ax.patches:
+        p.set_height(p.get_height() / 2)
+
+    # rescale y-axis to match
+    ax.set_ylim(0, max(p.get_height() for p in ax.patches) * 1.1)
+    ax.set_title("Count of Samples per EV Bin")
+    ax.set_xlabel("EV Bin")
+    ax.set_ylabel("Count (scaled by 1/2)")
+    ax.tick_params(axis='x', rotation=45)
+
+    # Define accuracy: proportion of rows where parlay_net_odds != -1
+    accuracy_per_bin = df_parlay.groupby('ev_bin')['parlay_net_odds'].apply(lambda x: (x != -1).sum() / len(x)).reset_index()
+    accuracy_per_bin.rename(columns={'parlay_net_odds': 'accuracy'}, inplace=True)
+
+    sns.barplot(
+        data=accuracy_per_bin,
+        x='ev_bin',
+        y='accuracy',
+        ax=axes[2]
+    )
+    axes[2].set_title("Accuracy per EV Bin")
+    axes[2].set_xlabel("EV Bin")
+    axes[2].set_ylabel("Accuracy")
+    axes[2].tick_params(axis='x', rotation=45)
+
+    plt.tight_layout()
+
+    if path is not None: 
+        fig.savefig(path,
+            dpi=300,
+            bbox_inches="tight")
+
+
+    plt.show()
+
+
+
+def per_bet_analysis(df_kelly, path=None):
+    import math
+    choice_kelly = df_kelly[df_kelly['choice_ev'] > 0]
+
+    features = [
+        'choice_ev',
+        'choice_edge',
+        'choice_bet_sigma',
+        'choice_bet_sharpe',
+        'choice_proba',
+        'choice_juice'
+    ]
+
+    y = choice_kelly['fstar_net']
+
+    n = len(features)
+    ncols = 3
+    nrows = math.ceil(n / ncols)
+
+    fig, axes = plt.subplots(nrows, ncols, figsize=(5*ncols, 4*nrows))
+    axes = axes.flatten()
+
+    for i, col in enumerate(features):
+        x = choice_kelly[col]
+        sns.regplot(x=x, y=y, ax=axes[i])
+        axes[i].set_title(col)
+
+    # remove unused axes
+    for j in range(i + 1, len(axes)):
+        fig.delaxes(axes[j])
+
+    plt.tight_layout()
+
+    if path is not None: 
+        fig.savefig(path,
+            dpi=300,
+            bbox_inches="tight")
+
     plt.show()

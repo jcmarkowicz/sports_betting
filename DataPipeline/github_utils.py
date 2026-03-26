@@ -8,6 +8,8 @@ import os
 import numpy as np 
 import pandas as pd
 
+from pathlib import Path
+
 
 # Function to commit if changed
 def commit_if_changed(file_path, msg, branch="main"):
@@ -42,7 +44,7 @@ def commit_if_changed(file_path, msg, branch="main"):
     subprocess.run(["git", "push", push_url, f"HEAD:{branch}"], check=True)
 
 
-def floats_changed(file_path, tol=2e-10):
+def floats_changed(file_path, tol=2e-3):
     # current file
     df_new = pd.read_csv(file_path)
 
@@ -69,3 +71,19 @@ def floats_changed(file_path, tol=2e-10):
                 return True
 
     return False
+
+def delete_and_commit(path, message):
+
+    file_path = Path(path)
+
+    # 1. Delete the file
+    file_path.unlink(missing_ok=True)
+
+    # 2. Stage the deletion (IMPORTANT)
+    subprocess.run(["git", "rm", str(file_path)], check=False)
+
+    # 3. Commit the deletion
+    subprocess.run(["git", "commit", "-m", message], check=False)
+
+    # 4. Push
+    subprocess.run(["git", "push"], check=False)

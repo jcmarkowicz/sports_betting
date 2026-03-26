@@ -83,11 +83,13 @@ scaler_open = joblib.load(BASE_DIR / "Data" / "saved_models" / "scaler_open.pkl"
 scaler_close1 = joblib.load(BASE_DIR / "Data" / "saved_models" / "scaler_close1.pkl")
 scaler_close2 = joblib.load(BASE_DIR / "Data" / "saved_models" / "scaler_close2.pkl")
 
-feats_list = [open_feats, close1_feats, close2_feats]
 model_list = [model_open, model_close1, model_close2]
 scaler_list = [scaler_open, scaler_close1, scaler_close2]
+feats_list = [open_feats, close1_feats, close2_feats]
 
 type_list = ['open', 'close1', 'close2']
+
+# 0 for blue, 1 for red 
 fair_odds_list = [['dec_fair_open_blue', 'dec_fair_open_red'], 
                   ['dec_fair_close1_blue', 'dec_fair_close1_red'], 
                   ['dec_fair_close2_blue', 'dec_fair_close2_red']]
@@ -110,7 +112,7 @@ def generate_bets(df, select_odds=None, bankroll=500):
                                                 real_odds_list=real_odds_list, 
                                                 bankroll=bankroll, max_drawdown=0.3, N=250)
     
-    df_bets_all[['open_red', 'open_blue', 'close1_red', 'close1_blue', 'close2_red', 'close2_blue']] = df[['open_red', 'open_blue', 'close1_red', 'close1_blue', 'close2_red', 'close2_blue']]
+    df_bets_all[['open_red', 'open_blue']] = df[['open_red', 'open_blue']].values
     df_bets_arr, df_parlay_arr = seperate_bets_dfs(df_bets_all, df_parlay_all, type_list)
     
     if select_odds: 

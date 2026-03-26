@@ -20,7 +20,7 @@ SMTP_PORT = 587
 EMAIL_FROM = "jcmarkufc@gmail.com"  # Gmail sender
 
 EMAIL_PASSWORD = os.environ["EMAIL_PASSWORD"]
-EMAIL_TO = ['jcmarkowicz@outlook.com', 'jimmymarkowicz28@gmail.com','jasonszat@gmail.com']
+EMAIL_TO = ['jcmarkowicz@outlook.com'] # 'jimmymarkowicz28@gmail.com','jasonszat@gmail.com']
 
 columns_to_email = ['fighter_red', 'fighter_blue','pred_name_open',
                     'open_red','open_blue','pred_winner_open',
@@ -59,7 +59,6 @@ def email_bets(df_, date):
     """
     msg.attach(MIMEText(html_body, "html"))
 
-
     # ---- Straight Bets CSV ----
     bets_csv = df_bets[columns_to_email].to_csv(index=False)
 
@@ -71,6 +70,8 @@ def email_bets(df_, date):
         "attachment; filename=straight_bets.csv",
     )
     msg.attach(part)
+
+
 
     parlay_csv = df_parlay[parlay_columns].to_csv(index=False)
 
@@ -87,5 +88,6 @@ def email_bets(df_, date):
     with smtplib.SMTP("smtp.gmail.com", 587) as server:
         server.starttls()
         server.login(EMAIL_FROM, EMAIL_PASSWORD)
+
         # Pass the list of recipients to send_message
         server.send_message(msg, from_addr=EMAIL_FROM, to_addrs=EMAIL_TO)
