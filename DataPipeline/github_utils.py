@@ -49,9 +49,12 @@ def commit_if_changed(df, file_path, msg, branch="main"):
 
 
 def floats_changed(df_new, file_path, tol=2e-3):
+    
     # current file
-    df_old = pd.read_csv(file_path)
+    if not os.path.exists(file_path):
+        return True
 
+    df_old = pd.read_csv(file_path)
     if df_new.shape != df_old.shape:
         return True
 
