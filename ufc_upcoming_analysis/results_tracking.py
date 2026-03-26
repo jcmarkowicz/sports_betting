@@ -17,6 +17,7 @@ BASE_DIR = Path(__file__).resolve().parents[1]
 
 ml_history_fp = BASE_DIR / 'Data' / 'betting_results' / 'moneyline_results.csv'
 parlay_history_fp = BASE_DIR / 'Data' / 'betting_results' / 'parlay_results.csv'
+event_features_folder = BASE_DIR / "Data" / "upcoming_events" / "event_features" / "upcoming_odds_stats"
 
 non_merged_stats_fp = BASE_DIR / "Data" / "non_merged_features" / "non_merged_stats.csv"
 non_merged_odds_fp = BASE_DIR / "Data" / "non_merged_features" / "non_merged_odds.csv"
@@ -73,6 +74,9 @@ def archive_results():
 
             delete_and_commit(parlay_file, f'Deleting parlay bets for event {d}')
             delete_and_commit(ml_file, f'Deleting money line bets for event {d}')
+
+            features_fp = event_features_folder / f"upcoming_odds_stats_{d}"
+            delete_and_commit(features_fp)
 
 
 def calc_winner_parlay(df_parlay, df_single_event):
