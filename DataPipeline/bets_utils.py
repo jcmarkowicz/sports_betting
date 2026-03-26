@@ -112,7 +112,6 @@ def generate_bets(df, select_odds=None, bankroll=500):
                                                 real_odds_list=real_odds_list, 
                                                 bankroll=bankroll, max_drawdown=0.3, N=250)
     
-    df_bets_all[['open_red', 'open_blue']] = df[['open_red', 'open_blue']].values
     df_bets_arr, df_parlay_arr = seperate_bets_dfs(df_bets_all, df_parlay_all, type_list)
     
     if select_odds: 

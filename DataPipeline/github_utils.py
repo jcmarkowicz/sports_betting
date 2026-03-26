@@ -12,13 +12,17 @@ from pathlib import Path
 
 
 # Function to commit if changed
-def commit_if_changed(file_path, msg, branch="main"):
+def commit_if_changed(df, file_path, msg, branch="main"):
 
     repo = os.environ["GITHUB_REPOSITORY"]
     token = os.environ["GITHUB_TOKEN"]
 
-    if not floats_changed(file_path):
+    if not floats_changed(df, file_path):
         return
+
+    df = df.reset_index(drop=True)
+    df.index = range(len(df))
+    df.to_csv(file_path)
 
     subprocess.run(["git", "add", str(file_path)], check=True)
 
@@ -44,17 +48,9 @@ def commit_if_changed(file_path, msg, branch="main"):
     subprocess.run(["git", "push", push_url, f"HEAD:{branch}"], check=True)
 
 
-def floats_changed(file_path, tol=2e-3):
+def floats_changed(df_new, file_path, tol=2e-3):
     # current file
-    df_new = pd.read_csv(file_path)
-
-    # previous committed version
-    try:
-        old_bytes = subprocess.check_output(["git", "show", f"HEAD:{file_path}"])
-    except subprocess.CalledProcessError:
-        return True  # file not previously tracked
-
-    df_old = pd.read_csv(StringIO(old_bytes.decode()))
+    df_old = pd.read_csv(file_path)
 
     if df_new.shape != df_old.shape:
         return True
