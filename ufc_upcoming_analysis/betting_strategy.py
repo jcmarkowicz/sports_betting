@@ -5,7 +5,9 @@ import statsmodels.api as sm
 
 import os 
 import sys 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))) 
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).parent))
 
 from betting_algos import parlay_top_ev, run_per_bet_scaling, expected_value, kelly_edge
 from set_column_names import set_ml_bets_cols, set_parlay_cols, get_ml_bet_cols, get_parlay_cols
