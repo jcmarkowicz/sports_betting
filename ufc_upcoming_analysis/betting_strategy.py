@@ -73,6 +73,8 @@ def df_parlay_tests(df_parlay, choice_ev):
     if np.count_nonzero(~np.isnan(choice_ev)) >= 2:
         assert not df_parlay.isna().any().any(), 'Parlay Bets Error'
 
+    assert df_parlay.shape[0] == PARLAY_SIZE, 'Parlay df size error '
+
 def merge_bets_types(df_bets, df_bets_combined):
     df_bets_combined = df_bets_combined.merge(
                     df_bets,
@@ -119,7 +121,7 @@ def betting_pipeline(upcoming_df, feats_list, model_list, scaler_list, type_list
 
         if df_valid_num.shape[0] == 0:
 
-            df_bets = set_ml_bets_cols(type, {}, length=df.shape[0], all_na=True)
+            df_bets = set_ml_bets_cols(type, {}, required_df_idx, all_na=True)
             df_bets_combined = merge_bets_types(df_bets, df_bets_combined)
 
             df_parlay = set_parlay_cols(type, {}, np.arange(PARLAY_SIZE), all_na=True)

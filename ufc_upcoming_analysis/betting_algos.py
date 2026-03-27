@@ -7,7 +7,7 @@ from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent))
 
-from set_column_names import get_parlay_cols
+from set_column_names import set_parlay_cols
 
 
 def parlay_top_ev(data, bankroll, type, top_n=[0,1]):
@@ -15,7 +15,7 @@ def parlay_top_ev(data, bankroll, type, top_n=[0,1]):
     data = data[data['choice_ev'] > 0]
 
     if data.shape[0] < 2:
-        df_parlay = get_parlay_cols(type, {}, np.arange(len(top_n)), all_na=True)
+        df_parlay = set_parlay_cols(type, {}, np.arange(len(top_n)), all_na=True)
         return df_parlay
     
     df_top_n = data.sort_values(by='choice_ev', ascending=False).iloc[top_n].copy()
