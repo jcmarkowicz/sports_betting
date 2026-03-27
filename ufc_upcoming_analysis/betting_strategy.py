@@ -132,7 +132,7 @@ def betting_pipeline(upcoming_df, feats_list, model_list, scaler_list, type_list
             df_bets = set_ml_bets_cols(type, {}, required_df_idx, all_na=True)
             df_bets_combined = merge_bets_types(df_bets, df_bets_combined)
 
-            df_parlay = set_parlay_cols(type, {}, np.arange(PARLAY_SIZE), all_na=True)
+            df_parlay = set_parlay_cols(type, {}, np.arange(2), all_na=True)
             df_parlay_combined = merge_parlay_types(df_parlay, df_parlay_combined)
             continue
 

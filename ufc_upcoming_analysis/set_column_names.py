@@ -44,6 +44,7 @@ def set_parlay_cols(type_, pkt, required_idx, all_na=False):
 
     if all_na:
         df = pd.DataFrame({v: pd.NA for v in cols.values()}, index=required_idx)
+        assert df.shape[0] == len(required_idx), 'wrong index parlay df'
     else: 
         assert set(pkt.keys()) == set(cols), 'parlay pkt error'
         df = pd.DataFrame({cols[key]:value for key, value in pkt.items()}, index=required_idx)

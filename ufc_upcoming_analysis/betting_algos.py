@@ -16,8 +16,16 @@ def parlay_top_ev(data, bankroll, type, top_n=[0,1]):
 
     if len(data) < 2:
         print(data['date'])
-        df_parlay = set_parlay_cols(type, {}, np.arange(len(top_n)), all_na=True)
-        return df_parlay
+        cols = [
+            f'choice_fighter_name_{type}', 
+            f'parlay_fstar_{type}',
+            f'parlay_odds_{type}', 
+            f'stake_{type}', 
+            f'parlay_ev_{type}', 
+            f'parlay_prob_{type}'
+        ]
+        df_nans = pd.DataFrame({col: pd.NA for col in cols}, index=np.arange(2))        
+        return df_nans
     
     df_top_n = data.sort_values(by='choice_ev', ascending=False).iloc[top_n].copy()
     df_top_n = df_top_n.rename(columns={'choice_fighter_name': f'choice_fighter_name_{type}'})
