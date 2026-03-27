@@ -184,8 +184,8 @@ def calc_winner_ml(df_single_event, df_money_line):
     df_data = pd.concat([profit_open, profit_close1, profit_close2], axis=1)
     df_data.columns = ['net_odds_open', 'net_odds_close1', 'net_odds_close2']
 
-    df_data = pd.concat([df_data, df_single_event[['fighter_red', 
-                                                   'fighter_blue',
+    df_data = pd.concat([df_data, df_money_line[[   'fighter_red', 
+                                                    'fighter_blue',
                                                     'pred_name_open', 
                                                     'pred_name_close1', 
                                                     'pred_name_close2',
@@ -205,7 +205,7 @@ def calc_winner_ml(df_single_event, df_money_line):
         (df_data['profit_open'] != 0 | df_data['profit_open'].notna())
     )
     assert mask.all(), "Money Line results profit error"
-    
+
     return df_data
 
 
