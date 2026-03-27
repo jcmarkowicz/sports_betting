@@ -27,7 +27,6 @@ event_features_folder = BASE_DIR / "Data" / "upcoming_events" / "event_features"
 non_merged_stats_fp = BASE_DIR / "Data" / "non_merged_features" / "non_merged_stats.csv"
 non_merged_odds_fp = BASE_DIR / "Data" / "non_merged_features" / "non_merged_odds.csv"
 
-
 ml_pct_returns_fp = BASE_DIR / 'Data' / 'betting_results' / 'ml_pct_returns.csv'
 parlay_pct_returns_fp = BASE_DIR / 'Data' / 'betting_results' / 'parlay_pct_returns.csv'
 
