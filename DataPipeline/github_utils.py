@@ -10,6 +10,7 @@ import pandas as pd
 
 from pathlib import Path
 
+from pandas.api.types import is_numeric_dtype
 
 # Function to commit if changed
 def commit_if_changed(df, file_path, msg, branch="main"):
@@ -62,9 +63,10 @@ def floats_changed(df_new, file_path, tol=2e-3):
         a = df_new[col]
         b = df_old[col]
 
-        if np.issubdtype(a.dtype, np.number):
-            if not np.allclose(a.values, b.values, atol=tol, rtol=0):
-                return True
+    if is_numeric_dtype(a):
+        if not np.allclose(a.to_numpy(), b.to_numpy(), atol=tol, rtol=0, equal_nan=True):
+            return True
+        
         else:
             if not a.equals(b):
                 return True
