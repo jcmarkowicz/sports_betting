@@ -236,6 +236,7 @@ def betting_pipeline(upcoming_df, feats_list, model_list, scaler_list, type_list
         df_parlay_tests(df_parlay_final, choice_ev)
         df_parlay_combined = merge_parlay_types(df_parlay_final, df_parlay_combined)
 
+
     return df_bets_combined, df_parlay_combined
 
 

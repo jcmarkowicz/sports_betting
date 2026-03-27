@@ -5,6 +5,8 @@ from pathlib import Path
 
 import pandas as pd 
 import numpy as np 
+import matplotlib.pyplot as plt 
+import seaborn as sns 
 
 from datetime import datetime 
 from DataPipeline.webscrapers.scraping_pipeline import UFC_Webscraper
@@ -22,6 +24,11 @@ event_features_folder = BASE_DIR / "Data" / "upcoming_events" / "event_features"
 non_merged_stats_fp = BASE_DIR / "Data" / "non_merged_features" / "non_merged_stats.csv"
 non_merged_odds_fp = BASE_DIR / "Data" / "non_merged_features" / "non_merged_odds.csv"
 
+
+ml_pct_returns_fp = BASE_DIR / 'Data' / 'betting_results' / 'ml_pct_returns.csv'
+parlay_pct_returns_fp = BASE_DIR / 'Data' / 'betting_results' / 'parlay_pct_returns.csv'
+
+
 def archive_results():
 
     ml_bets_folder = BASE_DIR / "Data" / "upcoming_events" / "straight_bets" 
@@ -34,7 +41,8 @@ def archive_results():
                                         'pred_name_open':[], 'pred_name_close1':[], 'pred_name_close2':[],
                                         'open_odds':[], 'close1_odds':[], 'close2_odds':[],
                                        'net_odds_open':[], 'net_odds_close1':[], 'net_odds_close2':[],
-                                         'fstar_open':[], 'fstar_close1':[], 'fstar_close2':[]
+                                         'fstar_open':[], 'fstar_close1':[], 'fstar_close2':[], 
+                                         'date':[]
                                          })
 
     if os.path.exists(parlay_history_fp): 
@@ -44,9 +52,21 @@ def archive_results():
                     {'choice_fighter_name_open':[], 'choice_fighter_name_close1':[], 'choice_fighter_name_close2':[],
                      'open_net_fstar':[], 'close1_net_fstar':[], 'close2_net_fstar':[],
                     'open_net_odds':[], 'close1_net_odds':[], 'close2_net_odds':[],
+                    'date':[]
                     }
          )
+        
 
+    earliest_date = None
+    for ml_file in os.listdir(ml_bets_folder):
+        date_str = ml_file.split('_')[-1]
+        d = datetime.strptime(date_str, "%Y-%m-%d").date()
+        
+        if earliest_date is None or d < earliest_date:
+            earliest_date = d
+
+    scraped_stats = get_missing_stats(earliest_date) 
+    df_single_event = single_event_features(scraped_stats)
 
     for ml_file in os.listdir(ml_bets_folder):
 
@@ -57,19 +77,20 @@ def archive_results():
 
             df_ml = pd.read_csv(ml_file)
 
-            scraped_stats = get_missing_stats(d) 
-            df_single_event = single_event_features(scraped_stats)
-
             parlay_file = parlay_bets_folder / f'parlay_all_{d}.csv'
             parlay_df = pd.read_csv(parlay_file)
 
-            df_results_ml = calc_winner_ml(df_single_event, df_ml)
+            df_event_date = df_single_event[df_single_event['date'] == d]
+
+            df_results_ml = calc_winner_ml(df_event_date, df_ml)
+            df_results_ml['date'] = d
             df_ml_history = pd.concat([df_ml_history, df_results_ml], axis=0).reset_index(drop=True)
 
             df_ml_history.to_csv(ml_history_fp)
             commit_if_changed(ml_history_fp, f'updating money line results for fight date: {d}')
 
-            parlay_results = calc_winner_parlay(parlay_df, df_single_event)
+            parlay_results = calc_winner_parlay(parlay_df, df_event_date)
+            parlay_results['date'] = d
             df_parlay_history = pd.concat([df_parlay_history, parlay_results],axis=0).reset_index(drop=True)
 
             df_parlay_history.to_csv(parlay_history_fp)
@@ -211,5 +232,60 @@ def get_missing_stats(prev_fight_date):
         commit_if_changed(f'{non_merged_odds_fp}', f'Updating Non Merged Odds for fight date: {prev_fight_date}')
 
 
+def returns_by_date():
+    
+    df_ml = pd.read_csv(ml_history_fp)
+    df_parlay = pd.read_csv(parlay_history_fp)
+
+    types = ['open', 'close1', 'close2']
+    ml_pct_returns = {type_:[] for type_ in types}
+    parlay_pct_returns = {type_:[] for type_ in types}
+
+
+    for date, group in df_ml.groupby('date'): 
+        
+        parlay_group = df_parlay[df_parlay['date']==date]
+
+        for type_ in types: 
+            ml_pct_returns[type_].append(group[f'net_odds_{type_}'].sum())
+
+            parlay_net = parlay_group[f'{type_}_net_odds'].iloc[0]
+            parlay_pct_returns[type_].append(parlay_net)
+
+    df_ml_pct = pd.DataFrame(ml_pct_returns)
+    df_parlay_pct = pd.DataFrame(parlay_pct_returns)
+
+    df_ml_pct.to_csv(ml_pct_returns_fp)
+    commit_if_changed(df_ml_pct, ml_pct_returns_fp, f'Saving Percent Returns ML')
+
+    df_parlay_pct.to_csv(parlay_pct_returns_fp)
+    commit_if_changed(df_parlay_pct, parlay_pct_returns_fp, f'Saving Percent Returns Parlay')
+
+
+    fig, axes = plt.subplots(2, len(types), figsize=(15,6))
+    for i, type_ in enumerate(types):
+        # ML percent returns
+        sns.histplot(ml_pct_returns[type_], ax=axes[0, i], kde=False, color='skyblue')
+        avg_ml = sum(ml_pct_returns[type_])/len(ml_pct_returns[type_])
+        total_ml = sum(ml_pct_returns[type_])
+        axes[0, i].set_title(f"ML {type_} — Avg: {avg_ml:.2%}, Total: {total_ml:.2%}")
+        
+        # Parlay percent returns
+        sns.histplot(parlay_pct_returns[type_], ax=axes[1, i], kde=False, color='salmon')
+        avg_parlay = sum(parlay_pct_returns[type_])/len(parlay_pct_returns[type_])
+        total_parlay = sum(parlay_pct_returns[type_])
+        axes[1, i].set_title(f"Parlay {type_} — Avg: {avg_parlay:.2%}, Total: {total_parlay:.2%}")
+
+    plt.tight_layout()
+
+    path = BASE_DIR / 'Data' / 'plot_pngs' / 'pct_returns.png'
+    fig.savefig(path,
+            dpi=300,
+            bbox_inches="tight")
+        
+    plt.show()
+
+
 if __name__ == "__main__":
     archive_results()
+    returns_by_date()
