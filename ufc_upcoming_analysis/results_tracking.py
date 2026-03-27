@@ -225,7 +225,9 @@ def get_missing_stats(prev_fight_date):
         if os.path.exists(non_merged_stats_fp):
             df_stats_missing = pd.read_csv(non_merged_stats_fp)
             df_stats_missing = pd.concat([df_stats_missing, missing_stats], axis=0).reset_index(drop=True)
-        
+        else:
+            df_stats_missing = missing_stats
+
         df_stats_missing.to_csv(non_merged_stats_fp)
         commit_if_changed(f'{non_merged_stats_fp}', f'Updating Non Merged Stats for fight date: {prev_fight_date}')
 
@@ -233,6 +235,8 @@ def get_missing_stats(prev_fight_date):
         if os.path.exists(non_merged_odds_fp):
             df_odds_missing = pd.read_csv(non_merged_odds_fp)
             df_odds_missing = pd.concat([df_odds_missing, missing_odds], axis=0).reset_index(drop=True)
+        else:
+            df_odds_missing = missing_odds
 
         df_odds_missing.to_csv(non_merged_odds_fp)
         commit_if_changed(f'{non_merged_odds_fp}', f'Updating Non Merged Odds for fight date: {prev_fight_date}')
