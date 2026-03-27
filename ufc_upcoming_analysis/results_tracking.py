@@ -41,7 +41,9 @@ def archive_results():
     else: 
          df_ml_history = pd.DataFrame({'fighter_red':[], 'fighter_blue':[], 'winner': [],
                                         'pred_name_open':[], 'pred_name_close1':[], 'pred_name_close2':[],
-                                        'open_odds':[], 'close1_odds':[], 'close2_odds':[],
+                                                    'open_red':[], 'open_blue':[],  
+                                                    'close1_red':[], 'close1_blue':[],
+                                                    'close2_red':[], 'close2_blue':[],
                                        'net_odds_open':[], 'net_odds_close1':[], 'net_odds_close2':[],
                                          'fstar_open':[], 'fstar_close1':[], 'fstar_close2':[], 
                                          'date':[]
