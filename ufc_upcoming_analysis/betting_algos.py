@@ -14,7 +14,8 @@ def parlay_top_ev(data, bankroll, type, top_n=[0,1]):
 
     data = data[data['choice_ev'] > 0]
 
-    if data.shape[0] < 2:
+    if len(data) < 2:
+        print(data['date'])
         df_parlay = set_parlay_cols(type, {}, np.arange(len(top_n)), all_na=True)
         return df_parlay
     
