@@ -213,28 +213,29 @@ def moneyline_profit(stake, odds):
 
 
 def get_missing_stats(prev_fight_date): 
-        """ previous fight date from file string """
+    """ previous fight date from file string """
 
-        scraper = UFC_Webscraper()
-        missing_stats = scraper.scrape_until(prev_fight_date)
-        missing_odds = scraper.get_fighter_odds(missing_stats) 
+    scraper = UFC_Webscraper()
+    missing_stats = scraper.scrape_until(prev_fight_date)
+    missing_odds = scraper.get_fighter_odds(missing_stats) 
 
-        if os.path.exists(non_merged_stats_fp):
-            df_stats_missing = pd.read_csv(non_merged_stats_fp)
-            df_stats_missing = pd.concat([df_stats_missing, missing_stats], axis=0).reset_index(drop=True)
-        else:
-            df_stats_missing = missing_stats
+    if os.path.exists(non_merged_stats_fp):
+        df_stats_missing = pd.read_csv(non_merged_stats_fp)
+        df_stats_missing = pd.concat([df_stats_missing, missing_stats], axis=0).reset_index(drop=True)
+    else:
+        df_stats_missing = missing_stats
 
-        commit_if_changed(df_stats_missing, non_merged_stats_fp, f'Updating Non Merged Stats for fight date: {prev_fight_date}')
+    commit_if_changed(df_stats_missing, non_merged_stats_fp, f'Updating Non Merged Stats for fight date: {prev_fight_date}')
 
-        # merge odds history 
-        if os.path.exists(non_merged_odds_fp):
-            df_odds_missing = pd.read_csv(non_merged_odds_fp)
-            df_odds_missing = pd.concat([df_odds_missing, missing_odds], axis=0).reset_index(drop=True)
-        else:
-            df_odds_missing = missing_odds
+    # merge odds history 
+    if os.path.exists(non_merged_odds_fp):
+        df_odds_missing = pd.read_csv(non_merged_odds_fp)
+        df_odds_missing = pd.concat([df_odds_missing, missing_odds], axis=0).reset_index(drop=True)
+    else:
+        df_odds_missing = missing_odds
 
-        commit_if_changed(df_odds_missing, non_merged_odds_fp, f'Updating Non Merged Odds for fight date: {prev_fight_date}')
+    commit_if_changed(df_odds_missing, non_merged_odds_fp, f'Updating Non Merged Odds for fight date: {prev_fight_date}')
+    return df_stats_missing
 
 
 def returns_by_date():
