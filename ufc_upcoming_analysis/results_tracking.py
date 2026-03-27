@@ -106,7 +106,7 @@ def archive_results():
             delete_and_commit(ml_file, f'Deleting money line bets for event {date_str}')
 
             features_fp = event_features_folder / f"upcoming_odds_stats_{date_str}"
-            delete_and_commit(features_fp)
+            delete_and_commit(features_fp, f'Deleting event features for event {date_str}')
 
 
 def calc_winner_parlay(df_parlay, df_single_event):
