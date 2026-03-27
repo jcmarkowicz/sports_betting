@@ -62,7 +62,7 @@ def archive_results():
 
     earliest_date = None
     for ml_file in os.listdir(ml_bets_folder):
-        date_str = ml_file.split('_')[-1]
+        date_str = ml_file.split('_')[-1].replace('.csv', '')
         d = datetime.strptime(date_str, "%Y-%m-%d").date()
         
         if earliest_date is None or d < earliest_date:
@@ -73,7 +73,7 @@ def archive_results():
 
     for ml_file in os.listdir(ml_bets_folder):
 
-        date_str = ml_file.split('_')[-1]
+        date_str = ml_file.split('_')[-1].replace('.csv', '')
         d = datetime.strptime(date_str, "%Y-%m-%d").date()
 
         if datetime.now().date() > d:
