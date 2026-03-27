@@ -68,41 +68,44 @@ def archive_results():
         if earliest_date is None or d < earliest_date:
             earliest_date = d
 
+    earliest_date = earliest_date.strftime("%Y-%m-%d")
     scraped_stats = get_missing_stats(earliest_date) 
     df_single_event = single_event_features(scraped_stats)
+
+    df_single_event['date'] = pd.to_datetime(df_single_event['date'])
 
     for ml_file in os.listdir(ml_bets_folder):
 
         date_str = ml_file.split('_')[-1].replace('.csv', '')
-        d = datetime.strptime(date_str, "%Y-%m-%d").date()
+        d_ts = pd.to_datetime(date_str)  
 
-        if datetime.now().date() > d:
+        if pd.Timestamp.now().normalize() > d_ts:
 
             df_ml = pd.read_csv(ml_file)
 
-            parlay_file = parlay_bets_folder / f'parlay_all_{d}.csv'
+            parlay_file = parlay_bets_folder / f'parlay_all_{date_str}.csv'
             parlay_df = pd.read_csv(parlay_file)
 
-            df_event_date = df_single_event[df_single_event['date'] == d]
+            df_event_date = df_single_event[df_single_event['date'] == d_ts]
 
             df_results_ml = calc_winner_ml(df_event_date, df_ml)
-            df_results_ml['date'] = d
+            df_results_ml['date'] = d_ts
             df_ml_history = pd.concat([df_ml_history, df_results_ml], axis=0).reset_index(drop=True)
 
             df_ml_history.to_csv(ml_history_fp)
-            commit_if_changed(ml_history_fp, f'updating money line results for fight date: {d}')
+            commit_if_changed(ml_history_fp, f'updating money line results for fight date: {date_str}')
 
             parlay_results = calc_winner_parlay(parlay_df, df_event_date)
-            parlay_results['date'] = d
+            parlay_results['date'] = d_ts
             df_parlay_history = pd.concat([df_parlay_history, parlay_results],axis=0).reset_index(drop=True)
 
             df_parlay_history.to_csv(parlay_history_fp)
-            commit_if_changed(f'Updating parlay results for fight date: {d}')
+            commit_if_changed(f'Updating parlay results for fight date: {date_str}')
 
-            delete_and_commit(parlay_file, f'Deleting parlay bets for event {d}')
-            delete_and_commit(ml_file, f'Deleting money line bets for event {d}')
+            delete_and_commit(parlay_file, f'Deleting parlay bets for event {date_str}')
+            delete_and_commit(ml_file, f'Deleting money line bets for event {date_str}')
 
-            features_fp = event_features_folder / f"upcoming_odds_stats_{d}"
+            features_fp = event_features_folder / f"upcoming_odds_stats_{date_str}"
             delete_and_commit(features_fp)
 
 
@@ -243,7 +246,6 @@ def returns_by_date():
     types = ['open', 'close1', 'close2']
     ml_pct_returns = {type_:[] for type_ in types}
     parlay_pct_returns = {type_:[] for type_ in types}
-
 
     for date, group in df_ml.groupby('date'): 
         
