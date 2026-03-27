@@ -35,6 +35,8 @@ def model_predict(model, df, y_hat, feats, num_feats, cat_feats, valid_mask, sca
     X_valid = sm.add_constant(X_valid)
     train_cols = model.model.exog_names            
 
+    print(X_valid.columns, train_cols)
+
     # test if missing or extra columns 
     missing = set(train_cols) - set(X_valid.columns)
     extra = set(X_valid.columns) - set(train_cols)
@@ -45,6 +47,7 @@ def model_predict(model, df, y_hat, feats, num_feats, cat_feats, valid_mask, sca
     X_valid = X_valid.reindex(columns=train_cols)
     if X_valid.isna().any().any():
         raise ValueError("NaNs present after alignment")
+
 
     # predict
     y_hat.loc[valid_mask] = model.predict(X_valid)
