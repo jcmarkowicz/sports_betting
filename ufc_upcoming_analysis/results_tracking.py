@@ -153,9 +153,9 @@ def calc_winner_ml(df_single_event, df_money_line):
 
     assert df_single_event.shape[0] == df_money_line.shape[0], 'scraped results df shape mismatch with bets df'
 
-    profit_open = pd.Series(0, index=range(df_single_event.shape[0]))
-    profit_close1 = pd.Series(0, index=range(df_single_event.shape[0]))
-    profit_close2 = pd.Series(0, index=range(df_single_event.shape[0]))
+    profit_open = pd.Series(0.0, index=range(df_single_event.shape[0]))
+    profit_close1 = pd.Series(0.0, index=range(df_single_event.shape[0]))
+    profit_close2 = pd.Series(0.0, index=range(df_single_event.shape[0]))
 
     for i, row in df_money_line.iterrows():
             
