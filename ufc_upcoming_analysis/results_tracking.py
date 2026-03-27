@@ -30,18 +30,21 @@ def archive_results():
     if os.path.exists(ml_history_fp):
         df_ml_history = pd.read_csv(ml_history_fp)
     else: 
-         df_ml_history = pd.DataFrame({'fighter_red':[], 'fighter_blue':[],
-                                     'pred_name_open':[], 'pred_name_close1':[], 'pred_name_close2':[],
-                                     'open_odds':[], 'close1_odds':[], 'close2_odds':[],
-                                     'fstar_open':[], 'fstar_close1':[], 'fstar_close2':[],})
+         df_ml_history = pd.DataFrame({'fighter_red':[], 'fighter_blue':[], 'winner': [],
+                                        'pred_name_open':[], 'pred_name_close1':[], 'pred_name_close2':[],
+                                        'open_odds':[], 'close1_odds':[], 'close2_odds':[],
+                                       'net_odds_open':[], 'net_odds_close1':[], 'net_odds_close2':[],
+                                         'fstar_open':[], 'fstar_close1':[], 'fstar_close2':[]
+                                         })
 
     if os.path.exists(parlay_history_fp): 
         df_parlay_history = pd.read_csv(parlay_history_fp)
     else: 
         df_parlay_history = pd.DataFrame(
-                    {'open_net_fstar':[], 'close1_net_fstar':[], 'close2_net_fstar':[],
+                    {'choice_fighter_name_open':[], 'choice_fighter_name_close1':[], 'choice_fighter_name_close2':[],
+                     'open_net_fstar':[], 'close1_net_fstar':[], 'close2_net_fstar':[],
                     'open_net_odds':[], 'close1_net_odds':[], 'close2_net_odds':[],
-                    'choice_fighter_name_open':[], 'choice_fighter_name_close1':[], 'choice_fighter_name_close2':[]}
+                    }
          )
 
 
@@ -108,9 +111,15 @@ def calc_winner_parlay(df_parlay, df_single_event):
     close1_net_fstar = close1_stake if close1_win else -close1_stake
     close2_net_fstar = close2_stake if close2_win else -close2_stake
 
-    parlay_results = {'open_net_fstar':open_net_fstar, 'close1_net_fstar':close1_net_fstar, 'close2_net_fstar':close2_net_fstar,
-                    'open_net_odds':profit_open, 'close1_net_odds':profit_close1, 'close2_net_odds':profit_close2,
-                    'choice_fighter_name_open':choice_fighters_open, 'choice_fighter_name_close1':choice_fighters_close1, 'choice_fighter_name_close2':choice_fighters_close2 }
+    parlay_results = {'open_net_fstar':open_net_fstar, 
+                      'close1_net_fstar':close1_net_fstar, 
+                      'close2_net_fstar':close2_net_fstar,
+                    'open_net_odds':profit_open, 
+                    'close1_net_odds':profit_close1, 
+                    'close2_net_odds':profit_close2,
+                    'choice_fighter_name_open':choice_fighters_open, 
+                    'choice_fighter_name_close1':choice_fighters_close1, 
+                    'choice_fighter_name_close2':choice_fighters_close2 }
 
     return parlay_results
 
@@ -155,10 +164,17 @@ def calc_winner_ml(df_single_event, df_money_line):
     df_data = pd.concat([profit_open, profit_close1, profit_close2], axis=1)
     df_data.columns = ['net_odds_open', 'net_odds_close1', 'net_odds_close2']
 
-    df_data = pd.concat([df_data, df_single_event[['fighter_red', 'fighter_blue',
-                                     'pred_name_open', 'pred_name_close1', 'pred_name_close2',
-                                     'open_odds', 'close1_odds', 'close2_odds',
-                                     'fstar_open', 'fstar_close1', 'fstar_close2',
+    df_data = pd.concat([df_data, df_single_event[['fighter_red', 
+                                                   'fighter_blue',
+                                                    'pred_name_open', 
+                                                    'pred_name_close1', 
+                                                    'pred_name_close2',
+                                                    'open_odds', 
+                                                    'close1_odds', 
+                                                    'close2_odds',
+                                                    'fstar_open', 
+                                                    'fstar_close1', 
+                                                    'fstar_close2',
                                      ]]], axis=1).reset_index(drop=True)
     
     df_data = pd.concat([df_data, df_single_event['winner']], axis=1).reset_index(drop=True)
