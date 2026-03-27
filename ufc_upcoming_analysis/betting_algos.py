@@ -73,7 +73,7 @@ def run_per_bet_scaling(bets_df, max_drawdown, bankroll, N):
         real_odds = row["real_odds"]
         ev = row["ev"]
 
-        if f_star <= 0 or ev < 0:
+        if f_star <= 0 or ev <= 0:
             f_final = f_star
             s = 0
 

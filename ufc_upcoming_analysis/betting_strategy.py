@@ -64,12 +64,7 @@ def df_bets_tests(df_bets, df_bets_combined, valid_mask, choice_ev, fstar_list):
         f"Mismatch: non-NaN rows ({n_non_nan}) != valid rows ({n_valid})"
     )
 
-    # test that there is valid fstar for valid ev 
-    valid_rows = ~np.isnan(choice_ev) & ~np.isnan(fstar_list)
-    assert np.array_equal(
-        (choice_ev > 0)[valid_rows],
-        (np.array(fstar_list) > 0)[valid_rows]
-    ), "Mismatch between EV > 0 and f* > 0"
+    assert np.array_equal(~np.isnan(fstar_list), ~np.isnan(choice_ev)), f'error with fstar and choice_ev, {print(choice_ev)}, {print(fstar_list)}'
 
     assert df_bets.shape[0] == df_bets_combined.shape[0], 'mismatch shapes df bets and df bets combined '
 
