@@ -9,13 +9,16 @@ import matplotlib.pyplot as plt
 import seaborn as sns 
 
 from datetime import datetime 
-from DataPipeline.webscrapers.scraping_pipeline import UFC_Webscraper
-from DataPipeline.FeatureEngineering.BuildFeatures.fight_time_feats import single_event_features
-
-from DataPipeline.github_utils import commit_if_changed, delete_and_commit
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))) 
 BASE_DIR = Path(__file__).resolve().parents[1]
+
+sys.path.append(str(Path(__file__).parent))
+
+from DataPipeline.webscrapers.scraping_pipeline import UFC_Webscraper
+from DataPipeline.FeatureEngineering.BuildFeatures.fight_time_feats import single_event_features
+from DataPipeline.github_utils import commit_if_changed, delete_and_commit
+
 
 ml_history_fp = BASE_DIR / 'Data' / 'betting_results' / 'moneyline_results.csv'
 parlay_history_fp = BASE_DIR / 'Data' / 'betting_results' / 'parlay_results.csv'
