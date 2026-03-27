@@ -32,11 +32,7 @@ def parlay_top_ev(data, bankroll, type, top_n=[0,1]):
     df_top_n[f'parlay_prob_{type}'] = parlay_prob
     df_top_n[f'parlay_ev_{type}'] = parlay_ev
 
-    df_top_n[f'choice_fighter_name_{type}'] = np.where(
-        df_top_n['pred_winner'].eq(1),
-        df_top_n['fighter_red'],
-        df_top_n['fighter_blue']
-    )
+    df_top_n[f'choice_fighter_name_{type}'] = data['choice_fighter_name'].values
 
     df_top_n[f'parlay_fstar_{type}'] = parlay_kelly
     df_top_n[f'stake_{type}'] = stake
