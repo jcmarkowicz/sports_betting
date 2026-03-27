@@ -80,7 +80,8 @@ def archive_results():
 
         if pd.Timestamp.now().normalize() > d_ts:
 
-            df_ml = pd.read_csv(ml_file)
+            fp = ml_bets_folder / ml_file
+            df_ml = pd.read_csv(fp)
 
             parlay_file = parlay_bets_folder / f'parlay_all_{date_str}.csv'
             parlay_df = pd.read_csv(parlay_file)
