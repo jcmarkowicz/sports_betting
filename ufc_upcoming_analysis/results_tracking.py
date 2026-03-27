@@ -180,11 +180,6 @@ def calc_winner_ml(df_single_event, df_money_line):
             profit_close1[i] = moneyline_profit(close1_stake, close1_odds) if pred_close1 == winner_name else -close1_stake * close1_odds
             profit_close2[i] = moneyline_profit(close2_stake, close2_odds) if pred_close2 == winner_name else -close2_stake * close2_odds
 
-    mask = (
-        (df_money_line['fstar_open'] != 0 | df_money_line['fstar_open'].notna()) &
-        (df_data['profit_open'] != 0 | df_data['profit_open'].notna())
-    )
-    assert mask.all(), "Money Line results profit error"
 
     df_data = pd.concat([profit_open, profit_close1, profit_close2], axis=1)
     df_data.columns = ['net_odds_open', 'net_odds_close1', 'net_odds_close2']
@@ -203,6 +198,14 @@ def calc_winner_ml(df_single_event, df_money_line):
                                      ]]], axis=1).reset_index(drop=True)
     
     df_data = pd.concat([df_data, df_single_event['winner']], axis=1).reset_index(drop=True)
+
+
+    mask = (
+        (df_money_line['fstar_open'] != 0 | df_money_line['fstar_open'].notna()) &
+        (df_data['profit_open'] != 0 | df_data['profit_open'].notna())
+    )
+    assert mask.all(), "Money Line results profit error"
+    
     return df_data
 
 
