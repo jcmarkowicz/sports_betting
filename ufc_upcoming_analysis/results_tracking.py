@@ -115,13 +115,13 @@ def calc_winner_parlay(df_parlay, df_single_event):
     choice_fighters_close1 = df_parlay['choice_fighter_name_close1'].values
     choice_fighters_close2 = df_parlay['choice_fighter_name_close2'].values
 
-    open_odds = df_parlay['open_odds']
-    close1_odds = df_parlay['close1_odds']
-    close2_odds = df_parlay['close2_odds']
+    open_odds = df_parlay['parlay_odds_open']
+    close1_odds = df_parlay['parlay_odds_close1']
+    close2_odds = df_parlay['parlay_odds_close2']
     
-    open_stake = df_parlay['fstar_open']
-    close1_stake = df_parlay['fstar_close1']
-    close2_stake = df_parlay['fstar_close2']
+    open_stake = df_parlay['parlay_fstar_open']
+    close1_stake = df_parlay['parlay_fstar_close1']
+    close2_stake = df_parlay['parlay_fstar_close2']
 
     winner_names = df_single_event['winner'].values
 
