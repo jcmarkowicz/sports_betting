@@ -91,15 +91,13 @@ def archive_results():
             df_results_ml['date'] = d_ts
             df_ml_history = pd.concat([df_ml_history, df_results_ml], axis=0).reset_index(drop=True)
 
-            df_ml_history.to_csv(ml_history_fp)
-            commit_if_changed(ml_history_fp, f'updating money line results for fight date: {date_str}')
+            commit_if_changed(df_ml_history, ml_history_fp, f'updating money line results for fight date: {date_str}')
 
             parlay_results = calc_winner_parlay(parlay_df, df_event_date)
             parlay_results['date'] = d_ts
             df_parlay_history = pd.concat([df_parlay_history, parlay_results],axis=0).reset_index(drop=True)
 
-            df_parlay_history.to_csv(parlay_history_fp)
-            commit_if_changed(f'Updating parlay results for fight date: {date_str}')
+            commit_if_changed(df_parlay_history, parlay_history_fp, f'Updating parlay results for fight date: {date_str}')
 
             delete_and_commit(parlay_file, f'Deleting parlay bets for event {date_str}')
             delete_and_commit(ml_file, f'Deleting money line bets for event {date_str}')
@@ -227,8 +225,7 @@ def get_missing_stats(prev_fight_date):
         else:
             df_stats_missing = missing_stats
 
-        df_stats_missing.to_csv(non_merged_stats_fp)
-        commit_if_changed(f'{non_merged_stats_fp}', f'Updating Non Merged Stats for fight date: {prev_fight_date}')
+        commit_if_changed(df_stats_missing, non_merged_stats_fp, f'Updating Non Merged Stats for fight date: {prev_fight_date}')
 
         # merge odds history 
         if os.path.exists(non_merged_odds_fp):
@@ -237,8 +234,7 @@ def get_missing_stats(prev_fight_date):
         else:
             df_odds_missing = missing_odds
 
-        df_odds_missing.to_csv(non_merged_odds_fp)
-        commit_if_changed(f'{non_merged_odds_fp}', f'Updating Non Merged Odds for fight date: {prev_fight_date}')
+        commit_if_changed(df_odds_missing, non_merged_odds_fp, f'Updating Non Merged Odds for fight date: {prev_fight_date}')
 
 
 def returns_by_date():
@@ -263,10 +259,8 @@ def returns_by_date():
     df_ml_pct = pd.DataFrame(ml_pct_returns)
     df_parlay_pct = pd.DataFrame(parlay_pct_returns)
 
-    df_ml_pct.to_csv(ml_pct_returns_fp)
     commit_if_changed(df_ml_pct, ml_pct_returns_fp, f'Saving Percent Returns ML')
 
-    df_parlay_pct.to_csv(parlay_pct_returns_fp)
     commit_if_changed(df_parlay_pct, parlay_pct_returns_fp, f'Saving Percent Returns Parlay')
 
 
