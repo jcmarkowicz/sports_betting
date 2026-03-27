@@ -32,10 +32,16 @@ def model_predict(model, df, y_hat, feats, num_feats, cat_feats, valid_mask, sca
 
     # keep original column order
     X_valid = scaled_valid[feats]
-    X_valid = sm.add_constant(X_valid)
-    train_cols = model.model.exog_names            
+    
+    # check for single-row case
+    if len(X_valid) == 1:
+        X_valid = sm.add_constant(X_valid, has_constant='add')
+    else:
+        X_valid = sm.add_constant(X_valid)
 
-    print(X_valid.columns, train_cols)
+    # ensure no duplicate 'const' column
+    assert X_valid.columns.duplicated().sum() == 0, "Duplicate columns found in X_valid"
+    train_cols = model.model.exog_names            
 
     # test if missing or extra columns 
     missing = set(train_cols) - set(X_valid.columns)
@@ -47,7 +53,6 @@ def model_predict(model, df, y_hat, feats, num_feats, cat_feats, valid_mask, sca
     X_valid = X_valid.reindex(columns=train_cols)
     if X_valid.isna().any().any():
         raise ValueError("NaNs present after alignment")
-
 
     # predict
     y_hat.loc[valid_mask] = model.predict(X_valid)
