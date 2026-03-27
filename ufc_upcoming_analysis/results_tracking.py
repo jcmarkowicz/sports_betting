@@ -138,15 +138,15 @@ def calc_winner_parlay(df_parlay, df_single_event):
     close1_net_fstar = close1_stake if close1_win else -close1_stake
     close2_net_fstar = close2_stake if close2_win else -close2_stake
 
-    parlay_results = {'open_net_fstar':open_net_fstar, 
+    parlay_results = pd.DataFrame({'open_net_fstar':open_net_fstar, 
                       'close1_net_fstar':close1_net_fstar, 
                       'close2_net_fstar':close2_net_fstar,
-                    'open_net_odds':profit_open, 
-                    'close1_net_odds':profit_close1, 
-                    'close2_net_odds':profit_close2,
-                    'choice_fighter_name_open':choice_fighters_open, 
-                    'choice_fighter_name_close1':choice_fighters_close1, 
-                    'choice_fighter_name_close2':choice_fighters_close2 }
+                        'open_net_odds':profit_open, 
+                        'close1_net_odds':profit_close1, 
+                        'close2_net_odds':profit_close2,
+                        'choice_fighter_name_open':choice_fighters_open, 
+                        'choice_fighter_name_close1':choice_fighters_close1, 
+                        'choice_fighter_name_close2':choice_fighters_close2 })
 
     return parlay_results
 
