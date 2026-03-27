@@ -75,7 +75,7 @@ def run_per_bet_scaling(bets_df, max_drawdown, bankroll, N):
 
         if f_star <= 0 or ev < 0:
             f_final = f_star
-            stake = 0
+            s = 0
 
         else:
             edge = p - (1/(fair_odds))
