@@ -202,7 +202,7 @@ def calc_winner_ml(df_single_event, df_money_line):
 
     mask = (
         (df_money_line['fstar_open'] != 0 | df_money_line['fstar_open'].notna()) &
-        (df_data['profit_open'] != 0 | df_data['profit_open'].notna())
+        (df_data['net_odds_open'] != 0 | df_data['net_odds_open'].notna())
     )
     assert mask.all(), "Money Line results profit error"
 
