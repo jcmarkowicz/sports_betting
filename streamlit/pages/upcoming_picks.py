@@ -24,8 +24,14 @@ parlay_column_order = ['choice_fighter_name_open', 'parlay_odds_open', 'parlay_e
                        'choice_fighter_name_close1', 'parlay_odds_close1', 'parlay_ev_close1', 'stake_close1',
                        'choice_fighter_name_close2', 'parlay_odds_close2', 'parlay_ev_close2', 'stake_close2']
 
-ml_files = sorted(os.listdir(ml_folder))
-parlay_files = sorted(os.listdir(parlay_folder))
+def extract_date(filename):
+    date_str = filename.split('_')[-1].replace('.csv', '')
+    return datetime.strptime(date_str, "%Y-%m-%d")
+
+ml_files = sorted(os.listdir(ml_folder), key=extract_date)
+parlay_files = sorted(os.listdir(parlay_folder), key=extract_date)
+
+assert len(ml_files) == len(parlay_files), "Mismatch in number of ML and Parlay files"
 
 for ml_file, parlay_file in zip(ml_files, parlay_files):
     today = datetime.today().date()

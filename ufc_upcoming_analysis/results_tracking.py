@@ -92,13 +92,13 @@ def archive_results():
 
             df_results_ml = calc_winner_ml(df_event_date, df_ml)
             df_results_ml['date'] = d_ts
-            df_ml_history = pd.concat([df_ml_history, df_results_ml], axis=0).reset_index(drop=True)
+            df_ml_history = pd.concat([df_ml_history, df_results_ml], axis=0, ignore_index=True)
 
             commit_if_changed(df_ml_history, ml_history_fp, f'updating money line results for fight date: {date_str}')
 
             parlay_results = calc_winner_parlay(parlay_df, df_event_date)
             parlay_results['date'] = d_ts
-            df_parlay_history = pd.concat([df_parlay_history, parlay_results],axis=0).reset_index(drop=True)
+            df_parlay_history = pd.concat([df_parlay_history, parlay_results],axis=0, ignore_index=True)
 
             commit_if_changed(df_parlay_history, parlay_history_fp, f'Updating parlay results for fight date: {date_str}')
 
