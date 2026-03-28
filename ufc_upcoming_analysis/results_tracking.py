@@ -83,12 +83,12 @@ def archive_results():
         if pd.Timestamp.now().normalize() > d_ts:
 
             fp = ml_bets_folder / ml_file
-            df_ml = pd.read_csv(fp)
+            df_ml = pd.read_csv(fp).reset_index(drop=True)
 
             parlay_file = parlay_bets_folder / f'parlay_all_{date_str}.csv'
-            parlay_df = pd.read_csv(parlay_file)
+            parlay_df = pd.read_csv(parlay_file).reset_index(drop=True)
 
-            df_event_date = df_single_event[df_single_event['date'] == d_ts]
+            df_event_date = df_single_event[df_single_event['date'] == d_ts].reset_index(drop=True)
 
             df_results_ml = calc_winner_ml(df_event_date, df_ml)
             df_results_ml['date'] = d_ts
@@ -101,6 +101,30 @@ def archive_results():
             df_parlay_history = pd.concat([df_parlay_history, parlay_results],axis=0).reset_index(drop=True)
 
             commit_if_changed(df_parlay_history, parlay_history_fp, f'Updating parlay results for fight date: {date_str}')
+
+
+
+def delete_old_files():
+    ml_bets_folder = BASE_DIR / "Data" / "upcoming_events" / "straight_bets" 
+    parlay_bets_folder = BASE_DIR / "Data" / "upcoming_events" / "parlays"
+
+    earliest_date = None
+    for ml_file in os.listdir(ml_bets_folder):
+        date_str = ml_file.split('_')[-1].replace('.csv', '')
+        d = datetime.strptime(date_str, "%Y-%m-%d").date()
+        
+        if earliest_date is None or d < earliest_date:
+            earliest_date = d
+
+    earliest_date = earliest_date.strftime("%Y-%m-%d")
+
+    for ml_file in os.listdir(ml_bets_folder):
+
+        date_str = ml_file.split('_')[-1].replace('.csv', '')
+        d_ts = pd.to_datetime(date_str)  
+        parlay_file = parlay_bets_folder / f'parlay_all_{date_str}.csv'
+
+        if pd.Timestamp.now().normalize() > d_ts:
 
             delete_and_commit(parlay_file, f'Deleting parlay bets for event {date_str}')
             delete_and_commit(ml_file, f'Deleting money line bets for event {date_str}')
@@ -298,3 +322,4 @@ def returns_by_date():
 if __name__ == "__main__":
     archive_results()
     returns_by_date()
+    delete_old_files()
