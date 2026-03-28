@@ -295,28 +295,7 @@ def returns_by_date():
     commit_if_changed(df_parlay_pct, parlay_pct_returns_fp, f'Saving Percent Returns Parlay')
 
 
-    fig, axes = plt.subplots(2, len(types), figsize=(15,6))
-    for i, type_ in enumerate(types):
-        # ML percent returns
-        sns.histplot(ml_pct_returns[type_], ax=axes[0, i], kde=False, color='skyblue')
-        avg_ml = sum(ml_pct_returns[type_])/len(ml_pct_returns[type_])
-        total_ml = sum(ml_pct_returns[type_])
-        axes[0, i].set_title(f"ML {type_} — Avg: {avg_ml:.2%}, Total: {total_ml:.2%}")
-        
-        # Parlay percent returns
-        sns.histplot(parlay_pct_returns[type_], ax=axes[1, i], kde=False, color='salmon')
-        avg_parlay = sum(parlay_pct_returns[type_])/len(parlay_pct_returns[type_])
-        total_parlay = sum(parlay_pct_returns[type_])
-        axes[1, i].set_title(f"Parlay {type_} — Avg: {avg_parlay:.2%}, Total: {total_parlay:.2%}")
 
-    plt.tight_layout()
-
-    path = BASE_DIR / 'Data' / 'plot_pngs' / 'pct_returns.png'
-    fig.savefig(path,
-            dpi=300,
-            bbox_inches="tight")
-        
-    plt.show()
 
 
 if __name__ == "__main__":
