@@ -14,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parents[1]
 ml_pct_returns_fp = BASE_DIR / 'Data' / 'betting_results' / 'ml_pct_returns.csv'
 parlay_pct_returns_fp = BASE_DIR / 'Data' / 'betting_results' / 'parlay_pct_returns.csv'
 
-from Streamlit.utils import display_paginated_df, show_image
+from utils import display_paginated_df, show_image
 
 df_ml_pct = pd.read_csv(ml_pct_returns_fp)
 df_parlay_pct = pd.read_csv(parlay_pct_returns_fp)
