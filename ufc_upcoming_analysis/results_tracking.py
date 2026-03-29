@@ -251,7 +251,7 @@ def get_missing_stats(prev_fight_date):
 
     if os.path.exists(non_merged_stats_fp):
         df_stats_missing = pd.read_csv(non_merged_stats_fp)
-        df_stats_missing = pd.concat([df_stats_missing, missing_stats], axis=0).reset_index(drop=True)
+        df_stats_missing = pd.concat([df_stats_missing, missing_stats], axis=0, ignore_index=True)
     else:
         df_stats_missing = missing_stats
 
@@ -260,7 +260,7 @@ def get_missing_stats(prev_fight_date):
     # merge odds history 
     if os.path.exists(non_merged_odds_fp):
         df_odds_missing = pd.read_csv(non_merged_odds_fp)
-        df_odds_missing = pd.concat([df_odds_missing, missing_odds], axis=0).reset_index(drop=True)
+        df_odds_missing = pd.concat([df_odds_missing, missing_odds], axis=0, ignore_index=True)
     else:
         df_odds_missing = missing_odds
 

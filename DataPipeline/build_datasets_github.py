@@ -41,7 +41,10 @@ missing_stats_history_fp = BASE_DIR / "Data" / "non_merged_features" / f"non_mer
 missing_odds_history_fp = BASE_DIR / "Data" / "non_merged_features" / f"non_merged_odds.csv"
 
 non_merged_stats = pd.read_csv(missing_stats_history_fp)
+non_merged_stats = non_merged_stats.drop(columns=[col for col in non_merged_stats.columns if "Unnamed" in col])
+
 non_merged_odds = pd.read_csv(missing_odds_history_fp)
+non_merged_odds = non_merged_odds.drop(columns=[col for col in non_merged_odds.columns if "Unnamed" in col])
 
 
 stats_history = pd.read_csv(stats_history_file_string) # frames BEFORE any feature engineering 
@@ -55,7 +58,8 @@ odds_history = pd.read_csv(odds_history_file_string)
 odds_history = odds_history.drop(columns=[col for col in odds_history.columns if "Unnamed" in col])
 
 assert set(odds_history.columns) == set(non_merged_odds.columns), 'Column misalignment odds history'
-odds_history = pd.concat([missing_odds_history_fp], axis=0, ignore_index=True)
+odds_history = pd.concat([odds_history, non_merged_odds], axis=0, ignore_index=True)
+
 # drop duplicate from history
 stats_history = stats_history[~stats_history.duplicated(
     subset=['fighter_red', 'fighter_blue', 'event_date'],
