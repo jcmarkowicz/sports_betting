@@ -1,8 +1,8 @@
 ,date,fighter_red,fighter_blue,open_red,open_blue,close1_red,close2_red,close1_blue,close2_blue,pred_name_open,pred_winner_open,choice_proba_open,fstar_open,stake_open,edge_open,ev_open,pred_name_close1,pred_winner_close1,choice_proba_close1,fstar_close1,stake_close1,edge_close1,ev_close1,pred_name_close2,pred_winner_close2,choice_proba_close2,fstar_close2,stake_close2,edge_close2,ev_close2
-0,2026-05-02,jack della maddalena,carlos prates,150.0,-175.0,-125.0,-110.0,-110.0,100.0,carlos prates,0,0.5876953102588838,0.0,0.0,-0.04866832610475258,-0.05249747228252066,carlos prates,0,0.5078465648106818,0.0,0.0,-0.015962958998842036,0.050413588600254355,carlos prates,0,0.5129830936545116,0.025964602458723493,12.982301229361747,0.012983093654511557,0.051273559117254175
-1,2026-05-02,tai tuivasa,sean sharaf,,,,,,,sean sharaf,0,,,,,,sean sharaf,0,,,,,,sean sharaf,0,,,,,
+0,2026-05-02,steve erceg,tim elliott,,,,,,,tim elliott,0,,,,,,tim elliott,0,,,,,,tim elliott,0,,,,,
+1,2026-05-02,jacob malkoun,gerald meerschaert,,,,,,,gerald meerschaert,0,,,,,,gerald meerschaert,0,,,,,,gerald meerschaert,0,,,,,
 2,2026-05-02,junior tafa,kevin christian,,,,,,,kevin christian,0,,,,,,kevin christian,0,,,,,,kevin christian,0,,,,,
 3,2026-05-02,cam rowston,robert bryczek,,,,,,,robert bryczek,0,,,,,,robert bryczek,0,,,,,,robert bryczek,0,,,,,
-4,2026-05-02,jacob malkoun,gerald meerschaert,,,,,,,gerald meerschaert,0,,,,,,gerald meerschaert,0,,,,,,gerald meerschaert,0,,,,,
-5,2026-05-02,steve erceg,tim elliott,,,,,,,tim elliott,0,,,,,,tim elliott,0,,,,,,tim elliott,0,,,,,
-6,2026-05-02,beneil dariush,quillan salkilld,,,,,,,quillan salkilld,0,,,,,,quillan salkilld,0,,,,,,quillan salkilld,0,,,,,
+4,2026-05-02,beneil dariush,quillan salkilld,,,,,,,quillan salkilld,0,,,,,,quillan salkilld,0,,,,,,quillan salkilld,0,,,,,
+5,2026-05-02,jack della maddalena,carlos prates,150.0,-175.0,-125.0,-110.0,-110.0,100.0,carlos prates,0,0.5876954912649237,0.0,0.0,-0.048668145098712645,-0.05249718045837748,carlos prates,0,0.507846411616462,0.0,0.0,-0.01596311219306179,0.05041327173823096,carlos prates,0,0.5129829408176569,0.0259642968036711,12.98214840183555,0.01298294081765694,0.051273245903532105
+6,2026-05-02,tai tuivasa,sean sharaf,,,,,,,sean sharaf,0,,,,,,sean sharaf,0,,,,,,sean sharaf,0,,,,,
