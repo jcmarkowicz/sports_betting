@@ -32,13 +32,14 @@ def model_predict(model, df, y_hat, feats, num_feats, cat_feats, valid_mask, sca
 
     # keep original column order
     X_valid = scaled_valid[feats]
-    
     X_valid = sm.add_constant(X_valid, has_constant='add')
+
     constant_like_cols = [
         col for col in X_valid.columns
-        if np.ptp(X_valid[col].values) == 0
+        if X_valid[col].nunique(dropna=False) == 1
     ]
     print("Constant-like columns:", constant_like_cols)
+    
 
     # ensure no duplicate 'const' column
     assert X_valid.columns.duplicated().sum() == 0, "Duplicate columns found in X_valid"
