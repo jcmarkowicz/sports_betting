@@ -96,7 +96,7 @@ fair_odds_list = [['dec_fair_open_blue', 'dec_fair_open_red'],
 
 real_odds_list = [['dec_open_blue', 'dec_open_red'], 
                   ['dec_close1_blue', 'dec_close1_red'], 
-                  ['dec_close2_blue', 'dec_close2_red'] ]
+                  ['dec_close2_blue', 'dec_close2_red']]
 
 
 def generate_bets(df, select_odds=None, bankroll=500):

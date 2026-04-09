@@ -108,13 +108,15 @@ if __name__ == "__main__":
         next_fight_date = next_fight_stats['event_date'][0] # unique date returned here, only one fightcard is scraped 
         
         # save next stats 
-        next_stats_path = f'{upcoming_scraped_stats_string}.csv'
-        commit_if_changed(next_fight_stats, next_stats_path, f'Updating upcoming scraped stats starting at: {next_fight_date}')
+        commit_if_changed(next_fight_stats, 
+                          f'{upcoming_scraped_stats_string}.csv', 
+                          f'Updating upcoming scraped stats starting at: {next_fight_date}')
 
         # save next_odds 
-        next_odds_path = f'{upcoming_scraped_odds_string}.csv' # upcoming odds for the next fight card
         next_odds_df = scraper.get_fighter_odds(next_fight_stats)
-        commit_if_changed(next_odds_df, next_odds_path, f'Updating upcoming scraped odds starting at: {next_fight_date}')
+        commit_if_changed(next_odds_df, 
+                          f'{upcoming_scraped_odds_string}.csv' , 
+                          f'Updating upcoming scraped odds starting at: {next_fight_date}')
 
 
 

@@ -37,14 +37,8 @@ parlay_columns = [
 def email_bets(df_, date):
 
     df = df_.copy()
-
-    df['math_red'] = df['math_red'].astype('category')
-    df['math_blue'] = df['math_blue'].astype('category')
-    df['elo_pred'] = df['elo_pred'].astype('category')
-
     df_bets, df_parlay = generate_bets(df, select_odds=0)
     
-
     msg = MIMEMultipart()
     msg["Subject"] = f"Betting Report {date}"
     msg["From"] = EMAIL_FROM

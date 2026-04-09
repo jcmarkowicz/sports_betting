@@ -39,7 +39,7 @@ def model_predict(model, df, y_hat, feats, num_feats, cat_feats, valid_mask, sca
         if X_valid[col].nunique(dropna=False) == 1
     ]
     print("Constant-like columns:", constant_like_cols)
-    
+
 
     # ensure no duplicate 'const' column
     assert X_valid.columns.duplicated().sum() == 0, "Duplicate columns found in X_valid"
@@ -80,7 +80,7 @@ def df_bets_tests(df_bets, df_bets_combined, valid_mask, choice_ev, fstar_list):
 
 def df_parlay_tests(df_parlay, choice_ev):
     
-    if np.count_nonzero(~np.isnan(choice_ev)) >= 2:
+    if np.count_nonzero(~np.isnan(choice_ev[choice_ev > 0])) >= 2:
         assert not df_parlay.isna().any().any(), 'Parlay Bets Error'
 
     assert df_parlay.shape[0] == PARLAY_SIZE, 'Parlay df size error '
@@ -106,7 +106,9 @@ def merge_parlay_types(df_parlay, df_parlay_combined):
         )
     return df_parlay_combined
 
-def betting_pipeline(upcoming_df, feats_list, model_list, scaler_list, type_list, fair_odds_list, real_odds_list, bankroll, max_drawdown=0.15, N=1000):
+def betting_pipeline(upcoming_df, feats_list, model_list, 
+                     scaler_list, type_list, fair_odds_list, 
+                     real_odds_list, bankroll, max_drawdown=0.15, N=1000):
 
     other_cols = ['date', 'fighter_red', 'fighter_blue', 'open_red', 'open_blue', 'close1_red', 'close2_red', 'close1_blue', 'close2_blue']
     df = upcoming_df.copy().reset_index(drop=True)
