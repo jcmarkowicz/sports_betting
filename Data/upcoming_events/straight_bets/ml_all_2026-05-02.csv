@@ -1,9 +1,9 @@
 ,date,fighter_red,fighter_blue,open_red,open_blue,close1_red,close2_red,close1_blue,close2_blue,pred_name_open,pred_winner_open,choice_proba_open,fstar_open,stake_open,edge_open,ev_open,pred_name_close1,pred_winner_close1,choice_proba_close1,fstar_close1,stake_close1,edge_close1,ev_close1,pred_name_close2,pred_winner_close2,choice_proba_close2,fstar_close2,stake_close2,edge_close2,ev_close2
-0,2026-05-02,jacob malkoun,gerald meerschaert,,,,,,,gerald meerschaert,0,,,,,,gerald meerschaert,0,,,,,,gerald meerschaert,0,,,,,
-1,2026-05-02,jack della maddalena,carlos prates,150.0,-175.0,-125.0,-110.0,-115.0,100.0,carlos prates,0,0.5876957621811789,0.0,0.0,-0.04866787418245744,-0.052496743677902746,carlos prates,0,0.5126946671818887,0.0,0.0,-0.0221890537483439,0.04809464715433209,carlos prates,0,0.5129824067613096,0.025963228756168792,12.981614378084396,0.012982406761309573,0.05127215144384334
-2,2026-05-02,beneil dariush,quillan salkilld,,,,,,,quillan salkilld,0,,,,,,quillan salkilld,0,,,,,,quillan salkilld,0,,,,,
-3,2026-05-02,tai tuivasa,sean sharaf,,,,,,,sean sharaf,0,,,,,,sean sharaf,0,,,,,,sean sharaf,0,,,,,
-4,2026-05-02,junior tafa,kevin christian,,,,,,,kevin christian,0,,,,,,kevin christian,0,,,,,,kevin christian,0,,,,,
-5,2026-05-02,cam rowston,robert bryczek,,,,,,,robert bryczek,0,,,,,,robert bryczek,0,,,,,,robert bryczek,0,,,,,
+0,2026-05-02,jack della maddalena,carlos prates,150.0,-175.0,-125.0,-115.0,-115.0,100.0,carlos prates,0,0.5876951911001924,0.0,0.0,-0.04866844526344394,-0.05249766439424808,carlos prates,0,0.512695235282782,0.0,0.0,-0.022188485647450573,0.04809580851516437,carlos prates,0,0.5081599781725841,0.01631896025408262,8.15948012704131,0.00815997817258407,0.053686074221441116
+1,2026-05-02,beneil dariush,quillan salkilld,,,,,,,quillan salkilld,0,,,,,,quillan salkilld,0,,,,,,quillan salkilld,0,,,,,
+2,2026-05-02,tai tuivasa,sean sharaf,,,,,,,sean sharaf,0,,,,,,sean sharaf,0,,,,,,sean sharaf,0,,,,,
+3,2026-05-02,junior tafa,kevin christian,,,,,,,kevin christian,0,,,,,,kevin christian,0,,,,,,kevin christian,0,,,,,
+4,2026-05-02,cam rowston,robert bryczek,,,,,,,robert bryczek,0,,,,,,robert bryczek,0,,,,,,robert bryczek,0,,,,,
+5,2026-05-02,jacob malkoun,gerald meerschaert,,,,,,,gerald meerschaert,0,,,,,,gerald meerschaert,0,,,,,,gerald meerschaert,0,,,,,
 6,2026-05-02,steve erceg,tim elliott,,,,,,,tim elliott,0,,,,,,tim elliott,0,,,,,,tim elliott,0,,,,,
 7,2026-05-02,dom mar fan,kody steele,,,,,,,kody steele,0,,,,,,kody steele,0,,,,,,kody steele,0,,,,,
