@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
-
+import os 
 from DataPipeline.FeatureEngineering.features_pipeline import BASE_DIR
 
 
@@ -57,6 +57,22 @@ class config:
     ml_pct_returns_fp = base_dir / 'Data' / 'betting_results' / 'ml_pct_returns.csv'
     parlay_pct_returns_fp = base_dir / 'Data' / 'betting_results' / 'parlay_pct_returns.csv'
 
+    # email params
+    sender_email = "jcmarkufc@gmail.com"
+    reciever_email = ['jcmarkowicz@outlook.com']
+    columns_to_email = ['fighter_red', 'fighter_blue','pred_name_open',
+                    'open_red','open_blue','pred_winner_open',
+                    'fstar_open','stake_open'
+                    ]  
+
+    parlay_columns = [
+        'choice_fighter_name_open',
+        'parlay_fstar_open',
+        'parlay_odds_open',
+        'stake_open'
+        ]
+    
+    email_password = os.environ["EMAIL_PASSWORD"]
 
     # --- Model Params ---
     open_feats = [
@@ -127,6 +143,7 @@ class config:
                    'choice_proba_open','choice_proba_close1', 'choice_proba_close2',
                    'edge_open', 'edge_close1', 'edge_close2',
                    'ev_open', 'ev_close1', 'ev_close2']
+    
     
     parlay_column_order = ['choice_fighter_name_open', 'parlay_odds_open', 'parlay_ev_open', 'stake_open', 
                         'choice_fighter_name_close1', 'parlay_odds_close1', 'parlay_ev_close1', 'stake_close1',

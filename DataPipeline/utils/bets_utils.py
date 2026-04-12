@@ -1,20 +1,11 @@
 
-import numpy as np 
-import pandas as pd 
-
 import statsmodels.api as sm
 
-import os 
-import sys 
 import joblib
-from pathlib import Path
 
 from config import config
+from UpcomingPicks.betting_pipeline import betting_pipeline, seperate_bets_dfs
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))) 
-from ufc_upcoming_analysis.betting_pipeline import betting_pipeline, seperate_bets_dfs
-
-# BASE_DIR = Path(__file__).resolve().parents[1]
 
 model_open = sm.load(config.model_open_path)
 model_close1 = sm.load(config.model_close1_path)

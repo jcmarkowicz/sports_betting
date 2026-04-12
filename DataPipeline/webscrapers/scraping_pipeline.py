@@ -1,6 +1,4 @@
-import numpy as np 
 import pandas as pd 
-
 import sys
 import os
 
@@ -8,7 +6,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from webscrapers.ufc_odds_scraper import get_fighter_odds
-from webscrapers.ufc_stats_scraper import scrape_ufc, scrape_upcoming
+from webscrapers.ufc_stats_scraper import scrape_ufc
 
 class UFC_Webscraper:
 

@@ -5,34 +5,16 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 
-import subprocess
-
-import sys
 import os 
 
 from DataPipeline.utils.bets_utils import generate_bets
-
+from config import config
 
 # Email setup
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 
-EMAIL_FROM = "jcmarkufc@gmail.com"  # Gmail sender
 
-EMAIL_PASSWORD = os.environ["EMAIL_PASSWORD"]
-EMAIL_TO = ['jcmarkowicz@outlook.com'] # 'jimmymarkowicz28@gmail.com','jasonszat@gmail.com']
-
-columns_to_email = ['fighter_red', 'fighter_blue','pred_name_open',
-                    'open_red','open_blue','pred_winner_open',
-                    'fstar_open','stake_open'
-                    ]  
-
-parlay_columns = [
-    'choice_fighter_name_open',
-    'parlay_fstar_open',
-    'parlay_odds_open',
-    'stake_open'
-]
 
 def email_bets(df_, date):
 
@@ -41,9 +23,9 @@ def email_bets(df_, date):
     
     msg = MIMEMultipart()
     msg["Subject"] = f"Betting Report {date}"
-    msg["From"] = EMAIL_FROM
+    msg["From"] = config.sender_email
     # Join the list into a comma-separated string for the header
-    msg["To"] = ", ".join(EMAIL_TO)
+    msg["To"] = ", ".join(config.reciever_email)
 
 
     # ---- Body with HTML link ----
@@ -54,7 +36,7 @@ def email_bets(df_, date):
     msg.attach(MIMEText(html_body, "html"))
 
     # ---- Straight Bets CSV ----
-    bets_csv = df_bets[columns_to_email].to_csv(index=False)
+    bets_csv = df_bets[config.columns_to_email].to_csv(index=False)
 
     part = MIMEBase("application", "octet-stream")
     part.set_payload(bets_csv.encode())
@@ -67,7 +49,7 @@ def email_bets(df_, date):
 
 
 
-    parlay_csv = df_parlay[parlay_columns].to_csv(index=False)
+    parlay_csv = df_parlay[config.parlay_columns].to_csv(index=False)
 
     part2 = MIMEBase("application", "octet-stream")
     part2.set_payload(parlay_csv.encode())
@@ -81,7 +63,7 @@ def email_bets(df_, date):
     # ---- Send email ----
     with smtplib.SMTP("smtp.gmail.com", 587) as server:
         server.starttls()
-        server.login(EMAIL_FROM, EMAIL_PASSWORD)
+        server.login(config.sender_email, config.email_password)
 
         # Pass the list of recipients to send_message
-        server.send_message(msg, from_addr=EMAIL_FROM, to_addrs=EMAIL_TO)
+        server.send_message(msg, from_addr=config.sender_email, to_addrs=config.reciever_email)

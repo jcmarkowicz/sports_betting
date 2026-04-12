@@ -1,23 +1,15 @@
-import numpy as np 
 import pandas as pd 
-
-import os
-import sys 
-from pathlib import Path
 from datetime import datetime 
 
 from DataPipeline.utils.bets_utils import generate_bets
 from DataPipeline.utils.email_utils import email_bets
 from DataPipeline.utils.github_utils import commit_if_changed 
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))) 
 from DataPipeline.FeatureEngineering.features_pipeline import FeatureEngineering
 from DataPipeline.webscrapers.scraping_pipeline import UFC_Webscraper
 
 from config import config
-# BASE_DIR = Path(__file__).resolve().parents[1]
 
-BASE_DIR = config.base_dir
 
 # find the most recent stats and odds history with most recent timestamp 
 # recent date from last merger with missing stats
