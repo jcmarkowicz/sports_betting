@@ -1,0 +1,70 @@
+
+import numpy as np 
+import pandas as pd 
+
+import statsmodels.api as sm
+
+import os 
+import sys 
+import joblib
+from pathlib import Path
+
+from config import config
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))) 
+from ufc_upcoming_analysis.betting_pipeline import betting_pipeline, seperate_bets_dfs
+
+# BASE_DIR = Path(__file__).resolve().parents[1]
+
+model_open = sm.load(config.model_open_path)
+model_close1 = sm.load(config.model_close1_path)
+model_close2 = sm.load(config.model_close2_path)
+
+scaler_open = joblib.load(config.scaler_open_path)
+scaler_close1 = joblib.load(config.scaler_close1_path)
+scaler_close2 = joblib.load(config.scaler_close2_path)
+
+model_list = [model_open, model_close1, model_close2]
+scaler_list = [scaler_open, scaler_close1, scaler_close2]
+feats_list = [config.open_feats, config.close1_feats, config.close2_feats]
+
+type_list = ['open', 'close1', 'close2']
+
+# 0 for blue, 1 for red 
+fair_odds_list = [['dec_fair_open_blue', 'dec_fair_open_red'], 
+                  ['dec_fair_close1_blue', 'dec_fair_close1_red'], 
+                  ['dec_fair_close2_blue', 'dec_fair_close2_red']]
+
+real_odds_list = [['dec_open_blue', 'dec_open_red'], 
+                  ['dec_close1_blue', 'dec_close1_red'], 
+                  ['dec_close2_blue', 'dec_close2_red']]
+
+
+def generate_bets(df, select_odds=None, bankroll=500):
+
+    bankroll = config.bankroll
+    mdd = config.max_drawdown
+    N = config.N_paths
+
+    df['math_red'] = df['math_red'].astype('category')
+    df['math_blue'] = df['math_blue'].astype('category')
+    df['elo_pred'] = df['elo_pred'].astype('category')
+
+    df_bets_all, df_parlay_all = betting_pipeline(df, 
+                                                feats_list=feats_list, model_list=model_list, 
+                                                scaler_list=scaler_list, type_list=type_list,
+                                                fair_odds_list=fair_odds_list, 
+                                                real_odds_list=real_odds_list, 
+                                                bankroll=bankroll, max_drawdown=mdd, N=N)
+    
+    df_bets_arr, df_parlay_arr = seperate_bets_dfs(df_bets_all, df_parlay_all, type_list)
+    
+    if select_odds: 
+        df_bets = df_bets_arr[select_odds]
+        df_parlay = df_parlay_arr[select_odds]
+    
+    else: 
+        df_bets = df_bets_all
+        df_parlay = df_parlay_all
+
+    return df_bets, df_parlay 

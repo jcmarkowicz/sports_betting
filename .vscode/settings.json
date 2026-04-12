@@ -1,0 +1,8 @@
+{
+    "python.analysis.extraPaths": [
+        "C:/Users/jcmar/my_files/SportsBetting"
+    ],
+    "terminal.integrated.env.windows": {
+        "PYTHONPATH": "C:/Users/jcmar/my_files/SportsBetting"
+    }
+}
