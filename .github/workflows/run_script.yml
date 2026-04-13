@@ -48,5 +48,5 @@ jobs:
           EMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
         run: |
-          python DataPipeline/build_datasets_github.py
+          python DataPipeline/dataset_workers/build_datasets_github.py
 
