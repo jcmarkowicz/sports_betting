@@ -14,7 +14,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: ls -R
 
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -38,6 +37,8 @@ jobs:
           # remove conflicting system chromedriver
           sudo rm -f /usr/bin/chromedriver
 
+      - run: ls -R
+
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
@@ -47,5 +48,5 @@ jobs:
           EMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
         run: |
-          python sports_betting/DataPipeline/build_datasets_github.py
+          python DataPipeline/build_datasets_github.py
 
