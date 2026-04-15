@@ -63,7 +63,8 @@ def email_bets(df_, date):
     # ---- Send email ----
     with smtplib.SMTP("smtp.gmail.com", 587) as server:
         server.starttls()
-        server.login(config.sender_email, config.email_password)
+        server.login(config.sender_email, os.environ["EMAIL_PASSWORD"]
+    )
 
         # Pass the list of recipients to send_message
         server.send_message(msg, from_addr=config.sender_email, to_addrs=config.reciever_email)

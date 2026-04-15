@@ -72,7 +72,6 @@ class config:
         'stake_open'
         ]
     
-    email_password = os.environ["EMAIL_PASSWORD"]
 
     # --- Model Params ---
     open_feats = [
