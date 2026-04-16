@@ -1,6 +1,6 @@
 ,blue_fighter,open_blue,close1_blue,close2_blue,red_fighter,open_red,close1_red,close2_red,event_date,og_blue_name,og_red_fighter
 0,Ciryl Gane,-185,-118,-105,Alex Pereira,+160,-125,-108,2026-06-15,Ciryl Gane,Alex Pereira
-1,Waldo Cortes-Acosta,+160,+105,+155,Alexander Volkov,-185,-180,-138,2026-05-10,Waldo Cortes Acosta,Alexander Volkov
+1,Waldo Cortes-Acosta,+160,+105,+140,Alexander Volkov,-185,-165,-138,2026-05-10,Waldo Cortes Acosta,Alexander Volkov
 2,Youssef Zalal,+135,-146,-138,Aljamain Sterling,-155,+110,+125,2026-04-26,Youssef Zalal,Aljamain Sterling
 3,Jingnan Xiong,-200,-105,+130,Angela Lee,+160,-150,-125,2022-09-30,Xiong Jingnan,Angela Hill
 4,Jing Nan Xiong,-210,-170,-170,Angela Lee,+160,+130,+130,2019-10-12,Xiong Jingnan,Angela Hill
@@ -13,7 +13,7 @@
 11,Steve Garcia,+190,+140,+160,Diego Lopes,-225,-200,-175,2026-06-15,Steve Garcia,Diego Lopes
 12,Mike Malott,-335,-340,-310,Gilbert Burns,+275,+245,+260,2026-04-19,Mike Malott,Gilbert Burns
 13,Justin Gaethje,+385,+460,+550,Ilia Topuria,-500,-800,-649,2026-06-15,Justin Gaethje,Ilia Topuria
-14,Jamey-Lyn Horth,-260,-188,-150,Jj Aldrich,+220,+125,+150,2026-04-18,Jamey-Lyn Horth,JJ Aldrich
+14,Jamey-Lyn Horth,-260,-188,-145,Jj Aldrich,+220,+125,+150,2026-04-18,Jamey-Lyn Horth,JJ Aldrich
 15,Carlos Prates,-175,-115,+100,Jack Della Maddalena,+150,-125,-115,2026-05-02,Carlos Prates,Jack Della Maddalena
 16,Sedriques Dumas,+130,+140,+174,Jackson McVey,-150,-215,-188,2026-04-25,Sedriques Dumas,Jackson McVey
 17,Lucas Rocha,+130,+225,+250,Jafel Filho,-150,-333,-300,2026-04-25,Lucas Rocha,Jafel Filho
@@ -23,11 +23,11 @@
 21,Karine Silva,+210,+225,+250,Jasmine Jasudavicius,-250,-330,-300,2026-04-19,Karine Silva,Jasmine Jasudavicius
 22,Mark Vologdin,-150,-102,+110,John Castaneda,+130,-130,-125,2026-04-18,Mark Vologdin,John Castaneda
 23,Tatsuro Taira,-150,-215,-200,Joshua van,+130,+164,+170,2026-05-10,Tatsuro Taira,Joshua Van
-24,Robert Valentin,+147,-162,-125,Julien Leblanc,-172,+100,+126,2026-04-18,Robert Valentin,Julien Leblanc
+24,Robert Valentin,+147,-162,-143,Julien Leblanc,-172,+117,+126,2026-04-18,Robert Valentin,Julien Leblanc
 25,Sean Strickland,+300,+325,+410,Khamzat Chimaev,-400,-560,-450,2026-05-10,Sean Strickland,Khamzat Chimaev
 26,Jeremy Stephens,+170,+175,+250,King Green,-200,-330,-250,2026-05-10,Jeremy Stephens,King Green
-27,Charles Jourdain,-150,-164,-150,Kyler Phillips,+130,+125,+134,2026-04-19,Charles Jourdain,Kyler Phillips
-28,Jai Herbert,+125,+140,+155,Mandel Nallo,-145,-186,-170,2026-04-19,Jai Herbert,Mandel Nallo
+27,Charles Jourdain,-150,-164,-145,Kyler Phillips,+130,+125,+130,2026-04-19,Charles Jourdain,Kyler Phillips
+28,Jai Herbert,+125,+140,+145,Mandel Nallo,-145,-186,-170,2026-04-19,Jai Herbert,Mandel Nallo
 29,Ryan Spann,-110,-105,+115,Marcus Buchecha,-110,-135,-125,2026-04-26,Ryan Spann,Marcus Buchecha
 30,Michael Chandler,+500,+330,+450,Mauricio Ruffy,-700,-700,-480,2026-06-15,Michael Chandler,Mauricio Ruffy
 31,Michelle Montague,-400,-430,-350,Mayra Bueno Silva,+330,+240,+300,2026-04-25,Michelle Montague,Mayra Bueno Silva
@@ -38,6 +38,6 @@
 36,Alexander Hernandez,-150,-188,-150,Rafa Garcia,+130,+118,+145,2026-04-26,Alexander Hernandez,Rafa Garcia
 37,Eric McConico,+250,+175,+211,Rodolfo Vieira,-300,-265,-250,2026-04-25,Eric McConico,Rodolfo Vieira
 38,Joaquin Buckley,+250,+150,+164,Sean Brady,-300,-215,-185,2026-05-10,Joaquin Buckley,Sean Brady
-39,Julia Polastri,-200,-235,-225,Talita Alencar,+170,+163,+200,2026-04-25,Julia Polastri,Talita Alencar
-40,Gokhan Saricam,+130,-175,-158,Tanner Boser,-150,+128,+138,2026-04-18,Gokhan Saricam,Tanner Boser
+39,Julia Polastri,-200,-265,-225,Talita Alencar,+170,+163,+225,2026-04-25,Julia Polastri,Talita Alencar
+40,Gokhan Saricam,+130,-175,-152,Tanner Boser,-150,+128,+138,2026-04-18,Gokhan Saricam,Tanner Boser
 41,Gauge Young,+130,-141,-125,Thiago Moises,-150,+100,+115,2026-04-19,Gauge Young,Thiago Moises
