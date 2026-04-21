@@ -1,7 +1,7 @@
 ,blue_fighter,open_blue,close1_blue,close2_blue,red_fighter,open_red,close1_red,close2_red,event_date,og_blue_name,og_red_fighter
 0,Ciryl Gane,-185,-118,-105,Alex Pereira,+160,-125,-108,2026-06-15,Ciryl Gane,Alex Pereira
 1,Waldo Cortes-Acosta,+160,+120,+150,Alexander Volkov,-185,-186,-150,2026-05-10,Waldo Cortes Acosta,Alexander Volkov
-2,Youssef Zalal,+135,-167,-138,Aljamain Sterling,-155,+110,+140,2026-04-26,Youssef Zalal,Aljamain Sterling
+2,Youssef Zalal,+135,-166,-138,Aljamain Sterling,-155,+110,+135,2026-04-26,Youssef Zalal,Aljamain Sterling
 3,Mitch Raposo,+210,+175,+175,Allan Nascimento,-275,-225,-225,2026-04-18,Mitch Raposo,Allan Nascimento
 4,Jingnan Xiong,-200,-105,+130,Angela Lee,+160,-150,-125,2022-09-30,Xiong Jingnan,Angela Hill
 5,Jing Nan Xiong,-210,-170,-170,Angela Lee,+160,+130,+130,2019-10-12,Xiong Jingnan,Angela Hill
@@ -11,21 +11,24 @@
 9,Kyle Daukaus,+250,+240,+250,Bo Nickal,-300,-340,-280,2026-06-15,Kyle Daukaus,
 10,Adrian Luna Martinetti,-138,-138,-105,Davey Grant,+105,-118,+105,2026-04-26,Adrian Luna Martinetti,Davey Grant
 11,Steve Garcia,+190,+140,+160,Diego Lopes,-225,-200,-175,2026-06-15,Steve Garcia,Diego Lopes
-12,Justin Gaethje,+385,+460,+550,Ilia Topuria,-500,-800,-649,2026-06-15,Justin Gaethje,Ilia Topuria
-13,Carlos Prates,-175,-120,+100,Jack Della Maddalena,+150,-125,-110,2026-05-02,Carlos Prates,Jack Della Maddalena
-14,Sedriques Dumas,+130,+140,+165,Jackson McVey,-150,-215,-188,2026-04-25,Sedriques Dumas,Jackson McVey
-15,Bogdan Guskov,-140,-162,-130,Jan Blachowicz,+120,+104,+126,2026-05-10,Bogdan Guskov,Jan Blachowicz
-16,Bogdan Guskov,+130,-126,-120,Jan Blachowicz,-150,-105,+108,2025-12-07,Bogdan Guskov,Jan Blachowicz
-17,Derrick Lewis,+330,+200,+260,Josh Hokit,-400,-330,-250,2026-06-15,Derrick Lewis,Josh Hokit
-18,Tatsuro Taira,-150,-215,-200,Joshua van,+130,+160,+170,2026-05-10,Tatsuro Taira,Joshua Van
-19,Sean Strickland,+300,+325,+440,Khamzat Chimaev,-400,-590,-450,2026-05-10,Sean Strickland,Khamzat Chimaev
-20,Jeremy Stephens,+170,+210,+250,King Green,-200,-335,-275,2026-05-10,Jeremy Stephens,King Green
-21,Ryan Spann,-110,-105,+130,Marcus Buchecha,-110,-155,-125,2026-04-25,Ryan Spann,Marcus Buchecha
-22,Michael Chandler,+500,+330,+450,Mauricio Ruffy,-700,-700,-480,2026-06-15,Michael Chandler,Mauricio Ruffy
-23,Michelle Montague,-400,-430,-350,Mayra Bueno Silva,+330,+240,+300,2026-04-25,Michelle Montague,Mayra Bueno Silva
-24,Raoni Barcelos,+186,+130,+158,Montel Jackson,-221,-186,-165,2026-04-26,Raoni Barcelos,Montel Jackson
-25,Joselyne Edwards,+170,+130,+205,Norma Dumont,-200,-250,-175,2026-04-25,Joselyne Edwards,Norma Dumont
-26,Alexander Hernandez,-150,-188,-150,Rafa Garcia,+130,+122,+140,2026-04-26,Alexander Hernandez,Rafa Garcia
-27,Eric McConico,+250,+175,+200,Rodolfo Vieira,-300,-265,-225,2026-04-25,Eric McConico,Rodolfo Vieira
-28,Joaquin Buckley,+250,+145,+164,Sean Brady,-300,-215,-185,2026-05-10,Joaquin Buckley,Sean Brady
-29,Julia Polastri,-200,-250,-225,Talita Alencar,+170,+163,+195,2026-04-25,Julia Polastri,Talita Alencar
+12,Lucas Brennan,+330,+385,+430,Francis Marshall,-400,-670,-500,2026-04-25,Lucas Brennan,Francis Marshall
+13,Justin Gaethje,+385,+460,+550,Ilia Topuria,-500,-800,-649,2026-06-15,Justin Gaethje,Ilia Topuria
+14,Carlos Prates,-175,-120,+100,Jack Della Maddalena,+150,-125,-110,2026-05-02,Carlos Prates,Jack Della Maddalena
+15,Sedriques Dumas,+130,+140,+165,Jackson McVey,-150,-215,-188,2026-04-25,Sedriques Dumas,Jackson McVey
+16,Cody Durden,+330,+420,+430,Jafel Filho,-400,-670,-550,2026-04-25,Cody Durden,Jafel Filho
+17,Bogdan Guskov,-140,-162,-130,Jan Blachowicz,+120,+104,+126,2026-05-10,Bogdan Guskov,Jan Blachowicz
+18,Bogdan Guskov,+130,-126,-120,Jan Blachowicz,-150,-105,+108,2025-12-07,Bogdan Guskov,Jan Blachowicz
+19,Derrick Lewis,+330,+200,+260,Josh Hokit,-400,-330,-250,2026-06-15,Derrick Lewis,Josh Hokit
+20,Tatsuro Taira,-150,-215,-200,Joshua van,+130,+160,+170,2026-05-10,Tatsuro Taira,Joshua Van
+21,Sean Strickland,+300,+325,+440,Khamzat Chimaev,-400,-590,-450,2026-05-10,Sean Strickland,Khamzat Chimaev
+22,Jeremy Stephens,+170,+210,+250,King Green,-200,-335,-275,2026-05-10,Jeremy Stephens,King Green
+23,Ryan Spann,-110,-105,+130,Marcus Buchecha,-110,-155,-125,2026-04-25,Ryan Spann,Marcus Buchecha
+24,Michael Chandler,+500,+330,+450,Mauricio Ruffy,-700,-700,-480,2026-06-15,Michael Chandler,Mauricio Ruffy
+25,Victor Valenzuela,-110,-150,-135,Max Griffin,-110,+110,+120,2026-04-25,Victor Valenzuela,Max Griffin
+26,Michelle Montague,-400,-450,-350,Mayra Bueno Silva,+330,+240,+350,2026-04-25,Michelle Montague,Mayra Bueno Silva
+27,Raoni Barcelos,+186,+130,+158,Montel Jackson,-221,-186,-165,2026-04-26,Raoni Barcelos,Montel Jackson
+28,Joselyne Edwards,+170,+164,+205,Norma Dumont,-200,-250,-215,2026-04-25,Joselyne Edwards,Norma Dumont
+29,Alexander Hernandez,-150,-132,-120,Rafa Garcia,+130,+100,+104,2026-04-26,Alexander Hernandez,Rafa Garcia
+30,Eric McConico,+250,+175,+225,Rodolfo Vieira,-300,-265,-250,2026-04-25,Eric McConico,Rodolfo Vieira
+31,Joaquin Buckley,+250,+145,+164,Sean Brady,-300,-215,-185,2026-05-10,Joaquin Buckley,Sean Brady
+32,Julia Polastri,-200,-250,-225,Talita Alencar,+170,+163,+205,2026-04-25,Julia Polastri,Talita Alencar
