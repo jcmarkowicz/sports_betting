@@ -1,83 +1,96 @@
-,Unnamed: 0.3,Unnamed: 0.2,Unnamed: 0.1,Unnamed: 0,blue_fighter,open_blue,close1_blue,close2_blue,red_fighter,open_red,close1_red,close2_red,event_date,og_blue_name,og_red_fighter
-0,0.0,0.0,0.0,0.0,Gillian Robertson,-250,-250,-235,Amanda Lemos,210,194,210,2026-03-14,Gillian Robertson,Amanda Lemos
-1,1.0,1.0,1.0,1.0,Gillian Robertson,-110,-205,-188,Amanda Lemos,-110,150,175,2025-12-14,Gillian Robertson,Amanda Lemos
-2,2.0,2.0,2.0,2.0,Jose Delgado,-260,-500,-401,Andre Fili,220,301,375,2026-03-14,Jose Delgado,Andre Fili
-3,3.0,3.0,3.0,3.0,Montserrat Rendon,375,450,900,Bia Mesquita,-500,-1667,-649,2026-03-14,Montse Rendon,Bia Mesquita
-4,4.0,4.0,4.0,4.0,Manoel Sousa,-200,-320,-270,Bolaji Oki,170,210,265,2026-03-14,Manoel Sousa,
-5,5.0,5.0,5.0,5.0,Eryk Anders,160,-140,-125,Brad Tavares,-185,100,118,2026-03-14,Eryk Anders,Brad Tavares
-6,6.0,6.0,6.0,6.0,Bruno Silva,130,140,165,Charles Johnson,-150,-195,-175,2026-03-14,Bruno Silva,Charles Johnson
-7,7.0,7.0,7.0,7.0,Myktybek Orolbai,-250,-500,-450,Chris Curtis,210,333,380,2026-03-14,Myktybek Orolbai,Chris Curtis
-8,8.0,8.0,8.0,8.0,Suyoung You,210,210,230,Elijah Smith,-250,-280,-260,2026-03-14,SuYoung You,Elijah Smith
-9,9.0,9.0,9.0,9.0,Oumar Sy,-200,-420,-250,Ion Cutelaba,170,200,320,2026-03-14,Oumar Sy,Ion Cutelaba
-10,10.0,10.0,10.0,10.0,Austen Lane,350,410,550,Iwo Baraniewski,-450,-800,-590,2026-03-21,Austen Lane,
-11,11.0,11.0,11.0,11.0,Kevin Vallejos,-500,-560,-480,Josh Emmett,375,360,400,2026-03-14,Kevin Vallejos,Josh Emmett
-12,12.0,12.0,12.0,12.0,Danny Silva,105,184,240,Kurtis Campbell,-125,-300,-230,2026-03-21,Danny Silva,Kurtis Campbell
-13,13.0,13.0,13.0,13.0,Brando Pericic,145,-275,-210,Louie Sutherland,-170,180,210,2026-03-21,Brando Pericic,Louie Sutherland
-14,14.0,14.0,14.0,14.0,Hecher Sosa,-200,-250,-180,Luan Lacerda,170,150,200,2026-03-14,Hecher Sosa,Luan Lacerda
-15,15.0,15.0,15.0,15.0,Darmon Blackshear,-230,111,132,Luan Lacerda,195,-163,-131,2023-06-03,Hecher Sosa,Luan Lacerda
-16,16.0,16.0,16.0,16.0,Michael Aswell,130,150,205,Luke Riley,-150,-250,-188,2026-03-21,Michael Aswell Jr.,Luke Riley
-17,17.0,17.0,17.0,17.0,Antonio Trocoli,300,490,750,Mantas Kondratavicius,-400,-1115,-750,2026-03-21,Antonio Trocoli,
-18,18.0,18.0,18.0,18.0,Felipe Franco,250,500,800,Mario Pinto,-300,-1400,-800,2026-03-21,Felipe Franco,Mario Pinto
-19,19.0,19.0,19.0,19.0,Harry Hardwick,170,210,260,Marwan Rahiki,-200,-320,-275,2026-03-14,Harry Hardwick,Marwan Rahiki
-20,20.0,20.0,20.0,20.0,Axel Sola,185,110,152,Mason Jones,-220,-177,-138,2026-03-21,Axel Sola,Mason Jones
-21,21.0,21.0,21.0,21.0,Sam Patterson,135,144,190,Michael Page,-155,-230,-178,2026-03-21,Sam Patterson,Michael Page
-22,22.0,22.0,22.0,22.0,Lerone Murphy,210,175,210,Movsar Evloev,-250,-275,-225,2026-03-21,Lerone Murphy,Movsar Evloev
-23,23.0,23.0,23.0,23.0,Losene Keita,-150,-290,-245,Nathaniel Wood,130,194,235,2026-03-21,Losene Keita,Nathaniel Wood
-24,24.0,24.0,24.0,24.0,Sam Hughes,120,118,128,Piera Rodriguez,-140,-152,-140,2026-03-14,Sam Hughes,Piera Rodriguez
-25,25.0,25.0,25.0,25.0,Sam Hughes,190,135,155,Piera Rodriguez,-230,-180,-167,2022-10-15,Sam Hughes,Piera Rodriguez
-26,26.0,26.0,26.0,26.0,Christian Leroy Duncan,-250,-470,-370,Roman Dolidze,210,290,340,2026-03-21,Christian Leroy Duncan,Roman Dolidze
-27,27.0,27.0,27.0,27.0,Ravena Oliveira,170,330,440,Shanelle Dyer,-200,-600,-450,2026-03-21,Ravena Oliveira,Shanelle Dyer
-28,28.0,28.0,28.0,28.0,Abdul-Kareem Al-Selwady,-185,-118,130,Shem Rock,160,-155,-104,2026-03-21,Abdul-Kareem Al-Selwady,Shem Rock
-29,29.0,29.0,29.0,29.0,Steven Asplund,205,163,188,Vitor Petrino,-240,-230,-200,2026-03-14,Steven Asplund,Vitor Petrino
-30,30.0,30.0,30.0,30.0,Austen Lane,275,420,460,Vitor Petrino,-400,-670,-649,2025-07-13,Steven Asplund,Vitor Petrino
-31,31.0,31.0,31.0,,Maycee Barber,-200,-205,-158,Alexa Grasso,170,124,170,2026-03-29,Maycee Barber,Alexa Grasso
-32,32.0,32.0,32.0,,Maycee Barber,-130,-117,-110,Alexa Grasso,110,-111,-103,2021-02-13,Maycee Barber,Alexa Grasso
-33,33.0,33.0,33.0,,Bruna Brasil,250,330,650,Alexia Thainara,-300,-1000,-480,2026-03-28,Bruna Brasil,Alexia Thainara
-34,34.0,34.0,34.0,,Gabriella Fernandes,-130,-113,110,Casey Oneill,110,-130,-113,2026-03-28,Gabriella Fernandes,Casey O'Neill
-35,35.0,35.0,35.0,,Lance Gibson Jr,285,210,320,Chase Hooper,-350,-420,-280,2026-03-28,Lance Gibson Jr.,Chase Hooper
-36,36.0,36.0,36.0,,Tofiq Musayev,175,220,280,Ignacio Bahamondes,-200,-350,-295,2026-03-28,Tofiq Musayev,Ignacio Bahamondes
-37,37.0,37.0,37.0,,Joe Pyfer,-110,102,122,Israel Adesanya,-110,-145,-130,2026-03-29,Joe Pyfer,Israel Adesanya
-38,38.0,38.0,38.0,,Lerryan Douglas,-350,-335,-280,Julian Erosa,285,235,250,2026-03-29,Lerryan Douglas,Julian Erosa
-39,39.0,39.0,39.0,,Yousri Belgaroui,-110,118,142,Mansur Abdul-Malik,-110,-164,-148,2026-03-29,Yousri Belgaroui,Mansur Abdul-Malik
-40,40.0,40.0,40.0,,Tyrell Fortune,140,-143,-122,Marcin Tybura,-160,-104,116,2026-03-28,Tyrell Fortune,Marcin Tybura
-41,41.0,41.0,41.0,,Niko Price,375,550,700,Michael Chiesa,-500,-1115,-901,2026-03-29,Niko Price,Michael Chiesa
-42,42.0,42.0,42.0,,Conor Cooke,400,400,400,John Michael Shiel,-600,-600,-600,2012-04-28,Niko Price,Michael Chiesa
-43,43.0,43.0,43.0,,Bruno Lopes,355,310,600,Navajo Stirling,-425,-900,-440,2026-03-28,Bruno Lopes,Navajo Stirling
-44,44.0,44.0,44.0,,Adrian Yanez,-110,124,165,Ricky Simon,-110,-195,-158,2026-03-28,Adrian Yanez,Ricky Simon
-45,45.0,45.0,45.0,,Kyle Nelson,150,118,165,Terrance McKinney,-175,-200,-150,2026-03-29,Kyle Nelson,Terrance McKinney
-46,46.0,46.0,,,Brendson Ribeiro,850,290,850,Abdul Rakhman Yakhyaev,-1400,-1600,-410,2026-04-04,Brendson Ribeiro,Abdul Rakhman Yakhyaev
-47,47.0,47.0,,,Stewart Nicoll,350,300,1770,Alessandro Costa,-450,-2588,-400,2026-04-04,Stewart Nicoll,Alessandro Costa
-48,48.0,48.0,,,Hailey Cowan,-110,110,140,Alice Pereira,-110,-180,-127,2026-04-04,Hailey Cowan,Alice Pereira
-49,49.0,49.0,,,Tresean Gore,625,-970,550,Azamt Bekoev,-850,-800,489,2026-04-04,Tresean Gore,Azamat Bekoev
-50,50.0,50.0,,,Melissa Gatto,-135,-112,252,Dione Barbosa,115,-323,-108,2026-04-04,Melissa Gatto,Dione Barbosa
-51,51.0,51.0,,,Rafael Estevam,-215,102,3013,Ethyn Ewing,185,-3487,-122,2026-04-04,Rafael Estevam,Ethyn Ewing
-52,52.0,52.0,,,Thomas Petersen,-110,-566,128,Guilherme Pat,-110,-164,424,2026-04-04,Thomas Petersen,Guilherme Pat
-53,53.0,53.0,,,Robert Ruchala,250,170,4566,Jose Delano,-300,-10679,-200,2026-04-04,Robert Ruchala,Jose Delano
-54,54.0,54.0,,,Dakota Hope,165,-168,135,Kai Kamaka III,-190,-163,109,2026-04-04,Dakota Hope,Kai Kamaka III
-55,55.0,55.0,,,Darrius Flowers,145,-361,225,Lando Vannata,-170,-275,295,2026-04-04,Darrius Flowers,Lando Vannata
-56,56.0,56.0,,,Chris Duncan,-175,-150,942,Renato Moicano,150,-1240,125,2026-04-04,Chris Duncan,Renato Moicano
-57,57.0,57.0,,,Manolo Zecchini,385,397,650,Tommy McMillen,-500,-1000,-491,2026-04-04,Manolo Zecchini,Tommy McMillen
-58,58.0,58.0,,,Tabatha Ricci,135,105,4566,Virna Jandiroba,-155,-10679,-117,2026-04-04,Tabatha Ricci,Virna Jandiroba
-59,59.0,,,,Paulo Costa,190,-229,230,Azamat Murzakanov,-230,-280,207,2026-04-11,Paulo Costa,Azamat Murzakanov
-60,60.0,,,,Francisco Prado,210,124,1770,Charles Radtke,-250,-2588,-147,2026-04-11,Francisco Prado,Charles Radtke
-61,61.0,,,,Marquel Mederos,130,126,4566,Chris Padilla,-150,-5285,-150,2026-04-11,MarQuel Mederos,Chris Padilla
-62,62.0,,,,Nate Landwehr,-155,-110,372,Cub Swanson,135,-459,-110,2026-04-11,Nate Landwehr,Cub Swanson
-63,63.0,,,,Josh Hokit,140,-1090,-100,Curtis Blaydes,-160,-125,838,2026-04-11,Josh Hokit,Curtis Blaydes
-64,64.0,,,,Jairzinho Rozenstruik,198,240,290,Curtis Blaydes,-240,-380,-300,2021-09-25,Josh Hokit,Curtis Blaydes
-65,65.0,,,,Johnny Walker,130,-108,175,Dominick Reyes,-150,-210,-108,2026-04-11,Johnny Walker,Dominick Reyes
-66,66.0,,,,Carlos Ulberg,-170,-5285,-100,Jiri Prochazka,145,-112,2236,2026-04-11,Carlos Ulberg,Jiri Prochazka
-67,67.0,,,,Vicente Luque,170,-103,235,Kelvin Gastelum,-200,-290,-126,2026-04-11,Vicente Luque,Kelvin Gastelum
-68,68.0,,,,Randy Brown,-129,-110,3013,Kevin Holland,109,-5285,-104,2026-04-11,Randy Brown,Kevin Holland
-69,69.0,,,,Esteban Ribovics,165,150,1238,Mateusz Gamrot,-190,-1689,-188,2026-04-11,Esteban Ribovics,Mateusz Gamrot
-70,,,,,Marcio Barbosa,-350,-435,-330,Dennis Buzukja,+285,+270,+325,2026-04-19,Marcio Barbosa,Dennis Buzukja
-71,,,,,Mike Malott,-335,-280,-250,Gilbert Burns,+275,+205,+240,2026-04-19,Mike Malott,Gilbert Burns
-72,,,,,Jamey-Lyn Horth,-260,-205,-150,Jj Aldrich,+220,+120,+170,2026-04-18,Jamey-Lyn Horth,JJ Aldrich
-73,,,,,John Yannis,+185,+175,+215,Jamie Siraj,-220,-265,-230,2026-04-18,John Yannis,Jamie Siraj
-74,,,,,Karine Silva,+210,+225,+290,Jasmine Jasudavicius,-250,-370,-300,2026-04-19,Karine Silva,Jasmine Jasudavicius
-75,,,,,Mark Vologdin,-150,+130,+160,John Castaneda,+130,-190,-158,2026-04-18,Mark Vologdin,John Castaneda
-76,,,,,Robert Valentin,+147,-186,-163,Julien Leblanc,-172,+130,+150,2026-04-18,Robert Valentin,Julien Leblanc
-77,,,,,Charles Jourdain,-150,-165,-136,Kyler Phillips,+130,+110,+132,2026-04-19,Charles Jourdain,Kyler Phillips
-78,,,,,Jai Herbert,+125,+140,+150,Mandel Nallo,-145,-180,-160,2026-04-19,Jai Herbert,Mandel Nallo
-79,,,,,Daria Zhelezniakova,+155,+110,+130,Melissa Croden,-180,-150,-138,2026-04-18,Daria Zhelezniakova,Melissa Croden
-80,,,,,Gokhan Saricam,+130,-163,-140,Tanner Boser,-150,+120,+135,2026-04-18,Gokhan Saricam,Tanner Boser
-81,,,,,Gauge Young,+130,-175,-138,Thiago Moises,-150,+110,+145,2026-04-19,Gauge Young,Thiago Moises
+,Unnamed: 0.4,Unnamed: 0.3,Unnamed: 0.2,Unnamed: 0.1,Unnamed: 0,blue_fighter,open_blue,close1_blue,close2_blue,red_fighter,open_red,close1_red,close2_red,event_date,og_blue_name,og_red_fighter
+0,0.0,0.0,0.0,0.0,0.0,Gillian Robertson,-250,-250,-235,Amanda Lemos,210,194,210,2026-03-14,Gillian Robertson,Amanda Lemos
+1,1.0,1.0,1.0,1.0,1.0,Gillian Robertson,-110,-205,-188,Amanda Lemos,-110,150,175,2025-12-14,Gillian Robertson,Amanda Lemos
+2,2.0,2.0,2.0,2.0,2.0,Jose Delgado,-260,-500,-401,Andre Fili,220,301,375,2026-03-14,Jose Delgado,Andre Fili
+3,3.0,3.0,3.0,3.0,3.0,Montserrat Rendon,375,450,900,Bia Mesquita,-500,-1667,-649,2026-03-14,Montse Rendon,Bia Mesquita
+4,4.0,4.0,4.0,4.0,4.0,Manoel Sousa,-200,-320,-270,Bolaji Oki,170,210,265,2026-03-14,Manoel Sousa,
+5,5.0,5.0,5.0,5.0,5.0,Eryk Anders,160,-140,-125,Brad Tavares,-185,100,118,2026-03-14,Eryk Anders,Brad Tavares
+6,6.0,6.0,6.0,6.0,6.0,Bruno Silva,130,140,165,Charles Johnson,-150,-195,-175,2026-03-14,Bruno Silva,Charles Johnson
+7,7.0,7.0,7.0,7.0,7.0,Myktybek Orolbai,-250,-500,-450,Chris Curtis,210,333,380,2026-03-14,Myktybek Orolbai,Chris Curtis
+8,8.0,8.0,8.0,8.0,8.0,Suyoung You,210,210,230,Elijah Smith,-250,-280,-260,2026-03-14,SuYoung You,Elijah Smith
+9,9.0,9.0,9.0,9.0,9.0,Oumar Sy,-200,-420,-250,Ion Cutelaba,170,200,320,2026-03-14,Oumar Sy,Ion Cutelaba
+10,10.0,10.0,10.0,10.0,10.0,Austen Lane,350,410,550,Iwo Baraniewski,-450,-800,-590,2026-03-21,Austen Lane,
+11,11.0,11.0,11.0,11.0,11.0,Kevin Vallejos,-500,-560,-480,Josh Emmett,375,360,400,2026-03-14,Kevin Vallejos,Josh Emmett
+12,12.0,12.0,12.0,12.0,12.0,Danny Silva,105,184,240,Kurtis Campbell,-125,-300,-230,2026-03-21,Danny Silva,Kurtis Campbell
+13,13.0,13.0,13.0,13.0,13.0,Brando Pericic,145,-275,-210,Louie Sutherland,-170,180,210,2026-03-21,Brando Pericic,Louie Sutherland
+14,14.0,14.0,14.0,14.0,14.0,Hecher Sosa,-200,-250,-180,Luan Lacerda,170,150,200,2026-03-14,Hecher Sosa,Luan Lacerda
+15,15.0,15.0,15.0,15.0,15.0,Darmon Blackshear,-230,111,132,Luan Lacerda,195,-163,-131,2023-06-03,Hecher Sosa,Luan Lacerda
+16,16.0,16.0,16.0,16.0,16.0,Michael Aswell,130,150,205,Luke Riley,-150,-250,-188,2026-03-21,Michael Aswell Jr.,Luke Riley
+17,17.0,17.0,17.0,17.0,17.0,Antonio Trocoli,300,490,750,Mantas Kondratavicius,-400,-1115,-750,2026-03-21,Antonio Trocoli,
+18,18.0,18.0,18.0,18.0,18.0,Felipe Franco,250,500,800,Mario Pinto,-300,-1400,-800,2026-03-21,Felipe Franco,Mario Pinto
+19,19.0,19.0,19.0,19.0,19.0,Harry Hardwick,170,210,260,Marwan Rahiki,-200,-320,-275,2026-03-14,Harry Hardwick,Marwan Rahiki
+20,20.0,20.0,20.0,20.0,20.0,Axel Sola,185,110,152,Mason Jones,-220,-177,-138,2026-03-21,Axel Sola,Mason Jones
+21,21.0,21.0,21.0,21.0,21.0,Sam Patterson,135,144,190,Michael Page,-155,-230,-178,2026-03-21,Sam Patterson,Michael Page
+22,22.0,22.0,22.0,22.0,22.0,Lerone Murphy,210,175,210,Movsar Evloev,-250,-275,-225,2026-03-21,Lerone Murphy,Movsar Evloev
+23,23.0,23.0,23.0,23.0,23.0,Losene Keita,-150,-290,-245,Nathaniel Wood,130,194,235,2026-03-21,Losene Keita,Nathaniel Wood
+24,24.0,24.0,24.0,24.0,24.0,Sam Hughes,120,118,128,Piera Rodriguez,-140,-152,-140,2026-03-14,Sam Hughes,Piera Rodriguez
+25,25.0,25.0,25.0,25.0,25.0,Sam Hughes,190,135,155,Piera Rodriguez,-230,-180,-167,2022-10-15,Sam Hughes,Piera Rodriguez
+26,26.0,26.0,26.0,26.0,26.0,Christian Leroy Duncan,-250,-470,-370,Roman Dolidze,210,290,340,2026-03-21,Christian Leroy Duncan,Roman Dolidze
+27,27.0,27.0,27.0,27.0,27.0,Ravena Oliveira,170,330,440,Shanelle Dyer,-200,-600,-450,2026-03-21,Ravena Oliveira,Shanelle Dyer
+28,28.0,28.0,28.0,28.0,28.0,Abdul-Kareem Al-Selwady,-185,-118,130,Shem Rock,160,-155,-104,2026-03-21,Abdul-Kareem Al-Selwady,Shem Rock
+29,29.0,29.0,29.0,29.0,29.0,Steven Asplund,205,163,188,Vitor Petrino,-240,-230,-200,2026-03-14,Steven Asplund,Vitor Petrino
+30,30.0,30.0,30.0,30.0,30.0,Austen Lane,275,420,460,Vitor Petrino,-400,-670,-649,2025-07-13,Steven Asplund,Vitor Petrino
+31,31.0,31.0,31.0,31.0,,Maycee Barber,-200,-205,-158,Alexa Grasso,170,124,170,2026-03-29,Maycee Barber,Alexa Grasso
+32,32.0,32.0,32.0,32.0,,Maycee Barber,-130,-117,-110,Alexa Grasso,110,-111,-103,2021-02-13,Maycee Barber,Alexa Grasso
+33,33.0,33.0,33.0,33.0,,Bruna Brasil,250,330,650,Alexia Thainara,-300,-1000,-480,2026-03-28,Bruna Brasil,Alexia Thainara
+34,34.0,34.0,34.0,34.0,,Gabriella Fernandes,-130,-113,110,Casey Oneill,110,-130,-113,2026-03-28,Gabriella Fernandes,Casey O'Neill
+35,35.0,35.0,35.0,35.0,,Lance Gibson Jr,285,210,320,Chase Hooper,-350,-420,-280,2026-03-28,Lance Gibson Jr.,Chase Hooper
+36,36.0,36.0,36.0,36.0,,Tofiq Musayev,175,220,280,Ignacio Bahamondes,-200,-350,-295,2026-03-28,Tofiq Musayev,Ignacio Bahamondes
+37,37.0,37.0,37.0,37.0,,Joe Pyfer,-110,102,122,Israel Adesanya,-110,-145,-130,2026-03-29,Joe Pyfer,Israel Adesanya
+38,38.0,38.0,38.0,38.0,,Lerryan Douglas,-350,-335,-280,Julian Erosa,285,235,250,2026-03-29,Lerryan Douglas,Julian Erosa
+39,39.0,39.0,39.0,39.0,,Yousri Belgaroui,-110,118,142,Mansur Abdul-Malik,-110,-164,-148,2026-03-29,Yousri Belgaroui,Mansur Abdul-Malik
+40,40.0,40.0,40.0,40.0,,Tyrell Fortune,140,-143,-122,Marcin Tybura,-160,-104,116,2026-03-28,Tyrell Fortune,Marcin Tybura
+41,41.0,41.0,41.0,41.0,,Niko Price,375,550,700,Michael Chiesa,-500,-1115,-901,2026-03-29,Niko Price,Michael Chiesa
+42,42.0,42.0,42.0,42.0,,Conor Cooke,400,400,400,John Michael Shiel,-600,-600,-600,2012-04-28,Niko Price,Michael Chiesa
+43,43.0,43.0,43.0,43.0,,Bruno Lopes,355,310,600,Navajo Stirling,-425,-900,-440,2026-03-28,Bruno Lopes,Navajo Stirling
+44,44.0,44.0,44.0,44.0,,Adrian Yanez,-110,124,165,Ricky Simon,-110,-195,-158,2026-03-28,Adrian Yanez,Ricky Simon
+45,45.0,45.0,45.0,45.0,,Kyle Nelson,150,118,165,Terrance McKinney,-175,-200,-150,2026-03-29,Kyle Nelson,Terrance McKinney
+46,46.0,46.0,46.0,,,Brendson Ribeiro,850,290,850,Abdul Rakhman Yakhyaev,-1400,-1600,-410,2026-04-04,Brendson Ribeiro,Abdul Rakhman Yakhyaev
+47,47.0,47.0,47.0,,,Stewart Nicoll,350,300,1770,Alessandro Costa,-450,-2588,-400,2026-04-04,Stewart Nicoll,Alessandro Costa
+48,48.0,48.0,48.0,,,Hailey Cowan,-110,110,140,Alice Pereira,-110,-180,-127,2026-04-04,Hailey Cowan,Alice Pereira
+49,49.0,49.0,49.0,,,Tresean Gore,625,-970,550,Azamt Bekoev,-850,-800,489,2026-04-04,Tresean Gore,Azamat Bekoev
+50,50.0,50.0,50.0,,,Melissa Gatto,-135,-112,252,Dione Barbosa,115,-323,-108,2026-04-04,Melissa Gatto,Dione Barbosa
+51,51.0,51.0,51.0,,,Rafael Estevam,-215,102,3013,Ethyn Ewing,185,-3487,-122,2026-04-04,Rafael Estevam,Ethyn Ewing
+52,52.0,52.0,52.0,,,Thomas Petersen,-110,-566,128,Guilherme Pat,-110,-164,424,2026-04-04,Thomas Petersen,Guilherme Pat
+53,53.0,53.0,53.0,,,Robert Ruchala,250,170,4566,Jose Delano,-300,-10679,-200,2026-04-04,Robert Ruchala,Jose Delano
+54,54.0,54.0,54.0,,,Dakota Hope,165,-168,135,Kai Kamaka III,-190,-163,109,2026-04-04,Dakota Hope,Kai Kamaka III
+55,55.0,55.0,55.0,,,Darrius Flowers,145,-361,225,Lando Vannata,-170,-275,295,2026-04-04,Darrius Flowers,Lando Vannata
+56,56.0,56.0,56.0,,,Chris Duncan,-175,-150,942,Renato Moicano,150,-1240,125,2026-04-04,Chris Duncan,Renato Moicano
+57,57.0,57.0,57.0,,,Manolo Zecchini,385,397,650,Tommy McMillen,-500,-1000,-491,2026-04-04,Manolo Zecchini,Tommy McMillen
+58,58.0,58.0,58.0,,,Tabatha Ricci,135,105,4566,Virna Jandiroba,-155,-10679,-117,2026-04-04,Tabatha Ricci,Virna Jandiroba
+59,59.0,59.0,,,,Paulo Costa,190,-229,230,Azamat Murzakanov,-230,-280,207,2026-04-11,Paulo Costa,Azamat Murzakanov
+60,60.0,60.0,,,,Francisco Prado,210,124,1770,Charles Radtke,-250,-2588,-147,2026-04-11,Francisco Prado,Charles Radtke
+61,61.0,61.0,,,,Marquel Mederos,130,126,4566,Chris Padilla,-150,-5285,-150,2026-04-11,MarQuel Mederos,Chris Padilla
+62,62.0,62.0,,,,Nate Landwehr,-155,-110,372,Cub Swanson,135,-459,-110,2026-04-11,Nate Landwehr,Cub Swanson
+63,63.0,63.0,,,,Josh Hokit,140,-1090,-100,Curtis Blaydes,-160,-125,838,2026-04-11,Josh Hokit,Curtis Blaydes
+64,64.0,64.0,,,,Jairzinho Rozenstruik,198,240,290,Curtis Blaydes,-240,-380,-300,2021-09-25,Josh Hokit,Curtis Blaydes
+65,65.0,65.0,,,,Johnny Walker,130,-108,175,Dominick Reyes,-150,-210,-108,2026-04-11,Johnny Walker,Dominick Reyes
+66,66.0,66.0,,,,Carlos Ulberg,-170,-5285,-100,Jiri Prochazka,145,-112,2236,2026-04-11,Carlos Ulberg,Jiri Prochazka
+67,67.0,67.0,,,,Vicente Luque,170,-103,235,Kelvin Gastelum,-200,-290,-126,2026-04-11,Vicente Luque,Kelvin Gastelum
+68,68.0,68.0,,,,Randy Brown,-129,-110,3013,Kevin Holland,109,-5285,-104,2026-04-11,Randy Brown,Kevin Holland
+69,69.0,69.0,,,,Esteban Ribovics,165,150,1238,Mateusz Gamrot,-190,-1689,-188,2026-04-11,Esteban Ribovics,Mateusz Gamrot
+70,70.0,,,,,Marcio Barbosa,-350,-435,-330,Dennis Buzukja,285,270,325,2026-04-19,Marcio Barbosa,Dennis Buzukja
+71,71.0,,,,,Mike Malott,-335,-280,-250,Gilbert Burns,275,205,240,2026-04-19,Mike Malott,Gilbert Burns
+72,72.0,,,,,Jamey-Lyn Horth,-260,-205,-150,Jj Aldrich,220,120,170,2026-04-18,Jamey-Lyn Horth,JJ Aldrich
+73,73.0,,,,,John Yannis,185,175,215,Jamie Siraj,-220,-265,-230,2026-04-18,John Yannis,Jamie Siraj
+74,74.0,,,,,Karine Silva,210,225,290,Jasmine Jasudavicius,-250,-370,-300,2026-04-19,Karine Silva,Jasmine Jasudavicius
+75,75.0,,,,,Mark Vologdin,-150,130,160,John Castaneda,130,-190,-158,2026-04-18,Mark Vologdin,John Castaneda
+76,76.0,,,,,Robert Valentin,147,-186,-163,Julien Leblanc,-172,130,150,2026-04-18,Robert Valentin,Julien Leblanc
+77,77.0,,,,,Charles Jourdain,-150,-165,-136,Kyler Phillips,130,110,132,2026-04-19,Charles Jourdain,Kyler Phillips
+78,78.0,,,,,Jai Herbert,125,140,150,Mandel Nallo,-145,-180,-160,2026-04-19,Jai Herbert,Mandel Nallo
+79,79.0,,,,,Daria Zhelezniakova,155,110,130,Melissa Croden,-180,-150,-138,2026-04-18,Daria Zhelezniakova,Melissa Croden
+80,80.0,,,,,Gokhan Saricam,130,-163,-140,Tanner Boser,-150,120,135,2026-04-18,Gokhan Saricam,Tanner Boser
+81,81.0,,,,,Gauge Young,130,-175,-138,Thiago Moises,-150,110,145,2026-04-19,Gauge Young,Thiago Moises
+82,,,,,,Youssef Zalal,+135,-141,-125,Aljamain Sterling,-155,+105,+115,2026-04-25,Youssef Zalal,Aljamain Sterling
+83,,,,,,Adrian Luna Martinetti,-138,-103,+100,Davey Grant,+105,-125,-121,2026-04-25,Adrian Luna Martinetti,Davey Grant
+84,,,,,,Lucas Brennan,+330,+325,+380,Francis Marshall,-400,-600,-425,2026-04-25,Lucas Brennan,Francis Marshall
+85,,,,,,Sedriques Dumas,+130,+140,+165,Jackson McVey,-150,-210,-160,2026-04-25,Sedriques Dumas,Jackson McVey
+86,,,,,,Cody Durden,+330,+400,+500,Jafel Filho,-400,-715,-549,2026-04-25,Cody Durden,Jafel Filho
+87,,,,,,Ryan Spann,-110,+110,+136,Marcus Buchecha,-110,-162,-138,2026-04-25,Ryan Spann,Marcus Buchecha
+88,,,,,,Victor Valenzuela,-110,-150,-120,Max Griffin,-110,+100,+120,2026-04-25,Victor Valenzuela,Max Griffin
+89,,,,,,Michelle Montague,-400,-480,-400,Mayra Bueno Silva,+330,+300,+360,2026-04-25,Michelle Montague,Mayra Bueno Silva
+90,,,,,,Raoni Barcelos,+186,+150,+180,Montel Jackson,-221,-225,-188,2026-04-25,Raoni Barcelos,Montel Jackson
+91,,,,,,Joselyne Edwards,+170,+165,+195,Norma Dumont,-200,-235,-205,2026-04-25,Joselyne Edwards,Norma Dumont
+92,,,,,,Alexander Hernandez,-150,-125,-118,Rafa Garcia,+130,-105,+105,2026-04-25,Alexander Hernandez,Rafa Garcia
+93,,,,,,Eric McConico,+250,+225,+310,Rodolfo Vieira,-300,-400,-300,2026-04-25,Eric McConico,Rodolfo Vieira
+94,,,,,,Julia Polastri,-200,-250,-230,Talita Alencar,+170,+190,+205,2026-04-25,Julia Polastri,Talita Alencar
