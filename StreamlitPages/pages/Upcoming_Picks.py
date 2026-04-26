@@ -8,6 +8,7 @@ import pandas as pd
 
 import os 
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from StreamlitPages.utils import display_paginated_df
 
@@ -22,10 +23,10 @@ def extract_date(filename):
 ml_files = sorted(os.listdir(config.ml_folder), key=extract_date)
 parlay_files = sorted(os.listdir(config.parlay_folder), key=extract_date)
 
-assert len(ml_files) == len(parlay_files), "Mismatch in number of ML and Parlay files"
+assert len(ml_files) == len(parlay_files), f"Mismatch in number of ML and Parlay files: {len(ml_files)} vs {len(parlay_files)}"
 
 for ml_file, parlay_file in zip(ml_files, parlay_files):
-    today = datetime.today().date()
+    today = datetime.now(ZoneInfo("America/New_York")).date()
     date_str = ml_file.split('_')[-1].replace('.csv','')
     event_date = datetime.strptime(date_str, "%Y-%m-%d").date()
 

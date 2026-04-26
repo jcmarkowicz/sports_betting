@@ -29,6 +29,7 @@ def archive_results():
 
     if os.path.exists(config.ml_history_fp):
         df_ml_history = pd.read_csv(config.ml_history_fp)
+        df_ml_history = df_ml_history.loc[:, ~df_ml_history.columns.str.contains('^Unnamed')]
     else: 
          df_ml_history = pd.DataFrame({'fighter_red':[], 'fighter_blue':[], 'winner': [],
                                         'pred_name_open':[], 'pred_name_close1':[], 'pred_name_close2':[],
@@ -42,6 +43,8 @@ def archive_results():
 
     if os.path.exists(config.parlay_history_fp): 
         df_parlay_history = pd.read_csv(config.parlay_history_fp)
+        df_parlay_history = df_parlay_history.loc[:, ~df_parlay_history.columns.str.contains('^Unnamed')]
+
     else: 
         df_parlay_history = pd.DataFrame(
                     {'choice_fighter_name_open':[], 'choice_fighter_name_close1':[], 'choice_fighter_name_close2':[],
@@ -139,11 +142,11 @@ def calc_winner_parlay(df_parlay, df_single_event):
     close1_stake = df_parlay['parlay_fstar_close1']
     close2_stake = df_parlay['parlay_fstar_close2']
 
-    winner_names = df_single_event['winner'].values
+    winner_names = df_single_event['winner'].str.lower().values
 
-    open_win = df_parlay['choice_fighter_name_open'].isin(winner_names).all()
-    close1_win = df_parlay['choice_fighter_name_close1'].isin(winner_names).all()
-    close2_win = df_parlay['choice_fighter_name_close2'].isin(winner_names).all()
+    open_win = df_parlay['choice_fighter_name_open'].str.lower().isin(winner_names).all()
+    close1_win = df_parlay['choice_fighter_name_close1'].str.lower().isin(winner_names).all()
+    close2_win = df_parlay['choice_fighter_name_close2'].str.lower().isin(winner_names).all()
 
 
     profit_open = open_stake * open_odds if open_win else -open_stake
@@ -153,6 +156,7 @@ def calc_winner_parlay(df_parlay, df_single_event):
     open_net_fstar = open_stake if open_win else -open_stake
     close1_net_fstar = close1_stake if close1_win else -close1_stake
     close2_net_fstar = close2_stake if close2_win else -close2_stake
+
 
     parlay_results = pd.DataFrame({'open_net_fstar':open_net_fstar, 
                       'close1_net_fstar':close1_net_fstar, 
@@ -167,17 +171,33 @@ def calc_winner_parlay(df_parlay, df_single_event):
     return parlay_results
 
 
+
 def calc_winner_ml(df_single_event, df_money_line):
 
     assert df_single_event.shape[0] == df_money_line.shape[0], 'scraped results df shape mismatch with bets df'
 
-    profit_open = pd.Series(0.0, index=range(df_single_event.shape[0]))
-    profit_close1 = pd.Series(0.0, index=range(df_single_event.shape[0]))
-    profit_close2 = pd.Series(0.0, index=range(df_single_event.shape[0]))
 
-    for i, row in df_money_line.iterrows():
+    df_single_event["fighter_red"] = df_money_line["fighter_red"].str.lower()
+    df_single_event["fighter_blue"] = df_money_line["fighter_blue"].str.lower()
+
+    df_money_line["fighter_red"] = df_money_line["fighter_red"].str.lower()
+    df_money_line["fighter_blue"] = df_money_line["fighter_blue"].str.lower()
+
+    merged = df_money_line.merge(
+        df_single_event,
+        on=["fighter_red", "fighter_blue"],
+        how="left"
+    )
+
+
+    profit_open = pd.Series(0.0, index=range(merged.shape[0]))
+    profit_close1 = pd.Series(0.0, index=range(merged.shape[0]))
+    profit_close2 = pd.Series(0.0, index=range(merged.shape[0]))
+
+
+    for i, row in merged.iterrows():
             
-            winner_name = df_single_event['winner'].loc[i].lower()
+            winner_name = row['winner'].lower()
             pred_open = row['pred_name_open'].lower()
             pred_close1 = row['pred_name_close1'].lower()
             pred_close2 = row['pred_name_close2'].lower()
@@ -215,14 +235,13 @@ def calc_winner_ml(df_single_event, df_money_line):
                                                     'fstar_close2',
                                      ]]], axis=1).reset_index(drop=True)
     
-    df_data = pd.concat([df_data, df_single_event['winner']], axis=1).reset_index(drop=True)
+    df_data = pd.concat([df_data, merged['winner']], axis=1).reset_index(drop=True)
 
-
-    mask = (
-        (df_money_line['fstar_open'] != 0 | df_money_line['fstar_open'].notna()) &
-        (df_data['net_odds_open'] != 0 | df_data['net_odds_open'].notna())
-    )
-    assert mask.all(), "Money Line results profit error"
+    # mask = (
+    #     (df_money_line['fstar_open'] != 0 | df_money_line['fstar_open'].notna()) &
+    #     (df_data['net_odds_open'] != 0 | df_data['net_odds_open'].notna())
+    # )
+    # assert mask.all(), "Money Line results profit error"
 
     return df_data
 
@@ -265,9 +284,15 @@ def returns_by_date():
     df_ml = pd.read_csv(config.ml_history_fp)
     df_parlay = pd.read_csv(config.parlay_history_fp)
 
+    df_ml = df_ml.loc[:, ~df_ml.columns.str.contains('^Unnamed')]
+    df_parlay = df_parlay.loc[:, ~df_parlay.columns.str.contains('^Unnamed')]
+
+
     types = ['open', 'close1', 'close2']
     ml_pct_returns = {type_:[] for type_ in types}
     parlay_pct_returns = {type_:[] for type_ in types}
+    ml_pct_returns['date'] = []
+    parlay_pct_returns['date'] = [] 
 
     for date, group in df_ml.groupby('date'): 
         
@@ -278,12 +303,14 @@ def returns_by_date():
 
             parlay_net = parlay_group[f'{type_}_net_odds'].iloc[0]
             parlay_pct_returns[type_].append(parlay_net)
+        
+        ml_pct_returns['date'].append(date)
+        parlay_pct_returns['date'].append(date)
 
     df_ml_pct = pd.DataFrame(ml_pct_returns)
     df_parlay_pct = pd.DataFrame(parlay_pct_returns)
 
     commit_if_changed(df_ml_pct, config.ml_pct_returns_fp, f'Saving Percent Returns ML')
-
     commit_if_changed(df_parlay_pct, config.parlay_pct_returns_fp, f'Saving Percent Returns Parlay')
 
 

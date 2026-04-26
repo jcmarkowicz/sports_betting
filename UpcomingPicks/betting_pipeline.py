@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 
-
 from UpcomingPicks.kelly_worker import parlay_top_ev, run_per_bet_scaling
 from BettingStrategy.kelly_scaling import expected_value, kelly_edge
 
@@ -106,7 +105,7 @@ def merge_parlay_types(df_parlay, df_parlay_combined):
 
 def betting_pipeline(upcoming_df, feats_list, model_list, 
                      scaler_list, type_list, fair_odds_list, 
-                     real_odds_list, bankroll, max_drawdown=0.15, N=1000):
+                     real_odds_list, bankroll, max_drawdown_array=[0.15, 0.15, 0.15], N=1000):
 
     other_cols = ['date', 'fighter_red', 'fighter_blue', 'open_red', 'open_blue', 'close1_red', 'close2_red', 'close1_blue', 'close2_blue']
     df = upcoming_df.copy().reset_index(drop=True)
@@ -119,7 +118,9 @@ def betting_pipeline(upcoming_df, feats_list, model_list,
     fighter_blue = df["fighter_blue"].values
     dates = df["date"].values
 
-    for model, scaler, feats, type, fair_odds, real_odds in zip(model_list, scaler_list, feats_list, type_list, real_odds_list, fair_odds_list):
+    for i, (model, scaler, feats, type, real_odds, fair_odds) in enumerate(
+    zip(model_list, scaler_list, feats_list, type_list, real_odds_list, fair_odds_list)
+    ):
 
         valid_mask = ~df[feats].isna().any(axis=1)
         y_hat = pd.Series(0, index=required_df_idx, dtype=float)
@@ -198,7 +199,7 @@ def betting_pipeline(upcoming_df, feats_list, model_list,
                 "f_star_unscaled": unweighted_fstar
             }, index=y_hat.index)
 
-        df_per_bet = run_per_bet_scaling(bets_input_df, max_drawdown, bankroll, N)
+        df_per_bet = run_per_bet_scaling(bets_input_df, max_drawdown_array[i], bankroll, N)
         fstar_list = df_per_bet['fstar_scaled'].values
         stake_list = df_per_bet['stake'].values
 

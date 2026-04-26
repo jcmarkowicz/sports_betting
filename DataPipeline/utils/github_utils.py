@@ -20,7 +20,7 @@ def commit_if_changed(df, file_path, msg, branch="main"):
 
     df = df.reset_index(drop=True)
     df.index = range(len(df))
-    df.to_csv(file_path)
+    df.to_csv(file_path, index=False)
 
     subprocess.run(["git", "add", str(file_path)], check=True)
 

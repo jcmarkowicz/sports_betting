@@ -1,16 +1,56 @@
 import numpy as np 
 import pandas as pd
+from itertools import combinations
 
-import sys
-# from pathlib import Path
-# sys.path.append(str(Path(__file__).parent))
+from BettingStrategy.kelly_scaling import scale_mdd, kelly_edge, kelly_edge, expected_value, log_return_volatility, scale_kelly_for_mdd
 
-import os
-print(os.getcwd())
 
-print(sys.path)
+def calculate_positive_ev_parlays(data, bankroll, n_legs):
+    parlays = []
 
-from BettingStrategy.KellyStrategy.kelly_scaling import scale_mdd, kelly_edge, kelly_edge, expected_value, log_return_volatility, scale_kelly_for_mdd
+    for idxs in combinations(data.index, n_legs):
+        df_parlay = data.loc[list(idxs)]
+
+        parlay_prob = np.prod(df_parlay["choice_proba"])
+        parlay_odds = np.prod(df_parlay["choice_real_odds"])
+        parlay_ev = parlay_prob * parlay_odds - 1
+
+        # only keep positive EV parlays
+        if parlay_ev <= 0:
+            continue
+
+        b = parlay_odds - 1
+        kelly_full = max((b * parlay_prob - (1 - parlay_prob)) / b, 0) if b > 0 else 0.0
+
+        parlay_kelly = kelly_full
+        stake = bankroll * parlay_kelly
+
+        parlay_win = (df_parlay["winner"] == df_parlay["pred_winner"]).all()
+
+        net_odds = parlay_odds - 1
+        if parlay_win:
+            profit = stake * net_odds
+        else:
+            profit = -stake
+            net_odds = -1
+
+        parlays.append({
+            "n_legs": n_legs,
+            "parlay_indices": idxs,
+            "parlay_prob": parlay_prob,
+            "parlay_odds": parlay_odds,
+            "parlay_ev": parlay_ev,
+            "kelly_full": kelly_full,
+            "stake": stake,
+            "parlay_win": parlay_win,
+            "profit": profit,
+            "net_odds": net_odds,
+        })
+
+    return parlays
+
+
+
 
 
 def scale_kelly_portfolio(bets, N, max_drawdown):
@@ -371,6 +411,9 @@ def simulate_kelly(df_final, prob_cols, fair_decimal_cols, real_decimal_cols,
 
     df_results = pd.DataFrame()
     df_parlay = pd.DataFrame()
+
+    df_all_parlays = []
+
     df = df_final.sort_values(by=date_col)
 
     for date, group in df.groupby(date_col, sort=True):
@@ -469,6 +512,11 @@ def simulate_kelly(df_final, prob_cols, fair_decimal_cols, real_decimal_cols,
 
             group_stats['parlay_net'] = np.full(group.shape[0], parlay_net_money)
             group_stats['parlay_net_odds'] = np.full(group.shape[0], parlay_net_odds)
+
+            # paraly_combs_array = calculate_positive_ev_parlays(df_data, bankroll, n_legs=2)
+
+            # parlay_net_money += np.sum([comb['profit'] for comb in paraly_combs_array])
+            # df_all_parlays.extend(paraly_combs_array)
 
             # if df_data.shape[0]>=3:
             #     profit1, _, _ = parlay_top_ev(df_data, bankroll, top_n=[0,2])

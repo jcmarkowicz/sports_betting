@@ -89,9 +89,12 @@ def run_logit_model(
         X_test, y_test, 
         cov_type="HC3",
         reg= False,
-        alpha=0,
-        L1_wt=0
+        alpha=0, #
+        method="l1"
     ):
+    """
+    https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.Logit.fit_regularized.html  
+    """
 
     # --- add constant ---
     X_train_sm = sm.add_constant(X_train.copy())
@@ -109,9 +112,8 @@ def run_logit_model(
         
     else:
         model = sm.Logit(y_train, X_train_sm).fit_regularized(
-        method="l1",     
-        alpha=alpha,       
-        L1_wt=L1_wt      
+        method=method,     
+        alpha=alpha # to multiply l1 penalty term     
         )
 
         train_pred = model.predict(X_train_sm)

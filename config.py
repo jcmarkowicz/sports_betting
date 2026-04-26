@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from pathlib import Path
-import os 
 from DataPipeline.FeatureEngineering.features_pipeline import BASE_DIR
 
 
@@ -11,7 +10,7 @@ class config:
     # --- Bet Params ---
     bankroll:int = 800
     N_paths:int = 250
-    max_drawdown:float = 0.3  
+    max_drawdown_array = [0.3, 0.45, 0.45]
     parlay_top_ev = 2  
 
     # --- Paths --- 

@@ -34,7 +34,7 @@ real_odds_list = [['dec_open_blue', 'dec_open_red'],
 def generate_bets(df, select_odds=None, bankroll=0):
 
     bankroll = config.bankroll
-    mdd = config.max_drawdown
+    mdd_arr = config.max_drawdown_array
     N = config.N_paths
 
     df['math_red'] = df['math_red'].astype('category')
@@ -46,7 +46,7 @@ def generate_bets(df, select_odds=None, bankroll=0):
                                                 scaler_list=scaler_list, type_list=type_list,
                                                 fair_odds_list=fair_odds_list, 
                                                 real_odds_list=real_odds_list, 
-                                                bankroll=bankroll, max_drawdown=mdd, N=N)
+                                                bankroll=bankroll, max_drawdown=mdd_arr, N=N)
     
     df_bets_arr, df_parlay_arr = seperate_bets_dfs(df_bets_all, df_parlay_all, type_list)
     

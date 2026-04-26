@@ -9,6 +9,7 @@ import os
 import sys 
 from pathlib import Path 
 
+import numpy as np 
 import pandas as pd 
 
 import matplotlib.pyplot as plt
@@ -27,8 +28,8 @@ df_ml_pct = pd.read_csv(ml_pct_returns_fp)
 df_parlay_pct = pd.read_csv(parlay_pct_returns_fp)
 
 
-display_paginated_df(df_ml_pct, title='Money Line Percent Returns')
-display_paginated_df(df_parlay_pct, title='Parlay Percent Returns')
+display_paginated_df(df_ml_pct, title='Money Line Percent Returns', key_prefix='ml')
+display_paginated_df(df_parlay_pct, title='Parlay Percent Returns', key_prefix='parlay')
 
 path = BASE_DIR / 'Data' / 'plot_pngs' / 'pct_returns.png'
 # show_image(path, title='Percent Returns')
@@ -46,15 +47,15 @@ def plot_returns():
     for i, type_ in enumerate(types):
         # ML percent returns
         sns.histplot(df_ml_pct[type_], ax=axes[0, i], kde=False, color='skyblue')
-        avg_ml = sum(df_ml_pct[type_])/len(df_ml_pct[type_])
-        total_ml = sum(df_ml_pct[type_])
-        axes[0, i].set_title(f"ML {type_} — Avg: {avg_ml:.2%}, Total: {total_ml:.2%}")
+        avg_ml = np.mean(df_ml_pct[type_])
+        total_ml = np.sum(df_ml_pct[type_])
+        axes[0, i].set_title(f"ML {type_} — Avg: {avg_ml:.2f}, Total: {total_ml:.2f}")
         
         # Parlay percent returns
         sns.histplot(df_parlay_pct[type_], ax=axes[1, i], kde=False, color='salmon')
-        avg_parlay = sum(df_parlay_pct[type_])/len(df_parlay_pct[type_])
-        total_parlay = sum(df_parlay_pct[type_])
-        axes[1, i].set_title(f"Parlay {type_} — Avg: {avg_parlay:.2%}, Total: {total_parlay:.2%}")
+        avg_parlay = np.mean(df_parlay_pct[type_])
+        total_parlay = np.sum(df_parlay_pct[type_])
+        axes[1, i].set_title(f"Parlay {type_} — Avg: {avg_parlay:.2f}, Total: {total_parlay:.2f}")
 
     plt.tight_layout()
 
@@ -62,8 +63,8 @@ def plot_returns():
     fig.savefig(path,
             dpi=300,
             bbox_inches="tight")
-        
-    plt.show()
+
+    show_image(path, title='Percent Returns')  
 
 
 plot_returns()
