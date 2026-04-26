@@ -46,7 +46,7 @@ def generate_bets(df, select_odds=None, bankroll=0):
                                                 scaler_list=scaler_list, type_list=type_list,
                                                 fair_odds_list=fair_odds_list, 
                                                 real_odds_list=real_odds_list, 
-                                                bankroll=bankroll, max_drawdown=mdd_arr, N=N)
+                                                bankroll=bankroll, max_drawdown_array=mdd_arr, N=N)
     
     df_bets_arr, df_parlay_arr = seperate_bets_dfs(df_bets_all, df_parlay_all, type_list)
     
