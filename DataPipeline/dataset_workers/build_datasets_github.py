@@ -174,9 +174,9 @@ if __name__ == "__main__":
                     email_bets(sub_group, date_str)
             
             # commit event csv data every time 
-            if group["pred_name_close1"].str.contains("joel", na=False).any():
+            if group["fighter_red"].str.contains("joel", na=False).any():
                 print('Joel betting line')
-                print(group[group["pred_name_close1"] == "joel alvarez"][['close1_red', 'close2_red']])
+                print(group[group["fighter_red"] == "joel alvarez"][['close1_red', 'close2_red']])
 
             commit_if_changed(group, event_file_path, f'Updating Features for {date_str}')
 
