@@ -135,12 +135,13 @@ class config:
     
 
     # --- Display Params ---
-    ml_column_order = ['fighter_red', 'fighter_blue', 'open_red', 'open_blue', 'pred_name_open', 'fstar_open', 'stake_open',
-                   'close1_red', 'close1_blue', 'pred_name_close1', 'fstar_close1', 'stake_close1', 
-                   'close2_red', 'close2_blue', 'pred_name_close2', 'fstar_close2', 'stake_close2',
-                   'choice_proba_open','choice_proba_close1', 'choice_proba_close2',
-                   'edge_open', 'edge_close1', 'edge_close2',
-                   'ev_open', 'ev_close1', 'ev_close2']
+    ml_column_order = ['fighter_red', 'fighter_blue', 'open_red', 'open_blue', 'close1_red', 'close1_blue', 'close2_red', 'close2_blue',
+                       'stake_open', 'stake_close1', 'stake_close2',  
+                       'pred_name_open', 'pred_name_close1', 'pred_name_close2',
+                       'fstar_open', 'fstar_close1', 'fstar_close2', 
+                        'choice_proba_open','choice_proba_close1', 'choice_proba_close2',
+                        'edge_open', 'edge_close1', 'edge_close2',
+                        'ev_open', 'ev_close1', 'ev_close2']
     
     
     parlay_column_order = ['choice_fighter_name_open', 'parlay_odds_open', 'parlay_ev_open', 'stake_open', 
