@@ -7,7 +7,7 @@ import pandas as pd
 
 from pathlib import Path
 
-from pandas.api.types import is_numeric_dtype
+from pandas.api.types import is_float_dtype, is_integer_dtype
 
 # Function to commit if changed
 def commit_if_changed(df, file_path, msg, branch="main"):
@@ -47,12 +47,12 @@ def commit_if_changed(df, file_path, msg, branch="main"):
 
 
 def floats_changed(df_new, file_path, tol=2e-3):
-    
-    # current file
+
     if not os.path.exists(file_path):
         return True
 
     df_old = pd.read_csv(file_path)
+
     if df_new.shape != df_old.shape:
         return True
 
@@ -60,10 +60,14 @@ def floats_changed(df_new, file_path, tol=2e-3):
         a = df_new[col]
         b = df_old[col]
 
-    if is_numeric_dtype(a):
-        if not np.allclose(a.to_numpy(), b.to_numpy(), atol=tol, rtol=0, equal_nan=True):
-            return True
-        
+        if is_float_dtype(a):
+            if not np.allclose(a.to_numpy(), b.to_numpy(), atol=tol, rtol=0, equal_nan=True):
+                return True
+
+        elif is_integer_dtype(a):
+            if not np.array_equal(a.to_numpy(), b.to_numpy()):
+                return True
+
         else:
             if not a.equals(b):
                 return True
