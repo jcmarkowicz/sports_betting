@@ -37,6 +37,7 @@ title_fight,fighter_red,fighter_blue,weight_class,event_date,event_location,reac
 0,Angela Hill,Xiong Jingnan,Women's Strawweight,2026-05-30," Macau, China","64""",--,"5' 3""",--,"Jan 12, 1985","Jan 12, 1988"
 0,Loma Lookboonmee,Jaqueline Amorim,Women's Strawweight,2026-05-30," Macau, China","61""","68""","5' 1""","5' 3""","Jan 18, 1996","Jun 24, 1995"
 0,Zhu Kangjie,Ramon Taveras,Featherweight,2026-05-30," Macau, China","70""","70""","5' 8""","5' 8""","Jan 16, 1996","Jan 09, 1994"
+0,Ding Meng,Jose Henrique,Welterweight,2026-05-30," Macau, China","73""","79""","6' 2""","6' 3""","Sep 27, 1994","May 23, 2002"
 0,Belal Muhammad,Gabriel Bonfim,Welterweight,2026-06-06," Las Vegas, Nevada, USA","72""","72""","5' 11""","6' 1""","Jul 09, 1988","Aug 20, 1997"
 0,Iwo Baraniewski,Billy Elekana,Light Heavyweight,2026-06-06," Las Vegas, Nevada, USA","73""","77""","6' 0""","6' 3""","Nov 20, 1998","May 28, 1995"
 0,Imanol Rodriguez,Matt Schnell,Flyweight,2026-06-06," Las Vegas, Nevada, USA","64""","70""","5' 4""","5' 8""","Nov 15, 1999","Jan 15, 1990"
@@ -62,3 +63,5 @@ title_fight,fighter_red,fighter_blue,weight_class,event_date,event_location,reac
 0,Andre Lima,Kevin Borjas,Flyweight,2026-06-20," Las Vegas, Nevada, USA","67""","68""","5' 7""","5' 5""","Feb 04, 1999","Dec 06, 1997"
 0,Hyder Amil,Christian Rodriguez,Featherweight,2026-06-20," Las Vegas, Nevada, USA","70""","71""","5' 9""","5' 7""","May 28, 1990","Dec 17, 1997"
 0,Bia Mesquita,Melissa Mullins,Women's Bantamweight,2026-06-20," Las Vegas, Nevada, USA","67""","68""","5' 4""","5' 7""","Apr 07, 1991","Jul 23, 1991"
+0,Rafael Fiziev,Manuel Torres,Lightweight,2026-06-27," Baku, Azerbaijan","71""","73""","5' 8""","5' 10""","Mar 05, 1993","Mar 25, 1995"
+0,Shara Magomedov,Michel Pereira,Middleweight,2026-06-27," Baku, Azerbaijan","73""","73""","6' 2""","6' 1""","May 16, 1994","Oct 06, 1993"
