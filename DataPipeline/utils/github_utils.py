@@ -15,7 +15,7 @@ def commit_if_changed(df, file_path, msg, branch="main"):
     repo = os.environ["GITHUB_REPOSITORY"]
     token = os.environ["GITHUB_TOKEN"]
 
-    if not floats_changed(df, file_path):
+    if not numeric_changed(df, file_path):
         return
 
     df = df.reset_index(drop=True)
@@ -46,7 +46,7 @@ def commit_if_changed(df, file_path, msg, branch="main"):
     subprocess.run(["git", "push", push_url, f"HEAD:{branch}"], check=True)
 
 
-def floats_changed(df_new, file_path, tol=2e-3):
+def numeric_changed(df_new, file_path, tol=2e-3):
 
     if not os.path.exists(file_path):
         return True

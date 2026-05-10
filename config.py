@@ -8,7 +8,7 @@ from DataPipeline.FeatureEngineering.features_pipeline import BASE_DIR
 class config:
     
     # --- Bet Params ---
-    bankroll:int = 800
+    bankroll:int = 1100
     N_paths:int = 250
     max_drawdown_array = [0.3, 0.45, 0.45]
     parlay_top_ev = 2  
