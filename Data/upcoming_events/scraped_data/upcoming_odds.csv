@@ -1,23 +1,25 @@
-blue_fighter,open_blue,close1_blue,close2_blue,red_fighter,open_red,close1_red,close2_red,event_date,og_blue_name,og_red_fighter
-Ciryl Gane,-185,-113,+100,Alex Pereira,+160,-120,-110,2026-06-15,Ciryl Gane,Alex Pereira
-Polyana Viana,+230,+140,+170,Alice Ardelean,-270,-205,-188,2026-05-17,Polyana Viana,Alice Ardelean
-Jingnan Xiong,-200,-105,+130,Angela Lee,+160,-150,-125,2022-09-30,Xiong Jingnan,Angela Hill
-Jing Nan Xiong,-210,-170,-170,Angela Lee,+160,+130,+130,2019-10-12,Xiong Jingnan,Angela Hill
-Jing Nan Xiong,+270,+180,+182,Angela Lee,-390,-240,-212,2019-03-31,Xiong Jingnan,Angela Hill
-Melquizael Costa,+130,+130,+145,Arnold Allen,-150,-180,-155,2026-05-17,Melquizael Costa,Arnold Allen
-Geoff Neal,-155,-227,-200,Belal Muhammad,+115,+162,+170,2019-01-19,Gabriel Bonfim,Belal Muhammad
-Kyle Daukaus,+250,+240,+250,Bo Nickal,-300,-340,-280,2026-06-15,Kyle Daukaus,
-Andre Petroski,-160,-235,-200,Cody Brundage,+140,+150,+180,2026-05-17,Andre Petroski,Cody Brundage
-Luis Gurule,+110,-114,-110,Daniel Barez,-130,-120,-107,2026-05-17,Luis Gurule,Daniel Barez
-Steve Garcia,+190,+140,+160,Diego Lopes,-225,-200,-175,2026-06-15,Steve Garcia,Diego Lopes
-Daniel Santos,-110,-180,-163,Doo Ho Choi,-110,+130,+150,2026-05-17,Daniel Santos,Dooho Choi
-Justin Gaethje,+385,+460,+550,Ilia Topuria,-500,-900,-750,2026-06-15,Justin Gaethje,Ilia Topuria
-Derrick Lewis,+330,+215,+275,Josh Hokit,-400,-333,-300,2026-06-15,Derrick Lewis,Josh Hokit
-Jacqueline Cavalcanti,-160,-178,-160,Ketlen Vieira,+140,+120,+145,2026-05-17,Jacqueline Cavalcanti,Ketlen Vieira
-Juan Diaz,+250,+200,+230,Malcolm Wellmaker,-300,-278,-260,2026-05-17,Juan Diaz,Malcolm Wellmaker
-Kyoji Horiguchi,-990,-990,-990,Manel Kape,+530,+530,+530,2017-12-31,Kyoji Horiguchi,
-Michael Chandler,+500,+420,+450,Mauricio Ruffy,-700,-700,-590,2026-06-15,Michael Chandler,Mauricio Ruffy
-Khaos Williams,-150,-135,-110,Nikolay Veretennikov,+130,-110,+115,2026-05-17,Khaos Williams,Nikolay Veretennikov
-Nicolle Caliari,-225,-240,-225,Shauna Bannon,+190,+163,+200,2026-05-17,Nicolle Caliari,Shauna Bannon
-Benardo Sopaj,-200,-172,-155,Timmy Cuamba,+170,+125,+135,2026-05-17,Benardo Sopaj,Timmy Cuamba
-Ivan Erslan,-300,-200,-163,Tuco Tokkos,+250,+120,+155,2026-05-17,Ivan Erslan,Tuco Tokkos
+red_fighter,blue_fighter,open_blue,close1_blue,close2_blue,open_red,close1_red,close2_red,event_date,og_blue_name,og_red_fighter
+Alex Pereira,Ciryl Gane,-185,-113,+100,+160,-120,-110,2026-06-15,Ciryl Gane,Alex Pereira
+Alice Ardelean,Polyana Viana,+230,+140,+170,-270,-205,-188,2026-05-17,Polyana Viana,Alice Ardelean
+Angela Lee,Jingnan Xiong,-200,-105,+130,+160,-150,-125,2022-09-30,Xiong Jingnan,Angela Hill
+Angela Lee,Jing Nan Xiong,-210,-170,-170,+160,+130,+130,2019-10-12,Xiong Jingnan,Angela Hill
+Angela Lee,Jing Nan Xiong,+270,+180,+182,-390,-240,-212,2019-03-31,Xiong Jingnan,Angela Hill
+Arnold Allen,Melquizael Costa,+130,+130,+140,-150,-180,-155,2026-05-17,Melquizael Costa,Arnold Allen
+Asu Almabaev,Jose Ochoa,+100,-110,-105,-127,-120,-108,2025-07-26,Charles Johnson,Asu Almabayev
+Asu Almabaev,Jose Johnson,+280,+300,+370,-355,-500,-395,2024-06-15,Charles Johnson,Asu Almabayev
+Belal Muhammad,Geoff Neal,-155,-227,-200,+115,+162,+170,2019-01-19,Gabriel Bonfim,Belal Muhammad
+Bo Nickal,Kyle Daukaus,+250,+240,+250,-300,-340,-280,2026-06-15,Kyle Daukaus,
+Cody Brundage,Andre Petroski,-160,-235,-200,+140,+150,+180,2026-05-17,Andre Petroski,Cody Brundage
+Daniel Barez,Luis Gurule,+110,-114,-110,-130,-120,-107,2026-05-17,Luis Gurule,Daniel Barez
+Diego Lopes,Steve Garcia,+190,+140,+160,-225,-200,-175,2026-06-15,Steve Garcia,Diego Lopes
+Doo Ho Choi,Daniel Santos,-110,-180,-163,-110,+130,+150,2026-05-17,Daniel Santos,Dooho Choi
+Ilia Topuria,Justin Gaethje,+385,+460,+550,-500,-900,-750,2026-06-15,Justin Gaethje,Ilia Topuria
+Josh Hokit,Derrick Lewis,+330,+215,+275,-400,-335,-300,2026-06-15,Derrick Lewis,Josh Hokit
+Ketlen Vieira,Jacqueline Cavalcanti,-160,-178,-163,+140,+120,+145,2026-05-17,Jacqueline Cavalcanti,Ketlen Vieira
+Malcolm Wellmaker,Juan Diaz,+250,+210,+234,-300,-295,-274,2026-05-17,Juan Diaz,Malcolm Wellmaker
+Manel Kape,Kyoji Horiguchi,-990,-990,-990,+530,+530,+530,2017-12-31,Kyoji Horiguchi,
+Mauricio Ruffy,Michael Chandler,+500,+420,+450,-700,-700,-590,2026-06-15,Michael Chandler,Mauricio Ruffy
+Nikolay Veretennikov,Khaos Williams,-150,-130,-110,+130,-110,+110,2026-05-17,Khaos Williams,Nikolay Veretennikov
+Shauna Bannon,Nicolle Caliari,-225,-240,-225,+190,+163,+200,2026-05-17,Nicolle Caliari,Shauna Bannon
+Timmy Cuamba,Benardo Sopaj,-200,-174,-155,+170,+125,+136,2026-05-17,Benardo Sopaj,Timmy Cuamba
+Tuco Tokkos,Ivan Erslan,-300,-200,-163,+250,+120,+155,2026-05-17,Ivan Erslan,Tuco Tokkos
