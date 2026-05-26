@@ -1,14 +1,16 @@
 numpy
 pandas
+
+xgboost
 statsmodels
+scikit-learn
+
 matplotlib
 seaborn
-scikit-learn==1.6.1
 
 selenium
 undetected-chromedriver
 python-dateutil
 
 joblib
-
 cvxopt
