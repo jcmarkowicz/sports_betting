@@ -286,16 +286,18 @@ def plot_backtest(df_results, init_bankroll, path=None):
 
     bankroll_history = df_group['bankroll_postevent'].values
 
+    df_plus_ev_ml = df_group[df_group['event_payout_money_line'] != 0]
     proportion_wins_per_bet = (
-        df_group.groupby('date')['event_payout_money_line']
+        df_plus_ev_ml.groupby('date')['event_payout_money_line']
         .first()
         .gt(0)
         .mean()
     )
 
     # proportion of events where bankroll increased
+    df_any_bets = df_group[df_group['bankroll_postevent'] != 0]
     proportion_wins_total = (
-        df_group.groupby('date')['bankroll_postevent']
+        df_any_bets.groupby('date')['bankroll_postevent']
         .first()
         .diff()
         .dropna()
@@ -304,7 +306,7 @@ def plot_backtest(df_results, init_bankroll, path=None):
     )
 
     # proportion of events where parlay won
-    parlay_plus_ev = df_group[df_group['parlay_net'] != 0]
+    parlay_plus_ev = df_group[df_group['parlay_ev'] > 0]
     proportion_wins_parlay = (
         parlay_plus_ev.groupby('date')['parlay_net']
         .first()
@@ -344,7 +346,7 @@ def plot_backtest(df_results, init_bankroll, path=None):
     axs[0].set_title(f"TOTAL Bankroll Over Time | Event Win Rate: {proportion_wins_total:.2%}")
     axs[0].legend(loc='upper left')
 
-    # ⭐ RESTORE MILESTONE BOX ⭐
+    # RESTORE MILESTONE BOX 
     milestones = [10_000, 100_000, 1_000_000]
     milestone_texts = []
     for milestone in milestones:

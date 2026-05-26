@@ -92,6 +92,7 @@ class TrainTestBuilder:
         selected_features,
         outlier_dict=None,
         target_col='winner',
+        scale=True,
         clustering=False,
         one_hot_encode=False,
         run_pca=False,
@@ -153,11 +154,18 @@ class TrainTestBuilder:
 
         # Standardize numerical features
         scaler = StandardScaler()
-        if num_cols:
-            X_train_num = scaler.fit_transform(X_train_raw[num_cols])
-            X_test_num  = scaler.transform(X_test_raw[num_cols])
-        else:
-            X_train_num, X_test_num = np.array([]), np.array([])
+        if scale: 
+            if num_cols:
+                X_train_num = scaler.fit_transform(X_train_raw[num_cols])
+                X_test_num  = scaler.transform(X_test_raw[num_cols])
+            else:
+                X_train_num, X_test_num = np.array([]), np.array([])
+        else: 
+            if num_cols:
+                X_train_num = X_train_raw[num_cols]
+                X_test_num  = X_test_raw[num_cols]
+            else:
+                X_train_num, X_test_num = np.array([]), np.array([])
 
         # Optionally run PCA
         if run_pca and num_cols:

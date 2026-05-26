@@ -1,7 +1,20 @@
 import numpy as np 
 import pandas as pd 
 from collections import defaultdict
-from math import isfinite
+
+def obs_per_fighter(df_): 
+    df = df_.copy()
+    dat = []
+    for _, row in df.iterrows():
+
+        total_fights_red = row['num_wins_red'] + row['num_losses_red']
+        total_fights_blue = row['num_wins_blue'] + row['num_losses_blue']
+
+        new_row = [total_fights_red, total_fights_blue]
+        dat.append(new_row)
+
+    return np.array(dat)
+
 
 def months_since_last(ufc_df):
     

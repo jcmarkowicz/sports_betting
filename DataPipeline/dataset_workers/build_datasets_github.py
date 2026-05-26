@@ -174,14 +174,10 @@ if __name__ == "__main__":
                     email_bets(sub_group, date_str)
             
             # commit event csv data every time 
-            if group["fighter_red"].str.contains("joel", na=False).any():
-                print('Joel betting line')
-                print(group[group["fighter_red"] == "joel alvarez"][['close1_red', 'close2_red']])
-
             commit_if_changed(group, event_file_path, f'Updating Features for {date_str}')
 
             # generate betting picks with latest data 
-            df_bets_all, df_parlay_all = generate_bets(group)
+            df_bets_all, df_parlay_all = generate_bets(group, select_odds=None)
 
             straight_path = config.ml_bets_folder/ f"ml_all_{date_str}.csv"
             parlay_path   = config.parlay_bets_folder/ f"parlay_all_{date_str}.csv"

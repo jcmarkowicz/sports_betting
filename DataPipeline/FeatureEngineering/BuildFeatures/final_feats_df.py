@@ -12,7 +12,7 @@ from RatingAlgos.glicko import glicko_rating
 from RatingAlgos.glicko2 import glicko2_run
 from RatingAlgos.elo_scope import run_elo_on_matches
 
-from DataPipeline.FeatureEngineering.BuildFeatures.feature_functions import total_bonus,\
+from DataPipeline.FeatureEngineering.BuildFeatures.feature_functions import obs_per_fighter, total_bonus,\
       womens_fight, mma_math, win_lose_streak, months_since_last, method_wins, method_win_pct,\
       avg_fight_time, title_fights_stats_columns, method_losses, max_rating_won_against, opponent_avg_features, expected_value_stats
 
@@ -79,6 +79,8 @@ def non_rolling_stats(df_):
 
     # feats['sig_str_efficiency_red'] = red_expected_str
     # feats['sig_str_efficiency_blue'] = blue_expected_str
+
+    
 
     # avg fight time in minutes
     avg_red, avg_blue = avg_fight_time(df).T
@@ -155,6 +157,11 @@ def non_rolling_stats(df_):
     feats['wins_diff'] = nw_r - nw_b
     feats['losses_diff'] = nl_r - nl_b
     feats['win_pct_diff'] = wp_r - wp_b
+
+    # number of observations per fighter
+    (obs_red, obs_blue) = obs_per_fighter(df).T
+    feats['obs_red'] = obs_red
+    feats['obs_blue'] = obs_blue
 
     # method wins
     (dec_wr, ko_wr, sub_wr,

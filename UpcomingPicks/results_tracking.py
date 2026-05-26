@@ -4,10 +4,6 @@ import sys
 from pathlib import Path 
 
 import pandas as pd 
-import numpy as np 
-import matplotlib.pyplot as plt 
-import seaborn as sns 
-
 from datetime import datetime 
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))) 

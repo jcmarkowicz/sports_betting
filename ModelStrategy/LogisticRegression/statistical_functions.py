@@ -132,12 +132,24 @@ def run_logit_model(
     f1_test = f1_score(y_test, test_class)
 
     check_vif(X_train)
-    
+
+    proba_se_test = model.get_prediction(X_test_sm).summary_frame()
+    proba_se_train = model.get_prediction(X_train_sm).summary_frame()
+    print(proba_se_test)
+
+    cov = model.cov_params()
+
+    print("Any NaN in cov:", np.isnan(cov).any().any())
+    print("Any inf in cov:", np.isinf(cov).any().any())
+    print("Condition number:", np.linalg.cond(model.model.exog))
+
     results = {
         "train_pred_proba": train_pred,
         "test_pred_proba": test_pred,
         "test_pred_class": test_class,
         "train_pred_class": train_class,
+        "proba_train_se": proba_se_train['se'],
+        'proba_test_se':proba_se_test['se'],
         'model': model
     }
     

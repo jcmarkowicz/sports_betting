@@ -50,9 +50,6 @@ def calculate_positive_ev_parlays(data, bankroll, n_legs):
     return parlays
 
 
-
-
-
 def scale_kelly_portfolio(bets, N, max_drawdown):
     """
     Scale multiple simultaneous Kelly bets to meet portfolio MDD target.
@@ -151,9 +148,11 @@ def run_portfolio_scaling(choice_ev, choice_proba, unweighted_fstar, choice_fair
         if kelly_frac < 0 or ev <0 : 
             profit = 0
             net_odds = 0
+
         else: 
             profit = stake * (real_odds - 1) if int(group.iloc[i][winner_col]) == bet_idx else -stake
             net_odds = (real_odds - 1) if int(group.iloc[i][winner_col]) == bet_idx else -(real_odds - 1)
+
         group_stats['choice_fstar'].append(kelly_frac)
         group_stats['fight_payout'].append(profit)
         group_stats['net_odds'].append(net_odds)
@@ -173,14 +172,14 @@ def run_per_bet_scaling(bets_df, max_drawdown, bankroll, N, max_k=0, sort_max_wi
     for _, row in bets_df.iterrows():
 
         f_star = row["f_star_unscaled"]
-        p = row["p"]
-        fair_odds = row["fair_odds"]
-        real_odds = row["real_odds"]
-        ev = row["ev"]
-        bet_idx = row["bet_idx"]
+        p = row["choice_proba"]
+        fair_odds = row["choice_fair_odds"]
+        real_odds = row["choice_real_odds"]
+        ev = row["choice_ev"]
+        bet_idx = row["choice_idx"]
         winner = row["winner"]
 
-        if f_star <= 0 or ev < 0 or (sort_max_wins is True and row.name >= max_k):
+        if f_star <= 0 or ev <= 0 or (sort_max_wins is True and row.name >= max_k):
             f_final = 0
             profit = 0
             net_odds = 0
@@ -210,7 +209,7 @@ def run_per_bet_scaling(bets_df, max_drawdown, bankroll, N, max_k=0, sort_max_wi
         group_profit += profit
         rows.append({ "p": p, "fair_odds": fair_odds, "real_odds": real_odds, "ev": ev,
                      "f_star_unscaled": f_star,"f_star_scaled": f_final,
-            "stake": bankroll * f_final,"profit": profit, "net_odds": net_odds, "win": win
+                    "stake": bankroll * f_final,"profit": profit, "net_odds": net_odds, "win": win
         })
 
     bets_out_df = pd.DataFrame(rows)
@@ -336,11 +335,15 @@ def parlay_bottom_odds(data, bankroll, parlay_mdd=.25, cutoff=-350):
 
 def parlay_top_ev(data, bankroll, top_n=[0,1], parlay_mdd=.25):
     
-    df_top_n = data.sort_values(by='choice_ev', ascending=False).iloc[top_n].copy()
+    empty_parlay = data.empty or data.shape[0] < len(top_n)
+    
+    parlay_ev = 0
+    parlay_prob = 0
+    parlay_kelly = 0
 
-    invalid_parlay = df_top_n.empty or df_top_n.shape[0] < len(top_n)
+    if not empty_parlay:
+        df_top_n = data.sort_values(by='choice_ev', ascending=False).iloc[top_n].copy()
 
-    if not invalid_parlay:
         parlay_prob = np.prod(df_top_n['choice_proba'])
         parlay_odds = np.prod(df_top_n['choice_real_odds'])
         parlay_ev = parlay_prob * parlay_odds - 1
@@ -353,13 +356,12 @@ def parlay_top_ev(data, bankroll, top_n=[0,1], parlay_mdd=.25):
             kelly_full = max((b * parlay_prob - (1 - parlay_prob)) / b, 0)
 
         # scale kelly mdd 
-        if parlay_ev < 0:
-            parlay_kelly = 0.0
+        if parlay_mdd is not None:
+            parlay_kelly = scale_kelly_for_mdd(parlay_prob, parlay_odds, kelly_full, 2000, parlay_mdd)
         else:
-            if parlay_mdd is not None:
-                parlay_kelly = scale_kelly_for_mdd(parlay_prob, parlay_odds, kelly_full, 2000, parlay_mdd)
-            else:
-                parlay_kelly = kelly_full
+            parlay_kelly = kelly_full
+
+    if not empty_parlay and parlay_ev > 0: 
 
         # profit and win 
         stake = bankroll * parlay_kelly
@@ -374,21 +376,17 @@ def parlay_top_ev(data, bankroll, top_n=[0,1], parlay_mdd=.25):
 
     else:
         # fully zeroed, but schema preserved
-        parlay_prob = 0.0
-        parlay_odds = 0.0
-        parlay_ev = 0.0
-        parlay_kelly = 0.0
         stake = 0.0
         profit = 0.0
         net_odds = 0.0
+        df_top_n = data.copy()
 
     df_top_n['parlay_prob'] = parlay_prob
     df_top_n['parlay_ev'] = parlay_ev
     
-    df_top_n['choice_parlay_name'] = np.where(df_top_n['pred_winner']==1, df_top_n['fighter_red'], df_top_n['fighter_blue'])
-    df_top_n['choice_fighter_name'] = df_top_n['choice_parlay_name']
+    df_top_n['choice_fighter_name'] = np.where(df_top_n['pred_winner']==1, df_top_n['fighter_red'], df_top_n['fighter_blue'])
     df_top_n['fstar_parlay'] = parlay_kelly
-    df_top_n['parlay_net_odds'] =  net_odds
+    df_top_n['parlay_net_odds'] = net_odds
 
     df_top_n = df_top_n[['choice_fighter_name', 'fstar_parlay','choice_ev',
                         'choice_real_odds', 'parlay_net_odds', 
@@ -398,13 +396,44 @@ def parlay_top_ev(data, bankroll, top_n=[0,1], parlay_mdd=.25):
 
     return profit, net_odds, df_top_n
 
+def event_bankroll_scaled(
+    bankroll,
+    raw_kelly,
+    edge,
+    max_event_exposure=0.50,
+    edge_scale=10.0
+):
+    raw_kelly = np.asarray(raw_kelly)
+    edge = np.asarray(edge)
+
+    # only positive Kelly bets
+    k = np.maximum(raw_kelly, 0)
+
+    # only reward positive edge
+    positive_edge = np.maximum(edge, 0)
+
+    # convert edge into confidence-like multiplier
+    edge_multiplier = 1 - np.exp(-edge_scale * positive_edge)
+
+    # scale Kelly by edge strength
+    k = k * edge_multiplier
+
+    if k.sum() == 0:
+        return 0.0
+
+    # total bankroll allocated to this event
+    event_exposure = min(max_event_exposure, k.sum())
+
+    return bankroll * event_exposure
+
 
 def simulate_kelly(df_final, prob_cols, fair_decimal_cols, real_decimal_cols,
                         pred_winner_col, winner_col='winner', date_col='date',
                         init_bankroll=1000, bankroll_floor=None, portfolio_scaling=False,\
                         adaptive_scaling=False, max_drawdown=.30, parlay_mdd=.25, N=1000,
                         calc_parlay=False,
-                        test_other_ev = False
+                        test_other_ev = False,
+                        test_bankroll_scaler = False
                         ):
 
     bankroll = init_bankroll
@@ -412,106 +441,106 @@ def simulate_kelly(df_final, prob_cols, fair_decimal_cols, real_decimal_cols,
     df_results = pd.DataFrame()
     df_parlay = pd.DataFrame()
 
-    df_all_parlays = []
 
     df = df_final.sort_values(by=date_col)
 
     for date, group in df.groupby(date_col, sort=True):
-
-        group_stats = {'fight_payout':[], 'choice_fstar':[], 'net_odds':[], 'choice_ev':[], 'choice_juice':[], 'choice_decimal_odds' : []}
-
-        unweighted_fstar = []
-        choice_proba = []
-        choice_fair_odds = []
-        choice_ev = []
-        choice_real_odds = []
-        choice_idx = []
-        choice_posterior = []
         group = group.reset_index(drop=True)
 
-        for idx, row in group.iterrows():
+        group_stats = { 
+                       'choice_decimal_odds':[],
+                        'f_star_unscaled':[],
+                        'choice_proba':[],
+                        'choice_fair_odds':[],
+                        'choice_ev':[],
+                        'choice_real_odds':[],
+                        'choice_idx':[],
+                        'pred_winner':[]
+                        }
+
+        for _, row in group.iterrows():
 
             bet_idx = int(row[pred_winner_col])
             p = row[prob_cols[bet_idx]]
             fair_odds = row[fair_decimal_cols[bet_idx]]
             real_odds = row[real_decimal_cols[bet_idx]]
             ev = expected_value(p, real_odds)
-            group_stats['choice_decimal_odds'].append(real_odds)
+            pred_winner = bet_idx
 
             # append this bet 
             if ev <= 0 and test_other_ev is True: 
-                new_bet = np.abs(bet_idx -1)
-                ev = expected_value(1-p, row[real_decimal_cols[new_bet]])
-                if ev > 0: 
-                    bet_idx = new_bet
+                new_idx = 1 if bet_idx == 0 else 0 
+                ev_new = expected_value(1-p, row[real_decimal_cols[new_idx]])
+                if ev_new > 0: 
+                    bet_idx = new_idx
                     real_odds = row[real_decimal_cols[bet_idx]]
                     fair_odds = row[fair_decimal_cols[bet_idx]]
                     p = 1-p
+                    ev = ev_new
+                    pred_winner = bet_idx
+  
+            new_row = {
+                'f_star_unscaled': kelly_edge(p, fair_odds),
+                'choice_ev': ev,
+                'choice_fair_odds': fair_odds,
+                'choice_real_odds': real_odds, 
+                'choice_idx': bet_idx,
+                'choice_decimal_odds': real_odds,
+                'choice_proba': p,
+                'pred_winner':pred_winner
+            }
 
-            kelly_default = kelly_edge(p, fair_odds) 
-            unweighted_fstar.append(kelly_default)
-
-            choice_ev.append(ev)
-            choice_proba.append(p)
-            choice_fair_odds.append(fair_odds)
-            choice_real_odds.append(real_odds)
-            choice_idx.append(bet_idx)
-            group_stats['choice_juice'].append(row['juice_open_red'] if bet_idx ==1 else row['juice_open_blue'])
-
-        best_k = pmf_num_wins(choice_proba)
+            for k,v in new_row.items(): 
+                group_stats[k].append(v)
+            
+        best_k = pmf_num_wins(group_stats['choice_proba'])
         bets_input_df = pd.DataFrame({
-                    "p": choice_proba,
-                    "fair_odds": choice_fair_odds,
-                    "real_odds": choice_real_odds,
-                    "ev": choice_ev,
-                    "f_star_unscaled": unweighted_fstar,
-                    "bet_idx": choice_idx,
-                    "winner": group[winner_col].values
-                })
+            **group_stats,
+            "winner": group[winner_col].values
+        })
 
-        if portfolio_scaling is True: 
-            group_stats, sigma_portfolio, \
-            sigma_portfolio_scaled, mu_portfolio, \
-            sharpe_portfolio, sharpe_per_bet,\
-            sigma_per_bet, k,\
-             group_stats, ml_profit = run_portfolio_scaling(choice_ev, choice_proba, unweighted_fstar, 
-                                                            choice_fair_odds, max_drawdown, bankroll,
-                                                            choice_real_odds, choice_idx, 
-                                                            winner_col, group, group_stats)
+        edge = np.asarray(group_stats['choice_proba']) - (1/(np.asarray(group_stats['choice_fair_odds'])))
 
-        elif adaptive_scaling is True: 
-            bets_out_df, portfolio_df, ml_profit = run_per_bet_scaling(bets_input_df,
-                                                            max_drawdown=max_drawdown,
-                                                            bankroll=bankroll,
-                                                            N=N, max_k=best_k,
-                                                            sort_max_wins=False,
-                                                            edge_harder=False) #edging harder does not work
+        if test_bankroll_scaler:
+            scaled_bankroll = event_bankroll_scaled(bankroll, 
+                                                    group_stats['f_star_unscaled'], 
+                                                    edge,
+                                                    max_event_exposure=1,
+                                                    edge_scale=5)
+        else: 
+            scaled_bankroll = bankroll 
+
+        bets_out_df, portfolio_df, ml_profit = run_per_bet_scaling(bets_input_df,
+                                                                    max_drawdown=max_drawdown,
+                                                                    bankroll=scaled_bankroll,
+                                                                    N=N, max_k=best_k,
+                                                                    sort_max_wins=False,
+                                                                    edge_harder=False) #edging harder does not work
             
-            edge = np.asarray(choice_proba) - (1/(np.asarray(choice_fair_odds)))
-            
-                                                                                                                   
         parlay_net_money = 0
+
         if calc_parlay is True:
 
             df_data = pd.DataFrame({
                 'winner': group['winner'].values,
-                'pred_winner': group['pred_winner'].values,
-                'choice_ev': choice_ev,
-                'choice_real_odds': choice_real_odds,
+                'pred_winner': group_stats['pred_winner'],
+                'choice_ev': group_stats['choice_ev'],
+                'choice_real_odds': group_stats['choice_real_odds'],
                 'choice_fstar': bets_out_df['f_star_scaled'].values,
                 'fighter_red': group['fighter_red'].values,
                 'fighter_blue': group['fighter_blue'].values,
                 'date': group['date'].values,
-                'choice_proba': choice_proba
+                'choice_proba': group_stats['choice_proba']
             })
                         
-            parlay_net_money, parlay_net_odds, df_top_n = parlay_top_ev(df_data, bankroll, top_n=[0,1], parlay_mdd=parlay_mdd)
+            parlay_net_money, parlay_net_odds, df_top_n = parlay_top_ev(df_data, scaled_bankroll, top_n=[0,1], parlay_mdd=parlay_mdd)
                                                        
             df_top_n['fstar_net'] = np.where(parlay_net_odds >= 0, df_top_n['fstar_parlay'], -df_top_n['fstar_parlay'])
             df_top_n['choice_decimal_odds'] = df_top_n['choice_real_odds'] 
 
             group_stats['parlay_net'] = np.full(group.shape[0], parlay_net_money)
             group_stats['parlay_net_odds'] = np.full(group.shape[0], parlay_net_odds)
+            group_stats['parlay_ev'] = np.full(group.shape[0], df_top_n['parlay_ev'].iloc[0])
 
             # paraly_combs_array = calculate_positive_ev_parlays(df_data, bankroll, n_legs=2)
 
@@ -527,10 +556,10 @@ def simulate_kelly(df_final, prob_cols, fair_decimal_cols, real_decimal_cols,
             # parlay_net_money += profit1
 
 
-        shape = len(choice_fair_odds)
+        shape = len(group_stats['choice_fair_odds'])
         assert len(bets_out_df) == shape == group.shape[0], 'bets df and shape incorrect'
 
-        choice_idxs = np.array(choice_ev) > 0
+        choice_idxs = np.array(group_stats['choice_ev']) > 0
 
         # bankroll updates 
         event_total_profit = ml_profit + parlay_net_money
@@ -544,7 +573,7 @@ def simulate_kelly(df_final, prob_cols, fair_decimal_cols, real_decimal_cols,
 
         # vegas acc for choice fighters 
         odds_ = np.array(group_stats['choice_decimal_odds'])
-        mask = np.array(choice_ev) > 0
+        mask = np.array(group_stats['choice_ev']) > 0
 
         vegas_acc_choice = (
             (odds_[mask] < 2).mean()
@@ -557,15 +586,13 @@ def simulate_kelly(df_final, prob_cols, fair_decimal_cols, real_decimal_cols,
         group_stats['fight_payout'] = bets_out_df['profit'].values # individual payout
         group_stats['net_odds'] = bets_out_df['net_odds'].values
 
-        group_stats['choice_ev'] = choice_ev
         group_stats['choice_fstar'] = bets_out_df['f_star_scaled'].values
         group_stats['event_ml_net_odds'] = np.full(shape, sum(bets_out_df['net_odds']))
 
-        group_stats['kelly_edge'] = unweighted_fstar
+        group_stats['kelly_edge'] = group_stats['f_star_unscaled']
 
         group_stats['choice_bet_sharpe'] = portfolio_df['sharpe_per_bet'].iloc[0]
         group_stats['choice_bet_sigma'] = portfolio_df['sigma_per_bet'].iloc[0]
-        group_stats['choice_idx'] = choice_idx
 
         group_stats['choice_edge'] = edge
         group_stats['avg_choice_edge'] = np.full(shape, np.mean(edge[choice_idxs]))
@@ -574,12 +601,10 @@ def simulate_kelly(df_final, prob_cols, fair_decimal_cols, real_decimal_cols,
         group_stats['fighter_red'] = group['fighter_red'].to_list()
         group_stats['fighter_blue'] = group['fighter_blue'].to_list()
 
-        group_stats['pred_winner'] = group['pred_winner'].to_list()
         group_stats['winner'] = group['winner'].to_list()
         
         group_stats['red_proba'] = group[prob_cols[1]].to_list()
         group_stats['blue_proba'] = group[prob_cols[0]].to_list()
-        group_stats['choice_proba'] = choice_proba
 
         group_stats['open_red'] = group['open_red'].to_list()
         group_stats['open_blue'] = group['open_blue'].to_list()
@@ -610,7 +635,7 @@ def simulate_kelly(df_final, prob_cols, fair_decimal_cols, real_decimal_cols,
                 'open_red', 'open_blue', 'close1_red', 'close1_blue', 'close2_red', 'close2_blue']].copy() 
         
         if calc_parlay is True: 
-            df_parlay = pd.concat([df_parlay , df_top_n], axis=0)
+            df_parlay = pd.concat([df_parlay, df_top_n], axis=0)
         df_results = pd.concat([df_results, group_df], ignore_index=True)
 
     return df_results, df_parlay

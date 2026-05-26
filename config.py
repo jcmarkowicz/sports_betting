@@ -9,8 +9,21 @@ class config:
     
     # --- Bet Params ---
     bankroll:int = 1100
-    N_paths:int = 250
-    max_drawdown_array = [0.3, 0.45, 0.45]
+
+    # for opening and closing 
+    mdd_ml = [.3, .4, .4] 
+    mdd_parlay = [.5, .5, .5]
+
+    N_parlay = [250, 250, 250]
+    N_ml = [250, 250, 250]
+
+    # just for closing odds 
+    mdd_ml_stack = [.4,.4]
+    mdd_parlay_stack = [.5,.5]
+
+    N_parlay_stack = [250, 250]
+    N_ml_stack = [250, 250]
+
     parlay_top_ev = 2  
 
     # --- Paths --- 
@@ -29,13 +42,14 @@ class config:
     # folder for stats/odds FEATURES per event 
     upcoming_events_folder =  base_dir / "Data" / "upcoming_events" / "event_features" 
 
-    # folder for 
+    # folder for model 
     ml_bets_folder = base_dir / "Data" / "upcoming_events" / "straight_bets" 
     parlay_bets_folder = base_dir / "Data" / "upcoming_events" / "parlays"
 
     model_open_path = base_dir / "Data" / "saved_models" / "logit_model_open.pkl"
     model_close1_path = base_dir / "Data" / "saved_models" / "logit_model_close1.pkl"
     model_close2_path = base_dir / "Data" / "saved_models" / "logit_model_close2.pkl"
+    xgb_stack_path = base_dir / "Data" / "saved_models" / "xgboost_stacked.pkl"
 
     scaler_open_path = base_dir / "Data" / "saved_models" / "scaler_open.pkl"
     scaler_close1_path = base_dir / "Data" / "saved_models" / "scaler_close1.pkl"
@@ -135,16 +149,17 @@ class config:
     
 
     # --- Display Params ---
-    ml_column_order = ['fighter_red', 'fighter_blue', 'open_red', 'open_blue', 'close1_red', 'close1_blue', 'close2_red', 'close2_blue',
-                       'stake_open', 'stake_close1', 'stake_close2',  
-                       'pred_name_open', 'pred_name_close1', 'pred_name_close2',
-                       'fstar_open', 'fstar_close1', 'fstar_close2', 
-                        'choice_proba_open','choice_proba_close1', 'choice_proba_close2',
-                        'edge_open', 'edge_close1', 'edge_close2',
-                        'ev_open', 'ev_close1', 'ev_close2']
+    ml_column_order = ['fighter_red', 'fighter_blue', 
+                       'open_red', 'open_blue', 'close1_red', 'close1_blue', 'close2_red', 'close2_blue',
+                       'stake_open', 'stake_close1_stack', 'stake_close2_stack',  
+                       'pred_name_open', 'pred_name_close1_stack', 'pred_name_close2_stack',
+                       'fstar_open', 'fstar_close1_stack', 'fstar_close2_stack', 
+                       'choice_proba_open','choice_proba_close1_stack', 'choice_proba_close2_stack',
+                       'edge_open', 'edge_close1_stack', 'edge_close2_stack',
+                       'ev_open', 'ev_close1_stack', 'ev_close2_stack']
     
     
     parlay_column_order = ['choice_fighter_name_open', 'parlay_odds_open', 'parlay_ev_open', 'stake_open', 
-                        'choice_fighter_name_close1', 'parlay_odds_close1', 'parlay_ev_close1', 'stake_close1',
-                        'choice_fighter_name_close2', 'parlay_odds_close2', 'parlay_ev_close2', 'stake_close2',
-                        'parlay_prob_open', 'parlay_prob_close1', 'parlay_prob_close2']
+                        'choice_fighter_name_close1_stack', 'parlay_odds_close1_stack', 'parlay_ev_close1_stack', 'stake_close1_stack',
+                        'choice_fighter_name_close2_stack', 'parlay_odds_close2_stack', 'parlay_ev_close2_stack', 'stake_close2_stack',
+                        'parlay_prob_open', 'parlay_prob_close1_stack', 'parlay_prob_close2_stack']
