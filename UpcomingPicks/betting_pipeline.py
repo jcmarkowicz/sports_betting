@@ -122,7 +122,7 @@ def betting_pipeline(
                      mdd_parlay_stack_arr,
                      N_ml_stack_arr,
                      N_parlay_stack_arr
-                    ):
+):
 
     other_cols = ['date', 'fighter_red', 'fighter_blue', 'open_red', 'open_blue', 'close1_red', 'close2_red', 'close1_blue', 'close2_blue']
     df = upcoming_df.copy().reset_index(drop=True)

@@ -12,3 +12,5 @@ Sports_betting.ipynb
 ufc_strat.ipynb
 
 .vscode/
+
+ModelStrategy/LogisticRegression/AutogluonModels/
