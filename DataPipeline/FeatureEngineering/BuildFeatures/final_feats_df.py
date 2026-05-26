@@ -159,7 +159,7 @@ def non_rolling_stats(df_):
     feats['win_pct_diff'] = wp_r - wp_b
 
     # number of observations per fighter
-    (obs_red, obs_blue) = obs_per_fighter(df).T
+    (obs_red, obs_blue) = obs_per_fighter(pd.DataFrame({"num_wins_red": nw_r, "num_wins_blue": nw_b})).T
     feats['obs_red'] = obs_red
     feats['obs_blue'] = obs_blue
 
