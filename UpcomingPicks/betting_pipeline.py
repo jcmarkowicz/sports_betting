@@ -79,7 +79,7 @@ def xgboost_stacking(xgb,
         bets_pkt = get_bets_pkt(bets_input_df, df_per_bet)
 
         df_bets = set_ml_bets_cols(f'{type}_stack', bets_pkt, required_idx=y_hat.index, all_na=False) 
-        df_bets_tests(df_bets, stacked_ml, valid_mask, df_per_bet['choice_ev'], df_per_bet['fstar_list'])
+        df_bets_tests(df_bets, stacked_ml, valid_mask, bets_input_df['choice_ev'], df_per_bet['fstar_list'])
         stacked_ml = merge_bets_types(df_bets, stacked_ml)
 
         parlay_input_df = get_parlay_input(bets_input_df,
@@ -104,7 +104,7 @@ def xgboost_stacking(xgb,
                                         all_na=False
                                     )
         
-        df_parlay_tests(df_parlay_final, df_per_bet['choice_ev'])
+        df_parlay_tests(df_parlay_final, bets_input_df['choice_ev'])
         stacked_parlay = merge_parlay_types(df_parlay_final, stacked_parlay)
 
     return stacked_ml, stacked_parlay 
