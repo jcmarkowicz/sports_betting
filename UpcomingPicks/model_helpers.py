@@ -76,11 +76,17 @@ def xgboost_predict(
     X_valid = X_valid.reindex(columns=model.get_booster().feature_names)
 
     y_hat = pd.Series(np.nan, index=required_df_idx)
+    proba_red = pd.Series(np.nan, index=required_df_idx)
+    proba_blue = pd.Series(np.nan, index=required_df_idx)
+
     y_hat.loc[valid_mask] = model.predict(X_valid)
+    proba_red.loc[valid_mask] = model.predict_proba(X_valid)[:, 0]
+    proba_blue.loc[valid_mask] = model.predict_proba(X_valid)[:, 1]
 
     result = {
         'y_hat': y_hat,
-        'y_prob': model.predict_proba(X_valid)[:, 1]
+        'proba_red': proba_red,
+        'proba_blue': proba_blue
     }
 
     return result

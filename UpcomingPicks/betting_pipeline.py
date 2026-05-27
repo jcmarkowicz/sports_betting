@@ -28,9 +28,8 @@ def xgboost_stacking(xgb,
 ):
     result = xgboost_predict(xgb, X_stacked, required_idx)
     
-    proba_red = result['y_prob']
-    proba_blue = 1 - proba_red
-    stacked_probs = np.column_stack((proba_blue, proba_red))
+    proba_red = result['proba_red']
+    proba_blue = result['proba_blue']
     y_hat = result['y_hat']
 
     dat_list = []
