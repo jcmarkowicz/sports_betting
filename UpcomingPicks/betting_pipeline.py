@@ -136,7 +136,8 @@ def betting_pipeline(
 
     df_bets_combined = pd.DataFrame(df[other_cols].values, columns=other_cols, index=required_df_idx)
     df_parlay_combined = pd.DataFrame()
-    df_proba = pd.DataFrame(index=required_df_idx)
+    df_proba = pd.DataFrame(columns=['proba_red_open', 'proba_blue_open', 'proba_red_close1', 'proba_blue_close1', 'proba_red_close2','proba_blue_close2'], 
+                            index=required_df_idx)
 
     fighter_red = df["fighter_red"].values
     fighter_blue = df["fighter_blue"].values
@@ -181,6 +182,10 @@ def betting_pipeline(
         df_valid_num = df.loc[valid_mask, num_feats]
 
         if df_valid_num.shape[0] == 0:
+            proba_red = pd.Series(np.nan, index=required_df_idx)
+            proba_blue = pd.Series(np.nan, index=required_df_idx)
+            df_proba[f'proba_red_{type}'] = proba_red
+            df_proba[f'proba_blue_{type}'] = proba_blue
 
             df_bets = set_ml_bets_cols(type, {}, required_df_idx, all_na=True)
             df_bets_combined = merge_bets_types(df_bets, df_bets_combined)
