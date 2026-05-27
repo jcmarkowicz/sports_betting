@@ -52,6 +52,9 @@ def xgboost_stacking(xgb,
     stacked_ml = pd.DataFrame(index=required_idx)
     stacked_parlay = pd.DataFrame()
 
+    fighter_red = df["fighter_red"].values
+    fighter_blue = df["fighter_blue"].values
+
     for dat in dat_list:
 
         valid_mask = ~df[feats].isna().any(axis=1)
@@ -67,10 +70,11 @@ def xgboost_stacking(xgb,
         bets_input_df = get_bets_input(
                                     df, 
                                     y_hat, 
-                                    stacked_probs, 
+                                    proba_red,
+                                    proba_blue, 
                                     real_odds=real_odds, 
                                     fair_odds=fair_odds
-                        )
+                                    )
 
         df_per_bet = run_per_bet_scaling(bets_input_df, mdd_ml, bankroll, N_ml)
         bets_pkt = get_bets_pkt(bets_input_df, df_per_bet)
@@ -79,7 +83,10 @@ def xgboost_stacking(xgb,
         df_bets_tests(df_bets, stacked_ml, valid_mask, df_per_bet['choice_ev'], df_per_bet['fstar_list'])
         stacked_ml = merge_bets_types(df_bets, stacked_ml)
 
-        parlay_input_df = get_parlay_input(bets_input_df)
+        parlay_input_df = get_parlay_input(bets_input_df,
+                                           bets_input_df,
+                                           fighter_red, 
+                                           fighter_blue)
 
         df_parlay = parlay_top_ev(
             parlay_input_df, 
@@ -89,7 +96,7 @@ def xgboost_stacking(xgb,
             parlay_mdd = mdd_parlay,
             N_parlay = N_parlay
         )
-        parlay_pkt = get_parlay_pkt(df_parlay)
+        parlay_pkt = get_parlay_pkt(df_parlay, type)
         
         df_parlay_final = set_parlay_cols(
                                         f'{type}_stack', 
