@@ -31,7 +31,7 @@ def xgboost_stacking(xgb,
     proba_red = result['y_prob']
     proba_blue = 1 - proba_red
     stacked_probs = np.column_stack((proba_blue, proba_red))
-    y_hat = result['y_hat'].astype(int)
+    y_hat = result['y_hat']
 
     dat_list = []
     for i in range(len(fair_odds_arr)):
