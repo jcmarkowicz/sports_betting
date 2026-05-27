@@ -93,7 +93,7 @@ def xgboost_stacking(xgb,
             type, 
             top_n=[0,1],
             parlay_mdd = mdd_parlay,
-            N_parlay = N_parlay
+            N = N_parlay
         )
         parlay_pkt = get_parlay_pkt(df_parlay, type)
         
