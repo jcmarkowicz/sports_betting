@@ -72,7 +72,7 @@ def pick_accuracy(df_):
 
 def bin_parlay_prob(df_parlay_):
     df = df_parlay_.copy()
-    df['parlay_win'] = 
+    df['parlay_win'] = (df['parlay_net_odds'] > 0).astype(int)
 
     # --- bin probabilities ---
     df['prob_bin'] = pd.cut(

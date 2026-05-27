@@ -55,7 +55,6 @@ class config:
     scaler_close1_path = base_dir / "Data" / "saved_models" / "scaler_close1.pkl"
     scaler_close2_path = base_dir / "Data" / "saved_models" / "scaler_close2.pkl"
 
-
     ml_folder = base_dir / "Data" / "upcoming_events" / "straight_bets"
     parlay_folder = base_dir / "Data" / "upcoming_events" / "parlays" 
 

@@ -4,15 +4,16 @@ import statsmodels.api as sm
 import joblib
 
 from config import config
-from UpcomingPicks.betting_pipeline import betting_pipeline
+from UpcomingPicks.betting_pipeline import betting_pipeline, seperate_bets_dfs
 
 
 model_open = sm.load(config.model_open_path)
 model_close1 = sm.load(config.model_close1_path)
 model_close2 = sm.load(config.model_close2_path)
 
-xgb = XGBClassifier()
-xgboost_stack = xgb.load_model(config.xgb_stack_path)
+xgboost_stack = XGBClassifier()
+xgboost_stack.load_model(config.xgb_stack_path)
+xgboost_stack.get_booster().feature_names
 
 scaler_open = joblib.load(config.scaler_open_path)
 scaler_close1 = joblib.load(config.scaler_close1_path)
@@ -60,14 +61,14 @@ def generate_bets(df, select_odds=None):
                                                 N_parlay_stack_arr=config.N_parlay_stack
     )
     
-    # df_bets_arr, df_parlay_arr = seperate_bets_dfs(df_bets_all, df_parlay_all, type_list)
+    df_bets_arr, df_parlay_arr = seperate_bets_dfs(df_bets_all, df_parlay_all, type_list)
     
-    # if select_odds: 
-    #     df_bets = df_bets_arr[select_odds]
-    #     df_parlay = df_parlay_arr[select_odds]
+    if select_odds: 
+        df_bets = df_bets_arr[select_odds]
+        df_parlay = df_parlay_arr[select_odds]
     
-    # else: 
-    #     df_bets = df_bets_all
-    #     df_parlay = df_parlay_all
+    else: 
+        df_bets = df_bets_all
+        df_parlay = df_parlay_all
 
-    return df_bets_all, df_parlay_all 
+    return df_bets, df_parlay 
