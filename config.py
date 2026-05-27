@@ -18,8 +18,8 @@ class config:
     N_ml = [250, 250, 250]
 
     # just for closing odds 
-    mdd_ml_stack = [.4,.4]
-    mdd_parlay_stack = [.5,.5]
+    mdd_ml_stack = [.4, .4]
+    mdd_parlay_stack = [.5, .5]
 
     N_parlay_stack = [250, 250]
     N_ml_stack = [250, 250]
