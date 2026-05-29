@@ -40,18 +40,18 @@ st.markdown("""
 <p style="font-size:18px; line-height:1.6;">
 In addition to sampling random permutations, I also consider the probability of selecting each odds type. The probabilities are chosen based on my beliefs and experience with 
 placing the bets manually. Betting lines often shift within hours of opening so getting the openining odds is somewhat difficult. However, they do take some time to stabalize so this is where the real money can come in. 
-Thinking realistically, I chose 15% for opening odds, 35% for close1 and .50% for close2. This is also based on close 1 being the odds resulting in the worst results, so Im assuming those are the final stabalized odds and close2 is somewhat in between. 
+Thinking realistically, I chose 15% for opening odds, 35% for close1 and 50% for close2. This is also based on close 1 being the odds resulting in the worst results, so Im assuming those are the final stabalized odds and close2 is somewhat in between. 
 If I were to place bets roughly a week in advance, I think its fair to be getting somewhat between open and close 2 85% of the time. Also, since I am placing bets weeks in advance, I 
 am adding a 3-event delay to updating my total bankroll since its unrealistic to expect to have bankroll updated in real time. All results are based on the final xgboost stacked model for close1 and close2 odds, 
 while the opening odds model remains the same. Lastly, if a simulation path results in a bankroll < 0, I 
-do not update that path anymore and keep it as zero in order to calcualte the probability of going broke.  
+do not update that path anymore and keep it as zero in order to calculate the probability of going broke.  
 </p>
 """, unsafe_allow_html=True)
 
 
 st.markdown("""
 <p style="font-size:18px; line-height:1.6;">
-The results of the parlay strategy indicate I may need to reduce risk tolerance. Money line and finaly distributions have 95% of suceeding. 
+The results of the parlay strategy indicate I may need to reduce risk tolerance. Starting bankroll is 500. Money line and finaly distributions have 95% of suceeding. 
 </p>
 """, unsafe_allow_html=True)
 
