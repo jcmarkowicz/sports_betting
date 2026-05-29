@@ -76,12 +76,14 @@ path = BASE_DIR / "Data" / "plot_pngs" / "returns_distributions_close1.png"
 show_image(path, title='Close1 Returns Distributions')
 
 
-st.markdown("""
+st.markdown(
+"""
 ## Close2 Odds Results:
             
 Better results from close1 but still much worse results from Open 
 
-""")
+"""
+)
 
 path =  BASE_DIR / "Data" / "plot_pngs" / "close2_kelly_sim.png"
 show_image(path, title='Close2 Simulation')
@@ -91,3 +93,25 @@ path = BASE_DIR / "Data" / "plot_pngs" / "returns_distributions_close2.png"
 show_image(path, title='Close2 Returns Distributions')
 
 
+
+st.markdown(
+"""
+## Update 5/29/26 Stacking Results:
+            
+By using a model(xgboost) that stacks the probability scores of each of the three 
+initial models, fight prediction accuracy increased resulting in more accurate
+betting edges and higher returns.
+
+Notable improvements in both the  Close 1 and Close 2 betting odds demonstrating the stacking models 
+high performance availability. This is biggest breakthrough in terms of profitable 
+strategies as demonstrated by the significant increases in returns.  
+
+"""
+)
+
+path =  BASE_DIR / "Data" / "plot_pngs" / "stacking_kelly_sim1.png"
+show_image(path, title='Stacking Close1 Simulation')
+
+
+path = BASE_DIR / "Data" / "plot_pngs" / "stacking_kelly_sim.png"
+show_image(path, title='Stacking Close2 Simulation')

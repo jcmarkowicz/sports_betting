@@ -13,7 +13,6 @@ model_close2 = sm.load(config.model_close2_path)
 
 xgboost_stack = XGBClassifier()
 xgboost_stack.load_model(config.xgb_stack_path)
-xgboost_stack.get_booster().feature_names
 
 scaler_open = joblib.load(config.scaler_open_path)
 scaler_close1 = joblib.load(config.scaler_close1_path)

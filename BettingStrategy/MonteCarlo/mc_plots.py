@@ -73,9 +73,11 @@ def plot_final_distributions(mc_ml_open, mc_parlay_open, mc_total_open, path):
     axes[2].set_ylabel("Count")
     axes[2].grid(True)
 
-    plt.savefig(path)
-
     plt.tight_layout()
+
+    if path is not None:
+        plt.savefig(path)
+
     plt.show()
 
 def plot_negative_fraction_histograms(
@@ -123,10 +125,10 @@ def plot_negative_fraction_histograms(
         ax.set_ylabel("Count")
         ax.grid(True)
         ax.legend()
-
-    plt.savefig(path)
-
     plt.tight_layout()
+
+    if path is not None:
+        plt.savefig(path)
     plt.show()
 
 
@@ -172,8 +174,11 @@ def mc_analysis(mc_ml_open, mc_parlay_open, mc_total_open, path):
         ax.grid(True)
         ax.legend()
 
-    plt.savefig(path)
     plt.tight_layout()
+
+    if path is not None:
+        plt.savefig(path)
+    
     plt.show()
 
     
