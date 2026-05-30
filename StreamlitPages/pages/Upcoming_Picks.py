@@ -27,7 +27,7 @@ assert len(ml_files) == len(parlay_files), f"Mismatch in number of ML and Parlay
 
 for ml_file, parlay_file in zip(ml_files, parlay_files):
     today = datetime.now(ZoneInfo("America/New_York")).date()
-    date_str = ml_file.split('_')[-1].replace('.csv','')
+    date_str = ml_file.split('_')[-1].replace('.csv', '')
     event_date = datetime.strptime(date_str, "%Y-%m-%d").date()
 
     if today > event_date:

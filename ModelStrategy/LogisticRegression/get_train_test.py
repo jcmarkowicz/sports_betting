@@ -12,6 +12,8 @@ from sklearn.decomposition import PCA
 from sklearn.mixture import GaussianMixture
 from sklearn.metrics import silhouette_score
 
+
+
 class TrainTestBuilder: 
     def __init__(self, df, target_col, non_features=[], train_size=0.8, random_state=42):
         self.df = df
@@ -19,6 +21,8 @@ class TrainTestBuilder:
         self.non_features = non_features
         self.train_size = train_size
         self.random_state = random_state
+        
+
 
     def fit_gmm_cluster(self, X_train, X_test):
         blue_feats = ['td_defense_pct_blue','td_accuracy_pct_blue', 'control_pm_blue',
@@ -183,6 +187,7 @@ class TrainTestBuilder:
                 X_train_cat = ohe.fit_transform(X_train_raw[cat_cols])
                 X_test_cat  = ohe.transform(X_test_raw[cat_cols])
                 cat_cols_ohe = ohe.get_feature_names_out(cat_cols)
+
             else:
                 X_train_cat = X_train_raw[cat_cols].to_numpy()
                 X_test_cat  = X_test_raw[cat_cols].to_numpy()

@@ -55,11 +55,16 @@ def parlay_top_ev(data, bankroll, type, top_n=[0,1], parlay_mdd=0.5, N=250):
                          f'parlay_odds_{type}', 
                          f'stake_{type}', 
                          f'parlay_ev_{type}', 
-                         f'parlay_prob_{type}']]
+                         f'parlay_prob_{type}'
+                         ]]
     return df_top_n
 
 
-def run_per_bet_scaling(bets_df, max_drawdown, bankroll, N):
+def run_per_bet_scaling(
+        bets_df, 
+        max_drawdown, 
+        bankroll, 
+        N):
 
     idx = bets_df.index
 

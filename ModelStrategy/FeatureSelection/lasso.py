@@ -94,9 +94,3 @@ def rank_features_by_lasso_path(coef_df, C_values):
     return rank_df
 
     # Generate C values across the logarithmic range
-
-
-C_min=1e-4
-C_max=1e2
-num_C=100
-C_values = np.logspace(np.log10(C_max), np.log10(C_min), num_C)

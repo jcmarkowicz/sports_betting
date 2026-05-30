@@ -26,7 +26,14 @@ def merge_parlay_types(df_parlay, df_parlay_combined):
         )
     return df_parlay_combined
 
-def get_bets_input(df, y_hat, proba_red, proba_blue, real_odds, fair_odds):
+def get_bets_input(
+        df, 
+        y_hat,
+        proba_red, 
+        proba_blue, 
+        real_odds, 
+        fair_odds
+):
         
         fighter_red = df["fighter_red"].values
         fighter_blue = df["fighter_blue"].values

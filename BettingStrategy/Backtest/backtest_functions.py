@@ -333,7 +333,7 @@ def parlay_bottom_odds(data, bankroll, parlay_mdd=.25, cutoff=-350):
     return profit, net_odds, df_bottom
 
 
-def parlay_top_ev(data, bankroll, top_n=[0,1], parlay_mdd=.25):
+def parlay_top_ev(data, bankroll, top_n=[0,1], parlay_mdd=.25, N=250):
     
     empty_parlay = data.empty or data.shape[0] < len(top_n)
     
@@ -357,7 +357,7 @@ def parlay_top_ev(data, bankroll, top_n=[0,1], parlay_mdd=.25):
 
         # scale kelly mdd 
         if parlay_mdd is not None:
-            parlay_kelly = scale_kelly_for_mdd(parlay_prob, parlay_odds, kelly_full, 2000, parlay_mdd)
+            parlay_kelly = scale_kelly_for_mdd(parlay_prob, parlay_odds, kelly_full, N=N, max_drawdown=parlay_mdd)
         else:
             parlay_kelly = kelly_full
 
@@ -430,7 +430,7 @@ def event_bankroll_scaled(
 def simulate_kelly(df_final, prob_cols, fair_decimal_cols, real_decimal_cols,
                         pred_winner_col, winner_col='winner', date_col='date',
                         init_bankroll=1000, bankroll_floor=None, portfolio_scaling=False,\
-                        adaptive_scaling=False, max_drawdown=.30, parlay_mdd=.25, N=1000,
+                        adaptive_scaling=False, max_drawdown=.30, parlay_mdd=.25, N=1000,N_parlay=2000,
                         calc_parlay=False,
                         test_other_ev = False,
                         test_bankroll_scaler = False
@@ -533,7 +533,7 @@ def simulate_kelly(df_final, prob_cols, fair_decimal_cols, real_decimal_cols,
                 'choice_proba': group_stats['choice_proba']
             })
                         
-            parlay_net_money, parlay_net_odds, df_top_n = parlay_top_ev(df_data, scaled_bankroll, top_n=[0,1], parlay_mdd=parlay_mdd)
+            parlay_net_money, parlay_net_odds, df_top_n = parlay_top_ev(df_data, scaled_bankroll, top_n=[0,1], parlay_mdd=parlay_mdd, N=N_parlay)
                                                        
             df_top_n['fstar_net'] = np.where(parlay_net_odds >= 0, df_top_n['fstar_parlay'], -df_top_n['fstar_parlay'])
             df_top_n['choice_decimal_odds'] = df_top_n['choice_real_odds'] 

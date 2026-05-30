@@ -12,19 +12,20 @@ from config import config
 PARLAY_SIZE = config.parlay_top_ev
 
 
-def xgboost_stacking(xgb, 
-                     df,
-                     required_idx,
-                     feats,
-                     X_stacked,
-                     fair_odds_arr, 
-                     real_odds_arr,
-                     types_arr,  
-                     mdd_ml_arr,
-                     mdd_parlay_arr, 
-                     N_ml_arr, 
-                     N_parlay_arr,
-                     bankroll
+def xgboost_stacking(
+        xgb, 
+        df,
+        required_idx,
+        feats,
+        X_stacked,
+        fair_odds_arr, 
+        real_odds_arr,
+        types_arr,  
+        mdd_ml_arr,
+        mdd_parlay_arr, 
+        N_ml_arr, 
+        N_parlay_arr,
+        bankroll
 ):
     result = xgboost_predict(xgb, X_stacked, required_idx)
     
@@ -67,25 +68,59 @@ def xgboost_stacking(xgb,
         type = dat['type']
         
         bets_input_df = get_bets_input(
-                                    df, 
-                                    y_hat, 
-                                    proba_red,
-                                    proba_blue, 
-                                    real_odds=real_odds, 
-                                    fair_odds=fair_odds
-                                    )
+            df=df, 
+            y_hat=y_hat, 
+            proba_red=proba_red,
+            proba_blue=proba_blue, 
+            real_odds=real_odds, 
+            fair_odds=fair_odds
+        )
+        print('XGBoost Stacking')
+        print(bets_input_df['f_star_unscaled'])
+        print(bets_input_df['choice_edge'])
+        print(bets_input_df['choice_ev'])
+        print(bets_input_df['choice_proba'])
+        print(bets_input_df['p'])
 
-        df_per_bet = run_per_bet_scaling(bets_input_df, mdd_ml, bankroll, N_ml)
-        bets_pkt = get_bets_pkt(bets_input_df, df_per_bet)
+        df_per_bet = run_per_bet_scaling(
+            bets_df=bets_input_df, 
+            max_drawdown=mdd_ml, 
+            bankroll=bankroll, 
+            N=N_ml
+        )
+        print(df_per_bet['fstar_scaled'])
+        
+        bets_pkt = get_bets_pkt(
+            bets_input_df=bets_input_df, 
+            df_per_bet=df_per_bet
+            )
 
-        df_bets = set_ml_bets_cols(f'{type}_stack', bets_pkt, required_idx=y_hat.index, all_na=False) 
-        df_bets_tests(df_bets, stacked_ml, valid_mask, bets_input_df['choice_ev'], df_per_bet['fstar_scaled'])
-        stacked_ml = merge_bets_types(df_bets, stacked_ml)
+        df_bets = set_ml_bets_cols(
+            type_=f'{type}_stack', 
+            pkt=bets_pkt, 
+            required_idx=y_hat.index, 
+            all_na=False
+        ) 
 
-        parlay_input_df = get_parlay_input(df,
-                                           bets_input_df,
-                                           fighter_red, 
-                                           fighter_blue)
+        df_bets_tests(
+            df_bets=df_bets, 
+            df_bets_combined=stacked_ml, 
+            valid_mask=valid_mask, 
+            choice_ev=bets_input_df['choice_ev'], 
+            fstar_list=df_per_bet['fstar_scaled']
+        )
+
+        stacked_ml = merge_bets_types(
+            df_bets=df_bets, 
+            df_bets_combined=stacked_ml
+        )
+
+        parlay_input_df = get_parlay_input(
+            df=df,
+            bets_input_df=bets_input_df,
+            fighter_red=fighter_red, 
+            fighter_blue=fighter_blue
+        )
 
         df_parlay = parlay_top_ev(
             parlay_input_df, 
@@ -95,39 +130,48 @@ def xgboost_stacking(xgb,
             parlay_mdd = mdd_parlay,
             N = N_parlay
         )
-        parlay_pkt = get_parlay_pkt(df_parlay, type)
+        print(df_parlay[f'stake_{type}'])
+
+        parlay_pkt = get_parlay_pkt(
+            df_parlay=df_parlay, 
+            type=type
+        )
         
         df_parlay_final = set_parlay_cols(
-                                        f'{type}_stack', 
-                                        parlay_pkt, 
-                                        required_idx=np.arange(PARLAY_SIZE), 
-                                        all_na=False
-                                    )
+            type_=f'{type}_stack', 
+            pkt=parlay_pkt, 
+            required_idx=np.arange(PARLAY_SIZE), 
+            all_na=False
+        )
         
-        df_parlay_tests(df_parlay_final, bets_input_df['choice_ev'])
+        df_parlay_tests(
+            df_parlay=df_parlay_final, 
+            choice_ev=bets_input_df['choice_ev']
+        )
+        
         stacked_parlay = merge_parlay_types(df_parlay_final, stacked_parlay)
 
     return stacked_ml, stacked_parlay 
 
 
 def betting_pipeline(
-                    upcoming_df, 
-                    feats_list, 
-                    model_list, 
-                    xgb_stack, 
-                     scaler_list, 
-                     type_list, 
-                     fair_odds_list, 
-                     real_odds_list, 
-                     bankroll, 
-                     mdd_ml_arr,
-                     mdd_parlay_arr, 
-                     N_ml_arr,
-                     N_parlay_arr,
-                     mdd_ml_stack_arr,
-                     mdd_parlay_stack_arr,
-                     N_ml_stack_arr,
-                     N_parlay_stack_arr
+        upcoming_df, 
+        feats_list, 
+        model_list, 
+        xgb_stack, 
+        scaler_list, 
+        type_list, 
+        fair_odds_list, 
+        real_odds_list, 
+        bankroll, 
+        mdd_ml_arr,
+        mdd_parlay_arr, 
+        N_ml_arr,
+        N_parlay_arr,
+        mdd_ml_stack_arr,
+        mdd_parlay_stack_arr,
+        N_ml_stack_arr,
+        N_parlay_stack_arr
 ):
 
     other_cols = ['date', 'fighter_red', 'fighter_blue', 'open_red', 'open_blue', 'close1_red', 'close2_red', 'close1_blue', 'close2_blue']
@@ -195,15 +239,15 @@ def betting_pipeline(
             continue
 
         y_hat = logit_predict(
-                            model, 
-                            df, 
-                            y_hat, 
-                            feats, 
-                            num_feats, 
-                            cat_feats, 
-                            valid_mask, 
-                            scaler, 
-                            required_df_idx
+            model=model, 
+            df=df, 
+            y_hat=y_hat, 
+            feats=feats, 
+            num_feats=num_feats, 
+            cat_feats=cat_feats, 
+            valid_mask=valid_mask, 
+            scaler=scaler, 
+            required_df_idx=required_df_idx
         )
 
         proba_red = y_hat
@@ -213,15 +257,53 @@ def betting_pipeline(
         df_proba[f'proba_red_{type}'] = proba_red
         df_proba[f'proba_blue_{type}'] = proba_blue
 
-        bets_input_df = get_bets_input(df, pred_winner_bool, proba_red, proba_blue, real_odds, fair_odds)
-        df_per_bet = run_per_bet_scaling(bets_input_df, mdd_ml, bankroll, N_ml)
-        bets_pkt = get_bets_pkt(bets_input_df, df_per_bet)
+        bets_input_df = get_bets_input(
+            df=df, 
+            y_hat=pred_winner_bool, 
+            proba_red=proba_red, 
+            proba_blue=proba_blue, 
+            real_odds=real_odds, 
+            fair_odds=fair_odds
+        )
+
+        df_per_bet = run_per_bet_scaling(
+            bets_df=bets_input_df, 
+            max_drawdown=mdd_ml, 
+            bankroll=bankroll, 
+            N=N_ml
+        )
+
+
+        bets_pkt = get_bets_pkt(
+            bets_input_df=bets_input_df, 
+            df_per_bet=df_per_bet
+        )
         
-        df_bets = set_ml_bets_cols(type, bets_pkt, required_idx=y_hat.index, all_na=False) 
-        df_bets_tests(df_bets, df_bets_combined, valid_mask, bets_input_df['choice_ev'], df_per_bet['fstar_scaled'].values)
-        
-        df_bets_combined = merge_bets_types(df_bets, df_bets_combined)
-        parlay_input_df = get_parlay_input(df, bets_input_df, fighter_red, fighter_blue)
+        df_bets = set_ml_bets_cols(
+            type_=type, 
+            pkt=bets_pkt, 
+            required_idx=y_hat.index, 
+            all_na=False
+        )
+        df_bets_tests(
+            df_bets=df_bets, 
+            df_bets_combined=df_bets_combined, 
+            valid_mask=valid_mask, 
+            choice_ev=bets_input_df['choice_ev'], 
+            fstar_list=df_per_bet['fstar_scaled'].values
+        )
+
+        df_bets_combined = merge_bets_types(
+            df_bets=df_bets, 
+            df_bets_combined=df_bets_combined
+        )
+
+        parlay_input_df = get_parlay_input(
+            df=df, 
+            bets_input_df=bets_input_df, 
+            fighter_red=fighter_red, 
+            fighter_blue=fighter_blue
+        )
 
         df_parlay = parlay_top_ev(
             parlay_input_df, 
@@ -232,27 +314,47 @@ def betting_pipeline(
             N = N_parlay
         )
         
-        parlay_pkt = get_parlay_pkt(df_parlay, type)
-        df_parlay_final = set_parlay_cols(type, parlay_pkt, required_idx=np.arange(PARLAY_SIZE), all_na=False)
-        df_parlay_tests(df_parlay_final, bets_input_df['choice_ev'])
-        df_parlay_combined = merge_parlay_types(df_parlay_final, df_parlay_combined)
-    
-    X_stacked = get_X_stacked(df, df_proba, df_bets_combined, required_df_idx)
-    
+        parlay_pkt = get_parlay_pkt(
+            df_parlay, 
+            type
+        )
+
+        df_parlay_final = set_parlay_cols(
+            type_=type, 
+            pkt=parlay_pkt, 
+            required_idx=np.arange(PARLAY_SIZE), 
+            all_na=False
+        )
+        df_parlay_tests(
+            df_parlay=df_parlay_final, 
+            choice_ev=bets_input_df['choice_ev']
+        )
+        df_parlay_combined = merge_parlay_types(
+            df_parlay=df_parlay_final, 
+            df_parlay_combined=df_parlay_combined
+        )
+
+    X_stacked = get_X_stacked(
+        df=df, 
+        df_proba=df_proba, 
+        df_bets_combined=df_bets_combined, 
+        required_df_idx=required_df_idx
+    )
+
     bets_stacking, parlay_stacking = xgboost_stacking(
-        xgb_stack,
-        df,
-        required_df_idx,  
-        feats,
-        X_stacked,
-        fair_odds_list[1:],
-        real_odds_list[1:], 
-        type_list[1:], 
-        mdd_ml_stack_arr,
-        mdd_parlay_stack_arr,
-        N_ml_stack_arr,
-        N_parlay_stack_arr, 
-        bankroll
+        xgb=xgb_stack,
+        df=df,
+        required_idx=required_df_idx,  
+        feats=feats,
+        X_stacked=X_stacked,
+        fair_odds_arr=fair_odds_list[1:],
+        real_odds_arr=real_odds_list[1:], 
+        types_arr=type_list[1:], 
+        mdd_ml_arr=mdd_ml_stack_arr,
+        mdd_parlay_arr=mdd_parlay_stack_arr,
+        N_ml_arr=N_ml_stack_arr,
+        N_parlay_arr=N_parlay_stack_arr, 
+        bankroll=bankroll
     )
 
     df_bets_combined = pd.concat([df_bets_combined, bets_stacking], axis=1)
