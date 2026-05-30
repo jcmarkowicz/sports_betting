@@ -75,12 +75,12 @@ def xgboost_stacking(
             real_odds=real_odds, 
             fair_odds=fair_odds
         )
-        print('XGBoost Stacking')
-        print(bets_input_df['f_star_unscaled'])
-        print(bets_input_df['choice_edge'])
-        print(bets_input_df['choice_ev'])
-        print(bets_input_df['choice_proba'])
-        print(bets_input_df['p'])
+        # print('XGBoost Stacking')
+        # print(bets_input_df['f_star_unscaled'])
+        # print(bets_input_df['choice_edge'])
+        # print(bets_input_df['choice_ev'])
+        # print(bets_input_df['choice_proba'])
+        # print(bets_input_df['p'])
 
         df_per_bet = run_per_bet_scaling(
             bets_df=bets_input_df, 
@@ -130,7 +130,7 @@ def xgboost_stacking(
             parlay_mdd = mdd_parlay,
             N = N_parlay
         )
-        print(df_parlay[f'stake_{type}'])
+        # print(df_parlay[f'stake_{type}'])
 
         parlay_pkt = get_parlay_pkt(
             df_parlay=df_parlay, 
