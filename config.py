@@ -21,8 +21,8 @@ class config:
     mdd_ml_stack = [.4, .4]
     mdd_parlay_stack = [.5, .5]
 
+    N_ml_stack = [250, 250]
     N_parlay_stack = [1000, 1000]
-    N_ml_stack = [1000, 1000]
 
     parlay_top_ev = 2  
 
