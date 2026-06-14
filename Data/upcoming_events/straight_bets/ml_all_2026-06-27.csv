@@ -1,13 +1,13 @@
 date,fighter_red,fighter_blue,open_red,open_blue,close1_red,close2_red,close1_blue,close2_blue,pred_name_open,pred_winner_open,choice_proba_open,fstar_open,stake_open,edge_open,ev_open,pred_name_close1,pred_winner_close1,choice_proba_close1,fstar_close1,stake_close1,edge_close1,ev_close1,pred_name_close2,pred_winner_close2,choice_proba_close2,fstar_close2,stake_close2,edge_close2,ev_close2,pred_name_close1_stack,pred_winner_close1_stack,choice_proba_close1_stack,fstar_close1_stack,stake_close1_stack,edge_close1_stack,ev_close1_stack,pred_name_close2_stack,pred_winner_close2_stack,choice_proba_close2_stack,fstar_close2_stack,stake_close2_stack,edge_close2_stack,ev_close2_stack
+2026-06-27,nursulton ruziboev,andrey pulyaev,,,,,,,andrey pulyaev,0,,,,,,andrey pulyaev,0,,,,,,andrey pulyaev,0,,,,,,,,,,,,,,,,,,,
 2026-06-27,asu almabayev,charles johnson,,,,,,,charles johnson,0,,,,,,charles johnson,0,,,,,,charles johnson,0,,,,,,,,,,,,,,,,,,,
-2026-06-27,farman hasanov,eric nolan,,,,,,,eric nolan,0,,,,,,eric nolan,0,,,,,,eric nolan,0,,,,,,,,,,,,,,,,,,,
-2026-06-27,shara magomedov,michel pereira,,,,,,,michel pereira,0,,,,,,michel pereira,0,,,,,,michel pereira,0,,,,,,,,,,,,,,,,,,,
-2026-06-27,nazim sadykhov,matheus camilo,,,,,,,matheus camilo,0,,,,,,matheus camilo,0,,,,,,matheus camilo,0,,,,,,,,,,,,,,,,,,,
-2026-06-27,abus magomedov,michal oleksiejczuk,,,,,,,michal oleksiejczuk,0,,,,,,michal oleksiejczuk,0,,,,,,michal oleksiejczuk,0,,,,,,,,,,,,,,,,,,,
-2026-06-27,rafael fiziev,manuel torres,-138.0,110.0,-138.0,-138.0,110.0,110.0,rafael fiziev,1,0.5280397288786349,0.0,0.0,-0.02522415134464151,-0.089322786426702,rafael fiziev,1,0.5569990236383203,0.008360961314054295,0.0,0.0037351434150438845,-0.039378495464346075,rafael fiziev,1,0.5582675564065243,0.011200518520303814,0.0,0.005003676183247818,-0.03719073605251605,rafael fiziev,1.0,0.6353844404220581,0.13984222864175413,153.82645150592955,0.08212056019878167,0.09580794797427417,rafael fiziev,1.0,0.6353844404220581,0.13984222864175413,153.82645150592955,0.08212056019878167,0.09580794797427417
-2026-06-27,abdul rakhman yakhyaev,julius walker,,,,,,,julius walker,0,,,,,,julius walker,0,,,,,,julius walker,0,,,,,,,,,,,,,,,,,,,
 2026-06-27,kaan ofli,javier reyes,,,,,,,javier reyes,0,,,,,,javier reyes,0,,,,,,javier reyes,0,,,,,,,,,,,,,,,,,,,
 2026-06-27,bekzat almakhan,jean matsumoto,,,,,,,jean matsumoto,0,,,,,,jean matsumoto,0,,,,,,jean matsumoto,0,,,,,,,,,,,,,,,,,,,
-2026-06-27,ikram aliskerov,brunno ferreira,,,,,,,brunno ferreira,0,,,,,,brunno ferreira,0,,,,,,brunno ferreira,0,,,,,,,,,,,,,,,,,,,
-2026-06-27,nursulton ruziboev,andrey pulyaev,,,,,,,andrey pulyaev,0,,,,,,andrey pulyaev,0,,,,,,andrey pulyaev,0,,,,,,,,,,,,,,,,,,,
 2026-06-27,daniil donchenko,andreas gustafsson,,,,,,,andreas gustafsson,0,,,,,,andreas gustafsson,0,,,,,,andreas gustafsson,0,,,,,,,,,,,,,,,,,,,
+2026-06-27,abdul rakhman yakhyaev,julius walker,,,,,,,julius walker,0,,,,,,julius walker,0,,,,,,julius walker,0,,,,,,,,,,,,,,,,,,,
+2026-06-27,rafael fiziev,manuel torres,-138.0,110.0,-138.0,-138.0,110.0,110.0,rafael fiziev,1,0.5280498486950231,0.0,0.0,-0.0252140315282533,-0.0893053334100325,rafael fiziev,1,0.556999038889334,0.008360995452806443,0.0,0.0037351586660575586,-0.03937846916187321,rafael fiziev,1,0.5582675734700532,0.011200556716295043,0.0,0.005003693246776741,-0.037190706624111114,rafael fiziev,1.0,0.6353844404220581,0.13984222864175413,153.82645150592955,0.08212056019878167,0.09580794797427417,rafael fiziev,1.0,0.6353844404220581,0.13984222864175413,153.82645150592955,0.08212056019878167,0.09580794797427417
+2026-06-27,abus magomedov,michal oleksiejczuk,,,,,,,michal oleksiejczuk,0,,,,,,michal oleksiejczuk,0,,,,,,michal oleksiejczuk,0,,,,,,,,,,,,,,,,,,,
+2026-06-27,ikram aliskerov,brunno ferreira,,,,,,,brunno ferreira,0,,,,,,brunno ferreira,0,,,,,,brunno ferreira,0,,,,,,,,,,,,,,,,,,,
+2026-06-27,nazim sadykhov,matheus camilo,,,,,,,matheus camilo,0,,,,,,matheus camilo,0,,,,,,matheus camilo,0,,,,,,,,,,,,,,,,,,,
+2026-06-27,shara magomedov,michel pereira,,,,,,,michel pereira,0,,,,,,michel pereira,0,,,,,,michel pereira,0,,,,,,,,,,,,,,,,,,,
+2026-06-27,farman hasanov,eric nolan,,,,,,,eric nolan,0,,,,,,eric nolan,0,,,,,,eric nolan,0,,,,,,,,,,,,,,,,,,,
