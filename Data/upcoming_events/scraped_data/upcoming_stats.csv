@@ -1,11 +1,4 @@
 title_fight,fighter_red,fighter_blue,weight_class,event_date,event_location,reach_red,reach_blue,height_red,height_blue,dob_red,dob_blue
-1,Ilia Topuria,Justin Gaethje,Lightweight,2026-06-14," Washington, DC, USA","69""","70""","5' 7""","5' 11""","Jan 21, 1997","Nov 14, 1988"
-1,Alex Pereira,Ciryl Gane,Heavyweight,2026-06-14," Washington, DC, USA","79""","81""","6' 4""","6' 4""","Jul 07, 1987","Apr 12, 1990"
-1,Sean O'Malley,Aiemann Zahabi,Bantamweight,2026-06-14," Washington, DC, USA","72""","68""","5' 11""","5' 8""","Oct 24, 1994","Nov 19, 1987"
-1,Josh Hokit,Derrick Lewis,Heavyweight,2026-06-14," Washington, DC, USA","73""","79""","6' 1""","6' 3""","Nov 12, 1997","Feb 07, 1985"
-1,Mauricio Ruffy,Michael Chandler,Lightweight,2026-06-14," Washington, DC, USA","75""","71""","5' 11""","5' 8""","Jun 17, 1996","Apr 24, 1986"
-1,Bo Nickal,Kyle Daukaus,Middleweight,2026-06-14," Washington, DC, USA","76""","76""","6' 1""","6' 2""","Jan 14, 1996","Feb 27, 1993"
-1,Diego Lopes,Steve Garcia,Featherweight,2026-06-14," Washington, DC, USA","72""","75""","5' 11""","6' 0""","Dec 30, 1994","May 22, 1992"
 0,Manel Kape,Kyoji Horiguchi,Flyweight,2026-06-20," Las Vegas, Nevada, USA","68""","63""","5' 5""","5' 4""","Nov 14, 1993","Oct 12, 1990"
 0,Ion Cutelaba,Navajo Stirling,Light Heavyweight,2026-06-20," Las Vegas, Nevada, USA","75""","79""","6' 1""","6' 4""","Dec 14, 1993","Nov 07, 1997"
 0,Vinicius Oliveira,Andre Fili,Featherweight,2026-06-20," Las Vegas, Nevada, USA","70""","74""","5' 9""","5' 11""","Nov 30, 1995","Jun 25, 1990"
