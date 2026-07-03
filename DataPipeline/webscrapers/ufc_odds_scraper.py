@@ -17,7 +17,7 @@ import undetected_chromedriver as uc
 def fighter_odds_search(red_fighter, blue_fighters, event_dates, driver):
 
     search_name = red_fighter
-    search_box = driver.find_element(By.ID, "search-box1")
+    search_box = driver.find_element(By.NAME, "query")
     search_box.clear()
     search_box.send_keys(search_name)
     search_box.send_keys(Keys.RETURN)
