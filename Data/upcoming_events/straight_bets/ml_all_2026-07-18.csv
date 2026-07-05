@@ -1,13 +1,13 @@
 date,fighter_red,fighter_blue,open_red,open_blue,close1_red,close2_red,close1_blue,close2_blue,pred_name_open,pred_winner_open,choice_proba_open,fstar_open,stake_open,edge_open,ev_open,pred_name_close1,pred_winner_close1,choice_proba_close1,fstar_close1,stake_close1,edge_close1,ev_close1,pred_name_close2,pred_winner_close2,choice_proba_close2,fstar_close2,stake_close2,edge_close2,ev_close2,pred_name_close1_stack,pred_winner_close1_stack,choice_proba_close1_stack,fstar_close1_stack,stake_close1_stack,edge_close1_stack,ev_close1_stack,pred_name_close2_stack,pred_winner_close2_stack,choice_proba_close2_stack,fstar_close2_stack,stake_close2_stack,edge_close2_stack,ev_close2_stack
-2026-07-18,jean paul lebosnoyani,seokhyeon ko,,,,,,,seokhyeon ko,0,,,,,,seokhyeon ko,0,,,,,,seokhyeon ko,0,,,,,,,,,,,,,,,,,,,
-2026-07-18,alden coria,stewart nicoll,,,,,,,stewart nicoll,0,,,,,,stewart nicoll,0,,,,,,stewart nicoll,0,,,,,,,,,,,,,,,,,,,
-2026-07-18,kevin holland,jacobe smith,,,,,,,jacobe smith,0,,,,,,jacobe smith,0,,,,,,jacobe smith,0,,,,,,,,,,,,,,,,,,,
-2026-07-18,tabatha ricci,fatima kline,,,,,,,fatima kline,0,,,,,,fatima kline,0,,,,,,fatima kline,0,,,,,,,,,,,,,,,,,,,
-2026-07-18,dricus du plessis,kamaru usman,-240.0,205.0,-340.0,-260.0,220.0,250.0,dricus du plessis,1,0.7597815688550935,0.14407254275163667,158.47979702680033,0.06764459854356564,0.07635722254471589,dricus du plessis,1,0.7668163304395524,0.09920038449295537,0.0,0.02567930678439967,-0.0076494547252850265,dricus du plessis,1,0.757854160200772,0.13806432558925713,151.87075814818283,0.03878951827036303,0.04933652950876122,dricus du plessis,1.0,0.8824368715286255,0.2696257431296157,296.58831744257725,0.14129984787347272,0.1419771278605742,dricus du plessis,1.0,0.8824368715286255,0.2804361242329097,308.47973665620066,0.1633722295982165,0.22183566827040452
 2026-07-18,jared cannonier,christian leroy duncan,,,,,,,christian leroy duncan,0,,,,,,christian leroy duncan,0,,,,,,christian leroy duncan,0,,,,,,,,,,,,,,,,,,,
-2026-07-18,levi rodrigues jr,felipe franco,,,,,,,felipe franco,0,,,,,,felipe franco,0,,,,,,felipe franco,0,,,,,,,,,,,,,,,,,,,
-2026-07-18,tommy mcmillen,alberto montes,,,,,,,alberto montes,0,,,,,,alberto montes,0,,,,,,alberto montes,0,,,,,,,,,,,,,,,,,,,
 2026-07-18,veronica hardy,dione barbosa,,,,,,,dione barbosa,0,,,,,,dione barbosa,0,,,,,,dione barbosa,0,,,,,,,,,,,,,,,,,,,
+2026-07-18,dricus du plessis,kamaru usman,-240.0,205.0,-340.0,-260.0,220.0,250.0,dricus du plessis,1,0.7597830405759467,0.1440756772896501,158.4832450186151,0.06764607026441882,0.07635930748259123,dricus du plessis,1,0.7668160229221521,0.09919919653859963,0.0,0.025678999266999347,-0.007649852688979553,dricus du plessis,1,0.7578541633155746,0.13806433667583776,151.87077034342153,0.03878952138516567,0.04933653382156489,dricus du plessis,1.0,0.8824368715286255,0.2696257431296157,296.58831744257725,0.14129984787347272,0.1419771278605742,dricus du plessis,1.0,0.8824368715286255,0.2804361242329097,308.47973665620066,0.1633722295982165,0.22183566827040452
+2026-07-18,kevin holland,jacobe smith,,,,,,,jacobe smith,0,,,,,,jacobe smith,0,,,,,,jacobe smith,0,,,,,,,,,,,,,,,,,,,
+2026-07-18,chase hooper,mitch ramirez,,,,,,,mitch ramirez,0,,,,,,mitch ramirez,0,,,,,,mitch ramirez,0,,,,,,,,,,,,,,,,,,,
+2026-07-18,tabatha ricci,fatima kline,,,,,,,fatima kline,0,,,,,,fatima kline,0,,,,,,fatima kline,0,,,,,,,,,,,,,,,,,,,
 2026-07-18,austin bashi,jose delgado,,,,,,,jose delgado,0,,,,,,jose delgado,0,,,,,,jose delgado,0,,,,,,,,,,,,,,,,,,,
 2026-07-18,allen frye jr,alvin hines,,,,,,,alvin hines,0,,,,,,alvin hines,0,,,,,,alvin hines,0,,,,,,,,,,,,,,,,,,,
-2026-07-18,chase hooper,mitch ramirez,,,,,,,mitch ramirez,0,,,,,,mitch ramirez,0,,,,,,mitch ramirez,0,,,,,,,,,,,,,,,,,,,
+2026-07-18,levi rodrigues jr,felipe franco,,,,,,,felipe franco,0,,,,,,felipe franco,0,,,,,,felipe franco,0,,,,,,,,,,,,,,,,,,,
+2026-07-18,alden coria,stewart nicoll,,,,,,,stewart nicoll,0,,,,,,stewart nicoll,0,,,,,,stewart nicoll,0,,,,,,,,,,,,,,,,,,,
+2026-07-18,jean paul lebosnoyani,seokhyeon ko,,,,,,,seokhyeon ko,0,,,,,,seokhyeon ko,0,,,,,,seokhyeon ko,0,,,,,,,,,,,,,,,,,,,
+2026-07-18,tommy mcmillen,alberto montes,,,,,,,alberto montes,0,,,,,,alberto montes,0,,,,,,alberto montes,0,,,,,,,,,,,,,,,,,,,
