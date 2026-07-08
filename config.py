@@ -8,7 +8,7 @@ from DataPipeline.FeatureEngineering.features_pipeline import BASE_DIR
 class config:
     
     # --- Bet Params ---
-    bankroll:int = 1100
+    bankroll:int = 2700
 
     # for opening and closing 
     mdd_ml = [.3, .4, .4] 
@@ -72,17 +72,18 @@ class config:
     # email params
     sender_email = "jcmarkufc@gmail.com"
     reciever_email = ['jcmarkowicz@outlook.com']
-    columns_to_email = ['fighter_red', 'fighter_blue','pred_name_open',
-                    'open_red','open_blue','pred_winner_open',
-                    'fstar_open','stake_open'
-                    ]  
+    columns_to_email = [
+        'fighter_red', 'fighter_blue','pred_name_open',
+        'open_red','open_blue','pred_winner_open',
+        'fstar_open','stake_open'
+    ]  
 
     parlay_columns = [
         'choice_fighter_name_open',
         'parlay_fstar_open',
         'parlay_odds_open',
         'stake_open'
-        ]
+    ]
     
 
     # --- Model Params ---
@@ -104,7 +105,7 @@ class config:
             'win_pct_red', 'win_pct_blue',
             'win_streak_diff', 'lose_streak_diff',
             'elo_red', 'elo_blue', 'elo_pred', 'age_red', 'age_blue'
-            ]
+        ]
     
     close1_feats = [
                   'proba_fair_close1_diff', 'proba_fair_open_diff', 'reach_diff', 
@@ -124,7 +125,7 @@ class config:
                   'win_pct_red', 'win_pct_blue',
                   'win_streak_diff', 'lose_streak_diff',
                   'elo_red', 'elo_blue', 'elo_pred', 'age_red', 'age_blue',
-                  ]
+        ]
     
     close2_feats = [
                   'proba_fair_close2_diff', 'proba_fair_open_diff', 'reach_diff', 
@@ -144,7 +145,7 @@ class config:
                   'win_pct_red', 'win_pct_blue',
                   'win_streak_diff', 'lose_streak_diff',
                   'elo_red', 'elo_blue', 'elo_pred', 'age_red', 'age_blue',
-                  ]
+        ]
     
 
     # --- Display Params ---
