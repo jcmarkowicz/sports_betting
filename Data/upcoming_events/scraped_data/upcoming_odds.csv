@@ -1,27 +1,37 @@
-red_fighter,blue_fighter,open_blue,close1_blue,close2_blue,open_red,close1_red,close2_red,event_date,og_blue_name,og_red_fighter
-Alessandro Costa,Cody Durden,+250,+200,+220,-300,-275,-235,2026-07-11,Cody Durden,Alessandro Costa
-Art Hernandez,Ysidro Gutierrez,-200,-400,-400,+150,+260,+260,2024-07-27,Gregory Rodrigues,Anthony Hernandez
-Benoit Saint-Denis,Paddy Pimblett,-110,+110,+120,-110,-146,-138,2026-07-11,Paddy Pimblett,Benoit Saint Denis
-Brandon Royval,Loneer Kavanagh,-200,-245,-220,+170,+175,+190,2026-07-11,Lone'er Kavanagh,Brandon Royval
-Cody Garbrandt,Adrian Yanez,-250,-450,-400,+210,+300,+350,2026-07-11,Adrian Yanez,Cody Garbrandt
-Conor McGregor,Max Holloway,-270,-230,-210,+230,+175,+183,2026-07-11,Max Holloway,Conor McGregor
-Conor McGregor,Max Holloway,+150,+225,+230,-190,-290,-245,2013-08-17,Max Holloway,Conor McGregor
-Cory Sandhagen,Mario Bautista,+170,+115,+125,-200,-156,-135,2026-07-11,Mario Bautista,Cory Sandhagen
-Cory Sandhagen,Mario Bautista,+325,+380,+475,-475,-625,-500,2019-01-19,Mario Bautista,Cory Sandhagen
-Damian Pinas,Cesar Almeida,+225,+172,+195,-265,-235,-220,2026-07-11,Cesar Almeida,Damian Pinas
-Dricus Du Plessis,Kamaru Usman,+205,+220,+250,-240,-340,-260,2026-07-18,Kamaru Usman,Dricus Du Plessis
-Farid Basharat,John Garza,+410,+400,+475,-525,-670,-600,2026-07-11,John Garza,Farid Basharat
-Gable Steveson,Elisha Ellison,+900,+1100,+1300,-1800,-4000,-2500,2026-07-11,Elisha Ellison,Gable Steveson
-Islam Makhachev,Ian Machado Garry,+330,+250,+295,-400,-390,-350,2026-08-16,Ian Machado Garry,Islam Makhachev
-Jan Blachowicz,Bogdan Guskov,+130,-126,-120,-150,-105,+108,2025-12-07,Bogdan Guskov,Jan Blachowicz
-Jared Cannonier,Israel Adesanya,-300,-700,-500,+250,+355,+460,2022-07-02,Christian Leroy Duncan,Jared Cannonier
-King Green,Terrance McKinney,-205,-166,-130,+175,+110,+130,2026-07-11,Terrance McKinney,King Green
-Luke Riley,Kai Kamaka III,+330,+220,+240,-400,-315,-265,2026-07-11,Kai Kamaka III,Luke Riley
-Luke Riley,Yuki Angdembe,+160,-105,+135,-200,-165,-125,2021-12-10,Kai Kamaka III,Luke Riley
-Luke Riley,Kamil Wincenciak,+240,+110,+145,-300,-188,-140,2021-10-01,Kai Kamaka III,Luke Riley
-Mackenzie Dern,Gillian Robertson,+181,+163,+195,-211,-240,-200,2026-08-16,Gillian Robertson,Mackenzie Dern
-Magomed Ankalaev,Khalil Rountree Jr,+250,+230,+260,-300,-333,-310,2026-07-25,Khalil Rountree Jr.,Magomed Ankalaev
-Magomed Tuchalov,Tursunbek Sodikov,+300,+900,+900,-450,-3333,-3333,2025-06-13,Brendson Ribeiro,Magomed Tuchalov
-Nikita Krylov,Robert Whittaker,-104,-150,-130,-116,+110,+120,2026-07-11,Robert Whittaker,Nikita Krylov
-Ryan Gandra,Zachary Reese,+140,+105,+115,-160,-141,-125,2026-07-11,Zach Reese,Ryan Gandra
-Tracy Cortez,Wang Cong,-133,-125,-110,+113,-110,+105,2026-07-11,Wang Cong,Tracy Cortez
+blue_fighter,open_blue,close1_blue,close2_blue,red_fighter,open_red,close1_red,close2_red,event_date,og_blue_name,og_red_fighter
+Stewart Nicoll,+550,+675,+675,Alden Coria,-800,-1000,-1000,2026-07-18,Stewart Nicoll,Alden Coria
+Cody Durden,+250,+200,+220,Alessandro Costa,-300,-270,-235,2026-07-11,Cody Durden,Alessandro Costa
+Ysidro Gutierrez,-200,-400,-400,Art Hernandez,+150,+260,+260,2024-07-27,Gregory Rodrigues,Anthony Hernandez
+Paddy Pimblett,-110,+110,+132,Benoit Saint-Denis,-110,-152,-138,2026-07-11,Paddy Pimblett,Benoit Saint Denis
+Loneer Kavanagh,-200,-245,-220,Brandon Royval,+170,+175,+190,2026-07-11,Lone'er Kavanagh,Brandon Royval
+Mitch Ramirez,+215,+250,+250,Chase Hooper,-255,-300,-300,2026-07-18,Mitch Ramirez,Chase Hooper
+Adrian Yanez,-250,-450,-420,Cody Garbrandt,+210,+310,+350,2026-07-11,Adrian Yanez,Cody Garbrandt
+Max Holloway,-270,-230,-210,Conor McGregor,+230,+175,+192,2026-07-11,Max Holloway,Conor McGregor
+Max Holloway,+150,+225,+230,Conor McGregor,-190,-290,-245,2013-08-17,Max Holloway,Conor McGregor
+Mario Bautista,+170,+115,+125,Cory Sandhagen,-200,-156,-135,2026-07-11,Mario Bautista,Cory Sandhagen
+Mario Bautista,+325,+380,+475,Cory Sandhagen,-475,-625,-500,2019-01-19,Mario Bautista,Cory Sandhagen
+Cesar Almeida,+225,+165,+205,Damian Pinas,-265,-240,-210,2026-07-11,Cesar Almeida,Damian Pinas
+Kamaru Usman,+205,+220,+250,Dricus Du Plessis,-240,-340,-260,2026-07-18,Kamaru Usman,Dricus Du Plessis
+John Garza,+410,+400,+475,Farid Basharat,-525,-670,-600,2026-07-11,John Garza,Farid Basharat
+Elisha Ellison,+900,+1100,+1400,Gable Steveson,-1800,-4000,-2500,2026-07-11,Elisha Ellison,Gable Steveson
+Ian Machado Garry,+330,+250,+295,Islam Makhachev,-400,-390,-350,2026-08-16,Ian Machado Garry,Islam Makhachev
+Bogdan Guskov,+130,-126,-120,Jan Blachowicz,-150,-105,+108,2025-12-07,Bogdan Guskov,Jan Blachowicz
+Christian Leroy Duncan,-325,-300,-300,Jared Cannonier,+275,+250,+250,2026-07-18,Christian Leroy Duncan,Jared Cannonier
+Israel Adesanya,-300,-700,-500,Jared Cannonier,+250,+355,+460,2022-07-02,Christian Leroy Duncan,Jared Cannonier
+Jacobe Smith,-225,-300,-300,Kevin Holland,+190,+250,+250,2026-07-18,Jacobe Smith,Kevin Holland
+Terrance McKinney,-205,-162,-128,King Green,+175,+108,+128,2026-07-11,Terrance McKinney,King Green
+Felipe Franco,-110,+160,+160,Levi Rodrigues,-110,-185,-185,2026-07-18,Felipe Franco,Levi Rodrigues Jr.
+Kai Kamaka III,+330,+220,+240,Luke Riley,-400,-315,-260,2026-07-11,Kai Kamaka III,Luke Riley
+Yuki Angdembe,+160,-105,+135,Luke Riley,-200,-165,-125,2021-12-10,Kai Kamaka III,Luke Riley
+Kamil Wincenciak,+240,+110,+145,Luke Riley,-300,-188,-140,2021-10-01,Kai Kamaka III,Luke Riley
+Gillian Robertson,+181,+163,+195,Mackenzie Dern,-211,-240,-200,2026-08-16,Gillian Robertson,Mackenzie Dern
+Khalil Rountree Jr,+250,+230,+260,Magomed Ankalaev,-300,-333,-310,2026-07-25,Khalil Rountree Jr.,Magomed Ankalaev
+Tursunbek Sodikov,+300,+900,+900,Magomed Tuchalov,-450,-3333,-3333,2025-06-13,Brendson Ribeiro,Magomed Tuchalov
+Robert Whittaker,-104,-148,-125,Nikita Krylov,-116,+105,+116,2026-07-11,Robert Whittaker,Nikita Krylov
+Christian Leroy Duncan,-250,-470,-370,Roman Dolidze,+210,+290,+340,2026-03-21,Reinier de Ridder,Roman Dolidze
+Nassourdine Imavov,-150,-182,-160,Roman Dolidze,+125,+135,+150,2024-02-04,Reinier de Ridder,Roman Dolidze
+Zachary Reese,+140,+100,+115,Ryan Gandra,-160,-141,-120,2026-07-11,Zach Reese,Ryan Gandra
+Luisa Fernanda Cifuentes,+450,+500,+550,Shanelle Dyer,-800,-800,-800,2023-09-30,Elise Reed,Shanelle Dyer
+Fatima Kline,-300,-400,-400,Tabatha Ricci,+250,+300,+300,2026-07-18,Fatima Kline,Tabatha Ricci
+Alberto Montes,-145,-140,-140,Tommy McMillen,+125,+120,+120,2026-07-18,Alberto Montes,Tommy McMillen
+Wang Cong,-133,-118,-106,Tracy Cortez,+113,-114,-105,2026-07-11,Wang Cong,Tracy Cortez
