@@ -32,6 +32,7 @@ title_fight,fighter_red,fighter_blue,weight_class,event_date,event_location,reac
 0,Dennis Buzukja,Bogdan Grad,Featherweight,2026-08-01," Belgrade, Vojvodina, Serbia","70""","70""","5' 9""","5' 8""","Oct 01, 1997","Sep 28, 1995"
 0,Nina Milosevic,Hailey Cowan,Women's Bantamweight,2026-08-01," Belgrade, Vojvodina, Serbia",--,"67""",--,"5' 8""","Aug 08, 1996","Feb 12, 1992"
 0,Jovan Leka,Max Gimenis,Heavyweight,2026-08-01," Belgrade, Vojvodina, Serbia","75""","75""","6' 4""","6' 2""","Mar 15, 2002","Apr 14, 1993"
+0,Mateusz Rebecki,Kyle Prepolec,Lightweight,2026-08-01," Belgrade, Vojvodina, Serbia","66""","70""","5' 7""","5' 10""","Oct 03, 1992","Aug 30, 1989"
 0,Mateusz Gamrot,Quillan Salkilld,Lightweight,2026-08-08," Las Vegas, Nevada, USA","70""","75""","5' 10""","6' 0""","Dec 11, 1990","Dec 28, 1999"
 1,Islam Makhachev,Ian Machado Garry,Welterweight,2026-08-15," Philadelphia, Pennsylvania, USA","70""","74""","5' 10""","6' 3""","Oct 27, 1991","Nov 17, 1997"
 1,Mackenzie Dern,Gillian Robertson,Women's Strawweight,2026-08-15," Philadelphia, Pennsylvania, USA","63""","63""","5' 4""","5' 5""","Mar 24, 1993","May 17, 1995"
@@ -56,3 +57,4 @@ title_fight,fighter_red,fighter_blue,weight_class,event_date,event_location,reac
 0,Sumudaerji,Alex Perez,Flyweight,2026-08-29," Shanghai, China","72""","65""","5' 8""","5' 6""","Jan 20, 1996","Mar 21, 1992"
 0,Rei Tsuruya,Kevin Borjas,Flyweight,2026-08-29," Shanghai, China","68""","68""","5' 6""","5' 5""","Jun 22, 2002","Dec 06, 1997"
 0,Liu Ce,Junior Tafa,Light Heavyweight,2026-08-29," Shanghai, China",--,"75""",--,"6' 3""","Sep 04, 1996","Sep 21, 1996"
+0,Aoriqileng,Kai Asakura,Bantamweight,2026-08-29," Shanghai, China","69""","69""","5' 7""","5' 8""","Jun 25, 1993","Oct 31, 1993"
