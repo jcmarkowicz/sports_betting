@@ -1,24 +1,32 @@
-blue_fighter,open_blue,close1_blue,close2_blue,red_fighter,open_red,close1_red,close2_red,event_date,og_blue_name,og_red_fighter
-Stewart Nicoll,+550,+500,+700,Alden Coria,-800,-1200,-1000,2026-07-18,Stewart Nicoll,Alden Coria
-Dione Barbosa,-280,-550,-450,Anna Melisano,+240,+300,+400,2026-07-18,Dione Barbosa,Anna Melisano
-Ysidro Gutierrez,-200,-400,-400,Art Hernandez,+150,+260,+260,2024-07-27,Gregory Rodrigues,Anthony Hernandez
-Jose Delgado,-170,-125,-108,Austin Bashi,+145,-118,+100,2026-07-18,Jose Delgado,Austin Bashi
-Mitch Ramirez,+215,+260,+290,Chase Hooper,-255,-390,-350,2026-07-18,Mitch Ramirez,Chase Hooper
-Kamaru Usman,+205,+188,+200,Dricus Du Plessis,-240,-250,-230,2026-07-18,Kamaru Usman,Dricus Du Plessis
-Ian Machado Garry,+330,+250,+295,Islam Makhachev,-400,-390,-350,2026-08-15,Ian Machado Garry,Islam Makhachev
-Bogdan Guskov,+130,-126,-120,Jan Blachowicz,-150,-105,+108,2025-12-07,Bogdan Guskov,Jan Blachowicz
-Christian Leroy Duncan,-325,-350,-305,Jared Cannonier,+275,+225,+285,2026-07-18,Christian Leroy Duncan,Jared Cannonier
-Israel Adesanya,-300,-700,-500,Jared Cannonier,+250,+355,+460,2022-07-02,Christian Leroy Duncan,Jared Cannonier
-Seok Hyun Ko,-250,-245,-205,Jean-Paul Lebosnoyani,+210,+170,+188,2026-07-18,Seokhyeon Ko,Jean-Paul Lebosnoyani
-Felipe Franco,-110,+132,+143,Levi Rodrigues,-110,-188,-155,2026-07-18,Felipe Franco,Levi Rodrigues Jr.
-Gillian Robertson,+181,+163,+195,Mackenzie Dern,-211,-240,-200,2026-08-15,Gillian Robertson,Mackenzie Dern
-Khalil Rountree Jr,+240,+240,+240,Magomed Ankalaev,-330,-330,-330,2026-07-25,Khalil Rountree Jr.,Magomed Ankalaev
-Tursunbek Sodikov,+300,+900,+900,Magomed Tuchalov,-450,-3333,-3333,2025-06-13,Brendson Ribeiro,Magomed Tuchalov
-Christian Leroy Duncan,-250,-470,-370,Roman Dolidze,+210,+290,+340,2026-03-21,Reinier de Ridder,Roman Dolidze
-Nassourdine Imavov,-150,-182,-160,Roman Dolidze,+125,+135,+150,2024-02-04,Reinier de Ridder,Roman Dolidze
-Luisa Fernanda Cifuentes,+450,+500,+550,Shanelle Dyer,-800,-800,-800,2023-09-30,Elise Reed,Shanelle Dyer
-Alex Perez,-105,-157,-125,Sumudaerji Sumudaerji,-115,+100,+132,2026-05-30,Alex Perez,
-Fatima Kline,-300,-415,-385,Tabatha Ricci,+250,+275,+315,2026-07-18,Fatima Kline,Tabatha Ricci
-Alberto Montes,-145,+108,+116,Tommy McMillen,+125,-143,-135,2026-07-18,Alberto Montes,Tommy McMillen
-Song Yadong,+525,+260,+300,Umar Nurmagomedov,-700,-400,-350,2026-08-29,Song Yadong,Umar Nurmagomedov
-Cory Sandhagen,+225,+275,+290,Umar Nurmagomedov,-278,-395,-340,2024-08-03,Song Yadong,Umar Nurmagomedov
+red_fighter,blue_fighter,open_blue,close1_blue,close2_blue,open_red,close1_red,close2_red,event_date,og_blue_name,og_red_fighter
+Alden Coria,Stewart Nicoll,+550,+500,+725,-800,-1200,-1000,2026-07-18,Stewart Nicoll,Alden Coria
+Anna Melisano,Dione Barbosa,-280,-650,-450,+240,+300,+475,2026-07-18,Dione Barbosa,Anna Melisano
+Art Hernandez,Ysidro Gutierrez,-200,-400,-400,+150,+260,+260,2024-07-27,Gregory Rodrigues,Anthony Hernandez
+Austin Bashi,Jose Delgado,-170,-125,-110,+145,-110,+100,2026-07-18,Jose Delgado,Austin Bashi
+Chase Hooper,Mitch Ramirez,+215,+260,+285,-255,-390,-330,2026-07-18,Mitch Ramirez,Chase Hooper
+Dricus Du Plessis,Kamaru Usman,+205,+185,+200,-240,-250,-225,2026-07-18,Kamaru Usman,Dricus Du Plessis
+Islam Dulatov,Wellington Turman,+420,+500,+500,-550,-700,-700,2026-07-25,Wellington Turman,Islam Dulatov
+Islam Makhachev,Ian Machado Garry,+330,+250,+295,-400,-390,-350,2026-08-15,Ian Machado Garry,Islam Makhachev
+Ismael Bonfim,Axel Sola,-170,-210,-210,+145,+180,+180,2026-07-25,Axel Sola,Ismael Bonfim
+Jared Cannonier,Christian Leroy Duncan,-325,-370,-333,+275,+225,+295,2026-07-18,Christian Leroy Duncan,Jared Cannonier
+Jared Cannonier,Israel Adesanya,-300,-700,-500,+250,+355,+460,2022-07-02,Christian Leroy Duncan,Jared Cannonier
+Jean-Paul Lebosnoyani,Seok Hyun Ko,-250,-235,-195,+210,+165,+180,2026-07-18,Seokhyeon Ko,Jean-Paul Lebosnoyani
+Levi Rodrigues,Felipe Franco,-110,+130,+142,-110,-188,-150,2026-07-18,Felipe Franco,Levi Rodrigues Jr.
+Mackenzie Dern,Gillian Robertson,+181,+163,+195,-211,-240,-200,2026-08-15,Gillian Robertson,Mackenzie Dern
+Magomed Ankalaev,Bogdan Guskov,+250,+360,+360,-300,-460,-460,2026-07-25,Bogdan Guskov,Magomed Ankalaev
+Magomed Tuchalov,Brendson Ribeiro,+420,+425,+425,-550,-600,-600,2026-07-25,Brendson Ribeiro,Magomed Tuchalov
+Magomed Tuchalov,Tursunbek Sodikov,+300,+900,+900,-450,-3333,-3333,2025-06-13,Brendson Ribeiro,Magomed Tuchalov
+Magomed Zaynukov,Damian Rzepecki,+235,+275,+275,-275,-335,-335,2026-07-25,Damian Rzepecki,Magomed Zaynukov
+Nurullo Aliev,Mike Davis,+147,+140,+140,-172,-160,-160,2026-07-25,Mike Davis,Nurullo Aliev
+Rizvan Kuniev,Tyrell Fortune,+210,+235,+235,-250,-275,-275,2026-07-25,Tyrell Fortune,Rizvan Kuniev
+Roman Dolidze,Christian Leroy Duncan,-250,-470,-370,+210,+290,+340,2026-03-21,Reinier de Ridder,Roman Dolidze
+Roman Dolidze,Nassourdine Imavov,-150,-182,-160,+125,+135,+150,2024-02-04,Reinier de Ridder,Roman Dolidze
+Santiago Ponzinibbio,Sam Patterson,-450,-425,-425,+350,+325,+325,2026-07-25,Sam Patterson,Santiago Ponzinibbio
+Shanelle Dyer,Luisa Fernanda Cifuentes,+450,+500,+550,-800,-800,-800,2023-09-30,Elise Reed,Shanelle Dyer
+Steve Erceg,Ramazan Temirov,+130,+112,+112,-150,-132,-132,2026-07-25,Ramazan Temirov,Steve Erceg
+Sumudaerji Sumudaerji,Alex Perez,-105,-157,-125,-115,+100,+132,2026-05-30,Alex Perez,
+Tabatha Ricci,Fatima Kline,-300,-500,-400,+250,+275,+375,2026-07-18,Fatima Kline,Tabatha Ricci
+Tommy McMillen,Alberto Montes,-145,+110,+130,+125,-150,-138,2026-07-18,Alberto Montes,Tommy McMillen
+Umar Nurmagomedov,Song Yadong,+525,+260,+300,-700,-400,-350,2026-08-29,Song Yadong,Umar Nurmagomedov
+Umar Nurmagomedov,Cory Sandhagen,+225,+275,+290,-278,-395,-340,2024-08-03,Song Yadong,Umar Nurmagomedov
+Valter Walker,Thomas Petersen,+210,+230,+230,-250,-270,-270,2026-07-25,Thomas Petersen,Valter Walker
