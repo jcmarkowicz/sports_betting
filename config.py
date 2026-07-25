@@ -8,7 +8,7 @@ from DataPipeline.FeatureEngineering.features_pipeline import BASE_DIR
 class config:
     
     # --- Bet Params ---
-    bankroll:int = 2500
+    bankroll:int = 3500
 
     # for opening and closing 
     mdd_ml = [.3, .4, .4] 
