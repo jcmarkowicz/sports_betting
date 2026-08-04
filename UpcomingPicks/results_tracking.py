@@ -4,13 +4,17 @@ import sys
 from pathlib import Path 
 
 import pandas as pd 
-from datetime import datetime 
+from datetime import datetime
+
+from DataPipeline.FeatureEngineering.features_pipeline import FeatureEngineering 
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))) 
 BASE_DIR = Path(__file__).resolve().parents[1]
 
 sys.path.append(str(Path(__file__).parent))
 
+from DataPipeline.FeatureEngineering.BuildFeatures.final_feats_df import non_rolling_stats
+from DataPipeline.FeatureEngineering.BuildFeatures.rolling_stats import apply_rolling_stats
 from DataPipeline.webscrapers.scraping_pipeline import UFC_Webscraper
 from DataPipeline.FeatureEngineering.BuildFeatures.fight_time_feats import single_event_features
 from DataPipeline.utils.github_utils import commit_if_changed, delete_and_commit
@@ -82,13 +86,31 @@ def archive_results(start_date='2026-07-25'):
         'open_net_odds':[], 'close1_net_odds':[], 'close2_net_odds':[],
         'date':[]
     })
-        
+
+    scraper = UFC_Webscraper()
+    features = FeatureEngineering()
+
+    stats_history = pd.read_csv(config.stats_history_file_string) # frames BEFORE any feature engineering 
+    stats_history = stats_history.drop(columns=[col for col in stats_history.columns if "Unnamed" in col])
+
+    odds_history = pd.read_csv(config.odds_history_file_string)
+    odds_history = odds_history.drop(columns=[col for col in odds_history.columns if "Unnamed" in col])
+
     scraped_stats = get_missing_stats(start_date) 
-    df_single_event = single_event_features(scraped_stats)
-    df_single_event['date'] = pd.to_datetime(df_single_event['date'])
+    scraped_odds = scraper.get_fighter_odds(scraped_stats)
+
+    df_stats = pd.concat([stats_history, scraped_stats], axis=0, ignore_index=True)
+    df_odds = pd.concat([odds_history, scraped_odds], axis=0, ignore_index=True)
+
+    df_single_event = single_event_features(df_stats)
+    df_rolling = apply_rolling_stats(df_single_event)
+    df_feats = non_rolling_stats(df_rolling)
+
+    df_total = features.standardized_merge(df_feats, df_odds)
+    df_total['date'] = pd.to_datetime(df_total['date'])
 
     # iterate through each event date and calculate the results for each event
-    for date, event_group in df_single_event.groupby('date'):
+    for date, event_group in df_total.groupby('date'):
 
         date_str = date.strftime("%Y-%m-%d")
         d_ts = pd.to_datetime(date_str)  
@@ -96,8 +118,8 @@ def archive_results(start_date='2026-07-25'):
         # check if event date is in the past 
         if pd.Timestamp.now().normalize() > d_ts:
 
-            ml_fp = ml_bets_folder / f'ml_all_{date_str}.csv'
-            parlay_fp = parlay_bets_folder / f'parlay_all_{date_str}.csv'
+            # ml_fp = ml_bets_folder / f'ml_all_{date_str}.csv'
+            # parlay_fp = parlay_bets_folder / f'parlay_all_{date_str}.csv'
             # if ml_fp.exists():
             #     df_ml = pd.read_csv(ml_fp).reset_index(drop=True)
 
@@ -153,7 +175,7 @@ def calc_winner_parlay(df_parlay, df_single_event):
     close1_stake = df_parlay['parlay_fstar_close1']
     close2_stake = df_parlay['parlay_fstar_close2']
 
-    winner_bool = df_single_event['winner_bool']
+    winner_bool = df_single_event['winner']
 
     open_win = df_parlay['choice_fighter_bool_open'].values & winner_bool.values
     close1_win = df_parlay['choice_fighter_bool_close1'].values & winner_bool.values
@@ -184,7 +206,7 @@ def calc_winner_ml(df_single_event, df_money_line):
 
     assert df_single_event.shape[0] == df_money_line.shape[0], 'scraped results df shape mismatch with bets df'
 
-    winner_bool = df_single_event['winner_bool'].to_numpy()
+    winner_bool = df_single_event['winner'].to_numpy()
 
     pred_bool_open = df_money_line['pred_bool_open'].to_numpy()
     pred_bool_close1 = df_money_line['pred_bool_close1'].to_numpy()

@@ -155,23 +155,23 @@ def xgboost_stacking(
 
 
 def betting_pipeline(
-        upcoming_df, 
-        feats_list, 
-        model_list, 
-        xgb_stack, 
-        scaler_list, 
-        type_list, 
-        fair_odds_list, 
-        real_odds_list, 
-        bankroll, 
-        mdd_ml_arr,
-        mdd_parlay_arr, 
-        N_ml_arr,
-        N_parlay_arr,
-        mdd_ml_stack_arr,
-        mdd_parlay_stack_arr,
-        N_ml_stack_arr,
-        N_parlay_stack_arr
+    upcoming_df, 
+    feats_list, 
+    model_list, 
+    xgb_stack, 
+    scaler_list, 
+    type_list, 
+    fair_odds_list, 
+    real_odds_list, 
+    bankroll, 
+    mdd_ml_arr,
+    mdd_parlay_arr, 
+    N_ml_arr,
+    N_parlay_arr,
+    mdd_ml_stack_arr,
+    mdd_parlay_stack_arr,
+    N_ml_stack_arr,
+    N_parlay_stack_arr
 ):
 
     other_cols = ['date', 'fighter_red', 'fighter_blue', 'open_red', 'open_blue', 'close1_red', 'close2_red', 'close1_blue', 'close2_blue']

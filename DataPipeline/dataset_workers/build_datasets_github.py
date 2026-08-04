@@ -125,7 +125,6 @@ if __name__ == "__main__":
 
 
 
-
     # Build features for history and upcoming 
     if generate_model_df is True: 
 
