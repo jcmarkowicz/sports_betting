@@ -78,6 +78,9 @@ def delete_and_commit(path, message):
 
     file_path = Path(path)
 
+    if not file_path.exists():
+        return
+
     # 1. Delete the file
     file_path.unlink(missing_ok=True)
 
