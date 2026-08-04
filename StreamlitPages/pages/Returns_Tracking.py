@@ -34,13 +34,9 @@ display_paginated_df(df_parlay_pct, title='Parlay Percent Returns', key_prefix='
 path = BASE_DIR / 'Data' / 'plot_pngs' / 'pct_returns.png'
 # show_image(path, title='Percent Returns')
 
-ml_pct_returns_fp = BASE_DIR / 'Data' / 'betting_results' / 'ml_pct_returns.csv'
-parlay_pct_returns_fp = BASE_DIR / 'Data' / 'betting_results' / 'parlay_pct_returns.csv'
-
-
 def plot_returns():
-    df_ml_pct = pd.read_csv(ml_pct_returns_fp)
-    df_parlay_pct = pd.read_csv(parlay_pct_returns_fp)
+    df_ml_pct = pd.read_csv(config.ml_history_fp)
+    df_parlay_pct = pd.read_csv(config.parlay_history_fp)
     types = ['open', 'close1', 'close2']
 
     fig, axes = plt.subplots(2, len(types), figsize=(15,6))
