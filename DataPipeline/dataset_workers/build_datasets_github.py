@@ -28,10 +28,10 @@ generate_model_df = True
 
 
 #Folders for ALL scraped data
-non_merged_stats = pd.read_csv(config.missing_stats_history_fp)
+non_merged_stats = pd.read_csv(config.non_merged_stats_fp)
 non_merged_stats = non_merged_stats.drop(columns=[col for col in non_merged_stats.columns if "Unnamed" in col])
 
-non_merged_odds = pd.read_csv(config.missing_odds_history_fp)
+non_merged_odds = pd.read_csv(config.non_merged_odds_fp)
 non_merged_odds = non_merged_odds.drop(columns=[col for col in non_merged_odds.columns if "Unnamed" in col])
 
 

@@ -6,7 +6,7 @@ def get_ml_bet_cols(type_):
     """
     return {
         "pred_name_col":    f"pred_name_{type_}",
-        "pred_winner_col":  f"pred_winner_{type_}",
+        "pred_winner_col":  f"pred_bool_{type_}",
         "choice_proba_col": f"choice_proba_{type_}",
         "choice_fstar_col": f"fstar_{type_}",
         "choice_stake_col": f"stake_{type_}",
@@ -23,7 +23,7 @@ def get_parlay_cols(type_):
         'stake_col'               : f"stake_{type_}",
         'parlay_ev_col'           : f"parlay_ev_{type_}",
         'parlay_prob_col'         : f"parlay_prob_{type_}"
-        }
+    }
 
 
 def set_ml_bets_cols(type_, pkt, required_idx, all_na=False):
@@ -49,4 +49,5 @@ def set_parlay_cols(type_, pkt, required_idx, all_na=False):
         assert set(pkt.keys()) == set(cols), 'parlay pkt error'
         df = pd.DataFrame({cols[key]:value for key, value in pkt.items()}, index=required_idx)
 
+    df[f'choice_fighter_bool_{type_}'] = pkt[f'choice_fighter_bool_col']
     return df

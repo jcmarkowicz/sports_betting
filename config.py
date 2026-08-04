@@ -33,9 +33,6 @@ class config:
     stats_history_file_string = base_dir / "Data" / "scraped_data_main" / f"stats_history_{db_scrape_date}.csv"
     odds_history_file_string = base_dir / "Data" / "scraped_data_main" / f"odds_history_{db_scrape_date}.csv"
 
-    missing_stats_history_fp = base_dir / "Data" / "non_merged_features" / f"non_merged_stats.csv"
-    missing_odds_history_fp = base_dir / "Data" / "non_merged_features" / f"non_merged_odds.csv"
-
     upcoming_scraped_stats_string = base_dir / "Data" / "upcoming_events" / "scraped_data" / "upcoming_stats"
     upcoming_scraped_odds_string = base_dir / "Data" /"upcoming_events" /"scraped_data" / "upcoming_odds"
 
@@ -61,7 +58,7 @@ class config:
     # --- Results Tracking Params ---
     ml_history_fp = base_dir / 'Data' / 'betting_results' / 'moneyline_results.csv'
     parlay_history_fp = base_dir / 'Data' / 'betting_results' / 'parlay_results.csv'
-    event_features_folder = base_dir / "Data" / "upcoming_events" / "event_features" / "upcoming_odds_stats"
+    event_features_folder = base_dir / "Data" / "upcoming_events" / "event_features" 
 
     non_merged_stats_fp = base_dir / "Data" / "non_merged_features" / "non_merged_stats.csv"
     non_merged_odds_fp = base_dir / "Data" / "non_merged_features" / "non_merged_odds.csv"

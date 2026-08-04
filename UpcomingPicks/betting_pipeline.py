@@ -178,10 +178,16 @@ def betting_pipeline(
     df = upcoming_df.copy().reset_index(drop=True)
     required_df_idx = df.index
 
-    df_bets_combined = pd.DataFrame(df[other_cols].values, columns=other_cols, index=required_df_idx)
     df_parlay_combined = pd.DataFrame()
-    df_proba = pd.DataFrame(columns=['proba_red_open', 'proba_blue_open', 'proba_red_close1', 'proba_blue_close1', 'proba_red_close2','proba_blue_close2'], 
-                            index=required_df_idx)
+    df_proba = pd.DataFrame(
+        columns=['proba_red_open', 'proba_blue_open', 'proba_red_close1', 'proba_blue_close1', 'proba_red_close2','proba_blue_close2'], 
+        index=required_df_idx
+    )
+    df_bets_combined = pd.DataFrame(
+        df[other_cols].values, 
+        columns=other_cols, 
+        index=required_df_idx
+    )
 
     fighter_red = df["fighter_red"].values
     fighter_blue = df["fighter_blue"].values
@@ -272,7 +278,6 @@ def betting_pipeline(
             bankroll=bankroll, 
             N=N_ml
         )
-
 
         bets_pkt = get_bets_pkt(
             bets_input_df=bets_input_df, 

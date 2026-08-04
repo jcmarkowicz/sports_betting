@@ -20,7 +20,8 @@ def parlay_top_ev(data, bankroll, type, top_n=[0,1], parlay_mdd=0.5, N=250):
             f'parlay_odds_{type}', 
             f'stake_{type}', 
             f'parlay_ev_{type}', 
-            f'parlay_prob_{type}'
+            f'parlay_prob_{type}',
+            f'choice_fighter_bool_{type}'
         ]
         df_nans = pd.DataFrame({col: pd.NA for col in cols}, index=np.arange(2))        
         return df_nans
@@ -50,13 +51,17 @@ def parlay_top_ev(data, bankroll, type, top_n=[0,1], parlay_mdd=0.5, N=250):
     df_top_n[f'stake_{type}'] = stake
     df_top_n[f'parlay_odds_{type}'] = net_odds
 
-    df_top_n = df_top_n[[f'choice_fighter_name_{type}', 
-                         f'parlay_fstar_{type}',
-                         f'parlay_odds_{type}', 
-                         f'stake_{type}', 
-                         f'parlay_ev_{type}', 
-                         f'parlay_prob_{type}'
-                         ]]
+    df_top_n[f'choice_fighter_bool_{type}'] = df_top_n['pred_winner_bool']
+
+    df_top_n = df_top_n[[
+        f'choice_fighter_name_{type}', 
+        f'parlay_fstar_{type}',
+        f'parlay_odds_{type}', 
+        f'stake_{type}', 
+        f'parlay_ev_{type}', 
+        f'parlay_prob_{type}',
+        f'choice_fighter_bool_{type}'
+    ]]
     return df_top_n
 
 

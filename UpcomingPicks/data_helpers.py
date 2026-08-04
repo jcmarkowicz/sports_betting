@@ -1,5 +1,3 @@
-
-
 import numpy as np 
 import pandas as pd 
 
@@ -108,6 +106,7 @@ def get_parlay_input(df, bets_input_df, fighter_red, fighter_blue):
         "choice_proba": bets_input_df['choice_proba'],
         "choice_real_odds": bets_input_df['choice_real_odds'],
         'choice_fighter_name':bets_input_df['pred_winner_names'],
+        'choice_fighter_bool':bets_input_df['pred_winner_bool'],
         "fighter_red": fighter_red,
         "fighter_blue": fighter_blue,
         "date": dates,
@@ -117,12 +116,13 @@ def get_parlay_input(df, bets_input_df, fighter_red, fighter_blue):
 
 def get_parlay_pkt(df_parlay, type):
     parlay_pkt = {
-                'choice_fighter_name_col': df_parlay[f'choice_fighter_name_{type}'].values,
-                'parlay_fstar_col': df_parlay[f'parlay_fstar_{type}'].values,
-                'parlay_odds_col': df_parlay[f'parlay_odds_{type}'].values, 
-                'stake_col': df_parlay[f'stake_{type}'].values, 
-                'parlay_ev_col': df_parlay[f'parlay_ev_{type}'].values, 
-                'parlay_prob_col': df_parlay[f'parlay_prob_{type}'].values
+        'choice_fighter_name_col': df_parlay[f'choice_fighter_name_{type}'].values,
+        'choice_fighter_bool_col': df_parlay[f'choice_fighter_bool_{type}'].values,
+        'parlay_fstar_col': df_parlay[f'parlay_fstar_{type}'].values,
+        'parlay_odds_col': df_parlay[f'parlay_odds_{type}'].values, 
+        'stake_col': df_parlay[f'stake_{type}'].values, 
+        'parlay_ev_col': df_parlay[f'parlay_ev_{type}'].values, 
+        'parlay_prob_col': df_parlay[f'parlay_prob_{type}'].values
     }
     return parlay_pkt
 
@@ -133,12 +133,10 @@ def get_bets_pkt(bets_input_df, df_per_bet):
             'choice_proba_col': bets_input_df['choice_proba'], 
             'choice_fstar_col': df_per_bet['fstar_scaled'], 
             'choice_stake_col': df_per_bet['stake'],
-            'edge_col':bets_input_df['choice_edge'], 
-            'ev_col':bets_input_df['choice_ev']
-    }
-    
+            'edge_col': bets_input_df['choice_edge'], 
+            'ev_col': bets_input_df['choice_ev']
+        }   
     return bets_pkt
-
 
 def get_X_stacked(df, df_proba, df_bets_combined, required_df_idx):
 

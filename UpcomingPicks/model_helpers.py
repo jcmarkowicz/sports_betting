@@ -17,6 +17,7 @@ def logit_predict(
 ):
 
     # scale numeric features
+    # use transform for scaler to avoid data leakage 
     scaled_num = pd.DataFrame(
         scaler.transform(df.loc[valid_mask, num_feats]), # ~nan rows, numerical columns 
         columns=num_feats,

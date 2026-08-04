@@ -282,6 +282,9 @@ def single_event_features(webscrape_df):
         ufc_df[col_name] = ufc_df.apply(func, axis=1)
     
     for col_name, func in strike_features.items():
-        ufc_df[col_name] = ufc_df.apply(func, axis=1)    
+        ufc_df[col_name] = ufc_df.apply(func, axis=1)
+
+    if 'winner' in ufc_df.columns:
+        ufc_df['winner_bool'] = [1 if row['winner'] == row['fighter_red'] else 0 for _, row in ufc_df.iterrows()]
     
     return ufc_df
