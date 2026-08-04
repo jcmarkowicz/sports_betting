@@ -6,13 +6,14 @@ from pathlib import Path
 import pandas as pd 
 from datetime import datetime
 
-from DataPipeline.FeatureEngineering.features_pipeline import FeatureEngineering 
+
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))) 
 BASE_DIR = Path(__file__).resolve().parents[1]
 
 sys.path.append(str(Path(__file__).parent))
 
+from DataPipeline.FeatureEngineering.features_pipeline import FeatureEngineering 
 from DataPipeline.FeatureEngineering.BuildFeatures.final_feats_df import non_rolling_stats
 from DataPipeline.FeatureEngineering.BuildFeatures.rolling_stats import apply_rolling_stats
 from DataPipeline.webscrapers.scraping_pipeline import UFC_Webscraper
