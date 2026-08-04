@@ -260,6 +260,7 @@ def get_missing_stats(prev_fight_date):
     else:
         df_stats_missing = missing_stats
 
+    df_stats_missing = df_stats_missing.drop_duplicates(subset=['fighter_red', 'fighter_blue', 'event_date', 'event_name'], keep='first').reset_index(drop=True)
     assert df_stats_missing.duplicated().any() == False, "Duplicate rows found in non-merged stats history"
     commit_if_changed(df_stats_missing, config.non_merged_stats_fp, f'Updating Non Merged Stats for fight date: {prev_fight_date}')
 
@@ -271,6 +272,7 @@ def get_missing_stats(prev_fight_date):
     else:
         df_odds_missing = missing_odds
 
+    df_odds_missing = df_odds_missing.drop_duplicates(keep='last').reset_index(drop=True)
     assert df_odds_missing.duplicated().any() == False, "Duplicate rows found in non-merged odds history"
     commit_if_changed(df_odds_missing, config.non_merged_odds_fp, f'Updating Non Merged Odds for fight date: {prev_fight_date}')
     return df_stats_missing
