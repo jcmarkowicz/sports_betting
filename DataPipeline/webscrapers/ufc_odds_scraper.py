@@ -67,9 +67,11 @@ def fighter_odds_search(red_fighter, blue_fighters, event_dates, driver):
 def scrape_odds(driver, blue_fighters, dates):
 
     red_fighter_row = driver.find_elements(By.CSS_SELECTOR, "tr.main-row") #red fighter row 
-    odds_dic = {'blue_fighter':[], 'open_blue':[], 'close1_blue':[], 'close2_blue':[],
-            'red_fighter':[], 'open_red':[], 'close1_red':[], 'close2_red':[], 'event_date':[],
-            'og_blue_name':[]}
+    odds_dic = {
+        'blue_fighter':[], 'open_blue':[], 'close1_blue':[], 'close2_blue':[],
+        'red_fighter':[], 'open_red':[], 'close1_red':[], 'close2_red':[], 
+        'og_blue_name':[], 'event_date':[],
+    }
 
     for i in range(0, len(red_fighter_row)):
 

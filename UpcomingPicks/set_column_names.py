@@ -18,6 +18,7 @@ def get_parlay_cols(type_):
     
     return {
         'choice_fighter_name_col' : f"choice_fighter_name_{type_}",
+        'choice_fighter_bool_col' : f"choice_fighter_bool_{type_}",
         'parlay_fstar_col'        : f"parlay_fstar_{type_}",
         'parlay_odds_col'         : f"parlay_odds_{type_}",
         'stake_col'               : f"stake_{type_}",
@@ -49,5 +50,4 @@ def set_parlay_cols(type_, pkt, required_idx, all_na=False):
         assert set(pkt.keys()) == set(cols), 'parlay pkt error'
         df = pd.DataFrame({cols[key]:value for key, value in pkt.items()}, index=required_idx)
 
-    df[f'choice_fighter_bool_{type_}'] = pkt[f'choice_fighter_bool_col']
     return df
