@@ -219,21 +219,21 @@ def calc_winner_ml(df_single_event, df_money_line):
 
     assert df_single_event.shape[0] == df_money_line.shape[0], 'scraped results df shape mismatch with bets df'
 
-    winner_bool = df_single_event['winner'].to_numpy()
+    winner_bool = df_single_event['winner'].to_numpy().astype(int)
 
-    pred_bool_open = df_money_line['pred_bool_open'].to_numpy()
-    pred_bool_close1 = df_money_line['pred_bool_close1'].to_numpy()
-    pred_bool_close2 = df_money_line['pred_bool_close2'].to_numpy()
+    # pred_bool_open = df_money_line['pred_bool_open'].to_numpy()
+    # pred_bool_close1 = df_money_line['pred_bool_close1'].to_numpy()
+    # pred_bool_close2 = df_money_line['pred_bool_close2'].to_numpy()
+
+    pred_open = df_money_line['pred_winner_open'].to_numpy().astype(int)
+    pred_close1 = df_money_line['pred_winner_close1'].to_numpy().astype(int)
+    pred_close2 = df_money_line['pred_winner_close2'].to_numpy().astype(int)
 
     calc_color = lambda x: 'red' if x == 1 else 'blue'
-    pred_color_open = calc_color(pred_bool_open)
-    pred_color_close1 = calc_color(pred_bool_close1)
-    pred_color_close2 = calc_color(pred_bool_close2)
+    pred_color_open = calc_color(pred_open)
+    pred_color_close1 = calc_color(pred_close1)
+    pred_color_close2 = calc_color(pred_close2)
     
-    pred_open = df_money_line['pred_name_open'].to_numpy()
-    pred_close1 = df_money_line['pred_name_close1'].to_numpy()
-    pred_close2 = df_money_line['pred_name_close2'].to_numpy()
-
     open_odds = df_money_line[f'open_{pred_color_open}']
     close1_odds = df_money_line[f'close1_{pred_color_close1}']
     close2_odds = df_money_line[f'close2_{pred_color_close2}']
