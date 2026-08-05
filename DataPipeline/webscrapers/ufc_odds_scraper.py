@@ -166,5 +166,7 @@ def get_fighter_odds(fighter_df):
         row = pd.DataFrame(odds_dic)
         odds_df = pd.concat([odds_df, row], ignore_index=True)
 
+    numeric_cols = ['open_blue', 'close1_blue', 'close2_blue', 'open_red', 'close1_red', 'close2_red']
+    odds_df[numeric_cols] = odds_df[numeric_cols].apply(pd.to_numeric, errors='coerce') # coerce turns values that cannot be interpreted as numbers to NaN 
     driver.quit()
     return odds_df

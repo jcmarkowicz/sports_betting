@@ -89,7 +89,6 @@ def archive_results(start_date='2026-07-25'):
         'date':[]
     })
 
-    scraper = UFC_Webscraper()
     features = FeatureEngineering()
 
     stats_history = pd.read_csv(config.stats_history_file_string) # frames BEFORE any feature engineering 
