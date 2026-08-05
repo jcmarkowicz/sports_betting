@@ -51,7 +51,7 @@ def parlay_top_ev(data, bankroll, type, top_n=[0,1], parlay_mdd=0.5, N=250):
     df_top_n[f'stake_{type}'] = stake
     df_top_n[f'parlay_odds_{type}'] = net_odds
 
-    df_top_n[f'choice_fighter_bool_{type}'] = df_top_n['pred_winner_bool']
+    df_top_n[f'choice_fighter_bool_{type}'] = df_top_n['choice_fighter_bool']
 
     df_top_n = df_top_n[[
         f'choice_fighter_name_{type}', 
