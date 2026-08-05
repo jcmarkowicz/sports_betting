@@ -6,7 +6,7 @@ def get_ml_bet_cols(type_):
     """
     return {
         "pred_name_col":    f"pred_name_{type_}",
-        "pred_winner_col":  f"pred_bool_{type_}",
+        "pred_winner_col":  f"pred_winner_{type_}",
         "choice_proba_col": f"choice_proba_{type_}",
         "choice_fstar_col": f"fstar_{type_}",
         "choice_stake_col": f"stake_{type_}",
