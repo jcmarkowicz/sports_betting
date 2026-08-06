@@ -180,13 +180,18 @@ def calc_winner_parlay(df_parlay, df_single_event):
     close1_win = df_parlay['choice_fighter_bool_close1'].values & winner_bool.values
     close2_win = df_parlay['choice_fighter_bool_close2'].values & winner_bool.values
 
-    profit_open = moneyline_profit(open_stake, open_odds) if open_win else -open_stake
-    profit_close1 = moneyline_profit(close1_stake, close1_odds) if close1_win else -close1_stake
-    profit_close2 = moneyline_profit(close2_stake, close2_odds) if close2_win else -close2_stake
+    profits = moneyline_profit(open_stake, open_odds)
+    profit_open = np.where(open_win, profits, -open_stake)
+  
+    profits = moneyline_profit(close1_stake, close1_odds)
+    profit_close1 = np.where(close1_win, profits, -close1_stake)
 
-    open_net_fstar = open_stake if open_win else -open_stake
-    close1_net_fstar = close1_stake if close1_win else -close1_stake
-    close2_net_fstar = close2_stake if close2_win else -close2_stake
+    profits = moneyline_profit(close2_stake, close2_odds)
+    profit_close2 = np.where(close2_win, profits, -close2_stake)
+
+    open_net_fstar = np.where(open_win, open_stake, -open_stake)
+    close1_net_fstar = np.where(close1_win, close1_stake, -close1_stake)
+    close2_net_fstar = np.where(close2_win, close2_stake, -close2_stake)
 
     parlay_results = pd.DataFrame({
         'open_net_fstar':open_net_fstar, 
@@ -249,9 +254,24 @@ def calc_winner_ml(df_single_event, df_money_line):
     close1_stake = df_money_line['fstar_close1'].to_numpy(dtype=float)
     close2_stake = df_money_line['fstar_close2'].to_numpy(dtype=float)
 
-    profit_open = moneyline_profit(open_stake, open_odds) if pred_open == winner_bool else -open_stake 
-    profit_close1 = moneyline_profit(close1_stake, close1_odds) if pred_close1 == winner_bool else -close1_stake 
-    profit_close2 = moneyline_profit(close2_stake, close2_odds) if pred_close2 == winner_bool else -close2_stake 
+    profits = moneyline_profit(open_stake, open_odds)
+    profit_open = np.where(
+        pred_open == winner_bool,
+        profits,
+        -open_stake
+    )
+    profits = moneyline_profit(close1_stake, close1_odds)
+    profit_close1 = np.where(
+        pred_close1 == winner_bool,
+        profits, 
+        -close1_stake
+    )
+    profits = moneyline_profit(close2_stake, close2_odds)
+    profit_close2 = np.where(
+        pred_close2 == winner_bool,
+        profits,    
+        -close2_stake
+    )
 
     df_data = pd.concat([profit_open, profit_close1, profit_close2], axis=1)
     df_data.columns = ['net_odds_open', 'net_odds_close1', 'net_odds_close2']
