@@ -105,6 +105,8 @@ def archive_results(start_date='2026-07-25'):
     # iterate through each event date and calculate the results for each event
     for date, event_group in upcoming_df.groupby('date'):
 
+        event_group =  event_group.copy().reset_index(drop=True)
+
         date_str = date.strftime("%Y-%m-%d")
         d_ts = pd.to_datetime(date_str)  
 
