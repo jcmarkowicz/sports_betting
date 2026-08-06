@@ -89,37 +89,20 @@ def archive_results(start_date='2026-07-25'):
         'date':[]
     })
 
-    features = FeatureEngineering()
+    scraped_stats, scraped_odds, upcoming_df = get_missing_stats(start_date) 
 
-    stats_history = pd.read_csv(config.stats_history_file_string) # frames BEFORE any feature engineering 
-    stats_history = stats_history.drop(columns=[col for col in stats_history.columns if "Unnamed" in col])
+    # df_single_event = single_event_features(df_stats)
+    # df_rolling = apply_rolling_stats(df_single_event)
+    # df_feats = non_rolling_stats(df_rolling)
+    # df_total = features.standardized_merge(df_feats, df_odds)
 
-    odds_history = pd.read_csv(config.odds_history_file_string)
-    odds_history = odds_history.drop(columns=[col for col in odds_history.columns if "Unnamed" in col])
-
-    scraped_stats, scraped_odds = get_missing_stats(start_date) 
-
-    t1 = time.time()
-    df_stats = pd.concat([stats_history, scraped_stats], axis=0, ignore_index=True)
-    df_odds = pd.concat([odds_history, scraped_odds], axis=0, ignore_index=True)
-    df_odds = build_odds_features(df_odds)
-    t2 = time.time()
-    print(f"Time to merge stats and odds: {t2-t1:.2f} seconds")
-    print(f"Scraped stats and odds from {start_date} to now. Total stats: {df_stats.shape[0]}, Total odds: {df_odds.shape[0]}")
-
-    t1 = time.time()
-    df_single_event = single_event_features(df_stats)
-    df_rolling = apply_rolling_stats(df_single_event)
-    df_feats = non_rolling_stats(df_rolling)
-
-    df_total = features.standardized_merge(df_feats, df_odds)
-    df_total['date'] = pd.to_datetime(df_total['date'])
-    t2 = time.time()
-    print(f"Time to generate features: {t2-t1:.2f} seconds" )
-    print(f"Total events to process: {df_total.shape[0]}")
+    # df_total['date'] = pd.to_datetime(df_total['date'])
+    # t2 = time.time()
+    # print(f"Time to generate features: {t2-t1:.2f} seconds" )
+    # print(f"Total events to process: {df_total.shape[0]}")
 
     # iterate through each event date and calculate the results for each event
-    for date, event_group in df_total.groupby('date'):
+    for date, event_group in upcoming_df.groupby('date'):
 
         date_str = date.strftime("%Y-%m-%d")
         d_ts = pd.to_datetime(date_str)  
@@ -284,6 +267,7 @@ def moneyline_profit(stake, odds):
 def get_missing_stats(prev_fight_date): 
     """ previous fight date from file string """
 
+
     scraper = UFC_Webscraper()
     missing_stats = scraper.scrape_until(prev_fight_date)
     missing_odds = scraper.get_fighter_odds(missing_stats) 
@@ -311,7 +295,26 @@ def get_missing_stats(prev_fight_date):
     assert df_odds_missing.duplicated().any() == False, "Duplicate rows found in non-merged odds history"
     commit_if_changed(df_odds_missing, config.non_merged_odds_fp, f'Updating Non Merged Odds for fight date: {prev_fight_date}')
 
-    return missing_stats, missing_odds
+    features = FeatureEngineering()
+
+    stats_history = pd.read_csv(config.stats_history_file_string) # frames BEFORE any feature engineering 
+    stats_history = stats_history.drop(columns=[col for col in stats_history.columns if "Unnamed" in col])
+
+    odds_history = pd.read_csv(config.odds_history_file_string)
+    odds_history = odds_history.drop(columns=[col for col in odds_history.columns if "Unnamed" in col])
+
+    # df_stats = pd.concat([stats_history, scraped_stats], axis=0, ignore_index=True)
+    # df_odds = pd.concat([odds_history, scraped_odds], axis=0, ignore_index=True)
+    # print(f"Scraped stats and odds from {start_date} to now. Total stats: {df_stats.shape[0]}, Total odds: {df_odds.shape[0]}")
+
+    t1 = time.time()
+    odds_stats_df, upcoming_df = features.build_all_stats(stats_history, missing_stats, odds_history, missing_odds)
+    t2 = time.time()
+    
+    print(f"Time to merge stats and odds: {t2-t1:.2f} seconds")
+
+
+    return missing_stats, missing_odds, upcoming_df
 
 
 def returns_by_date():
