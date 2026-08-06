@@ -273,25 +273,30 @@ def calc_winner_ml(df_single_event, df_money_line):
         -close2_stake
     )
 
-    df_data = pd.concat([profit_open, profit_close1, profit_close2], axis=1)
-    df_data.columns = ['net_odds_open', 'net_odds_close1', 'net_odds_close2']
+    df_data = pd.DataFrame({
+        "net_odds_open": profit_open,
+        "net_odds_close1": profit_close1,
+        "net_odds_close2": profit_close2,
+        'winner_bool': winner_bool
+    })
 
-    df_data = pd.concat([df_data, df_money_line[[   
-        'fighter_red', 
-        'fighter_blue',
-        'pred_name_open', 
-        'pred_name_close1', 
-        'pred_name_close2',
-        'open_red', 'open_blue',  
-        'close1_red', 'close1_blue',
-        'close2_red', 'close2_blue',
-        'fstar_open', 
-        'fstar_close1', 
-        'fstar_close2',
-    ]]], axis=1).reset_index(drop=True)
+    df_data = pd.concat([
+        df_data,
+        df_money_line[[
+            "fighter_red",
+            "fighter_blue",
+            "pred_name_open",
+            "pred_name_close1",
+            "pred_name_close2",
+            "open_red", "open_blue",
+            "close1_red", "close1_blue",
+            "close2_red", "close2_blue",
+            "fstar_open",
+            "fstar_close1",
+            "fstar_close2",
+        ]].reset_index(drop=True),
+    ], axis=1)
     
-    df_data = pd.concat([df_data, winner_bool.reshape(-1, 1)], axis=1).reset_index(drop=True)
-
     # mask = (
     #     (df_money_line['fstar_open'] != 0 | df_money_line['fstar_open'].notna()) &
     #     (df_data['net_odds_open'] != 0 | df_data['net_odds_open'].notna())
@@ -302,6 +307,7 @@ def calc_winner_ml(df_single_event, df_money_line):
 
 
 def moneyline_profit(stake, odds):
+    """ if scalars, numpy returns a 0 dimensional array which acts like a python float """
     stake = np.asarray(stake)
     odds = np.asarray(odds)
 
