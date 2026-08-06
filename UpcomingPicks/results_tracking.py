@@ -129,12 +129,16 @@ def archive_results(start_date='2026-07-25'):
             # calculate the winners and commit 
             df_results_ml = calc_winner_ml(event_group, df_ml)
             df_results_ml['date'] = d_ts
+
             df_ml_history = pd.concat([df_ml_history, df_results_ml], axis=0, ignore_index=True)
+            df_ml_history = df_ml_history.drop_duplicates(subset=['fighter_red', 'fighter_blue','open_red','open_blue','close1_red','close1_blue','close2_red','close2_blue', 'date'], keep='first')
             commit_if_changed(df_ml_history, config.ml_history_fp, f'updating money line results for fight date: {date_str}')
 
             parlay_results = calc_winner_parlay(df_parlay, event_group)
             parlay_results['date'] = d_ts
+
             df_parlay_history = pd.concat([df_parlay_history, parlay_results],axis=0, ignore_index=True)
+            df_parlay_history = df_parlay_history.drop_duplicates(subset=['choice_fighter_name_open','choice_fighter_name_close1','choice_fighter_name_close2', 'date'])
             commit_if_changed(df_parlay_history, config.parlay_history_fp, f'Updating parlay results for fight date: {date_str}')
 
             # all of these deleted files are regenerated in the above functions 
@@ -175,7 +179,7 @@ def calc_winner_parlay(df_parlay, df_single_event):
 
     open_win = (choice_fighters_open == winner_bool.loc[choice_index_open].to_numpy(dtype=int)).all()
     close1_win = (choice_fighters_close1 == winner_bool.loc[choice_index_close1].to_numpy(dtype=int)).all()
-    close2_win = (choice_fighters_close2 == winner_bool.loc[choice_index_close2].to_numpy(dype=int)).all()
+    close2_win = (choice_fighters_close2 == winner_bool.loc[choice_index_close2].to_numpy(dtype=int)).all()
 
     open_odds = df_parlay['parlay_odds_open']
     close1_odds = df_parlay['parlay_odds_close1_stack']
