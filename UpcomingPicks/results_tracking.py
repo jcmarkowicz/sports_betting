@@ -161,9 +161,9 @@ def delete_old_files(date_str):
 
 def calc_winner_parlay(df_parlay, df_single_event):
      
-    choice_fighters_open = df_parlay['choice_fighter_bool_open'].values
-    choice_fighters_close1 = df_parlay['choice_fighter_bool_close1'].values
-    choice_fighters_close2 = df_parlay['choice_fighter_bool_close2'].values
+    choice_fighters_open = df_parlay['choice_fighter_bool_open'].to_numpy(dtype=float)
+    choice_fighters_close1 = df_parlay['choice_fighter_bool_close1'].to_numpy(dtype=float)
+    choice_fighters_close2 = df_parlay['choice_fighter_bool_close2'].to_numpy(dtype=float)
 
     open_odds = df_parlay['parlay_odds_open']
     close1_odds = df_parlay['parlay_odds_close1']
@@ -176,9 +176,9 @@ def calc_winner_parlay(df_parlay, df_single_event):
     # preserve nan values 
     winner_bool = df_single_event['winner'].to_numpy(dtype=float)
 
-    open_win = df_parlay['choice_fighter_bool_open'].values & winner_bool.values
-    close1_win = df_parlay['choice_fighter_bool_close1'].values & winner_bool.values
-    close2_win = df_parlay['choice_fighter_bool_close2'].values & winner_bool.values
+    open_win = choice_fighters_open & winner_bool
+    close1_win = choice_fighters_close1 & winner_bool
+    close2_win = choice_fighters_close2 & winner_bool
 
     profits = moneyline_profit(open_stake, open_odds)
     profit_open = np.where(open_win, profits, -open_stake)
