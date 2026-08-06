@@ -215,11 +215,15 @@ def calc_winner_ml(df_single_event, df_money_line):
     pred_close1 = df_money_line['pred_winner_close1'].to_numpy(dtype=float)
     pred_close2 = df_money_line['pred_winner_close2'].to_numpy(dtype=float)
 
-    calc_color = lambda x: np.where(
-        np.isnan(x),
-        np.nan,
-        np.where(x == 1, "red", "blue")
-    )
+    def calc_color(x):
+        result = np.empty(len(x), dtype=object)
+
+        result[x == 1] = "red"
+        result[x == 0] = "blue"
+        result[np.isnan(x)] = np.nan
+
+        return result
+    
     pred_color_open = calc_color(pred_open)
     pred_color_close1 = calc_color(pred_close1)
     pred_color_close2 = calc_color(pred_close2)
