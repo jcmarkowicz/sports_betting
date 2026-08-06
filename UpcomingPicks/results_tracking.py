@@ -3,6 +3,7 @@ import os
 import sys
 from pathlib import Path 
 
+import numpy as np
 import pandas as pd 
 from datetime import datetime
 
@@ -122,6 +123,7 @@ def archive_results(start_date='2026-07-25'):
             #     df_ml, df_parlay = generate_bets(event_group, select_odds=None)
 
             df_ml, df_parlay = generate_bets(event_group, select_odds=None)
+
             # calculate the winners and commit 
             df_results_ml = calc_winner_ml(event_group, df_ml)
             df_results_ml['date'] = d_ts
@@ -171,7 +173,8 @@ def calc_winner_parlay(df_parlay, df_single_event):
     close1_stake = df_parlay['parlay_fstar_close1']
     close2_stake = df_parlay['parlay_fstar_close2']
 
-    winner_bool = df_single_event['winner']
+    # preserve nan values 
+    winner_bool = df_single_event['winner'].to_numpy(dtype=float)
 
     open_win = df_parlay['choice_fighter_bool_open'].values & winner_bool.values
     close1_win = df_parlay['choice_fighter_bool_close1'].values & winner_bool.values
@@ -202,28 +205,32 @@ def calc_winner_ml(df_single_event, df_money_line):
 
     assert df_single_event.shape[0] == df_money_line.shape[0], 'scraped results df shape mismatch with bets df'
 
-    winner_bool = df_single_event['winner'].to_numpy().astype(int)
+    winner_bool = df_single_event['winner'].to_numpy(dtype=float)
 
     # pred_bool_open = df_money_line['pred_bool_open'].to_numpy()
     # pred_bool_close1 = df_money_line['pred_bool_close1'].to_numpy()
     # pred_bool_close2 = df_money_line['pred_bool_close2'].to_numpy()
 
-    pred_open = df_money_line['pred_winner_open'].to_numpy().astype(int)
-    pred_close1 = df_money_line['pred_winner_close1'].to_numpy().astype(int)
-    pred_close2 = df_money_line['pred_winner_close2'].to_numpy().astype(int)
+    pred_open = df_money_line['pred_winner_open'].to_numpy(dtype=float)
+    pred_close1 = df_money_line['pred_winner_close1'].to_numpy(dtype=float)
+    pred_close2 = df_money_line['pred_winner_close2'].to_numpy(dtype=float)
 
-    calc_color = lambda x: 'red' if x == 1 else 'blue'
+    calc_color = lambda x: np.where(
+        np.isnan(x),
+        np.nan,
+        np.where(x == 1, "red", "blue")
+    )
     pred_color_open = calc_color(pred_open)
     pred_color_close1 = calc_color(pred_close1)
     pred_color_close2 = calc_color(pred_close2)
     
-    open_odds = df_money_line[f'open_{pred_color_open}']
-    close1_odds = df_money_line[f'close1_{pred_color_close1}']
-    close2_odds = df_money_line[f'close2_{pred_color_close2}']
+    open_odds = df_money_line[f'open_{pred_color_open}'].to_numpy(dtype=float)
+    close1_odds = df_money_line[f'close1_{pred_color_close1}'].to_numpy(dtype=float)
+    close2_odds = df_money_line[f'close2_{pred_color_close2}'].to_numpy(dtype=float)
 
-    open_stake = df_money_line['fstar_open'].to_numpy()
-    close1_stake = df_money_line['fstar_close1'].to_numpy()
-    close2_stake = df_money_line['fstar_close2'].to_numpy()
+    open_stake = df_money_line['fstar_open'].to_numpy(dtype=float)
+    close1_stake = df_money_line['fstar_close1'].to_numpy(dtype=float)
+    close2_stake = df_money_line['fstar_close2'].to_numpy(dtype=float)
 
     profit_open = moneyline_profit(open_stake, open_odds) if pred_open == winner_bool else -open_stake 
     profit_close1 = moneyline_profit(close1_stake, close1_odds) if pred_close1 == winner_bool else -close1_stake 
@@ -266,7 +273,6 @@ def moneyline_profit(stake, odds):
 
 def get_missing_stats(prev_fight_date): 
     """ previous fight date from file string """
-
 
     scraper = UFC_Webscraper()
     missing_stats = scraper.scrape_until(prev_fight_date)
@@ -312,7 +318,6 @@ def get_missing_stats(prev_fight_date):
     t2 = time.time()
     
     print(f"Time to merge stats and odds: {t2-t1:.2f} seconds")
-
 
     return missing_stats, missing_odds, upcoming_df
 
