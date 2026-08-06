@@ -302,11 +302,14 @@ def calc_winner_ml(df_single_event, df_money_line):
 
 
 def moneyline_profit(stake, odds):
-    if odds > 0:
-        return stake * (odds / 100)
-    else:
-        return stake * (100 / abs(odds))
+    stake = np.asarray(stake)
+    odds = np.asarray(odds)
 
+    return np.where(
+        odds > 0,
+        stake * (odds / 100),
+        stake * (100 / np.abs(odds))
+    )
 
 def get_missing_stats(prev_fight_date): 
     """ previous fight date from file string """
