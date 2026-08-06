@@ -132,6 +132,7 @@ def archive_results(start_date='2026-07-25'):
 
             df_ml_history = pd.concat([df_ml_history, df_results_ml], axis=0, ignore_index=True)
             df_ml_history = df_ml_history.drop_duplicates(subset=['fighter_red', 'fighter_blue', 'date'], keep='first')
+
             commit_if_changed(df_ml_history, config.ml_history_fp, f'updating money line results for fight date: {date_str}')
 
             parlay_results = calc_winner_parlay(df_parlay, event_group)
@@ -206,9 +207,9 @@ def calc_winner_parlay(df_parlay, df_single_event):
         'open_net_odds':profit_open, 
         'close1_net_odds':profit_close1, 
         'close2_net_odds':profit_close2,
-        'choice_fighter_name_open':choice_fighters_open, 
-        'choice_fighter_name_close1':choice_fighters_close1, 
-        'choice_fighter_name_close2':choice_fighters_close2 
+        'choice_fighter_name_open':df_parlay['choice_fighter_name_open'], 
+        'choice_fighter_name_close1':df_parlay['choice_fighter_name_close1_stack'], 
+        'choice_fighter_name_close2':df_parlay['choice_fighter_name_close2_stack'] 
     })
     return parlay_results
 
@@ -379,12 +380,10 @@ def returns_by_date():
     df_ml = pd.read_csv(config.ml_history_fp)
     df_parlay = pd.read_csv(config.parlay_history_fp)
 
-    df_ml = df_ml.loc[:, ~df_ml.columns.str.contains('^Unnamed')]
-    df_parlay = df_parlay.loc[:, ~df_parlay.columns.str.contains('^Unnamed')]
-
     types = ['open', 'close1', 'close2']
     ml_pct_returns = {type_:[] for type_ in types}
     parlay_pct_returns = {type_:[] for type_ in types}
+
     ml_pct_returns['date'] = []
     parlay_pct_returns['date'] = [] 
 
@@ -393,8 +392,8 @@ def returns_by_date():
         parlay_group = df_parlay[df_parlay['date']==date]
 
         for type_ in types: 
+            
             ml_pct_returns[type_].append(group[f'net_odds_{type_}'].sum())
-
             parlay_net = parlay_group[f'{type_}_net_odds'].iloc[0]
             parlay_pct_returns[type_].append(parlay_net)
         
