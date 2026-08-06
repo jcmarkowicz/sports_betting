@@ -152,9 +152,6 @@ def delete_old_files(date_str):
     parlay_bets_folder = BASE_DIR / "Data" / "upcoming_events" / "parlays"
     features_folder = config.event_features_folder 
 
-    earliest_date = datetime.strptime(ml_bets_folder[0].split('_')[-1].replace('.csv', ''), "%Y-%m-%d").date()
-    earliest_date = earliest_date.strftime("%Y-%m-%d")
-
     ml_fp = ml_bets_folder / f'ml_all_{date_str}.csv'
     delete_and_commit(ml_fp, f'Deleting Money Line bets for event {date_str}')
 
