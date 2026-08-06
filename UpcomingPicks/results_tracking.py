@@ -131,7 +131,7 @@ def archive_results(start_date='2026-07-25'):
             df_results_ml['date'] = d_ts
 
             df_ml_history = pd.concat([df_ml_history, df_results_ml], axis=0, ignore_index=True)
-            df_ml_history = df_ml_history.drop_duplicates(subset=['fighter_red', 'fighter_blue','open_red','open_blue','close1_red','close1_blue','close2_red','close2_blue', 'date'], keep='first')
+            df_ml_history = df_ml_history.drop_duplicates(subset=['fighter_red', 'fighter_blue', 'date'], keep='first')
             commit_if_changed(df_ml_history, config.ml_history_fp, f'updating money line results for fight date: {date_str}')
 
             parlay_results = calc_winner_parlay(df_parlay, event_group)
