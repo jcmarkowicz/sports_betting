@@ -223,14 +223,27 @@ def calc_winner_ml(df_single_event, df_money_line):
         result[np.isnan(x)] = np.nan
 
         return result
+
+    def odds_from_color(df, color_list, odds_type):
+        odds = np.empty(len(color_list), dtype=float)
+
+        for i, color in enumerate(color_list):
+            if color == "red":
+                odds[i] = df[f"{odds_type}_red"].iloc[i]
+            elif color == "blue":
+                odds[i] = df[f"{odds_type}_blue"].iloc[i]
+            else:
+                odds[i] = np.nan  # Handle NaN or unexpected values
+
+        return odds
     
     pred_color_open = calc_color(pred_open)
     pred_color_close1 = calc_color(pred_close1)
     pred_color_close2 = calc_color(pred_close2)
     
-    open_odds = df_money_line[f'open_{pred_color_open}'].to_numpy(dtype=float)
-    close1_odds = df_money_line[f'close1_{pred_color_close1}'].to_numpy(dtype=float)
-    close2_odds = df_money_line[f'close2_{pred_color_close2}'].to_numpy(dtype=float)
+    open_odds =  odds_from_color(df_money_line, pred_color_open, "open")
+    close1_odds = odds_from_color(df_money_line, pred_color_close1, "close1")
+    close2_odds = odds_from_color(df_money_line, pred_color_close2, "close2")
 
     open_stake = df_money_line['fstar_open'].to_numpy(dtype=float)
     close1_stake = df_money_line['fstar_close1'].to_numpy(dtype=float)
