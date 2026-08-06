@@ -160,25 +160,28 @@ def delete_old_files(date_str):
 
 
 def calc_winner_parlay(df_parlay, df_single_event):
-     
-    choice_fighters_open = df_parlay['choice_fighter_bool_open'].to_numpy(dtype=float)
-    choice_fighters_close1 = df_parlay['choice_fighter_bool_close1'].to_numpy(dtype=float)
-    choice_fighters_close2 = df_parlay['choice_fighter_bool_close2'].to_numpy(dtype=float)
+
+    winner_bool = df_single_event['winner']
+
+    choice_index_open = df_parlay['fight_index_open'].astype(int)
+    choice_index_close1 = df_parlay['fight_index_close1_stack'].astype(int)
+    choice_index_close2 = df_parlay['fight_index_close2_stack'].astype(int)
+
+    choice_fighters_open = df_parlay['choice_fighter_bool_open'].to_numpy(dtype=int)
+    choice_fighters_close1 = df_parlay['choice_fighter_bool_close1_stack'].to_numpy(dtype=int)
+    choice_fighters_close2 = df_parlay['choice_fighter_bool_close2_stack'].to_numpy(dtype=int)
+
+    open_win = (choice_fighters_open == winner_bool.loc[choice_index_open].to_numpy(dtype=int)).all()
+    close1_win = (choice_fighters_close1 == winner_bool.loc[choice_index_close1].to_numpy(dtype=int)).all()
+    close2_win = (choice_fighters_close2 == winner_bool.loc[choice_index_close2].to_numpy(dype=int)).all()
 
     open_odds = df_parlay['parlay_odds_open']
-    close1_odds = df_parlay['parlay_odds_close1']
-    close2_odds = df_parlay['parlay_odds_close2']
+    close1_odds = df_parlay['parlay_odds_close1_stack']
+    close2_odds = df_parlay['parlay_odds_close2_stack']
     
     open_stake = df_parlay['parlay_fstar_open']
-    close1_stake = df_parlay['parlay_fstar_close1']
-    close2_stake = df_parlay['parlay_fstar_close2']
-
-    # preserve nan values 
-    winner_bool = df_single_event['winner'].to_numpy(dtype=float)
-
-    open_win = choice_fighters_open & winner_bool
-    close1_win = choice_fighters_close1 & winner_bool
-    close2_win = choice_fighters_close2 & winner_bool
+    close1_stake = df_parlay['parlay_fstar_close1_stack']
+    close2_stake = df_parlay['parlay_fstar_close2_stack']
 
     profits = moneyline_profit(open_stake, open_odds)
     profit_open = np.where(open_win, profits, -open_stake)
@@ -217,8 +220,8 @@ def calc_winner_ml(df_single_event, df_money_line):
     # pred_bool_close2 = df_money_line['pred_bool_close2'].to_numpy()
 
     pred_open = df_money_line['pred_winner_open'].to_numpy(dtype=float)
-    pred_close1 = df_money_line['pred_winner_close1'].to_numpy(dtype=float)
-    pred_close2 = df_money_line['pred_winner_close2'].to_numpy(dtype=float)
+    pred_close1 = df_money_line['pred_winner_close1_stack'].to_numpy(dtype=float)
+    pred_close2 = df_money_line['pred_winner_close2_stack'].to_numpy(dtype=float)
 
     def calc_color(x):
         result = np.empty(len(x), dtype=object)
@@ -251,8 +254,8 @@ def calc_winner_ml(df_single_event, df_money_line):
     close2_odds = odds_from_color(df_money_line, pred_color_close2, "close2")
 
     open_stake = df_money_line['fstar_open'].to_numpy(dtype=float)
-    close1_stake = df_money_line['fstar_close1'].to_numpy(dtype=float)
-    close2_stake = df_money_line['fstar_close2'].to_numpy(dtype=float)
+    close1_stake = df_money_line['fstar_close1_stack'].to_numpy(dtype=float)
+    close2_stake = df_money_line['fstar_close2_stack'].to_numpy(dtype=float)
 
     profits = moneyline_profit(open_stake, open_odds)
     profit_open = np.where(

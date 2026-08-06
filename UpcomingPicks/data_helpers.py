@@ -4,6 +4,7 @@ import pandas as pd
 from BettingStrategy.kelly_scaling import expected_value, kelly_edge
 
 def merge_bets_types(df_bets, df_bets_combined):
+    """ matching rows by their index and adding the columns  """
     df_bets_combined = df_bets_combined.merge(
                     df_bets,
                     left_index=True,
@@ -12,16 +13,25 @@ def merge_bets_types(df_bets, df_bets_combined):
                 )
     return df_bets_combined
 
-def merge_parlay_types(df_parlay, df_parlay_combined):
+def merge_parlay_types(df_parlay, df_parlay_combined, odds_type):
+    
+
+    # Store the original index as a column
+    df_parlay[f"fight_index_{odds_type}"] = df_parlay.index
+
+    # reset for merging, index doesnt matter now 
+    df_parlay = df_parlay.copy().reset_index(drop=True)
+
     if df_parlay_combined.empty:
-        df_parlay_combined = df_parlay.copy()
+        df_parlay_combined = df_parlay
     else:
         df_parlay_combined = df_parlay_combined.merge(
             df_parlay,
             left_index=True,
             right_index=True,
-            how="left"
+            how="left",
         )
+
     return df_parlay_combined
 
 def get_bets_input(
@@ -91,11 +101,11 @@ def get_bets_input(
             'pred_winner_names':pred_winner_names,
             'choice_edge': choice_edge,
             'pred_winner_bool':y_hat, 
-        }, index=y_hat.index)
+        }, index=y_hat.index) # y_hat index is the same as required_idx 
 
         return bets_input_df
 
-def get_parlay_input(df, bets_input_df, fighter_red, fighter_blue):
+def get_parlay_input(df, bets_input_df, fighter_red, fighter_blue, required_idx):
 
     fighter_red = df["fighter_red"].values
     fighter_blue = df["fighter_blue"].values
@@ -110,9 +120,9 @@ def get_parlay_input(df, bets_input_df, fighter_red, fighter_blue):
         "fighter_red": fighter_red,
         "fighter_blue": fighter_blue,
         "date": dates,
-    }).dropna().reset_index(drop=True)
+    }, index=required_idx)
 
-    return parlay_input_df
+    return parlay_input_df.dropna()
 
 def get_parlay_pkt(df_parlay, type):
     parlay_pkt = {

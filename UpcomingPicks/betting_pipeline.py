@@ -119,7 +119,8 @@ def xgboost_stacking(
             df=df,
             bets_input_df=bets_input_df,
             fighter_red=fighter_red, 
-            fighter_blue=fighter_blue
+            fighter_blue=fighter_blue,
+            required_idx=required_idx
         )
 
         df_parlay = parlay_top_ev(
@@ -140,7 +141,7 @@ def xgboost_stacking(
         df_parlay_final = set_parlay_cols(
             type_=f'{type}_stack', 
             pkt=parlay_pkt, 
-            required_idx=np.arange(PARLAY_SIZE), 
+            required_idx=df_parlay.index, 
             all_na=False
         )
         
@@ -148,8 +149,9 @@ def xgboost_stacking(
             df_parlay=df_parlay_final, 
             choice_ev=bets_input_df['choice_ev']
         )
-        
-        stacked_parlay = merge_parlay_types(df_parlay_final, stacked_parlay)
+
+        # created fight index for stacked bets 
+        stacked_parlay = merge_parlay_types(df_parlay_final, stacked_parlay, odds_type=f'{type}_stack')
 
     return stacked_ml, stacked_parlay 
 
@@ -241,7 +243,7 @@ def betting_pipeline(
             df_bets_combined = merge_bets_types(df_bets, df_bets_combined)
 
             df_parlay = set_parlay_cols(type, {}, np.arange(2), all_na=True)
-            df_parlay_combined = merge_parlay_types(df_parlay, df_parlay_combined)
+            df_parlay_combined = merge_parlay_types(df_parlay, df_parlay_combined, odds_type=type)
             continue
 
         y_hat = logit_predict(
@@ -307,9 +309,14 @@ def betting_pipeline(
             df=df, 
             bets_input_df=bets_input_df, 
             fighter_red=fighter_red, 
-            fighter_blue=fighter_blue
+            fighter_blue=fighter_blue,
+            required_idx=required_df_idx
         )
 
+        # parlay_input has required_idx 
+        # index is reset if NaNs, np.arange(2)
+        # if not nans, index is preserved from parlay_input_df
+        # parlay top ev now has 2 rows 
         df_parlay = parlay_top_ev(
             parlay_input_df, 
             bankroll, 
@@ -327,16 +334,20 @@ def betting_pipeline(
         df_parlay_final = set_parlay_cols(
             type_=type, 
             pkt=parlay_pkt, 
-            required_idx=np.arange(PARLAY_SIZE), 
+            required_idx=df_parlay.index, 
             all_na=False
         )
+
         df_parlay_tests(
             df_parlay=df_parlay_final, 
             choice_ev=bets_input_df['choice_ev']
         )
+
+        # want to preserve df_parlay_final index in the merge
         df_parlay_combined = merge_parlay_types(
             df_parlay=df_parlay_final, 
-            df_parlay_combined=df_parlay_combined
+            df_parlay_combined=df_parlay_combined,
+            odds_type=type
         )
 
     X_stacked = get_X_stacked(
