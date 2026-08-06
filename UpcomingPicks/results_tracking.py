@@ -392,7 +392,7 @@ def returns_by_date():
         parlay_group = df_parlay[df_parlay['date']==date]
 
         for type_ in types: 
-            
+
             ml_pct_returns[type_].append(group[f'net_odds_{type_}'].sum())
             parlay_net = parlay_group[f'{type_}_net_odds'].iloc[0]
             parlay_pct_returns[type_].append(parlay_net)
@@ -408,9 +408,6 @@ def returns_by_date():
 
 
 
-
-
 if __name__ == "__main__":
     archive_results()
     returns_by_date()
-    delete_old_files()
