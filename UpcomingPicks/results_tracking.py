@@ -219,7 +219,7 @@ def calc_winner_parlay(df_parlay, df_single_event):
     close2_net_fstar = np.where(close2_win, close2_stake, -close2_stake)
 
     winner_name_loc = winner_name.loc[choice_index_open].to_numpy()
-    print(f'Winner Name Loc shape:{winner_name_loc.shape}, DF parlay shape: {df_parlay.shape}')
+    print(f'Winner Name Parlay: {winner_name_loc}')
 
     parlay_results = pd.DataFrame({
         'open_net_fstar':open_net_fstar, 'close1_net_fstar':close1_net_fstar, 'close2_net_fstar':close2_net_fstar,
@@ -320,6 +320,7 @@ def calc_winner_ml(df_single_event, df_money_line):
     )
 
     winner_name = df_single_event['winner_name'].to_numpy()
+    print(f'Winner Name in ML: {winner_name}')
 
     df_data = pd.DataFrame({
         "net_odds_open": profit_open,
