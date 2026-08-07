@@ -166,14 +166,14 @@ def calc_winner_parlay(df_parlay, df_single_event):
     winner_bool_close1 = winner_bool.loc[choice_index_close1].to_numpy(dtype=int)
     winner_bool_close2 = winner_bool.loc[choice_index_close2].to_numpy(dtype=int)
 
-    open_red = df_single_event.loc[choice_index_open]['open_red']
-    open_blue = df_single_event.loc[choice_index_open]['open_blue']
+    open_red = df_single_event.loc[choice_index_open]['open_red'].to_numpy()
+    open_blue = df_single_event.loc[choice_index_open]['open_blue'].to_numpy()
 
-    close1_red = df_single_event.loc[choice_index_open]['close1_red']
-    close1_blue = df_single_event.loc[choice_index_open]['close1_blue']
+    close1_red = df_single_event.loc[choice_index_close1]['close1_red'].to_numpy()
+    close1_blue = df_single_event.loc[choice_index_close1]['close1_blue'].to_numpy()
 
-    close2_red = df_single_event.loc[choice_index_open]['close2_red']
-    close2_blue = df_single_event.loc[choice_index_open]['close2_blue']
+    close2_red = df_single_event.loc[choice_index_close2]['close2_red'].to_numpy()
+    close2_blue = df_single_event.loc[choice_index_close2]['close2_blue'].to_numpy()
 
     open_win = (choice_fighters_open == winners_bool_open).all()
     close1_win = (choice_fighters_close1 == winner_bool_close1).all()
