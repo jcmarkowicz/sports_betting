@@ -319,7 +319,6 @@ def calc_winner_ml(df_single_event, df_money_line):
     #     (df_data['net_odds_open'] != 0 | df_data['net_odds_open'].notna())
     # )
     # assert mask.all(), "Money Line results profit error"
-
     return df_data
 
 
@@ -409,7 +408,7 @@ def returns_by_date():
             ml_pct_returns[type_].append(total_net_odds)
 
             valid_parlay = parlay_group[f'{type_}_fstar'].iloc[0] > 0 
-            total_net_odds = group[f'{type_}_net_odds'].iloc[0] if valid_parlay else 0 
+            total_net_odds = parlay_group[f'{type_}_net_odds'].iloc[0] if valid_parlay else 0 
             parlay_pct_returns[type_].append(total_net_odds)
         
         ml_pct_returns['date'].append(date)
