@@ -236,7 +236,6 @@ def calc_winner_parlay(df_parlay, df_single_event):
         'fight_index_close1_stack':df_parlay['fight_index_close1_stack'],
         'fight_index_close2_stack':df_parlay['fight_index_close2_stack'],
 
-        'winner_name':winner_name_loc 
     })
     return parlay_results
 
