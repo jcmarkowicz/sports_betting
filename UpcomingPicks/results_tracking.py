@@ -125,12 +125,17 @@ def archive_results(start_date='2026-07-25'):
             df_results_ml['date'] = d_ts
 
             df_ml_history = pd.concat([df_ml_history, df_results_ml], axis=0, ignore_index=True)
+            df_ml_history["date"] = pd.to_datetime(
+                df_ml_history["date"], format="mixed"
+            ).dt.date
             df_ml_history = df_ml_history.drop_duplicates(subset=['fighter_red', 'fighter_blue', 'date'], keep='first')
 
             parlay_results = calc_winner_parlay(df_parlay, event_group)
             parlay_results['date'] = d_ts
-
             df_parlay_history = pd.concat([df_parlay_history, parlay_results],axis=0, ignore_index=True)
+            df_parlay_history["date"] = pd.to_datetime(
+                df_parlay_history["date"], format="mixed"
+            ).dt.date
             df_parlay_history = df_parlay_history.drop_duplicates(subset=['choice_fighter_name_open','choice_fighter_name_close1','choice_fighter_name_close2', 'date'])
 
             # all of these deleted files are regenerated in the above functions 
@@ -167,6 +172,9 @@ def calc_winner_parlay(df_parlay, df_single_event):
     choice_index_open = df_parlay['fight_index_open'].astype(int)
     choice_index_close1 = df_parlay['fight_index_close1_stack'].astype(int)
     choice_index_close2 = df_parlay['fight_index_close2_stack'].astype(int)
+    print(f'choice index open: {choice_index_open}')
+    print(f'choice index close1: {choice_index_close1}')
+    print(f'choice index close2: {choice_index_close2}')
 
     choice_fighters_open = df_parlay['choice_fighter_bool_open'].to_numpy(dtype=int)
     choice_fighters_close1 = df_parlay['choice_fighter_bool_close1_stack'].to_numpy(dtype=int)
