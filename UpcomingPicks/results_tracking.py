@@ -356,33 +356,10 @@ def get_missing_stats(prev_fight_date):
     """ previous fight date from file string """
 
     scraper = UFC_Webscraper()
+    features = FeatureEngineering()
+
     missing_stats = scraper.scrape_until(prev_fight_date)
     missing_odds = scraper.get_fighter_odds(missing_stats) 
-
-    if os.path.exists(config.non_merged_stats_fp):
-        df_stats_missing = pd.read_csv(config.non_merged_stats_fp)
-        df_stats_missing = df_stats_missing.drop(columns=[col for col in df_stats_missing.columns if "Unnamed" in col])
-        df_stats_missing = pd.concat([df_stats_missing, missing_stats], axis=0, ignore_index=True)
-    else:
-        df_stats_missing = missing_stats.copy()
-
-    df_stats_missing = df_stats_missing.drop_duplicates(subset=['fighter_red', 'fighter_blue', 'event_date', 'event_name'], keep='first').reset_index(drop=True)
-    assert df_stats_missing.duplicated().any() == False, "Duplicate rows found in non-merged stats history"
-    commit_if_changed(df_stats_missing, config.non_merged_stats_fp, f'Updating Non Merged Stats for fight date: {prev_fight_date}')
-
-    # merge odds history 
-    if os.path.exists(config.non_merged_odds_fp):
-        df_odds_missing = pd.read_csv(config.non_merged_odds_fp)
-        df_odds_missing = df_odds_missing.drop(columns=[col for col in df_odds_missing.columns if "Unnamed" in col])        
-        df_odds_missing = pd.concat([df_odds_missing, missing_odds], axis=0, ignore_index=True)
-    else:
-        df_odds_missing = missing_odds.copy()
-
-    df_odds_missing = df_odds_missing.drop_duplicates(keep='last').reset_index(drop=True)
-    assert df_odds_missing.duplicated().any() == False, "Duplicate rows found in non-merged odds history"
-    commit_if_changed(df_odds_missing, config.non_merged_odds_fp, f'Updating Non Merged Odds for fight date: {prev_fight_date}')
-
-    features = FeatureEngineering()
 
     stats_history = pd.read_csv(config.stats_history_file_string) # frames BEFORE any feature engineering 
     stats_history = stats_history.drop(columns=[col for col in stats_history.columns if "Unnamed" in col])
@@ -390,34 +367,57 @@ def get_missing_stats(prev_fight_date):
     odds_history = pd.read_csv(config.odds_history_file_string)
     odds_history = odds_history.drop(columns=[col for col in odds_history.columns if "Unnamed" in col])
 
-    # df_stats = pd.concat([stats_history, scraped_stats], axis=0, ignore_index=True)
-    # df_odds = pd.concat([odds_history, scraped_odds], axis=0, ignore_index=True)
-    # print(f"Scraped stats and odds from {start_date} to now. Total stats: {df_stats.shape[0]}, Total odds: {df_odds.shape[0]}")
 
-    t1 = time.time()
-    # concat all history to get winner gt bool column 
+    if os.path.exists(config.non_merged_stats_fp):
 
-    missing_stats_prev = pd.read_csv(config.non_merged_stats_fp)
-    missing_odds_prev = pd.read_csv(config.non_merged_odds_fp)
+        stats_missing_prev = pd.read_csv(config.non_merged_stats_fp)
+        stats_missing_prev = stats_missing_prev.drop(columns=[col for col in stats_missing_prev.columns if "Unnamed" in col])
+        stats_missing_all = pd.concat([stats_missing_prev, missing_stats], axis=0, ignore_index=True)
 
-    all_stats = pd.concat([stats_history, missing_stats_prev, missing_stats], axis=0)
+    else:
+        stats_missing_all = missing_stats.copy()
+
+    stats_missing_all['event_date'] = pd.to_datetime(
+        stats_missing_all["event_date"], format="mixed"
+    ).dt.date
+    stats_missing_all = stats_missing_all.drop_duplicates(subset=['fighter_red', 'fighter_blue', 'event_date', 'event_name'], keep='first').reset_index(drop=True)
+    commit_if_changed(stats_missing_all, config.non_merged_stats_fp, f'Updating Non Merged Stats for fight date: {prev_fight_date}')
+
+    all_stats = pd.concat([stats_history, stats_missing_all], axis=0)
     all_stats['event_date'] = pd.to_datetime(
         all_stats["event_date"], format="mixed"
     ).dt.date
 
-    print(f'all stats with dupes: {all_stats.shape}')
-    all_stats = all_stats.drop_duplicates(subset=['fighter_red', 'fighter_blue', 'event_date'])
-    print(f'All stats without dupes: {all_stats.shape}')
+    print(f'all stats shape dupes: {all_stats.shape}')
+    all_stats = all_stats.drop_duplicates(subset=['fighter_red', 'fighter_blue', 'event_date', 'event_name'])
+    print(f'all stats shape NO dupes: {all_stats.shape}')
 
-    all_odds = pd.concat([odds_history, missing_odds_prev, missing_odds], axis=0)
+
+    # merge odds history 
+    if os.path.exists(config.non_merged_odds_fp):
+        df_odds_missing = pd.read_csv(config.non_merged_odds_fp)
+        df_odds_missing = df_odds_missing.drop(columns=[col for col in df_odds_missing.columns if "Unnamed" in col])   
+        odds_missing_all = pd.concat([df_odds_missing, missing_odds], axis=0, ignore_index=True)
+    else:
+        odds_missing_all = missing_odds.copy()
+
+    odds_missing_all['event_date'] = pd.to_datetime(
+        odds_missing_all["event_date"], format="mixed"
+    ).dt.date
+    odds_missing_all = odds_missing_all.drop_duplicates(subset=['event_date', 'blue_fighter', 'red_fighter'], keep='last').reset_index(drop=True)
+    commit_if_changed(odds_missing_all, config.non_merged_odds_fp, f'Updating Non Merged Odds for fight date: {prev_fight_date}')
+
+    all_odds = pd.concat([odds_history, odds_missing_all], axis=0)
     all_odds['event_date'] = pd.to_datetime(
         all_odds["event_date"], format="mixed"
     ).dt.date
-
+    print(f'All odds shape dupes: {all_odds.shape}')
     all_odds = all_odds.drop_duplicates(subset=['event_date', 'blue_fighter', 'red_fighter'])
+    print(f'All odds shape NO dupes: {all_odds.shape}')
 
+
+    t1 = time.time()
     odds_stats_df, upcoming_df = features.build_all_stats(all_stats, missing_stats.iloc[:5], all_odds, missing_odds.iloc[:5])
-
     t2 = time.time()
     print(f"Time to merge stats and odds: {t2-t1:.2f} seconds")
 
