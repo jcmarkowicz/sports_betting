@@ -162,6 +162,7 @@ def calc_winner_parlay(df_parlay, df_single_event):
 
     winner_bool = df_single_event['winner']
     winner_name = df_single_event['winner_name']
+    print(f'Winner Name in Parlay: {winner_name}')
 
     choice_index_open = df_parlay['fight_index_open'].astype(int)
     choice_index_close1 = df_parlay['fight_index_close1_stack'].astype(int)
@@ -188,13 +189,13 @@ def calc_winner_parlay(df_parlay, df_single_event):
     close1_win = (choice_fighters_close1 == winner_bool_close1).all()
     close2_win = (choice_fighters_close2 == winner_bool_close2).all()
 
-    open_odds = df_parlay['parlay_odds_open']
-    close1_odds = df_parlay['parlay_odds_close1_stack']
-    close2_odds = df_parlay['parlay_odds_close2_stack']
+    open_odds = df_parlay['parlay_odds_open'].to_numpy()
+    close1_odds = df_parlay['parlay_odds_close1_stack'].to_numpy()
+    close2_odds = df_parlay['parlay_odds_close2_stack'].to_numpy()
     
-    open_stake = df_parlay['parlay_fstar_open']
-    close1_stake = df_parlay['parlay_fstar_close1_stack']
-    close2_stake = df_parlay['parlay_fstar_close2_stack']
+    open_stake = df_parlay['parlay_fstar_open'].to_numpy()
+    close1_stake = df_parlay['parlay_fstar_close1_stack'].to_numpy()
+    close2_stake = df_parlay['parlay_fstar_close2_stack'].to_numpy()
 
     profits = moneyline_profit(open_stake, open_odds)
     profit_open = np.where(open_win, open_odds, -1)
@@ -211,7 +212,7 @@ def calc_winner_parlay(df_parlay, df_single_event):
 
     winner_name_loc = winner_name.loc[choice_index_open].to_numpy()
     print(f'Winner Name Loc shape:{winner_name_loc.shape}, DF parlay shape: {df_parlay.shape}')
-    
+
     parlay_results = pd.DataFrame({
         'open_net_fstar':open_net_fstar, 'close1_net_fstar':close1_net_fstar, 'close2_net_fstar':close2_net_fstar,
 
