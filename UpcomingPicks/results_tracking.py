@@ -247,8 +247,9 @@ def calc_winner_parlay(df_parlay, df_single_event):
         'winner_name_close1': winner_name_close1 ,
         'winner_name_close2': winner_name_close2 , 
     })
-    
-    print(f'Parlay Results Columsn for winners: {parlay_results[['winner_name', 'winner_name_close1', 'winner_name_close2']]}')
+    test = parlay_results[['winner_name', 'winner_name_close1', 'winner_name_close2']].head()
+
+    print(f'Parlay Results Columsn for winners: {test}')
     return parlay_results
 
 def calc_winner_ml(df_single_event, df_money_line):
