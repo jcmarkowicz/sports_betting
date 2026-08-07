@@ -128,10 +128,11 @@ def archive_results(start_date='2026-07-25'):
             df_ml_history["date"] = pd.to_datetime(
                 df_ml_history["date"], format="mixed"
             ).dt.date
-            df_ml_history = df_ml_history.drop_duplicates(subset=['fighter_red', 'fighter_blue', 'date'], keep='first')
+            df_ml_history = df_ml_history.drop_duplicates(subset=['fighter_red', 'fighter_blue', 'date'], keep='last')
 
             parlay_results = calc_winner_parlay(df_parlay, event_group)
             parlay_results['date'] = d_ts
+
             df_parlay_history = pd.concat([df_parlay_history, parlay_results],axis=0, ignore_index=True)
             df_parlay_history["date"] = pd.to_datetime(
                 df_parlay_history["date"], format="mixed"
@@ -392,7 +393,7 @@ def get_missing_stats(prev_fight_date):
     stats_missing_all['event_date'] = pd.to_datetime(
         stats_missing_all["event_date"], format="mixed"
     ).dt.date
-    stats_missing_all = stats_missing_all.drop_duplicates(subset=['fighter_red', 'fighter_blue', 'event_date', 'event_name'], keep='first').reset_index(drop=True)
+    stats_missing_all = stats_missing_all.drop_duplicates(subset=['fighter_red', 'fighter_blue', 'event_date', 'event_name'], keep='last').reset_index(drop=True)
     commit_if_changed(stats_missing_all, config.non_merged_stats_fp, f'Updating Non Merged Stats for fight date: {prev_fight_date}')
 
     all_stats = pd.concat([stats_history, stats_missing_all], axis=0)
