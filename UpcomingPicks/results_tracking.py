@@ -79,13 +79,13 @@ def archive_results(start_date='2026-07-25'):
     # print(f"Total events to process: {df_total.shape[0]}")
 
     # iterate through each event date and calculate the results for each event
-    df_ml_history["date"] = pd.to_datetime(
-        df_ml_history["date"], format="mixed"
-    ).dt.date
+    # df_ml_history["date"] = pd.to_datetime(
+    #     df_ml_history["date"], format="mixed"
+    # ).dt.date
 
-    df_parlay_history["date"] = pd.to_datetime(
-        df_parlay_history["date"], format="mixed"
-    ).dt.date
+    # df_parlay_history["date"] = pd.to_datetime(
+    #     df_parlay_history["date"], format="mixed"
+    # ).dt.date
 
     for date, event_group in upcoming_df.groupby('date'):
 
