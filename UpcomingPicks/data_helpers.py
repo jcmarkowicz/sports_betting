@@ -19,7 +19,8 @@ def merge_parlay_types(df_parlay, df_parlay_combined, odds_type):
     # Store the original index as a column
     print(f"DF PARLAY INDEX PRE MERGE: {df_parlay.index}")
     df_parlay[f"fight_index_{odds_type}"] = df_parlay.index.to_numpy()
-    print(f"DF PARLAY INDEX POST MERGE: {df_parlay[f"fight_index_{odds_type}"]}")
+    col = f"fight_index_{odds_type}"
+    print(f"DF PARLAY INDEX POST MERGE: {df_parlay[col]}")
 
     # reset for merging, index doesnt matter now 
     df_parlay = df_parlay.copy().reset_index(drop=True)
@@ -45,8 +46,8 @@ def get_bets_input(
         fair_odds
 ):
         
-        fighter_red = df["fighter_red"].values
-        fighter_blue = df["fighter_blue"].values
+        fighter_red = df["fighter_red"].to_numpy()
+        fighter_blue = df["fighter_blue"].to_numpy()
 
         choice_fair_odds = pd.Series(
             np.where(y_hat == 1, df[fair_odds[1]],
@@ -109,16 +110,16 @@ def get_bets_input(
 
 def get_parlay_input(df, bets_input_df, fighter_red, fighter_blue, required_idx):
 
-    fighter_red = df["fighter_red"].values
-    fighter_blue = df["fighter_blue"].values
-    dates = df["date"].values
+    fighter_red = df["fighter_red"].to_numpy()
+    fighter_blue = df["fighter_blue"].to_numpy()
+    dates = df["date"].to_numpy()
 
     parlay_input_df = pd.DataFrame({
-        "choice_ev": bets_input_df['choice_ev'],
-        "choice_proba": bets_input_df['choice_proba'],
-        "choice_real_odds": bets_input_df['choice_real_odds'],
-        'choice_fighter_name':bets_input_df['pred_winner_names'],
-        'choice_fighter_bool':bets_input_df['pred_winner_bool'],
+        "choice_ev": bets_input_df['choice_ev'].to_numpy(),
+        "choice_proba": bets_input_df['choice_proba'].to_numpy(),
+        "choice_real_odds": bets_input_df['choice_real_odds'].to_numpy(),
+        'choice_fighter_name':bets_input_df['pred_winner_names'].to_numpy(),
+        'choice_fighter_bool':bets_input_df['pred_winner_bool'].to_numpy(),
         "fighter_red": fighter_red,
         "fighter_blue": fighter_blue,
         "date": dates,
