@@ -20,7 +20,7 @@ def merge_parlay_types(df_parlay, df_parlay_combined, odds_type):
     print(f"DF PARLAY INDEX PRE MERGE: {df_parlay.index}")
     df_parlay[f"fight_index_{odds_type}"] = df_parlay.index.to_numpy()
     col = f"fight_index_{odds_type}"
-    print(f"DF PARLAY INDEX POST MERGE: {df_parlay[col]}")
+    print(f"DF PARLAY INDEX POST MERGE: {df_parlay[col].to_numpy()}")
 
     # reset for merging, index doesnt matter now 
     df_parlay = df_parlay.copy().reset_index(drop=True)
@@ -35,6 +35,7 @@ def merge_parlay_types(df_parlay, df_parlay_combined, odds_type):
             how="left",
         )
 
+    print(f'MERGED INDEX COL: {df_parlay_combined[col].to_numpy()}')
     return df_parlay_combined
 
 def get_bets_input(
@@ -44,69 +45,69 @@ def get_bets_input(
         proba_blue, 
         real_odds, 
         fair_odds
-):
+    ):
         
-        fighter_red = df["fighter_red"].to_numpy()
-        fighter_blue = df["fighter_blue"].to_numpy()
+    fighter_red = df["fighter_red"].to_numpy()
+    fighter_blue = df["fighter_blue"].to_numpy()
 
-        choice_fair_odds = pd.Series(
-            np.where(y_hat == 1, df[fair_odds[1]],
-                    np.where(y_hat == 0, df[fair_odds[0]], np.nan)),
-            index=y_hat.index
+    choice_fair_odds = pd.Series(
+        np.where(y_hat == 1, df[fair_odds[1]],
+                np.where(y_hat == 0, df[fair_odds[0]], np.nan)),
+        index=y_hat.index
+    )
+    
+    choice_real_odds = pd.Series(
+        np.where(y_hat == 1, df[real_odds[1]],
+                np.where(y_hat == 0, df[real_odds[0]], np.nan)),
+        index=y_hat.index
+    )
+
+    choice_proba = pd.Series(
+            np.where(y_hat == 1, proba_red, proba_blue),
+            index=y_hat.index,
+            name='choice_proba'
         )
-        
-        choice_real_odds = pd.Series(
-            np.where(y_hat == 1, df[real_odds[1]],
-                    np.where(y_hat == 0, df[real_odds[0]], np.nan)),
-            index=y_hat.index
-        )
+    
+    assert real_odds[1].split('_')[-1] == 'red', 'red/blue odds column order error'
 
-        choice_proba = pd.Series(
-                np.where(y_hat == 1, proba_red, proba_blue),
-                index=y_hat.index,
-                name='choice_proba'
-            )
-        
-        assert real_odds[1].split('_')[-1] == 'red', 'red/blue odds column order error'
+    unweighted_fstar = pd.Series(
+        [
+            kelly_edge(p, fo) if not (pd.isna(p) or pd.isna(fo)) else np.nan
+            for p, fo in zip(choice_proba, choice_fair_odds)
+        ],
+        index=y_hat.index
+    )
 
-        unweighted_fstar = pd.Series(
-            [
-                kelly_edge(p, fo) if not (pd.isna(p) or pd.isna(fo)) else np.nan
-                for p, fo in zip(choice_proba, choice_fair_odds)
-            ],
-            index=y_hat.index
-        )
+    choice_ev = pd.Series(
+        np.where(
+            choice_proba.isna() | choice_real_odds.isna(),
+            np.nan,
+            expected_value(choice_proba, choice_real_odds)
+        ),
+        index=y_hat.index
+    )
 
-        choice_ev = pd.Series(
-            np.where(
-                choice_proba.isna() | choice_real_odds.isna(),
-                np.nan,
-                expected_value(choice_proba, choice_real_odds)
-            ),
-            index=y_hat.index
-        )
+    choice_edge = choice_proba - (1 / choice_fair_odds)
 
-        choice_edge = choice_proba - (1 / choice_fair_odds)
+    pred_winner_names = pd.Series(np.where(y_hat == 1, fighter_red,
+                                np.where(y_hat == 0, fighter_blue, None)),
+                        index=y_hat.index)
 
-        pred_winner_names = pd.Series(np.where(y_hat == 1, fighter_red,
-                                    np.where(y_hat == 0, fighter_blue, None)),
-                            index=y_hat.index)
+    bets_input_df = pd.DataFrame({
+        "p": choice_proba,
+        'choice_proba':choice_proba, 
+        "fair_odds": choice_fair_odds,
+        "real_odds": choice_real_odds,
+        "choice_real_odds":choice_real_odds,
+        "ev": choice_ev,
+        "choice_ev": choice_ev,
+        "f_star_unscaled": unweighted_fstar,
+        'pred_winner_names':pred_winner_names,
+        'choice_edge': choice_edge,
+        'pred_winner_bool':y_hat, 
+    }, index=y_hat.index) # y_hat index is the same as required_idx 
 
-        bets_input_df = pd.DataFrame({
-            "p": choice_proba,
-            'choice_proba':choice_proba, 
-            "fair_odds": choice_fair_odds,
-            "real_odds": choice_real_odds,
-            "choice_real_odds":choice_real_odds,
-            "ev": choice_ev,
-            "choice_ev": choice_ev,
-            "f_star_unscaled": unweighted_fstar,
-            'pred_winner_names':pred_winner_names,
-            'choice_edge': choice_edge,
-            'pred_winner_bool':y_hat, 
-        }, index=y_hat.index) # y_hat index is the same as required_idx 
-
-        return bets_input_df
+    return bets_input_df
 
 def get_parlay_input(df, bets_input_df, fighter_red, fighter_blue, required_idx):
 
@@ -129,25 +130,25 @@ def get_parlay_input(df, bets_input_df, fighter_red, fighter_blue, required_idx)
 
 def get_parlay_pkt(df_parlay, type):
     parlay_pkt = {
-        'choice_fighter_name_col': df_parlay[f'choice_fighter_name_{type}'].values,
-        'choice_fighter_bool_col': df_parlay[f'choice_fighter_bool_{type}'].values,
-        'parlay_fstar_col': df_parlay[f'parlay_fstar_{type}'].values,
-        'parlay_odds_col': df_parlay[f'parlay_odds_{type}'].values, 
-        'stake_col': df_parlay[f'stake_{type}'].values, 
-        'parlay_ev_col': df_parlay[f'parlay_ev_{type}'].values, 
-        'parlay_prob_col': df_parlay[f'parlay_prob_{type}'].values
+        'choice_fighter_name_col': df_parlay[f'choice_fighter_name_{type}'].to_numpy(),
+        'choice_fighter_bool_col': df_parlay[f'choice_fighter_bool_{type}'].to_numpy(),
+        'parlay_fstar_col': df_parlay[f'parlay_fstar_{type}'].to_numpy(),
+        'parlay_odds_col': df_parlay[f'parlay_odds_{type}'].to_numpy(), 
+        'stake_col': df_parlay[f'stake_{type}'].to_numpy(), 
+        'parlay_ev_col': df_parlay[f'parlay_ev_{type}'].to_numpy(), 
+        'parlay_prob_col': df_parlay[f'parlay_prob_{type}'].to_numpy()
     }
     return parlay_pkt
 
 def get_bets_pkt(bets_input_df, df_per_bet):
     bets_pkt = {
-            'pred_name_col': bets_input_df['pred_winner_names'], 
-            'pred_winner_col': bets_input_df['pred_winner_bool'], 
-            'choice_proba_col': bets_input_df['choice_proba'], 
-            'choice_fstar_col': df_per_bet['fstar_scaled'], 
-            'choice_stake_col': df_per_bet['stake'],
-            'edge_col': bets_input_df['choice_edge'], 
-            'ev_col': bets_input_df['choice_ev']
+            'pred_name_col': bets_input_df['pred_winner_names'].to_numpy(), 
+            'pred_winner_col': bets_input_df['pred_winner_bool'].to_numpy(), 
+            'choice_proba_col': bets_input_df['choice_proba'].to_numpy(), 
+            'choice_fstar_col': df_per_bet['fstar_scaled'].to_numpy(), 
+            'choice_stake_col': df_per_bet['stake'].to_numpy(),
+            'edge_col': bets_input_df['choice_edge'].to_numpy(), 
+            'ev_col': bets_input_df['choice_ev'].to_numpy(),
         }   
     return bets_pkt
 

@@ -28,9 +28,9 @@ def parlay_top_ev(data, bankroll, type, top_n=[0,1], parlay_mdd=0.5, N=250):
     df_top_n = data.sort_values(by='choice_ev', ascending=False).iloc[top_n].copy()
     df_top_n = df_top_n.rename(columns={})
 
-    parlay_prob = np.prod(df_top_n['choice_proba'])
-    parlay_odds = np.prod(df_top_n['choice_real_odds'])
-    net_odds = np.prod(df_top_n['choice_real_odds'])-1
+    parlay_prob = np.prod(df_top_n['choice_proba'].to_numpy())
+    parlay_odds = np.prod(df_top_n['choice_real_odds'].to_numpy())
+    net_odds = np.prod(df_top_n['choice_real_odds'].to_numpy())-1
     parlay_ev = parlay_prob * parlay_odds - 1
 
     b = parlay_odds - 1
