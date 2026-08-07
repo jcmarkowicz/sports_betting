@@ -36,8 +36,8 @@ display_paginated_df(df_parlay_pct, title='Parlay Percent Returns', key_prefix='
 def plot_returns():
 
     types = ['open', 'close1', 'close2']
-
     fig, axes = plt.subplots(2, len(types), figsize=(15,6))
+    
     for i, type_ in enumerate(types):
         # ML percent returns
         sns.histplot(df_ml_pct[type_], ax=axes[0, i], kde=False, color='skyblue')

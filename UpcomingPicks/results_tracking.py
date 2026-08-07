@@ -89,6 +89,9 @@ def archive_results(start_date='2026-07-25'):
     # print(f"Total events to process: {df_total.shape[0]}")
 
     # iterate through each event date and calculate the results for each event
+    df_ml_history["date"] = pd.to_datetime(df_ml_history["date"], format="%Y-%m-%d")
+    df_parlay_history["date"] = pd.to_datetime(df_parlay_history["date"], format="%Y-%m-%d")
+
     for date, event_group in upcoming_df.groupby('date'):
 
         event_group =  event_group.copy().reset_index(drop=True)
@@ -291,11 +294,14 @@ def calc_winner_ml(df_single_event, df_money_line):
         -1
     )
 
+    winner_name = df_single_event['winner_name'].to_numpy()
+
     df_data = pd.DataFrame({
         "net_odds_open": profit_open,
         "net_odds_close1": profit_close1,
         "net_odds_close2": profit_close2,
-        'winner_bool': winner_bool
+        'winner_bool': winner_bool,
+        'winner_name':winner_name,
     })
 
     df_data = pd.concat([
@@ -377,8 +383,18 @@ def get_missing_stats(prev_fight_date):
 
     t1 = time.time()
     # concat all history to get winner gt bool column 
-    all_stats = pd.concat([stats_history, missing_stats], axis=0)
-    all_odds = pd.concat([odds_history, missing_odds], axis=0)
+
+    missing_stats_prev = pd.read_csv(config.non_merged_stats_fp)
+    missing_odds_prev = pd.read_csv(config.non_merged_odds_fp)
+
+    all_stats = pd.concat([stats_history, missing_stats_prev, missing_stats], axis=0)
+    print(f'all stats with dupes: {all_stats.shape}')
+    all_stats = all_stats.drop_duplicates(subset=['fighter_red', 'fighter_blue', 'event_date'])
+    print(f'All stats without dupes: {all_stats.shape}')
+
+    all_odds = pd.concat([odds_history, missing_odds_prev, missing_odds], axis=0)
+    all_odds = all_odds.drop_duplicates(subset=['event_date', 'blue_fighter', 'red_fighter'])
+
     odds_stats_df, upcoming_df = features.build_all_stats(all_stats, missing_stats.iloc[:5], all_odds, missing_odds.iloc[:5])
     t2 = time.time()
     print(f"Time to merge stats and odds: {t2-t1:.2f} seconds")
