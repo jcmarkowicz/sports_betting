@@ -89,8 +89,13 @@ def archive_results(start_date='2026-07-25'):
     # print(f"Total events to process: {df_total.shape[0]}")
 
     # iterate through each event date and calculate the results for each event
-    df_ml_history["date"] = pd.to_datetime(df_ml_history["date"], format="%Y-%m-%d")
-    df_parlay_history["date"] = pd.to_datetime(df_parlay_history["date"], format="%Y-%m-%d")
+    df_ml_history["date"] = pd.to_datetime(
+        df_ml_history["date"], format="mixed"
+    ).dt.date
+
+    df_parlay_history["date"] = pd.to_datetime(
+        df_parlay_history["date"], format="mixed"
+    ).dt.date
 
     for date, event_group in upcoming_df.groupby('date'):
 
@@ -156,6 +161,7 @@ def delete_old_files(date_str):
 def calc_winner_parlay(df_parlay, df_single_event):
 
     winner_bool = df_single_event['winner']
+    winner_name = df_single_event['winner_name']
 
     choice_index_open = df_parlay['fight_index_open'].astype(int)
     choice_index_close1 = df_parlay['fight_index_close1_stack'].astype(int)
@@ -203,6 +209,7 @@ def calc_winner_parlay(df_parlay, df_single_event):
     close1_net_fstar = np.where(close1_win, close1_stake, -close1_stake)
     close2_net_fstar = np.where(close2_win, close2_stake, -close2_stake)
 
+    winner_name = winner_name.loc[choice_index_open]
     parlay_results = pd.DataFrame({
         'open_net_fstar':open_net_fstar, 'close1_net_fstar':close1_net_fstar, 'close2_net_fstar':close2_net_fstar,
 
@@ -223,7 +230,9 @@ def calc_winner_parlay(df_parlay, df_single_event):
 
         'choice_fighter_name_open':df_parlay['choice_fighter_name_open'], 
         'choice_fighter_name_close1':df_parlay['choice_fighter_name_close1_stack'], 
-        'choice_fighter_name_close2':df_parlay['choice_fighter_name_close2_stack'] 
+        'choice_fighter_name_close2':df_parlay['choice_fighter_name_close2_stack'],
+
+        'winner_name':winner_name 
     })
     return parlay_results
 
@@ -388,14 +397,23 @@ def get_missing_stats(prev_fight_date):
     missing_odds_prev = pd.read_csv(config.non_merged_odds_fp)
 
     all_stats = pd.concat([stats_history, missing_stats_prev, missing_stats], axis=0)
+    all_stats['event_date'] = pd.to_datetime(
+        all_stats["event_date"], format="mixed"
+    ).dt.date
+
     print(f'all stats with dupes: {all_stats.shape}')
     all_stats = all_stats.drop_duplicates(subset=['fighter_red', 'fighter_blue', 'event_date'])
     print(f'All stats without dupes: {all_stats.shape}')
 
     all_odds = pd.concat([odds_history, missing_odds_prev, missing_odds], axis=0)
+    all_odds['event_date'] = pd.to_datetime(
+        all_odds["event_date"], format="mixed"
+    ).dt.date
+    
     all_odds = all_odds.drop_duplicates(subset=['event_date', 'blue_fighter', 'red_fighter'])
 
     odds_stats_df, upcoming_df = features.build_all_stats(all_stats, missing_stats.iloc[:5], all_odds, missing_odds.iloc[:5])
+
     t2 = time.time()
     print(f"Time to merge stats and odds: {t2-t1:.2f} seconds")
 
