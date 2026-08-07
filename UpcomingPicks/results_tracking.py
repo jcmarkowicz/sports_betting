@@ -209,7 +209,9 @@ def calc_winner_parlay(df_parlay, df_single_event):
     close1_net_fstar = np.where(close1_win, close1_stake, -close1_stake)
     close2_net_fstar = np.where(close2_win, close2_stake, -close2_stake)
 
-    winner_name_loc = winner_name.loc[choice_index_open]
+    winner_name_loc = winner_name.loc[choice_index_open].to_numpy()
+    print(f'Winner Name Loc shape:{winner_name_loc.shape}, DF parlay shape: {df_parlay.shape}')
+    
     parlay_results = pd.DataFrame({
         'open_net_fstar':open_net_fstar, 'close1_net_fstar':close1_net_fstar, 'close2_net_fstar':close2_net_fstar,
 
@@ -235,6 +237,8 @@ def calc_winner_parlay(df_parlay, df_single_event):
         'fight_index_open':df_parlay['fight_index_open'],
         'fight_index_close1_stack':df_parlay['fight_index_close1_stack'],
         'fight_index_close2_stack':df_parlay['fight_index_close2_stack'],
+
+        'winner_name':winner_name_loc
 
     })
     return parlay_results
@@ -357,18 +361,17 @@ def get_missing_stats(prev_fight_date):
     scraper = UFC_Webscraper()
     features = FeatureEngineering()
 
-    missing_stats = scraper.scrape_until(prev_fight_date)
-    missing_odds = scraper.get_fighter_odds(missing_stats) 
-
     stats_history = pd.read_csv(config.stats_history_file_string) # frames BEFORE any feature engineering 
     stats_history = stats_history.drop(columns=[col for col in stats_history.columns if "Unnamed" in col])
 
     odds_history = pd.read_csv(config.odds_history_file_string)
     odds_history = odds_history.drop(columns=[col for col in odds_history.columns if "Unnamed" in col])
 
+    missing_stats = scraper.scrape_until(prev_fight_date)
+    missing_odds = scraper.get_fighter_odds(missing_stats) 
+
 
     if os.path.exists(config.non_merged_stats_fp):
-
         stats_missing_prev = pd.read_csv(config.non_merged_stats_fp)
         stats_missing_prev = stats_missing_prev.drop(columns=[col for col in stats_missing_prev.columns if "Unnamed" in col])
         stats_missing_all = pd.concat([stats_missing_prev, missing_stats], axis=0, ignore_index=True)

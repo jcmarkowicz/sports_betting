@@ -17,6 +17,7 @@ def merge_parlay_types(df_parlay, df_parlay_combined, odds_type):
     
 
     # Store the original index as a column
+    print(f"DF PARLAY INDEX PRE MERGE: {df_parlay.index}")
     df_parlay[f"fight_index_{odds_type}"] = df_parlay.index
 
     # reset for merging, index doesnt matter now 
