@@ -52,8 +52,8 @@ def plot_returns():
         axes[1, i].set_title(f"Parlay {type_} — Avg: {avg_parlay:.2f}, Total: {total_parlay:.2f}")
 
     plt.tight_layout()
-
     path = BASE_DIR / 'Data' / 'plot_pngs' / 'pct_returns.png'
+    
     fig.savefig(path,
             dpi=300,
             bbox_inches="tight")
