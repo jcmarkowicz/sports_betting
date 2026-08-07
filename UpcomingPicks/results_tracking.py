@@ -5,31 +5,21 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd 
-from datetime import datetime
-
 
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))) 
 BASE_DIR = Path(__file__).resolve().parents[1]
-
 sys.path.append(str(Path(__file__).parent))
 
-from DataPipeline.FeatureEngineering.BuildFeatures.odds_features import build_odds_features
 from DataPipeline.FeatureEngineering.features_pipeline import FeatureEngineering 
-from DataPipeline.FeatureEngineering.BuildFeatures.final_feats_df import non_rolling_stats
-from DataPipeline.FeatureEngineering.BuildFeatures.rolling_stats import apply_rolling_stats
 from DataPipeline.webscrapers.scraping_pipeline import UFC_Webscraper
-from DataPipeline.FeatureEngineering.BuildFeatures.fight_time_feats import single_event_features
+
 from DataPipeline.utils.github_utils import commit_if_changed, delete_and_commit
 from DataPipeline.utils.bets_utils import generate_bets
-from config import config
 
+from config import config
 import time 
-# Same key for identical rows
-# df["row_key"] = (
-#     df.groupby(list(df.columns), dropna=False)
-#       .ngroup()
-# )
+
 
 def archive_results(start_date='2026-07-25'):
     """
@@ -168,7 +158,7 @@ def calc_winner_parlay(df_parlay, df_single_event):
 
     winner_bool = df_single_event['winner']
     winner_name = df_single_event['winner_name']
-    print(f'Winner Name in Parlay: {winner_name}')
+    print(f'Winner Name GT in Parlay: {winner_name}')
 
     choice_index_open = df_parlay['fight_index_open'].astype(int)
     choice_index_close1 = df_parlay['fight_index_close1_stack'].astype(int)
@@ -219,8 +209,13 @@ def calc_winner_parlay(df_parlay, df_single_event):
     close1_net_fstar = np.where(close1_win, close1_stake, -close1_stake)
     close2_net_fstar = np.where(close2_win, close2_stake, -close2_stake)
 
-    winner_name_loc = winner_name.loc[choice_index_open].to_numpy()
-    print(f'Winner Name Parlay: {winner_name_loc}')
+    winner_name_open = winner_name.loc[choice_index_open].to_numpy()
+    winner_name_close1 = winner_name.loc[choice_index_close1].to_numpy()
+    winner_name_close2 = winner_name.loc[choice_index_close2].to_numpy()
+
+    print(f'Winner Name Parlay Open: {winner_name_open}')    
+    print(f'Winner Name Parlay close 1: {winner_name_close1}')
+    print(f'Winner Name Parlay Close2: {winner_name_close2}')
 
     parlay_results = pd.DataFrame({
         'open_net_fstar':open_net_fstar, 'close1_net_fstar':close1_net_fstar, 'close2_net_fstar':close2_net_fstar,
@@ -248,9 +243,12 @@ def calc_winner_parlay(df_parlay, df_single_event):
         'fight_index_close1_stack':df_parlay['fight_index_close1_stack'],
         'fight_index_close2_stack':df_parlay['fight_index_close2_stack'],
 
-        'winner_name':winner_name_loc
-
+        'winner_name':winner_name_open,
+        'winner_name_close1': winner_name_close1 ,
+        'winner_name_close2': winner_name_close2 , 
     })
+    
+    print(f'Parlay Results Columsn for winners: {parlay_results[['winner_name', 'winner_name_close1', 'winner_name_close2']]}')
     return parlay_results
 
 def calc_winner_ml(df_single_event, df_money_line):
