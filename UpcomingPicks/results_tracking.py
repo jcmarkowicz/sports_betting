@@ -209,7 +209,7 @@ def calc_winner_parlay(df_parlay, df_single_event):
     close1_net_fstar = np.where(close1_win, close1_stake, -close1_stake)
     close2_net_fstar = np.where(close2_win, close2_stake, -close2_stake)
 
-    winner_name = winner_name.loc[choice_index_open]
+    winner_name_loc = winner_name.loc[choice_index_open]
     parlay_results = pd.DataFrame({
         'open_net_fstar':open_net_fstar, 'close1_net_fstar':close1_net_fstar, 'close2_net_fstar':close2_net_fstar,
 
@@ -232,7 +232,11 @@ def calc_winner_parlay(df_parlay, df_single_event):
         'choice_fighter_name_close1':df_parlay['choice_fighter_name_close1_stack'], 
         'choice_fighter_name_close2':df_parlay['choice_fighter_name_close2_stack'],
 
-        'winner_name':winner_name 
+        'fight_index_open':df_parlay['fight_index_open'],
+        'fight_index_close1_stack':df_parlay['fight_index_close1_stack'],
+        'fight_index_close2_stack':df_parlay['fight_index_close2_stack'],
+
+        'winner_name':winner_name_loc 
     })
     return parlay_results
 
@@ -409,7 +413,7 @@ def get_missing_stats(prev_fight_date):
     all_odds['event_date'] = pd.to_datetime(
         all_odds["event_date"], format="mixed"
     ).dt.date
-    
+
     all_odds = all_odds.drop_duplicates(subset=['event_date', 'blue_fighter', 'red_fighter'])
 
     odds_stats_df, upcoming_df = features.build_all_stats(all_stats, missing_stats.iloc[:5], all_odds, missing_odds.iloc[:5])
