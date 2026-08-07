@@ -1,0 +1,25 @@
+net_odds_open,net_odds_close1,net_odds_close2,winner_bool,fighter_red,fighter_blue,pred_name_open,pred_name_close1,pred_name_close2,pred_winner_open,pred_winner_close1_stack,pred_winner_close2_stack,open_red,open_blue,close1_red,close1_blue,close2_red,close2_blue,fstar_open,fstar_close1,fstar_close2,date
+-350.0,-1.0,-1.0,0.0,cody gibson,abdul hussein,abdul hussein,abdul hussein,abdul hussein,0,,,285.0,-350.0,420.0,-650.0,475.0,-600.0,,,,2026-07-25
+-300.0,-560.0,-549.0,1.0,magomed ankalaev,bogdan guskov,magomed ankalaev,magomed ankalaev,magomed ankalaev,1,1.0,1.0,-300.0,250.0,-560.0,390.0,-549.0,410.0,0.05636178599832942,0.0,0.0,2026-07-25
+-1.0,-1.0,-1.0,1.0,magomed zaynukov,damian rzepecki,damian rzepecki,damian rzepecki,damian rzepecki,0,,,-275.0,235.0,-286.0,206.0,-241.0,215.0,,,,2026-07-25
+-1.0,-1.0,-1.0,1.0,rizvan kuniev,tyrell fortune,tyrell fortune,tyrell fortune,tyrell fortune,0,,,-250.0,210.0,-350.0,250.0,-310.0,275.0,,,,2026-07-25
+-1.0,-1.0,-1.0,1.0,abubakar vagaev,saygid izagakhmaev,saygid izagakhmaev,saygid izagakhmaev,saygid izagakhmaev,0,,,-205.0,175.0,-275.0,164.0,-190.0,210.0,,,,2026-07-25
+-172.0,-235.0,-225.0,1.0,nurullo aliev,mike davis,nurullo aliev,nurullo aliev,nurullo aliev,1,1.0,1.0,-172.0,147.0,-235.0,175.0,-225.0,193.0,0.13377836488701977,0.18018745525667137,0.1826492326228993,2026-07-25
+-250.0,-210.0,-188.0,1.0,valter walker,thomas petersen,valter walker,valter walker,valter walker,1,1.0,1.0,-250.0,210.0,-210.0,150.0,-188.0,175.0,0.14904472131986418,0.17185030334010934,0.17353308945179236,2026-07-25
+,-1.0,-1.0,0.0,dustin jacoby,muhammad saidov,muhammad saidov,muhammad saidov,muhammad saidov,0,,,,,,,,,,,,2026-07-25
+-450.0,-770.0,-500.0,0.0,santiago ponzinibbio,sam patterson,sam patterson,sam patterson,sam patterson,0,0.0,0.0,350.0,-450.0,350.0,-770.0,480.0,-500.0,0.16436404212905162,0.0,0.00649354653199552,2026-07-25
+-170.0,-212.0,-198.0,0.0,ismael bonfim,axel sola,axel sola,axel sola,axel sola,0,0.0,0.0,145.0,-170.0,160.0,-212.0,182.0,-198.0,0.0,0.0,0.0,2026-07-25
+-1.0,-1.0,-1.0,1.0,magomed tuchalov,brendson ribeiro,brendson ribeiro,brendson ribeiro,brendson ribeiro,0,,,-550.0,420.0,-1250.0,500.0,-800.0,700.0,,,,2026-07-25
+-1.0,-1.0,-1.0,0.0,steve erceg,ramazan temirov,steve erceg,steve erceg,steve erceg,1,1.0,1.0,-150.0,130.0,-115.0,-119.0,-101.0,-104.0,0.11335960573380316,0.1311556938815193,0.1319543199715001,2026-07-25
+-275.0,-1.0,-1.0,0.0,oban elliott,michael oliveira,michael oliveira,michael oliveira,michael oliveira,0,,,235.0,-275.0,275.0,-910.0,575.0,-350.0,,,,2026-08-01
+-1.0,-1.0,-1.0,1.0,borislav nikolic,mark vologdin,mark vologdin,mark vologdin,mark vologdin,0,,,-150.0,130.0,-230.0,163.0,-200.0,190.0,,,,2026-08-01
+,-1.0,-1.0,0.0,dennis buzukja,bogdan grad,bogdan grad,bogdan grad,bogdan grad,0,,,,,,,,,,,,2026-08-01
+-500.0,-1100.0,-649.0,1.0,mateusz rebecki,kyle prepolec,mateusz rebecki,mateusz rebecki,mateusz rebecki,1,1.0,1.0,-500.0,385.0,-1100.0,450.0,-649.0,709.0,0.0,0.0,0.0,2026-08-01
+-1.0,-1.0,-1.0,1.0,nina milosevic,hailey cowan,hailey cowan,hailey cowan,hailey cowan,0,,,-500.0,385.0,-910.0,350.0,-500.0,575.0,,,,2026-08-01
+-1.0,-1.0,-1.0,1.0,jovan leka,alexander poppeck,alexander poppeck,alexander poppeck,alexander poppeck,0,,,-300.0,250.0,-360.0,225.0,-290.0,280.0,,,,2026-08-01
+-300.0,-1.0,-1.0,0.0,marina spasic,stephanie luciano,stephanie luciano,stephanie luciano,stephanie luciano,0,,,250.0,-300.0,250.0,-425.0,334.0,-333.0,,,,2026-08-01
+300.0,-1.0,-1.0,0.0,vlasto cepo,gilbert urbina,gilbert urbina,gilbert urbina,gilbert urbina,0,,,-400.0,300.0,-350.0,230.0,-280.0,275.0,,,,2026-08-01
+-200.0,-1.0,-1.0,0.0,jan blachowicz,navajo stirling,navajo stirling,navajo stirling,navajo stirling,0,,,170.0,-200.0,250.0,-370.0,290.0,-330.0,,,,2026-08-01
+-1.0,-1.0,-1.0,1.0,aleksandar rakic,marcin tybura,marcin tybura,marcin tybura,marcin tybura,0,,,-250.0,210.0,-420.0,260.0,-350.0,310.0,,,,2026-08-01
+-501.0,-435.0,-350.0,1.0,uros medic,daniel rodriguez,uros medic,uros medic,uros medic,1,1.0,1.0,-501.0,386.0,-435.0,280.0,-350.0,315.0,0.08679480324676532,0.10814109987033155,0.16377066635159487,2026-08-01
+-1.0,-1.0,-1.0,3.0,dusko todorovic,robert valentin,robert valentin,robert valentin,robert valentin,0,0.0,0.0,110.0,-130.0,125.0,-175.0,140.0,-150.0,0.0,0.0,0.0,2026-08-01
