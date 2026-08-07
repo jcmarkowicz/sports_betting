@@ -18,7 +18,8 @@ def merge_parlay_types(df_parlay, df_parlay_combined, odds_type):
 
     # Store the original index as a column
     print(f"DF PARLAY INDEX PRE MERGE: {df_parlay.index}")
-    df_parlay[f"fight_index_{odds_type}"] = df_parlay.index
+    df_parlay[f"fight_index_{odds_type}"] = df_parlay.index.to_numpy()
+    print(f"DF PARLAY INDEX POST MERGE: {df_parlay[f"fight_index_{odds_type}"]}")
 
     # reset for merging, index doesnt matter now 
     df_parlay = df_parlay.copy().reset_index(drop=True)

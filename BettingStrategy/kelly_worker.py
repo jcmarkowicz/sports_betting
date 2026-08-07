@@ -13,7 +13,6 @@ def parlay_top_ev(data, bankroll, type, top_n=[0,1], parlay_mdd=0.5, N=250):
     data = data[data['choice_ev'] > 0]
 
     if len(data) < 2:
-        print(data['date'])
         cols = [
             f'choice_fighter_name_{type}', 
             f'parlay_fstar_{type}',
@@ -27,7 +26,7 @@ def parlay_top_ev(data, bankroll, type, top_n=[0,1], parlay_mdd=0.5, N=250):
         return df_nans
     
     df_top_n = data.sort_values(by='choice_ev', ascending=False).iloc[top_n].copy()
-    df_top_n = df_top_n.rename(columns={'choice_fighter_name': f'choice_fighter_name_{type}'})
+    df_top_n = df_top_n.rename(columns={})
 
     parlay_prob = np.prod(df_top_n['choice_proba'])
     parlay_odds = np.prod(df_top_n['choice_real_odds'])
@@ -51,7 +50,10 @@ def parlay_top_ev(data, bankroll, type, top_n=[0,1], parlay_mdd=0.5, N=250):
     df_top_n[f'stake_{type}'] = stake
     df_top_n[f'parlay_odds_{type}'] = net_odds
 
-    df_top_n[f'choice_fighter_bool_{type}'] = df_top_n['choice_fighter_bool']
+    df_top_n = df_top_n.rename(
+        columns={"choice_fighter_bool": f"choice_fighter_bool_{type}",
+                 'choice_fighter_name': f'choice_fighter_name_{type}'}
+    )
 
     df_top_n = df_top_n[[
         f'choice_fighter_name_{type}', 
