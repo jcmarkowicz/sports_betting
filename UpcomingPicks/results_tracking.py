@@ -244,8 +244,8 @@ def calc_winner_parlay(df_parlay, df_single_event):
         'fight_index_close2_stack':df_parlay['fight_index_close2_stack'],
 
         'winner_name':winner_name_open,
-        'winner_name_close1': winner_name_close1 ,
-        'winner_name_close2': winner_name_close2 , 
+        'winner_name_close1': winner_name_close1,
+        'winner_name_close2': winner_name_close2, 
     })
     test = parlay_results[['winner_name', 'winner_name_close1', 'winner_name_close2']].head()
 
@@ -429,7 +429,7 @@ def get_missing_stats(prev_fight_date):
 
 
     t1 = time.time()
-    odds_stats_df, upcoming_df = features.build_all_stats(all_stats, missing_stats.iloc[:5], all_odds, missing_odds.iloc[:5])
+    odds_stats_df, upcoming_df = features.build_all_stats(all_stats, missing_stats.iloc[:5], all_odds, missing_odds.iloc[:5], ignore_upcoming=True)
     t2 = time.time()
     print(f"Time to merge stats and odds: {t2-t1:.2f} seconds")
 

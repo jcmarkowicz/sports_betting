@@ -28,10 +28,11 @@ class FeatureEngineering:
         all_features = non_rolling_stats(rolling_features)
         return all_features
     
-    def build_all_stats(self, stats_df, upcoming_stats, odds_df, upcoming_odds):
+    def build_all_stats(self, stats_df, upcoming_stats, odds_df, upcoming_odds, ignore_upcoming=False):
 
         # combine odds history and upcoming odds, build odds features
-        total_odds = pd.concat([odds_df, upcoming_odds]).reset_index(drop=True) # combine upcoming odds and odds history
+        # combine upcoming odds and odds history
+        total_odds = pd.concat([odds_df, upcoming_odds]).reset_index(drop=True) if not ignore_upcoming else odds_df 
         total_odds = build_odds_features(total_odds)
         print(BASE_DIR)
         total_odds.to_csv(BASE_DIR / 'Data/features_test_files/all_odds_features.csv', index=False)
@@ -68,7 +69,9 @@ class FeatureEngineering:
 
         # Make sure event_date is datetime
         empty_df['date'] = pd.to_datetime(empty_df['event_date'], format="%Y-%m-%d")
-        combined_df = pd.concat([empty_df, past_event_stats], axis=0).reset_index(drop=True) # Combine with past event stats
+
+        # Combine with past event stats
+        combined_df = pd.concat([empty_df, past_event_stats], axis=0).reset_index(drop=True) if not ignore_upcoming else past_event_stats
 
         # compute rolling stats
         rolling_fp = BASE_DIR / 'Data/features_test_files/ufc_new_rolling.csv'
