@@ -1,7 +1,5 @@
 from dataclasses import dataclass
 from pathlib import Path
-from DataPipeline.FeatureEngineering.features_pipeline import BASE_DIR
-
 
 
 @dataclass

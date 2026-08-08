@@ -4,7 +4,6 @@ import os
 # Add the project root to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-import numpy as np 
 import pandas as pd 
 from DataPipeline.FeatureEngineering.BuildFeatures.final_feats_df import non_rolling_stats
 from DataPipeline.FeatureEngineering.BuildFeatures.fight_time_feats import single_event_features, upcoming_event_features
@@ -13,7 +12,9 @@ from DataPipeline.FeatureEngineering.BuildFeatures.odds_features import build_od
 from DataPipeline.FeatureEngineering.BuildFeatures.feature_functions import count_fav_dog
 
 from pathlib import Path
-BASE_DIR = Path(__file__).resolve().parents[2]
+from config import config
+# BASE_DIR = Path(__file__).resolve().parents[2]
+BASE_DIR = config.base_dir
 
 class FeatureEngineering: 
     """Requires df with all stats and odds merged, computes ai model features"""
@@ -34,7 +35,6 @@ class FeatureEngineering:
         # combine upcoming odds and odds history
         total_odds = pd.concat([odds_df, upcoming_odds]).reset_index(drop=True) if not ignore_upcoming else odds_df 
         total_odds = build_odds_features(total_odds)
-        print(BASE_DIR)
         total_odds.to_csv(BASE_DIR / 'Data/features_test_files/all_odds_features.csv', index=False)
 
         # compute features for past events
@@ -100,7 +100,7 @@ class FeatureEngineering:
         merged_df['dog_counts_diff'] = merged_df['dog_counts_red'] - merged_df['dog_counts_blue']
 
         # seperate the upcoming fight stats/odds from the history
-        odds_stats_history = merged_df.iloc[:-upcoming_stats.shape[0], :]
+        odds_stats_history = merged_df.iloc[:-upcoming_stats.shape[0], :] if not ignore_upcoming else merged_df 
         upcoming_df = merged_df.iloc[-upcoming_stats.shape[0]:, :]
 
         return odds_stats_history, upcoming_df
