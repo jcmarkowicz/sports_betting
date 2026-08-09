@@ -21,7 +21,7 @@ from config import config
 import time 
 
 
-def archive_results(start_date='2026-07-25'):
+def archive_results(start_date='2026-02-23'):
     """
     Maintain moneyline and parlay history betting results. 
 
