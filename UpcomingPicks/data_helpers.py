@@ -84,9 +84,14 @@ def get_bets_input(
 
     choice_edge = choice_proba - (1 / choice_fair_odds)
 
-    pred_winner_names = pd.Series(np.where(y_hat == 1, fighter_red,
-                                np.where(y_hat == 0, fighter_blue, None)),
-                        index=y_hat.index)
+    pred_winner_names = pd.Series(
+        np.where(y_hat == 1, fighter_red,
+            np.where(
+                y_hat == 0, 
+                fighter_blue, 
+                None
+            )),
+    index=y_hat.index)
 
     bets_input_df = pd.DataFrame({
         "p": choice_proba,

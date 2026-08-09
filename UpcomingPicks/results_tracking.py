@@ -68,25 +68,6 @@ def archive_results(start_date='2026-07-25'):
 
     scraped_stats, scraped_odds, upcoming_df = get_missing_stats(start_date) 
 
-    # df_single_event = single_event_features(df_stats)
-    # df_rolling = apply_rolling_stats(df_single_event)
-    # df_feats = non_rolling_stats(df_rolling)
-    # df_total = features.standardized_merge(df_feats, df_odds)
-
-    # df_total['date'] = pd.to_datetime(df_total['date'])
-    # t2 = time.time()
-    # print(f"Time to generate features: {t2-t1:.2f} seconds" )
-    # print(f"Total events to process: {df_total.shape[0]}")
-
-    # iterate through each event date and calculate the results for each event
-    # df_ml_history["date"] = pd.to_datetime(
-    #     df_ml_history["date"], format="mixed"
-    # ).dt.date
-
-    # df_parlay_history["date"] = pd.to_datetime(
-    #     df_parlay_history["date"], format="mixed"
-    # ).dt.date
-
     for date, event_group in upcoming_df.groupby('date'):
 
         event_group =  event_group.copy().reset_index(drop=True)
@@ -345,7 +326,9 @@ def calc_winner_ml(df_single_event, df_money_line):
             "fstar_open", "fstar_close1", "fstar_close2",
         ]].reset_index(drop=True),
     ], axis=1)
-    
+
+    df_data = df_data.rename(columns={'pred_winner_close1_stack': 'pred_winner_close1',
+                    'pred_winner_close2_stack': 'pred_winner_close2'})
     # mask = (
     #     (df_money_line['fstar_open'] != 0 | df_money_line['fstar_open'].notna()) &
     #     (df_data['net_odds_open'] != 0 | df_data['net_odds_open'].notna())

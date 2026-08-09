@@ -75,12 +75,6 @@ def xgboost_stacking(
             real_odds=real_odds, 
             fair_odds=fair_odds
         )
-        # print('XGBoost Stacking')
-        # print(bets_input_df['f_star_unscaled'])
-        # print(bets_input_df['choice_edge'])
-        # print(bets_input_df['choice_ev'])
-        # print(bets_input_df['choice_proba'])
-        # print(bets_input_df['p'])
 
         df_per_bet = run_per_bet_scaling(
             bets_df=bets_input_df, 
@@ -88,7 +82,6 @@ def xgboost_stacking(
             bankroll=bankroll, 
             N=N_ml
         )
-        print(df_per_bet['fstar_scaled'])
         
         bets_pkt = get_bets_pkt(
             bets_input_df=bets_input_df, 
@@ -226,7 +219,7 @@ def betting_pipeline(
         N_parlay = dat['N_parlay']
 
         valid_mask = ~df[feats].isna().any(axis=1)
-        y_hat = pd.Series(0, index=required_df_idx, dtype=float)
+        y_hat = pd.Series(np.nan, index=required_df_idx)
 
         # split features by dtype
         num_feats = df[feats].select_dtypes(exclude='category').columns
@@ -246,7 +239,7 @@ def betting_pipeline(
             df_parlay_combined = merge_parlay_types(df_parlay, df_parlay_combined, odds_type=type)
             continue
 
-        y_hat = logit_predict(
+        y_hat, proba_red, proba_blue = logit_predict(
             model=model, 
             df=df, 
             y_hat=y_hat, 
@@ -258,10 +251,7 @@ def betting_pipeline(
             required_df_idx=required_df_idx
         )
 
-        proba_red = y_hat
-        proba_blue = 1 - y_hat
-        pred_winner_bool = (proba_red >= 0.5).astype('Int64') 
-
+        pred_winner_bool = y_hat
         df_proba[f'proba_red_{type}'] = proba_red
         df_proba[f'proba_blue_{type}'] = proba_blue
 

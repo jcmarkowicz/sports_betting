@@ -57,12 +57,15 @@ def logit_predict(
         raise ValueError("NaNs present after alignment")
 
     # predict
-    y_hat.loc[valid_mask] = model.predict(X_valid)
+    proba_red = model.predict(X_valid)
+    proba_blue = 1 - proba_red
+
+    y_hat.loc[valid_mask] = (proba_red >= 0.5).astype(int) 
 
     # nan values for missing fights 
     y_hat.loc[~valid_mask] = np.nan
 
-    return y_hat
+    return y_hat, proba_red, proba_blue
 
 
 def xgboost_predict(
