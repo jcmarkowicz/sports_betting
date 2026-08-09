@@ -50,9 +50,6 @@ def archive_results(start_date='2026-07-25'):
 
     """
 
-    ml_bets_folder = BASE_DIR / "Data" / "upcoming_events" / "straight_bets" 
-    parlay_bets_folder = BASE_DIR / "Data" / "upcoming_events" / "parlays"
-
     if os.path.exists(config.ml_history_fp):
         df_ml_history = pd.read_csv(config.ml_history_fp)
         df_ml_history = df_ml_history.loc[:, ~df_ml_history.columns.str.contains('^Unnamed')]
@@ -512,10 +509,11 @@ def returns_by_date(starting_bankroll=500):
 
         parlay_data[f'net_odds_{type_}'] = parlay_net_odds.copy()
         parlay_data[f'net_stake_{type_}'] = parlay_net_stake.copy()
+        parlay_data[f'win_parlay_{type_}'] = win_parlay.copy()
 
         bankroll = starting_bankroll
+        bankroll_history = []
         profits = []
-
         for date in date_index.unique():
 
             wins = win_bet.loc[date]
@@ -535,13 +533,16 @@ def returns_by_date(starting_bankroll=500):
             profit_parlay = stakes_parlay * odds_parlay * bankroll if wins_parlay else -stakes_parlay * bankroll 
 
             total_profit = profit_ml.sum() + profit_parlay
-            profits.append(total_profit)
-            bankroll += total_profit.sum()
+            profits.append(total_profit) 
 
-        bankroll_data[f'bankroll_{type_}'] = profits
+            bankroll += total_profit.sum()
+            bankroll_history.append(bankroll)
+
+        bankroll_data[f'bankroll_{type_}'] = bankroll_history
+        bankroll_data[f'profits_{type_}'] = profits
 
     other_info = df_ml[[
-        'open_red', 'open_blue', 'close1_red', 'close2_blue',
+        'open_red', 'open_blue', 'close1_red', 'close1_blue', 'close2_red', 'close2_blue',
         'fighter_red', 'fighter_blue', 'pred_winner_open', 'pred_winner_close1', 'pred_winner_close2',
         'winner_bool', 'winner_name'
     ]].reset_index(drop=True)
@@ -550,6 +551,7 @@ def returns_by_date(starting_bankroll=500):
         key: value.to_numpy()
         for key, value in dict(ml_data).items()
     }
+
     ml_results = pd.DataFrame(ml_results)
     ml_results = pd.concat([ml_results, other_info], axis=1)
 
