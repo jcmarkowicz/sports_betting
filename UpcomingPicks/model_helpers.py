@@ -38,8 +38,7 @@ def logit_predict(
         col for col in X_valid.columns
         if X_valid[col].nunique(dropna=False) == 1
     ]
-    print("Constant-like columns:", constant_like_cols)
-
+    # print("Constant-like columns:", constant_like_cols)
 
     # ensure no duplicate 'const' column
     assert X_valid.columns.duplicated().sum() == 0, "Duplicate columns found in X_valid"
@@ -57,7 +56,8 @@ def logit_predict(
         raise ValueError("NaNs present after alignment")
 
     # predict
-    proba_red = model.predict(X_valid)
+    proba_red = pd.Series(np.nan, index=required_df_idx)
+    proba_red.loc[valid_mask] = model.predict(X_valid)
     proba_blue = 1 - proba_red
 
     y_hat.loc[valid_mask] = (proba_red >= 0.5).astype(int) 

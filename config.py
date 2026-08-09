@@ -61,8 +61,9 @@ class config:
     non_merged_stats_fp = base_dir / "Data" / "non_merged_features" / "non_merged_stats.csv"
     non_merged_odds_fp = base_dir / "Data" / "non_merged_features" / "non_merged_odds.csv"
 
-    ml_pct_returns_fp = base_dir / 'Data' / 'betting_results' / 'ml_pct_returns.csv'
-    parlay_pct_returns_fp = base_dir / 'Data' / 'betting_results' / 'parlay_pct_returns.csv'
+    ml_returns_fp = base_dir / 'Data' / 'betting_results' / 'ml_returns.csv'
+    parlay_returns_fp = base_dir / 'Data' / 'betting_results' / 'parlay_returns.csv'
+    bankroll_returns_fp = base_dir / 'Data' / 'betting_results' / 'bankroll_returns.csv'
 
     # email params
     sender_email = "jcmarkufc@gmail.com"
