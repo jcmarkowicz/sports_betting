@@ -1,39 +1,276 @@
 net_odds_open,net_odds_close1,net_odds_close2,winner_bool,winner_name,fighter_red,fighter_blue,pred_name_open,pred_name_close1,pred_name_close2,pred_winner_open,pred_winner_close1,pred_winner_close2,open_red,open_blue,close1_red,close1_blue,close2_red,close2_blue,fstar_open,fstar_close1,fstar_close2,date
--1.0,-1.0,-1.0,0.0,Abdul Hussein,cody gibson,abdul hussein,,,,,,,285.0,-350.0,420.0,-650.0,475.0,-600.0,,,,2026-07-25
--172.0,-235.0,-225.0,1.0,Nurullo Aliev,nurullo aliev,mike davis,nurullo aliev,nurullo aliev,nurullo aliev,1.0,1.0,1.0,-172.0,147.0,-235.0,175.0,-225.0,193.0,0.13378727944621055,0.18019591808870392,0.18265264799101905,2026-07-25
--300.0,-560.0,-549.0,1.0,Magomed Ankalaev,magomed ankalaev,bogdan guskov,magomed ankalaev,magomed ankalaev,magomed ankalaev,1.0,1.0,1.0,-300.0,250.0,-560.0,390.0,-549.0,410.0,0.0562266141062037,0.0,0.0,2026-07-25
--1.0,-1.0,-1.0,1.0,Magomed Zaynukov,magomed zaynukov,damian rzepecki,,,,,,,-275.0,235.0,-286.0,206.0,-241.0,215.0,,,,2026-07-25
--250.0,-350.0,-310.0,1.0,Rizvan Kuniev,rizvan kuniev,tyrell fortune,rizvan kuniev,rizvan kuniev,rizvan kuniev,1.0,1.0,1.0,-250.0,210.0,-350.0,250.0,-310.0,275.0,0.05834956841799518,0.042524214951855835,0.07934541358021327,2026-07-25
--1.0,-1.0,-1.0,1.0,Abubakar Vagaev,abubakar vagaev,saygid izagakhmaev,,,,,,,-205.0,175.0,-275.0,164.0,-190.0,210.0,,,,2026-07-25
+-1.0,-1.0,-1.0,1.0,Damian Pinas,damian pinas,wes schultz,,,,,,,-400.0,300.0,-265.0,190.0,-225.0,200.0,,,,2026-02-28
+-1.0,-1.0,-1.0,1.0,Ryan Gandra,ryan gandra,jose daniel medina,,,,,,,-550.0,420.0,-1000.0,450.0,-649.0,650.0,,,,2026-02-28
+-1.0,-1.0,-1.0,1.0,Regina Tarin,regina tarin,ernesta kareckaite,,,,,,,130.0,-150.0,105.0,-167.0,133.0,-125.0,,,,2026-02-28
+-450.0,-1200.0,-800.0,0.0,Francis Marshall,erik silva,francis marshall,francis marshall,francis marshall,francis marshall,0.0,0.0,0.0,350.0,-450.0,500.0,-1200.0,750.0,-800.0,0.0,0.0,0.0,2026-02-28
+-1.0,-1.0,-1.0,0.0,Lone'er Kavanagh,brandon moreno,loneer kavanagh,brandon moreno,brandon moreno,brandon moreno,1.0,1.0,1.0,-210.0,180.0,-215.0,163.0,-198.0,170.0,0.0,0.0,0.0,2026-02-28
+-500.0,-700.0,-560.0,1.0,Cristian Quinonez,cristian quinonez,kris moutinho,cristian quinonez,cristian quinonez,cristian quinonez,1.0,1.0,1.0,-500.0,385.0,-700.0,420.0,-560.0,500.0,0.13336161673784777,0.0,0.0,2026-02-28
+-150.0,-340.0,-275.0,0.0,David Martinez,marlon vera,david martinez,david martinez,david martinez,david martinez,0.0,0.0,0.0,130.0,-150.0,210.0,-340.0,265.0,-275.0,0.11167332509999317,0.0,0.0,2026-02-28
+-1.0,-1.0,-1.0,0.0,Javier Reyes,douglas silva de andrade,javier reyes,,,,,,,180.0,-210.0,175.0,-265.0,225.0,-225.0,,,,2026-02-28
+-400.0,-1200.0,-649.0,1.0,Santiago Luna,santiago luna,angel pacheco,santiago luna,santiago luna,santiago luna,1.0,1.0,1.0,-400.0,300.0,-1200.0,450.0,-649.0,750.0,0.007856789696850443,0.0,0.0,2026-02-28
+-1.0,-1.0,-1.0,1.0,Imanol Rodriguez,imanol rodriguez,kevin borjas,,,,,,,-230.0,195.0,-530.0,333.0,-450.0,380.0,,,,2026-02-28
+-220.0,-350.0,-255.0,1.0,Edgar Chairez,edgar chairez,felipe bunes,edgar chairez,edgar chairez,edgar chairez,1.0,1.0,1.0,-220.0,185.0,-350.0,215.0,-255.0,260.0,0.1350903785666242,0.04575428559417318,0.09069302067922473,2026-02-28
+-1.0,-1.0,-1.0,0.0,King Green,daniel zellhuber,king green,daniel zellhuber,daniel zellhuber,daniel zellhuber,1.0,1.0,1.0,-520.0,350.0,-500.0,290.0,-360.0,350.0,0.0690033727795173,0.0,0.05551975403944762,2026-02-28
+-129.0,-195.0,-180.0,1.0,Ailin Perez,ailin perez,macy chiasson,ailin perez,ailin perez,ailin perez,1.0,1.0,1.0,-129.0,109.0,-195.0,148.0,-180.0,165.0,0.13024135627250244,0.18152320273233408,0.18338058707951832,2026-02-28
+-800.0,-910.0,-725.0,1.0,Donte Johnson,donte johnson,cody brundage,donte johnson,donte johnson,donte johnson,1.0,1.0,1.0,-800.0,550.0,-910.0,500.0,-725.0,610.0,0.27906472779025515,0.2722551186604551,0.33292520728488545,2026-03-07
+-1.0,-1.0,-1.0,0.0,Rodolfo Bellato,luke fernandez,rodolfo bellato,,,,,,,-125.0,105.0,-245.0,175.0,-220.0,190.0,,,,2026-03-07
+-1.0,-1.0,-1.0,0.0,Diyar Nurgozhay,rafael tobias,diyar nurgozhay,,,,,,,-300.0,250.0,-190.0,140.0,-170.0,150.0,,,,2026-03-07
+-215.0,-205.0,-155.0,1.0,Sumudaerji,sumudaerji,jesus aguilar,sumudaerji,sumudaerji,sumudaerji,1.0,1.0,1.0,-215.0,185.0,-205.0,130.0,-155.0,163.0,0.13370950801635975,0.15700181733894908,0.1577365008956569,2026-03-07
+-160.0,-220.0,-194.0,0.0,Nyamjargal Tumendemberel,cody durden,nyamjargal tumendemberel,nyamjargal tumendemberel,nyamjargal tumendemberel,nyamjargal tumendemberel,0.0,0.0,0.0,140.0,-160.0,155.0,-220.0,180.0,-194.0,0.10379142526214366,0.027077151379684826,0.03956016830115587,2026-03-07
+-1.0,-1.0,-1.0,0.0,Alberto Montes,ricky turcios,alberto montes,,,,,,,190.0,-225.0,150.0,-195.0,160.0,-175.0,,,,2026-03-07
+-1.0,-225.0,-190.0,1.0,Drew Dober,drew dober,michael johnson,michael johnson,drew dober,drew dober,0.0,1.0,1.0,160.0,-185.0,-225.0,160.0,-190.0,175.0,0.0,0.010058371621696848,0.010541338852420425,2026-03-07
+-1.0,-1.0,-1.0,1.0,Cody Garbrandt,cody garbrandt,xiao long,,,,,,,,,,,,,,,,2026-03-07
+-150.0,-175.0,-155.0,1.0,Gregory Rodrigues,gregory rodrigues,brunno ferreira,gregory rodrigues,gregory rodrigues,gregory rodrigues,1.0,1.0,1.0,-150.0,130.0,-175.0,130.0,-155.0,140.0,0.11155502746279197,0.15384685914122867,0.15173994091995505,2026-03-07
+-500.0,-350.0,-290.0,0.0,Raul Rosas Jr.,rob font,raul rosas jr,raul rosas jr,raul rosas jr,raul rosas jr,0.0,0.0,0.0,375.0,-500.0,245.0,-350.0,275.0,-290.0,0.21557132925966319,0.22503560140764572,0.22282982300419904,2026-03-07
+-235.0,-245.0,-210.0,1.0,Caio Borralho,caio borralho,reinier de ridder,caio borralho,caio borralho,caio borralho,1.0,1.0,1.0,-235.0,180.0,-245.0,175.0,-210.0,190.0,0.0341908183277445,0.041536255604586826,0.06754976439730916,2026-03-07
+130.0,-1.0,-1.0,0.0,Charles Oliveira,max holloway,charles oliveira,charles oliveira,max holloway,max holloway,0.0,1.0,1.0,-150.0,130.0,-225.0,155.0,-190.0,175.0,0.08426785436904016,0.0,0.0,2026-03-07
+-140.0,-152.0,-140.0,1.0,Piera Rodriguez,piera rodriguez,sam hughes,piera rodriguez,piera rodriguez,piera rodriguez,1.0,1.0,1.0,-140.0,120.0,-152.0,118.0,-140.0,128.0,0.10881030384087784,0.14528494302367764,0.14479617933798553,2026-03-14
+-1.0,-1.0,-1.0,0.0,Hecher Sosa,luan lacerda,hecher sosa,,,,,,,170.0,-200.0,150.0,-250.0,200.0,-180.0,,,,2026-03-14
+-500.0,-1667.0,-649.0,1.0,Bia Mesquita,bia mesquita,montse rendon,bia mesquita,bia mesquita,bia mesquita,1.0,1.0,1.0,-500.0,375.0,-1667.0,450.0,-649.0,900.0,0.20402252413383773,0.0,0.14199070484749762,2026-03-14
+-1.0,-1.0,-1.0,0.0,Manoel Sousa,bolaji oki,manoel sousa,,,,,,,170.0,-200.0,210.0,-320.0,265.0,-270.0,,,,2026-03-14
+-250.0,-280.0,-260.0,1.0,Elijah Smith,elijah smith,suyoung you,elijah smith,elijah smith,elijah smith,1.0,1.0,1.0,-250.0,210.0,-280.0,210.0,-260.0,230.0,0.1444192822159287,0.14757351459148016,0.15527200802349364,2026-03-14
+-1.0,-1.0,-1.0,0.0,Eryk Anders,brad tavares,eryk anders,brad tavares,eryk anders,brad tavares,1.0,1.0,1.0,-185.0,160.0,100.0,-140.0,118.0,-125.0,0.0029004326445338426,0.0,0.08887601639825654,2026-03-14
+-240.0,-230.0,-200.0,1.0,Vitor Petrino,vitor petrino,steven asplund,vitor petrino,vitor petrino,vitor petrino,1.0,1.0,1.0,-240.0,205.0,-230.0,163.0,-200.0,188.0,0.07480522440542438,0.17680893655392044,0.17646746272325636,2026-03-14
+-1.0,-1.0,-1.0,1.0,Ion Cutelaba,ion cutelaba,oumar sy,oumar sy,oumar sy,oumar sy,0.0,0.0,0.0,170.0,-200.0,200.0,-420.0,320.0,-250.0,0.0,0.0,0.0,2026-03-14
+-1.0,-1.0,-1.0,1.0,Marwan Rahiki,marwan rahiki,harry hardwick,,,,,,,-200.0,170.0,-320.0,210.0,-275.0,260.0,,,,2026-03-14
+-260.0,-500.0,-401.0,0.0,Jose Delgado,andre fili,jose delgado,jose delgado,jose delgado,jose delgado,0.0,0.0,0.0,220.0,-260.0,301.0,-500.0,375.0,-401.0,0.08408521273944737,0.0,0.0,2026-03-14
+-250.0,-250.0,-235.0,0.0,Gillian Robertson,amanda lemos,gillian robertson,gillian robertson,gillian robertson,gillian robertson,0.0,0.0,0.0,210.0,-250.0,194.0,-250.0,210.0,-235.0,0.1433885652917973,0.09155264057717796,0.12818711919598186,2026-03-14
+-500.0,-560.0,-480.0,0.0,Kevin Vallejos,josh emmett,kevin vallejos,kevin vallejos,kevin vallejos,kevin vallejos,0.0,0.0,0.0,375.0,-500.0,360.0,-560.0,400.0,-480.0,0.15189543374862316,0.0,0.0,2026-03-14
+-150.0,-195.0,-175.0,1.0,Charles Johnson,charles johnson,bruno silva,charles johnson,charles johnson,charles johnson,1.0,1.0,1.0,-150.0,130.0,-195.0,140.0,-175.0,165.0,0.12206602115812332,0.14724081689374008,0.16315851815053128,2026-03-14
+-250.0,-500.0,-450.0,0.0,Myktybek Orolbai,chris curtis,myktybek orolbai,myktybek orolbai,myktybek orolbai,myktybek orolbai,0.0,0.0,0.0,210.0,-250.0,333.0,-500.0,380.0,-450.0,0.15306173286239416,0.05255418801642998,0.08635386956667924,2026-03-14
+-1.0,-1.0,-1.0,1.0,Shanelle Dyer,shanelle dyer,ravena oliveira,,,,,,,-200.0,170.0,-600.0,330.0,-450.0,440.0,,,,2026-03-21
+-185.0,-118.0,130.0,0.0,Abdul-Kareem Al-Selwady,shem rock,abdul kareem al selwady,abdul kareem al selwady,abdul kareem al selwady,abdul kareem al selwady,0.0,0.0,0.0,160.0,-185.0,-155.0,-118.0,-104.0,130.0,0.1450407553417358,0.13458962138960798,0.13476690469261798,2026-03-21
+-1.0,-1.0,-1.0,1.0,Mantas Kondratavicius,mantas kondratavicius,antonio trocoli,,,,,,,-400.0,300.0,-1115.0,490.0,-750.0,750.0,,,,2026-03-21
+-1.0,-1.0,-1.0,1.0,Mario Pinto,mario pinto,felipe franco,,,,,,,-300.0,250.0,-1400.0,500.0,-800.0,800.0,,,,2026-03-21
+-1.0,-1.0,-1.0,1.0,Nathaniel Wood,nathaniel wood,losene keita,,,,,,,130.0,-150.0,194.0,-290.0,235.0,-245.0,,,,2026-03-21
+-1.0,-1.0,-1.0,0.0,Brando Pericic,louie sutherland,brando pericic,,,,,,,-170.0,145.0,180.0,-275.0,210.0,-210.0,,,,2026-03-21
+-220.0,-177.0,-138.0,1.0,Mason Jones,mason jones,axel sola,mason jones,mason jones,mason jones,1.0,1.0,1.0,-220.0,185.0,-177.0,110.0,-138.0,152.0,0.1366910433617977,0.15992886999295966,0.16317359361673955,2026-03-21
+-450.0,-800.0,-590.0,1.0,Iwo Baraniewski,iwo baraniewski,austen lane,iwo baraniewski,iwo baraniewski,iwo baraniewski,1.0,1.0,1.0,-450.0,350.0,-800.0,410.0,-590.0,550.0,0.0,0.0,0.0,2026-03-21
+-155.0,-230.0,-178.0,1.0,Michael Page,michael page,sam patterson,michael page,michael page,michael page,1.0,1.0,1.0,-155.0,135.0,-230.0,144.0,-178.0,190.0,0.0,0.0,0.0,2026-03-21
+-150.0,-250.0,-188.0,1.0,Luke Riley,luke riley,michael aswell jr,luke riley,luke riley,luke riley,1.0,1.0,1.0,-150.0,130.0,-250.0,150.0,-188.0,205.0,0.0,0.0,0.0,2026-03-21
+-250.0,-275.0,-225.0,1.0,Movsar Evloev,movsar evloev,lerone murphy,movsar evloev,movsar evloev,movsar evloev,1.0,1.0,1.0,-250.0,210.0,-275.0,175.0,-225.0,210.0,0.14341284779064215,0.18099584295190957,0.18399662994325633,2026-03-21
+-250.0,-470.0,-370.0,0.0,Christian Leroy Duncan,roman dolidze,christian leroy duncan,christian leroy duncan,christian leroy duncan,christian leroy duncan,0.0,0.0,0.0,210.0,-250.0,290.0,-470.0,340.0,-370.0,0.14429798447821185,0.0,0.028948320688897813,2026-03-21
+-1.0,-1.0,-1.0,0.0,Danny Silva,kurtis campbell,danny silva,,,,,,,-125.0,105.0,-300.0,184.0,-230.0,240.0,,,,2026-03-21
+-1.0,-1.0,-1.0,0.0,Lance Gibson Jr.,chase hooper,lance gibson jr,chase hooper,chase hooper,chase hooper,1.0,1.0,1.0,-350.0,285.0,-420.0,210.0,-280.0,320.0,0.0,0.0,0.0,2026-03-28
+-300.0,-1000.0,-480.0,1.0,Alexia Thainara,alexia thainara,bruna brasil,alexia thainara,alexia thainara,alexia thainara,1.0,1.0,1.0,-300.0,250.0,-1000.0,330.0,-480.0,650.0,0.16027127212410544,0.0,0.0,2026-03-28
+-1.0,-1.0,-1.0,2.0,DRAW,ricky simon,adrian yanez,ricky simon,ricky simon,ricky simon,1.0,1.0,1.0,-110.0,-110.0,-195.0,124.0,-158.0,165.0,0.09426765951102548,0.1573471758403059,0.1588008583951957,2026-03-28
+-425.0,-900.0,-440.0,1.0,Navajo Stirling,navajo stirling,bruno lopes,navajo stirling,navajo stirling,navajo stirling,1.0,1.0,1.0,-425.0,355.0,-900.0,310.0,-440.0,600.0,0.09794534829135236,0.0,0.0,2026-03-28
+110.0,-130.0,-113.0,1.0,Casey O'Neill,casey oneill,gabriella fernandes,casey oneill,casey oneill,casey oneill,1.0,1.0,1.0,110.0,-130.0,-130.0,-113.0,-113.0,110.0,0.09229441181881053,0.12950441391079748,0.1321982536322609,2026-03-28
+-1.0,-1.0,-1.0,0.0,Tyrell Fortune,marcin tybura,tyrell fortune,,,,,,,-160.0,140.0,-104.0,-143.0,116.0,-122.0,,,,2026-03-28
+-1.0,-1.0,-1.0,0.0,Tofiq Musayev,ignacio bahamondes,tofiq musayev,ignacio bahamondes,ignacio bahamondes,ignacio bahamondes,1.0,1.0,1.0,-200.0,175.0,-350.0,220.0,-295.0,280.0,0.1283228775408397,0.0,0.0,2026-03-28
+-110.0,-1.0,-1.0,0.0,Yousri Belgaroui,mansur abdul malik,yousri belgaroui,yousri belgaroui,mansur abdul malik,mansur abdul malik,0.0,1.0,1.0,-110.0,-110.0,-164.0,118.0,-148.0,142.0,0.009024046007486408,0.014341482409106373,0.0017809070263326903,2026-03-28
+-1.0,-1.0,-1.0,0.0,Lerryan Douglas,julian erosa,lerryan douglas,,,,,,,285.0,-350.0,235.0,-335.0,250.0,-280.0,,,,2026-03-28
+-500.0,-1115.0,-901.0,1.0,Michael Chiesa,michael chiesa,niko price,michael chiesa,michael chiesa,michael chiesa,1.0,1.0,1.0,-500.0,375.0,-1115.0,550.0,-901.0,700.0,0.20650741434228506,0.0,0.0,2026-03-28
+-1.0,-1.0,-1.0,1.0,Alexa Grasso,alexa grasso,maycee barber,maycee barber,maycee barber,maycee barber,0.0,0.0,0.0,170.0,-200.0,124.0,-205.0,170.0,-158.0,0.14751701994460945,0.1737734879999389,0.17537216393177413,2026-03-28
+-110.0,-1.0,-1.0,0.0,Joe Pyfer,israel adesanya,joe pyfer,joe pyfer,israel adesanya,israel adesanya,0.0,1.0,1.0,-110.0,-110.0,-145.0,102.0,-130.0,122.0,0.09319804767087436,0.0,0.0,2026-03-28
+-175.0,-200.0,-150.0,1.0,Terrance McKinney,terrance mckinney,kyle nelson,terrance mckinney,terrance mckinney,terrance mckinney,1.0,1.0,1.0,-175.0,150.0,-200.0,118.0,-150.0,165.0,0.12208872083990527,0.1564682093783287,0.15689706795541242,2026-03-28
+-110.0,-180.0,-135.0,1.0,Alice Pereira,alice pereira,hailey cowan,alice pereira,alice pereira,alice pereira,1.0,1.0,1.0,-110.0,-110.0,-180.0,110.0,-135.0,140.0,0.09430872023547796,0.0,0.01072549129112143,2026-04-04
+-1.0,-1.0,-1.0,1.0,Kai Kamaka III,kai kamaka iii,dakota hope,,,,,,,,,,,,,,,,2026-04-04
+-1.0,-125.0,-110.0,1.0,Dione Barbosa,dione barbosa,melissa gatto,melissa gatto,dione barbosa,dione barbosa,0.0,1.0,1.0,115.0,-135.0,-125.0,-112.0,-110.0,100.0,0.0,0.019186160146150818,0.027900288302290407,2026-04-04
+-1.0,-1.0,-1.0,0.0,Tresean Gore,azamat bekoev,tresean gore,,,,,,,,,,,,,,,,2026-04-04
+-450.0,-450.0,-400.0,1.0,Alessandro Costa,alessandro costa,stewart nicoll,alessandro costa,alessandro costa,alessandro costa,1.0,1.0,1.0,-450.0,350.0,-450.0,300.0,-400.0,350.0,0.0,0.0,0.0,2026-04-04
+-1.0,-1.0,-1.0,0.0,Darrius Flowers,lando vannata,darrius flowers,lando vannata,lando vannata,lando vannata,1.0,1.0,1.0,-170.0,145.0,-275.0,175.0,-225.0,225.0,0.0,0.0,0.0,2026-04-04
+-1.0,-1.0,-1.0,0.0,Thomas Petersen,guilherme pat,thomas petersen,,,,,,,-110.0,-110.0,-164.0,-120.0,-105.0,128.0,,,,2026-04-04
+-1.0,-1.0,-1.0,1.0,Tommy McMillen,tommy mcmillen,manolo zecchini,,,,,,,-500.0,385.0,-1000.0,500.0,-700.0,650.0,,,,2026-04-04
+-1400.0,-1600.0,-410.0,1.0,Abdul Rakhman Yakhyaev,abdul rakhman yakhyaev,brendson ribeiro,abdul rakhman yakhyaev,abdul rakhman yakhyaev,abdul rakhman yakhyaev,1.0,1.0,1.0,-1400.0,850.0,-1600.0,290.0,-410.0,850.0,0.0,0.023149301178118472,0.2913386567316556,2026-04-04
+-155.0,-140.0,-125.0,1.0,Virna Jandiroba,virna jandiroba,tabatha ricci,virna jandiroba,virna jandiroba,virna jandiroba,1.0,1.0,1.0,-155.0,135.0,-140.0,105.0,-125.0,118.0,0.11347591006498807,0.13845372387723506,0.13889649606489618,2026-04-04
+-1.0,-1.0,-1.0,1.0,Renato Moicano,renato moicano,chris duncan,chris duncan,chris duncan,chris duncan,0.0,0.0,0.0,150.0,-175.0,114.0,-150.0,125.0,-134.0,0.009485742156840817,0.0,0.0,2026-04-04
+-1.0,-1.0,-1.0,1.0,Jose Delano,jose delano,robert ruchala,,,,,,,-300.0,250.0,-280.0,170.0,-200.0,210.0,,,,2026-04-04
+-1.0,-1.0,-1.0,1.0,Ethyn Ewing,ethyn ewing,rafael estevam,,,,,,,185.0,-215.0,-142.0,102.0,-122.0,112.0,,,,2026-04-04
+109.0,-142.0,-110.0,1.0,Kevin Holland,kevin holland,randy brown,kevin holland,kevin holland,kevin holland,1.0,1.0,1.0,109.0,-129.0,-142.0,-110.0,-110.0,118.0,0.08551759930242445,0.08965327414408705,0.09420559875655828,2026-04-11
+-250.0,-180.0,-147.0,1.0,Charles Radtke,charles radtke,francisco prado,charles radtke,charles radtke,charles radtke,1.0,1.0,1.0,-250.0,210.0,-180.0,124.0,-147.0,143.0,0.0,0.0,0.0,2026-04-11
+-1.0,-1.0,-1.0,0.0,Vicente Luque,kelvin gastelum,vicente luque,kelvin gastelum,kelvin gastelum,kelvin gastelum,1.0,1.0,1.0,-200.0,170.0,-290.0,200.0,-250.0,235.0,0.0,0.0,0.0,2026-04-11
+-1.0,-1.0,-1.0,2.0,DRAW,chris padilla,marquel mederos,chris padilla,chris padilla,chris padilla,1.0,1.0,1.0,-150.0,130.0,-175.0,126.0,-160.0,140.0,0.1139847245165197,0.153509905235618,0.1544847214062169,2026-04-11
+-1.0,-1.0,-1.0,1.0,Tatiana Suarez,tatiana suarez,loopy godinez,,,,,,,,,,,,,,,,2026-04-11
+-190.0,-260.0,-188.0,1.0,Mateusz Gamrot,mateusz gamrot,esteban ribovics,mateusz gamrot,mateusz gamrot,mateusz gamrot,1.0,1.0,1.0,-190.0,165.0,-260.0,150.0,-188.0,210.0,0.12886126695391054,0.1808479604087583,0.17899550123440341,2026-04-11
+-170.0,-1.0,-1.0,0.0,Carlos Ulberg,jiri prochazka,carlos ulberg,carlos ulberg,carlos ulberg,carlos ulberg,0.0,1.0,1.0,145.0,-170.0,-112.0,-125.0,105.0,-110.0,0.004319244167472444,0.03390294736471924,0.05987498977971256,2026-04-11
+-1.0,-1.0,-1.0,0.0,Aaron Pico,patricio pitbull,aaron pico,,,,,,,,,,,,,,,,2026-04-11
+-1.0,-150.0,-110.0,1.0,Cub Swanson,cub swanson,nate landwehr,nate landwehr,cub swanson,cub swanson,0.0,1.0,1.0,135.0,-155.0,-150.0,-110.0,-110.0,125.0,0.0,0.06406585968018337,0.04346547451677723,2026-04-11
+-150.0,-210.0,-163.0,1.0,Dominick Reyes,dominick reyes,johnny walker,dominick reyes,dominick reyes,dominick reyes,1.0,1.0,1.0,-150.0,130.0,-210.0,130.0,-163.0,175.0,0.014048732176041816,0.015141168308652928,0.024907858760008342,2026-04-11
+-1.0,-1.0,-1.0,0.0,Josh Hokit,curtis blaydes,josh hokit,curtis blaydes,curtis blaydes,curtis blaydes,1.0,1.0,1.0,-160.0,140.0,-125.0,-135.0,115.0,100.0,0.13176911867583535,0.1432724006685773,0.14215272762817743,2026-04-11
+-1.0,-1.0,-1.0,0.0,Paulo Costa,azamat murzakanov,paulo costa,azamat murzakanov,azamat murzakanov,azamat murzakanov,1.0,1.0,1.0,-230.0,190.0,-280.0,200.0,-250.0,230.0,0.13990743793404234,0.1644744093357084,0.18571837992110266,2026-04-11
+-1.0,-1.0,-1.0,0.0,Gokhan Saricam,tanner boser,gokhan saricam,,,,,,,-150.0,130.0,120.0,-163.0,135.0,-140.0,,,,2026-04-18
+-1.0,-1.0,-1.0,2.0,DRAW,john castaneda,mark vologdin,,,,,,,130.0,-150.0,-190.0,130.0,-158.0,160.0,,,,2026-04-18
+-1.0,120.0,170.0,1.0,JJ Aldrich,jj aldrich,jamey lyn horth,jamey lyn horth,jamey lyn horth,jamey lyn horth,0.0,1.0,1.0,220.0,-260.0,120.0,-205.0,170.0,-150.0,0.0,0.0,0.0,2026-04-18
+-180.0,-150.0,-138.0,1.0,Melissa Croden,melissa croden,daria zhelezniakova,melissa croden,melissa croden,melissa croden,1.0,1.0,1.0,-180.0,155.0,-150.0,110.0,-138.0,130.0,0.009052649945522954,0.08889174912661063,0.0993938336996421,2026-04-18
+-1.0,-1.0,-1.0,0.0,Robert Valentin,julien leblanc,robert valentin,,,,,,,-172.0,147.0,130.0,-186.0,150.0,-163.0,,,,2026-04-18
+-1.0,-1.0,-1.0,0.0,John Yannis,jamie siraj,john yannis,,,,,,,-220.0,185.0,-265.0,175.0,-230.0,215.0,,,,2026-04-18
+130.0,-175.0,-138.0,0.0,Gauge Young,thiago moises,gauge young,gauge young,gauge young,gauge young,0.0,0.0,0.0,-150.0,130.0,110.0,-175.0,145.0,-138.0,0.08405580565981452,0.1115064157924934,0.11302890456092952,2026-04-18
+-250.0,-370.0,-300.0,1.0,Jasmine Jasudavicius,jasmine jasudavicius,karine silva,jasmine jasudavicius,jasmine jasudavicius,jasmine jasudavicius,1.0,1.0,1.0,-250.0,210.0,-370.0,225.0,-300.0,290.0,0.07247623919410565,0.0908903094495574,0.11715377519112391,2026-04-18
+-1.0,-1.0,-1.0,0.0,Jai Herbert,mandel nallo,jai herbert,,,,,,,-145.0,125.0,-180.0,140.0,-160.0,150.0,,,,2026-04-18
+-150.0,-1.0,-1.0,0.0,Charles Jourdain,kyler phillips,charles jourdain,charles jourdain,charles jourdain,charles jourdain,0.0,1.0,1.0,130.0,-150.0,110.0,-165.0,132.0,-136.0,0.0,0.0,0.0,2026-04-18
+-335.0,-280.0,-250.0,0.0,Mike Malott,gilbert burns,mike malott,mike malott,mike malott,mike malott,0.0,0.0,0.0,275.0,-335.0,205.0,-280.0,240.0,-250.0,0.0,0.0,0.0,2026-04-18
+-1.0,-1.0,-1.0,0.0,Marcio Barbosa,dennis buzukja,marcio barbosa,,,,,,,285.0,-350.0,270.0,-435.0,325.0,-330.0,,,,2026-04-18
+-1.0,-1.0,-1.0,0.0,Eric McConico,rodolfo vieira,eric mcconico,rodolfo vieira,rodolfo vieira,rodolfo vieira,1.0,1.0,1.0,-300.0,250.0,-400.0,225.0,-300.0,310.0,0.06319359684204649,0.09643643951976176,0.12564634044106474,2026-04-25
+-1.0,-1.0,-1.0,0.0,Michelle Montague,mayra bueno silva,michelle montague,,,,,,,330.0,-400.0,300.0,-480.0,360.0,-400.0,,,,2026-04-25
+-1.0,-1.0,-1.0,1.0,Talita Alencar,talita alencar,julia polastri,julia polastri,julia polastri,julia polastri,0.0,0.0,0.0,170.0,-200.0,190.0,-250.0,205.0,-230.0,0.0,0.0,0.0,2026-04-25
+-1.0,-1.0,-1.0,0.0,Victor Valenzuela,max griffin,victor valenzuela,,,,,,,-110.0,-110.0,100.0,-150.0,120.0,-120.0,,,,2026-04-25
+-1.0,-1.0,-1.0,0.0,Cody Durden,jafel filho,cody durden,jafel filho,jafel filho,jafel filho,1.0,1.0,1.0,-400.0,330.0,-715.0,400.0,-549.0,500.0,0.10837689780154598,0.0,0.0,2026-04-25
+-150.0,-210.0,-160.0,1.0,Jackson McVey,jackson mcvey,sedriques dumas,jackson mcvey,jackson mcvey,jackson mcvey,1.0,1.0,1.0,-150.0,130.0,-210.0,140.0,-160.0,165.0,0.11222328286738278,0.1063640890984973,0.15172969300868439,2026-04-25
+-1.0,-1.0,-1.0,0.0,Raoni Barcelos,montel jackson,raoni barcelos,montel jackson,montel jackson,montel jackson,1.0,1.0,1.0,-221.0,186.0,-225.0,150.0,-188.0,180.0,0.14163723767372483,0.17469826305506192,0.17373924501234492,2026-04-25
+-1.0,-1.0,-1.0,0.0,Ryan Spann,marcus buchecha,ryan spann,marcus buchecha,marcus buchecha,marcus buchecha,1.0,1.0,1.0,-110.0,-110.0,-162.0,110.0,-138.0,136.0,0.10320744260302964,0.1562722254796926,0.15944752360556266,2026-04-25
+-1.0,-1.0,-1.0,1.0,Davey Grant,davey grant,adrian luna martinetti,,,,,,,105.0,-138.0,-125.0,-103.0,-121.0,100.0,,,,2026-04-25
+-1.0,-1.0,-1.0,1.0,Aljamain Sterling,aljamain sterling,youssef zalal,youssef zalal,youssef zalal,youssef zalal,0.0,0.0,0.0,-155.0,135.0,105.0,-141.0,115.0,-125.0,0.08222812632612217,0.11187628760902872,0.13641593975967076,2026-04-25
+130.0,-105.0,105.0,1.0,Rafa Garcia,rafa garcia,alexander hernandez,rafa garcia,rafa garcia,rafa garcia,1.0,1.0,1.0,130.0,-150.0,-105.0,-125.0,105.0,-118.0,0.07838211431033168,0.09514228990871902,0.08949243566137646,2026-04-25
+-1.0,-1.0,-1.0,0.0,Joselyne Edwards,norma dumont,joselyne edwards,norma dumont,norma dumont,norma dumont,1.0,1.0,1.0,-200.0,170.0,-235.0,165.0,-205.0,195.0,0.04124156751963734,0.014454713115752967,0.03805418926106242,2026-04-25
+-1.0,-1.0,-1.0,1.0,Francis Marshall,francis marshall,lucas brennan,,,,,,,-400.0,330.0,-600.0,325.0,-425.0,380.0,,,,2026-04-25
+-400.0,-240.0,-213.0,1.0,Junior Tafa,junior tafa,kevin christian,junior tafa,junior tafa,junior tafa,1.0,1.0,1.0,-400.0,330.0,-240.0,175.0,-213.0,200.0,0.0,0.0,0.0,2026-05-02
+-1.0,-1.0,-1.0,0.0,Kody Steele,dom mar fan,kody steele,,,,,,,175.0,-205.0,125.0,-380.0,270.0,-150.0,,,,2026-05-02
+-150.0,-250.0,-220.0,1.0,Jonathan Micallef,jonathan micallef,themba gorimbo,jonathan micallef,jonathan micallef,jonathan micallef,1.0,1.0,1.0,-150.0,130.0,-250.0,170.0,-220.0,205.0,0.08341736846220862,0.0,0.0,2026-05-02
+-1.0,-1.0,-1.0,0.0,Wes Schultz,ben johnston,wes schultz,,,,,,,,,,,,,,,,2026-05-02
+-110.0,-145.0,102.0,1.0,Colby Thicknesse,colby thicknesse,vince morales,colby thicknesse,colby thicknesse,colby thicknesse,1.0,1.0,1.0,-110.0,-110.0,-145.0,-128.0,102.0,122.0,0.11675757274386452,0.1379868042746705,0.13972384952913128,2026-05-02
+-600.0,-1800.0,-550.0,1.0,Jacob Malkoun,jacob malkoun,gerald meerschaert,jacob malkoun,jacob malkoun,jacob malkoun,1.0,1.0,1.0,-600.0,450.0,-1800.0,350.0,-550.0,950.0,0.23753118965747005,0.0,0.20699224705364047,2026-05-02
+-1.0,-1.0,-1.0,0.0,Brando Pericic,shamil gaziev,brando pericic,shamil gaziev,shamil gaziev,shamil gaziev,1.0,1.0,1.0,-155.0,135.0,-120.0,-122.0,104.0,-105.0,0.020615126378599604,0.12390080477036496,0.12194134431968223,2026-05-02
+-300.0,-225.0,-163.0,1.0,Cam Rowston,cam rowston,robert bryczek,cam rowston,cam rowston,cam rowston,1.0,1.0,1.0,-300.0,250.0,-225.0,130.0,-163.0,185.0,0.0493271131225546,0.10908765021310743,0.11588401378690083,2026-05-02
+-1.0,-1.0,-1.0,1.0,Marwan Rahiki,marwan rahiki,ollie schmid,,,,,,,-900.0,600.0,-800.0,475.0,-650.0,525.0,,,,2026-05-02
+-250.0,-196.0,-180.0,0.0,Steve Erceg,tim elliott,steve erceg,steve erceg,steve erceg,steve erceg,0.0,0.0,0.0,210.0,-250.0,150.0,-196.0,160.0,-180.0,0.0,0.0,0.0,2026-05-02
+-350.0,-450.0,-350.0,0.0,Quillan Salkilld,beneil dariush,quillan salkilld,quillan salkilld,quillan salkilld,quillan salkilld,0.0,0.0,0.0,285.0,-350.0,285.0,-450.0,350.0,-350.0,0.15344152035299363,0.012105775433910696,0.05845916601181694,2026-05-02
+-175.0,-1.0,-1.0,0.0,Carlos Prates,jack della maddalena,carlos prates,carlos prates,carlos prates,carlos prates,0.0,1.0,1.0,150.0,-175.0,-115.0,-120.0,-105.0,-104.0,0.0,0.04227041965714056,0.04679991065274572,2026-05-02
+130.0,-1.0,-1.0,0.0,Louie Sutherland,tai tuivasa,louie sutherland,louie sutherland,tai tuivasa,tai tuivasa,0.0,1.0,1.0,-150.0,130.0,-265.0,175.0,-225.0,215.0,0.07840045366511704,0.0,0.0,2026-05-02
+-300.0,130.0,138.0,1.0,Sean Brady,sean brady,joaquin buckley,sean brady,sean brady,sean brady,1.0,1.0,1.0,-300.0,250.0,130.0,-167.0,138.0,-150.0,0.1480662218137049,0.10679772980744161,0.10874715639836534,2026-05-09
+-185.0,-150.0,-126.0,1.0,Alexander Volkov,alexander volkov,waldo cortes acosta,alexander volkov,alexander volkov,alexander volkov,1.0,1.0,1.0,-185.0,160.0,-150.0,108.0,-126.0,130.0,0.0,0.06269138988308061,0.06371557807522996,2026-05-09
+-1000.0,-1800.0,-1400.0,1.0,Ateba Gautier,ateba gautier,ozzy diaz,ateba gautier,ateba gautier,ateba gautier,1.0,1.0,1.0,-1000.0,675.0,-1800.0,700.0,-1400.0,900.0,0.0,0.0,0.0,2026-05-09
+-1.0,-1.0,-1.0,0.0,Sean Strickland,khamzat chimaev,sean strickland,khamzat chimaev,khamzat chimaev,khamzat chimaev,1.0,1.0,1.0,-400.0,300.0,-500.0,310.0,-410.0,375.0,0.22931934869889697,0.27232662902820015,0.2724913557108605,2026-05-09
+-1.0,-1.0,-1.0,1.0,Joshua Van,joshua van,tatsuro taira,tatsuro taira,tatsuro taira,tatsuro taira,0.0,0.0,0.0,130.0,-150.0,123.0,-175.0,145.0,-152.0,0.0,0.08301368503114101,0.0797125667381538,2026-05-09
+-1.0,-1.0,-1.0,0.0,Yaroslav Amosov,joel alvarez,yaroslav amosov,joel alvarez,joel alvarez,joel alvarez,1.0,1.0,1.0,-200.0,170.0,140.0,-205.0,170.0,-175.0,0.14471995373607005,0.10553449136003312,0.10586684997135623,2026-05-09
+-225.0,140.0,154.0,1.0,Roman Kopylov,roman kopylov,marco tulio,roman kopylov,marco tulio,marco tulio,1.0,1.0,1.0,-225.0,190.0,140.0,-188.0,154.0,-165.0,0.0,0.0,0.0,2026-05-09
+-1.0,-1.0,-1.0,1.0,Jim Miller,jim miller,jared gordon,jared gordon,jared gordon,jared gordon,0.0,0.0,0.0,210.0,-250.0,210.0,-280.0,230.0,-260.0,0.0,0.0,0.0,2026-05-09
+-270.0,-340.0,-165.0,1.0,Pat Sabatini,pat sabatini,william gomis,pat sabatini,pat sabatini,pat sabatini,1.0,1.0,1.0,-270.0,230.0,-340.0,138.0,-165.0,240.0,0.013469388530985468,0.13742329317215332,0.17307773785270938,2026-05-09
+-1.0,-1.0,-1.0,1.0,Baisangur Susurkaev,baisangur susurkaev,djorden santos,,,,,,,-500.0,375.0,-900.0,500.0,-770.0,600.0,,,,2026-05-09
+-185.0,-190.0,-180.0,0.0,Jose Ochoa,clayton carpenter,jose ochoa,jose ochoa,jose ochoa,jose ochoa,0.0,0.0,0.0,160.0,-185.0,145.0,-190.0,160.0,-180.0,0.038975891526718,0.05172285061908932,0.05634394542415052,2026-05-09
+-200.0,-500.0,-400.0,1.0,King Green,king green,jeremy stephens,king green,king green,king green,1.0,1.0,1.0,-200.0,170.0,-500.0,300.0,-400.0,375.0,0.15484443091679037,0.22923584646784406,0.24913781577776792,2026-05-09
+-110.0,-160.0,-143.0,1.0,Grant Dawson,grant dawson,mateusz rebecki,grant dawson,grant dawson,grant dawson,1.0,1.0,1.0,-110.0,-110.0,-160.0,115.0,-143.0,135.0,0.11415188429744946,0.1573000945116008,0.15872662225813944,2026-05-09
+-225.0,-275.0,-240.0,0.0,Nicolle Caliari,shauna bannon,nicolle caliari,nicolle caliari,nicolle caliari,nicolle caliari,0.0,0.0,0.0,190.0,-225.0,200.0,-275.0,225.0,-240.0,0.134914675687752,0.1460133930146562,0.17170917977391303,2026-05-16
+-1.0,-188.0,-162.0,0.0,Luis Gurule,daniel barez,luis gurule,daniel barez,luis gurule,luis gurule,1.0,0.0,0.0,-130.0,110.0,136.0,-188.0,155.0,-162.0,0.0,0.0,0.0,2026-05-16
+-270.0,-200.0,-168.0,1.0,Alice Ardelean,alice ardelean,polyana viana,alice ardelean,alice ardelean,alice ardelean,1.0,1.0,1.0,-270.0,230.0,-200.0,142.0,-168.0,165.0,0.06943251996340168,0.12251347050882694,0.1388554080545271,2026-05-16
+-1.0,120.0,130.0,1.0,Cody Brundage,cody brundage,andre petroski,andre petroski,andre petroski,andre petroski,0.0,1.0,1.0,140.0,-160.0,120.0,-163.0,130.0,-150.0,0.0,0.0,0.0,2026-05-16
+-1.0,-1.0,-1.0,1.0,Ketlen Vieira,ketlen vieira,jacqueline cavalcanti,jacqueline cavalcanti,jacqueline cavalcanti,jacqueline cavalcanti,0.0,0.0,0.0,140.0,-160.0,120.0,-159.0,135.0,-150.0,0.11636831107618548,0.05863941699333797,0.07409276270314528,2026-05-16
+-150.0,-1.0,-1.0,0.0,Khaos Williams,nikolay veretennikov,khaos williams,khaos williams,nikolay veretennikov,nikolay veretennikov,0.0,1.0,1.0,130.0,-150.0,-110.0,-127.0,105.0,-110.0,0.0,0.10282974369271097,0.10722157614160552,2026-05-16
+-1.0,-1.0,-1.0,1.0,Tommy Gantt,tommy gantt,artur minev,,,,,,,,,,,,,,,,2026-05-16
+-200.0,-1.0,-1.0,0.0,Benardo Sopaj,timmy cuamba,benardo sopaj,benardo sopaj,benardo sopaj,benardo sopaj,0.0,1.0,1.0,170.0,-200.0,-105.0,-128.0,108.0,-115.0,0.0,0.0,0.0020647149007387774,2026-05-16
+-1.0,-1.0,-1.0,1.0,Modestas Bukauskas,modestas bukauskas,christian edwards,,,,,,,-250.0,210.0,-350.0,215.0,-290.0,275.0,,,,2026-05-16
+-1.0,-1.0,-1.0,0.0,Juan Diaz,malcolm wellmaker,juan diaz,,,,,,,-300.0,250.0,-265.0,188.0,-225.0,205.0,,,,2026-05-16
+-1.0,-1.0,-1.0,1.0,Dooho Choi,dooho choi,daniel santos,,,,,,,,,,,,,,,,2026-05-16
+-1.0,-1.0,-1.0,1.0,Arnold Allen,arnold allen,melquizael costa,melquizael costa,melquizael costa,melquizael costa,0.0,0.0,0.0,-150.0,130.0,-132.0,-105.0,-115.0,106.0,0.08421524621892433,0.11786710855555875,0.1252658064103807,2026-05-16
+-1.0,-1.0,-1.0,0.0,Ivan Erslan,tuco tokkos,ivan erslan,,,,,,,250.0,-300.0,135.0,-182.0,145.0,-167.0,,,,2026-05-16
+-1.0,-1.0,-1.0,0.0,Luis Felipe Dias,yisak lee,luis felipe dias,,,,,,,,,,,,,,,,2026-05-30
+-250.0,-150.0,-120.0,0.0,Jaqueline Amorim,loma lookboonmee,jaqueline amorim,jaqueline amorim,jaqueline amorim,jaqueline amorim,0.0,0.0,0.0,210.0,-250.0,-105.0,-150.0,120.0,-120.0,0.0,0.012949429358027058,0.032490507684242026,2026-05-30
+-1.0,-1.0,-1.0,1.0,Angela Hill,angela hill,xiong jingnan,,,,,,,165.0,-190.0,155.0,-225.0,175.0,-190.0,,,,2026-05-30
+-200.0,-450.0,-333.0,1.0,Rei Tsuruya,rei tsuruya,luis gurule,rei tsuruya,rei tsuruya,rei tsuruya,1.0,1.0,1.0,-200.0,170.0,-450.0,250.0,-333.0,350.0,0.14590991503559614,0.12689823163338732,0.16009260147860788,2026-05-30
+-300.0,-460.0,-350.0,0.0,Cody Haddon,aoriqileng,cody haddon,cody haddon,cody haddon,cody haddon,0.0,0.0,0.0,250.0,-300.0,260.0,-460.0,360.0,-350.0,0.07378211860089062,0.0,0.0,2026-05-30
+-1.0,-1.0,-1.0,0.0,Jose Souza,ding meng,jose souza,,,,,,,,,,,,,,,,2026-05-30
+-1.0,-1.0,-1.0,0.0,Rodrigo Vera,zhu kangjie,rodrigo vera,,,,,,,210.0,-250.0,-125.0,-120.0,-105.0,105.0,,,,2026-05-30
+-350.0,-333.0,-260.0,1.0,Kai Asakura,kai asakura,cameron smotherman,kai asakura,kai asakura,kai asakura,1.0,1.0,1.0,-350.0,285.0,-333.0,220.0,-260.0,250.0,0.0,0.0,0.0,2026-05-30
+-250.0,-700.0,-549.0,1.0,Sergei Pavlovich,sergei pavlovich,tallison teixeira,sergei pavlovich,sergei pavlovich,sergei pavlovich,1.0,1.0,1.0,-250.0,210.0,-700.0,400.0,-549.0,500.0,0.0,0.0,0.0,2026-05-30
+-1.0,-1.0,-1.0,0.0,Alonzo Menifield,zhang mingyang,alonzo menifield,zhang mingyang,zhang mingyang,zhang mingyang,1.0,1.0,1.0,-300.0,250.0,-250.0,175.0,-222.0,205.0,0.16928939369764,0.18779159582557353,0.18977218111013264,2026-05-30
+-300.0,-670.0,-549.0,1.0,Song Yadong,song yadong,deiveson figueiredo,song yadong,song yadong,song yadong,1.0,1.0,1.0,-300.0,250.0,-670.0,400.0,-549.0,460.0,0.12157764962756654,0.0,0.0,2026-05-30
+-200.0,-700.0,-450.0,1.0,Jake Matthews,jake matthews,carlston harris,jake matthews,jake matthews,jake matthews,1.0,1.0,1.0,-200.0,170.0,-700.0,333.0,-450.0,500.0,0.13229407704933294,0.0,0.025819873278843226,2026-05-30
+-1.0,-1.0,-1.0,2.0,NC,alex perez,sumudaerji,sumudaerji,alex perez,alex perez,0.0,1.0,1.0,-105.0,-115.0,-157.0,100.0,-125.0,132.0,0.09589124145592384,0.0,0.0,2026-05-30
+-110.0,-120.0,100.0,0.0,Edgar Chairez,bruno silva,edgar chairez,edgar chairez,edgar chairez,edgar chairez,0.0,0.0,0.0,-110.0,-110.0,-125.0,-120.0,100.0,100.0,0.10190617740779102,0.09968082381039382,0.11342983618401707,2026-06-06
+-300.0,-380.0,-320.0,1.0,Ketlen Souza,ketlen souza,ariane carnelossi,ketlen souza,ketlen souza,ketlen souza,1.0,1.0,1.0,-300.0,250.0,-380.0,250.0,-320.0,300.0,0.1603867506049943,0.13621191464066087,0.18804309151560938,2026-06-06
+-1.0,-1.0,-1.0,1.0,Jeisla Chaves,jeisla chaves,yuneisy duben,,,,,,,-900.0,600.0,-295.0,210.0,-255.0,230.0,,,,2026-06-06
+-400.0,-1.0,-1.0,0.0,Joanderson Brito,jordan leavitt,joanderson brito,joanderson brito,joanderson brito,joanderson brito,0.0,1.0,1.0,330.0,-400.0,140.0,-188.0,155.0,-166.0,0.0,0.0,0.0,2026-06-06
+-450.0,-600.0,-350.0,1.0,Marcus McGhee,marcus mcghee,john yannis,marcus mcghee,marcus mcghee,marcus mcghee,1.0,1.0,1.0,-450.0,350.0,-600.0,260.0,-350.0,390.0,0.0,0.0,0.0,2026-06-06
+-110.0,-1.0,-1.0,0.0,Chelsea Chandler,priscila cachoeira,chelsea chandler,chelsea chandler,chelsea chandler,chelsea chandler,0.0,1.0,1.0,-110.0,-110.0,100.0,-140.0,118.0,-125.0,0.026818232199909975,0.0,0.0,2026-06-06
+-350.0,-205.0,-175.0,1.0,Brendan Allen,brendan allen,edmen shahbazyan,brendan allen,brendan allen,brendan allen,1.0,1.0,1.0,-350.0,285.0,-205.0,140.0,-175.0,172.0,0.0,0.016702854944957272,0.02964096077306643,2026-06-06
+-250.0,-142.0,-115.0,1.0,Bryce Mitchell,bryce mitchell,santiago luna,bryce mitchell,bryce mitchell,bryce mitchell,1.0,1.0,1.0,-250.0,210.0,-142.0,-105.0,-115.0,112.0,0.0,0.024817626153590008,0.04498614652346732,2026-06-06
+-1.0,-1.0,-1.0,0.0,Tom Nolan,fares ziam,tom nolan,fares ziam,fares ziam,fares ziam,1.0,1.0,1.0,-185.0,160.0,-370.0,250.0,-320.0,290.0,0.1257088680332324,0.05320971047091277,0.08623741121913987,2026-06-06
+-550.0,-500.0,-430.0,0.0,Alessandro Costa,matt schnell,alessandro costa,alessandro costa,alessandro costa,alessandro costa,0.0,0.0,0.0,400.0,-550.0,340.0,-500.0,360.0,-430.0,0.0,0.0,0.0,2026-06-06
+-135.0,-1.0,-1.0,0.0,Gabriel Bonfim,belal muhammad,gabriel bonfim,gabriel bonfim,gabriel bonfim,gabriel bonfim,0.0,1.0,1.0,115.0,-135.0,-130.0,-110.0,-110.0,110.0,0.11512247920224321,0.11918584554074665,0.1188724208265848,2026-06-06
+-1.0,-500.0,-400.0,1.0,Iwo Baraniewski,iwo baraniewski,junior tafa,junior tafa,iwo baraniewski,iwo baraniewski,0.0,1.0,1.0,220.0,-260.0,-500.0,300.0,-400.0,380.0,0.0,0.0,0.0,2026-06-06
+-225.0,-177.0,-150.0,1.0,Diego Lopes,diego lopes,steve garcia,diego lopes,diego lopes,diego lopes,1.0,1.0,1.0,-225.0,190.0,-177.0,120.0,-150.0,145.0,0.0,0.0,0.0,2026-06-14
+-300.0,-410.0,-333.0,1.0,Bo Nickal,bo nickal,kyle daukaus,bo nickal,bo nickal,bo nickal,1.0,1.0,1.0,-300.0,250.0,-410.0,250.0,-333.0,295.0,0.15791081830953302,0.08427697585437151,0.11928030218800818,2026-06-14
+-700.0,-556.0,-475.0,1.0,Mauricio Ruffy,mauricio ruffy,michael chandler,mauricio ruffy,mauricio ruffy,mauricio ruffy,1.0,1.0,1.0,-700.0,500.0,-556.0,340.0,-475.0,400.0,0.023558771103781337,0.011595495074975069,0.05646857728826221,2026-06-14
+-400.0,-515.0,-385.0,1.0,Josh Hokit,josh hokit,derrick lewis,josh hokit,josh hokit,josh hokit,1.0,1.0,1.0,-400.0,330.0,-515.0,290.0,-385.0,400.0,0.20271641685056838,0.18190890936537946,0.2348181657248573,2026-06-14
+-1.0,-1.0,-1.0,1.0,Sean O'Malley,sean omalley,aiemann zahabi,,,,,,,,,,,,,,,,2026-06-14
+-185.0,-1.0,-1.0,0.0,Ciryl Gane,alex pereira,ciryl gane,ciryl gane,alex pereira,alex pereira,0.0,1.0,1.0,160.0,-185.0,-130.0,-110.0,-110.0,110.0,0.0,0.0,0.0,2026-06-14
+-1.0,-1.0,-1.0,0.0,Justin Gaethje,ilia topuria,justin gaethje,ilia topuria,ilia topuria,ilia topuria,1.0,1.0,1.0,-500.0,385.0,-500.0,210.0,-250.0,360.0,0.2137215597488749,0.2364357474734211,0.2219420668067369,2026-06-14
+-1.0,-1.0,-1.0,1.0,Shane Collins,shane collins,otari tanzilovi,,,,,,,-170.0,145.0,-225.0,170.0,-200.0,185.0,,,,2026-06-20
+100.0,-1.0,-1.0,0.0,Luana Santos,karol rosa,luana santos,luana santos,luana santos,luana santos,0.0,1.0,1.0,-120.0,100.0,-125.0,-120.0,100.0,100.0,0.08896856754416485,0.0290166759661018,0.03523916482446131,2026-06-20
+-600.0,-950.0,-549.0,1.0,Bia Mesquita,bia mesquita,melissa mullins,bia mesquita,bia mesquita,bia mesquita,1.0,1.0,1.0,-600.0,450.0,-950.0,400.0,-549.0,650.0,0.0,0.0,0.04572184466913938,2026-06-20
+-1.0,-1.0,-1.0,1.0,Gaston Bolanos,gaston bolanos,michael aswell jr,michael aswell jr,michael aswell jr,michael aswell jr,0.0,0.0,0.0,330.0,-400.0,295.0,-435.0,330.0,-360.0,0.006278073393926639,0.002157926641159411,0.04862951782667585,2026-06-20
+-1.0,-1.0,-1.0,0.0,Mitch Raposo,allan nascimento,mitch raposo,allan nascimento,allan nascimento,allan nascimento,1.0,1.0,1.0,-250.0,210.0,-175.0,130.0,-155.0,140.0,0.0,0.058382458620572265,0.07369438117835346,2026-06-20
+-1.0,-1.0,-1.0,0.0,Levan Chokheli,leon shahbazyan,levan chokheli,,,,,,,215.0,-255.0,260.0,-420.0,320.0,-350.0,,,,2026-06-20
+-275.0,-175.0,-162.0,1.0,Manel Kape,manel kape,kyoji horiguchi,manel kape,manel kape,manel kape,1.0,1.0,1.0,-275.0,235.0,-175.0,130.0,-162.0,150.0,0.04616994892593332,0.1363123512177271,0.14214077904964423,2026-06-20
+-225.0,-305.0,-245.0,1.0,Vinicius Oliveira,vinicius oliveira,andre fili,vinicius oliveira,vinicius oliveira,vinicius oliveira,1.0,1.0,1.0,-225.0,190.0,-305.0,205.0,-245.0,230.0,0.13866218429121152,0.0538768642067039,0.09064249517984192,2026-06-20
+-1.0,-1.0,-1.0,0.0,Murtazali Magomedov,melsik baghdasaryan,murtazali magomedov,,,,,,,385.0,-500.0,250.0,-600.0,430.0,-333.0,,,,2026-06-20
+-170.0,-240.0,-188.0,0.0,Christian Rodriguez,hyder amil,christian rodriguez,christian rodriguez,christian rodriguez,christian rodriguez,0.0,0.0,0.0,145.0,-170.0,150.0,-240.0,205.0,-188.0,0.1069468761418081,0.04859498713309706,0.06012609162793347,2026-06-20
+-350.0,-420.0,-333.0,0.0,Navajo Stirling,ion cutelaba,navajo stirling,navajo stirling,navajo stirling,navajo stirling,0.0,0.0,0.0,275.0,-350.0,250.0,-420.0,320.0,-333.0,0.0,0.0,0.0,2026-06-20
+-1.0,-1.0,-1.0,0.0,Kevin Borjas,andre lima,kevin borjas,andre lima,andre lima,andre lima,1.0,1.0,1.0,-600.0,450.0,-900.0,450.0,-649.0,600.0,0.14632550378689943,0.0,0.0,2026-06-20
+-1.0,-1.0,-1.0,1.0,Kaan Ofli,kaan ofli,javier reyes,javier reyes,javier reyes,javier reyes,0.0,0.0,0.0,150.0,-175.0,163.0,-260.0,210.0,-220.0,0.0,0.0,0.0,2026-06-27
+-1.0,-1.0,-1.0,1.0,Tahir Abdullayev,tahir abdullayev,jefferson nascimento,,,,,,,170.0,-200.0,-105.0,-160.0,140.0,-120.0,,,,2026-06-27
+-175.0,-190.0,-175.0,0.0,Jean Matsumoto,bekzat almakhan,jean matsumoto,jean matsumoto,jean matsumoto,jean matsumoto,0.0,0.0,0.0,150.0,-175.0,140.0,-190.0,160.0,-175.0,0.12034849286842751,0.14310381630721708,0.1449440767372892,2026-06-27
+-1.0,-1.0,-1.0,1.0,Daniil Donchenko,daniil donchenko,theodor berggren,,,,,,,-700.0,525.0,-590.0,350.0,-460.0,430.0,,,,2026-06-27
+-500.0,-750.0,-625.0,1.0,Abdul Rakhman Yakhyaev,abdul rakhman yakhyaev,julius walker,abdul rakhman yakhyaev,abdul rakhman yakhyaev,abdul rakhman yakhyaev,1.0,1.0,1.0,-500.0,385.0,-750.0,440.0,-625.0,530.0,0.0,0.0,0.0,2026-06-27
+-225.0,-225.0,-174.0,1.0,Nursulton Ruziboev,nursulton ruziboev,andrey pulyaev,nursulton ruziboev,nursulton ruziboev,nursulton ruziboev,1.0,1.0,1.0,-225.0,190.0,-225.0,143.0,-174.0,175.0,0.0,0.0,0.0,2026-06-27
+-325.0,-365.0,-275.0,1.0,Asu Almabayev,asu almabayev,charles johnson,asu almabayev,asu almabayev,asu almabayev,1.0,1.0,1.0,-325.0,275.0,-365.0,210.0,-275.0,290.0,0.18162400877321014,0.22620409727873653,0.22558764419880625,2026-06-27
+-1.0,-1.0,-1.0,1.0,Farman Hasanov,farman hasanov,eric nolan,,,,,,,-110.0,-110.0,-175.0,138.0,-160.0,145.0,,,,2026-06-27
+-141.0,-116.0,-108.0,1.0,Rafael Fiziev,rafael fiziev,manuel torres,rafael fiziev,rafael fiziev,rafael fiziev,1.0,1.0,1.0,-141.0,108.0,-116.0,-113.0,-108.0,-104.0,0.0,0.022984378839593558,0.025723675369808754,2026-06-27
+-1.0,-1.0,-1.0,0.0,Matheus Camilo,nazim sadykhov,matheus camilo,nazim sadykhov,nazim sadykhov,nazim sadykhov,1.0,1.0,1.0,-200.0,170.0,-205.0,150.0,-186.0,170.0,0.0,0.0,0.0,2026-06-27
+-300.0,-435.0,-350.0,1.0,Shara Magomedov,shara magomedov,michel pereira,shara magomedov,shara magomedov,shara magomedov,1.0,1.0,1.0,-300.0,250.0,-435.0,260.0,-350.0,335.0,0.0,0.0,0.0,2026-06-27
+-190.0,-110.0,103.0,1.0,Abus Magomedov,abus magomedov,michal oleksiejczuk,abus magomedov,abus magomedov,abus magomedov,1.0,1.0,1.0,-190.0,165.0,-110.0,-125.0,103.0,-110.0,0.04895113903103405,0.1063223599195356,0.11959108981851381,2026-06-27
+-300.0,-295.0,-250.0,1.0,Ikram Aliskerov,ikram aliskerov,brunno ferreira,ikram aliskerov,ikram aliskerov,ikram aliskerov,1.0,1.0,1.0,-300.0,250.0,-295.0,200.0,-250.0,240.0,0.15655217635474683,0.18018261885645132,0.19516307952209574,2026-06-27
+-250.0,-450.0,-370.0,0.0,Adrian Yanez,cody garbrandt,adrian yanez,adrian yanez,adrian yanez,adrian yanez,0.0,0.0,0.0,210.0,-250.0,295.0,-450.0,333.0,-370.0,0.0,0.0,0.0,2026-07-11
+-300.0,-250.0,-205.0,1.0,Alessandro Costa,alessandro costa,cody durden,alessandro costa,alessandro costa,alessandro costa,1.0,1.0,1.0,-300.0,250.0,-250.0,175.0,-205.0,200.0,0.1571598800415027,0.14604413151029488,0.17746494697268472,2026-07-11
+-1.0,-1.0,-1.0,1.0,Ryan Gandra,ryan gandra,zach reese,,,,,,,,,,,,,,,,2026-07-11
+-1.0,-1.0,-1.0,1.0,Farid Basharat,farid basharat,john garza,,,,,,,-525.0,410.0,-750.0,450.0,-620.0,525.0,,,,2026-07-11
+-1.0,-1.0,-1.0,1.0,Damian Pinas,damian pinas,cesar almeida,,,,,,,-265.0,225.0,-300.0,200.0,-250.0,250.0,,,,2026-07-11
+-1.0,-1.0,-1.0,0.0,Wang Cong,tracy cortez,wang cong,tracy cortez,tracy cortez,tracy cortez,1.0,1.0,1.0,113.0,-133.0,-105.0,-124.0,102.0,-120.0,0.08399874714433826,0.11927937973224337,0.11819086503337274,2026-07-11
+-1.0,-1.0,-1.0,1.0,Luke Riley,luke riley,kai kamaka iii,,,,,,,,,,,,,,,,2026-07-11
+-1.0,-1.0,-1.0,0.0,Paddy Pimblett,benoit st denis,paddy pimblett,benoit st denis,benoit st denis,benoit st denis,1.0,1.0,1.0,-110.0,-110.0,-125.0,100.0,-120.0,105.0,0.11408359246317144,0.1431950859321569,0.1439019213908356,2026-07-11
+-1.0,-1.0,-1.0,1.0,Gable Steveson,gable steveson,elisha ellison,,,,,,,-1800.0,900.0,-2000.0,725.0,-1100.0,900.0,,,,2026-07-11
+-1.0,-1.0,-1.0,0.0,Robert Whittaker,nikita krylov,robert whittaker,nikita krylov,nikita krylov,nikita krylov,1.0,1.0,1.0,-116.0,-104.0,100.0,-130.0,110.0,-125.0,0.10483421827672496,0.1170291239288819,0.1211955234847069,2026-07-11
+-1.0,-120.0,100.0,1.0,King Green,king green,terrance mckinney,terrance mckinney,king green,king green,0.0,1.0,1.0,175.0,-205.0,-120.0,-120.0,100.0,100.0,0.0,0.010926285711870598,0.008641923754524132,2026-07-11
+-1.0,-1.0,-1.0,1.0,Brandon Royval,brandon royval,loneer kavanagh,loneer kavanagh,loneer kavanagh,loneer kavanagh,0.0,0.0,0.0,170.0,-200.0,175.0,-260.0,210.0,-225.0,0.12739836124475196,0.04730153301013503,0.05786183878007342,2026-07-11
+-1.0,-1.0,-1.0,0.0,Mario Bautista,cory sandhagen,mario bautista,cory sandhagen,cory sandhagen,cory sandhagen,1.0,1.0,1.0,-200.0,170.0,-155.0,120.0,-148.0,133.0,0.0,0.03533353436396559,0.043075676282215515,2026-07-11
+-270.0,-295.0,-250.0,0.0,Max Holloway,conor mcgregor,max holloway,max holloway,max holloway,max holloway,0.0,0.0,0.0,230.0,-270.0,200.0,-295.0,240.0,-250.0,0.0,0.0,0.0,2026-07-11
+-1.0,-1.0,-1.0,0.0,Dione Barbosa,anna melisano,dione barbosa,,,,,,,240.0,-280.0,450.0,-800.0,550.0,-649.0,,,,2026-07-18
+-1.0,-1.0,-1.0,1.0,RJ Harris,rj harris,alvin hines,,,,,,,,,,,,,,,,2026-07-18
+-800.0,-1500.0,-1000.0,1.0,Alden Coria,alden coria,stewart nicoll,alden coria,alden coria,alden coria,1.0,1.0,1.0,-800.0,550.0,-1500.0,600.0,-1000.0,850.0,0.0,0.0,0.0,2026-07-18
+-1.0,-1.0,-1.0,1.0,Ezra Elliott,ezra elliott,damien anderson,,,,,,,,,,,,,,,,2026-07-18
+-1.0,-1.0,-1.0,1.0,Jean-Paul Lebosnoyani,jean paul lebosnoyani,seokhyeon ko,,,,,,,,,,,,,,,,2026-07-18
+-1.0,-1.0,-1.0,0.0,Felipe Franco,levi rodrigues jr,felipe franco,,,,,,,,,,,,,,,,2026-07-18
+-1.0,-1.0,-1.0,1.0,Tommy McMillen,tommy mcmillen,alberto montes,,,,,,,125.0,-145.0,-220.0,155.0,-195.0,180.0,,,,2026-07-18
+-300.0,-500.0,-465.0,0.0,Fatima Kline,tabatha ricci,fatima kline,fatima kline,fatima kline,fatima kline,0.0,0.0,0.0,250.0,-300.0,350.0,-500.0,380.0,-465.0,0.15830178926476973,0.0,0.007882303160320781,2026-07-18
+-255.0,-375.0,-350.0,1.0,Chase Hooper,chase hooper,mitch ramirez,chase hooper,chase hooper,chase hooper,1.0,1.0,1.0,-255.0,215.0,-375.0,260.0,-350.0,295.0,0.1474772849771915,0.045269265225147945,0.05811180618251386,2026-07-18
+-325.0,-400.0,-300.0,0.0,Christian Leroy Duncan,jared cannonier,christian leroy duncan,christian leroy duncan,christian leroy duncan,christian leroy duncan,0.0,0.0,0.0,275.0,-325.0,245.0,-400.0,300.0,-300.0,0.16898655556528008,0.08762364485098072,0.1421967970134575,2026-07-18
+-240.0,-225.0,-205.0,1.0,Dricus Du Plessis,dricus du plessis,kamaru usman,dricus du plessis,dricus du plessis,dricus du plessis,1.0,1.0,1.0,-240.0,205.0,-225.0,163.0,-205.0,185.0,0.14407054758444132,0.15735874825596793,0.1732690276227905,2026-07-18
+-170.0,-1.0,-1.0,0.0,Jose Delgado,austin bashi,jose delgado,jose delgado,austin bashi,austin bashi,0.0,1.0,1.0,145.0,-170.0,-150.0,106.0,-130.0,125.0,0.0,0.08544242646038573,0.08836663617982643,2026-07-18
 -1.0,-1.0,-1.0,0.0,Muhammad Saidov,dustin jacoby,muhammad saidov,,,,,,,,,,,,,,,,2026-07-25
--450.0,-770.0,-500.0,0.0,Sam Patterson,santiago ponzinibbio,sam patterson,sam patterson,sam patterson,sam patterson,0.0,0.0,0.0,350.0,-450.0,350.0,-770.0,480.0,-500.0,0.01722565958909394,0.0,0.0,2026-07-25
--170.0,-212.0,-198.0,0.0,Axel Sola,ismael bonfim,axel sola,axel sola,axel sola,axel sola,0.0,0.0,0.0,145.0,-170.0,160.0,-212.0,182.0,-198.0,0.05757546562912073,0.0289296757176463,0.02653718448712687,2026-07-25
+-1.0,-1.0,-1.0,0.0,Abdul Hussein,cody gibson,abdul hussein,,,,,,,285.0,-350.0,420.0,-650.0,475.0,-600.0,,,,2026-07-25
+-172.0,-235.0,-225.0,1.0,Nurullo Aliev,nurullo aliev,mike davis,nurullo aliev,nurullo aliev,nurullo aliev,1.0,1.0,1.0,-172.0,147.0,-235.0,175.0,-225.0,193.0,0.1337813044067282,0.18019340877549017,0.1826479304475646,2026-07-25
+-170.0,-212.0,-198.0,0.0,Axel Sola,ismael bonfim,axel sola,axel sola,axel sola,axel sola,0.0,0.0,0.0,145.0,-170.0,160.0,-212.0,182.0,-198.0,0.05759880583432133,0.02895041548032902,0.026560259616304194,2026-07-25
+-450.0,-770.0,-500.0,0.0,Sam Patterson,santiago ponzinibbio,sam patterson,sam patterson,sam patterson,sam patterson,0.0,0.0,0.0,350.0,-450.0,350.0,-770.0,480.0,-500.0,0.017225982462465594,0.0,0.0,2026-07-25
 -1.0,-1.0,-1.0,1.0,Magomed Tuchalov,magomed tuchalov,brendson ribeiro,,,,,,,-550.0,420.0,-1250.0,500.0,-800.0,700.0,,,,2026-07-25
--1.0,-1.0,-1.0,0.0,Ramazan Temirov,steve erceg,ramazan temirov,steve erceg,steve erceg,steve erceg,1.0,1.0,1.0,-150.0,130.0,-115.0,-119.0,-101.0,-104.0,0.12229010038420919,0.13179570194011567,0.13284302980523582,2026-07-25
--250.0,-210.0,-188.0,1.0,Valter Walker,valter walker,thomas petersen,valter walker,valter walker,valter walker,1.0,1.0,1.0,-250.0,210.0,-210.0,150.0,-188.0,175.0,0.1500673937698389,0.17299306092416591,0.17497320341371495,2026-07-25
--1.0,-1.0,-1.0,0.0,Gilbert Urbina,vlasto cepo,gilbert urbina,,,,,,,-400.0,300.0,-350.0,230.0,-280.0,275.0,,,,2026-08-01
--1.0,-1.0,-1.0,0.0,Tofiq Musayev,ludovit klein,tofiq musayev,ludovit klein,ludovit klein,ludovit klein,1.0,1.0,1.0,-145.0,125.0,-275.0,200.0,-250.0,225.0,0.12061702728598524,0.17631704388945404,0.1892055799712166,2026-08-01
--501.0,-435.0,-350.0,1.0,Uros Medic,uros medic,daniel rodriguez,uros medic,uros medic,uros medic,1.0,1.0,1.0,-501.0,386.0,-435.0,280.0,-350.0,315.0,0.0866994599506375,0.10806490378929189,0.16369599318187233,2026-08-01
--200.0,-370.0,-330.0,0.0,Navajo Stirling,jan blachowicz,navajo stirling,navajo stirling,navajo stirling,navajo stirling,0.0,0.0,0.0,170.0,-200.0,250.0,-370.0,290.0,-330.0,0.14592018233521317,0.06523314684157566,0.09956816755048266,2026-08-01
--250.0,-420.0,-350.0,1.0,Aleksandar Rakic,aleksandar rakic,marcin tybura,aleksandar rakic,aleksandar rakic,aleksandar rakic,1.0,1.0,1.0,-250.0,210.0,-420.0,260.0,-350.0,310.0,0.15220368164605072,0.16845064413534333,0.2129247560121879,2026-08-01
--1.0,-1.0,-1.0,0.0,Robert Valentin,dusko todorovic,robert valentin,dusko todorovic,robert valentin,robert valentin,1.0,1.0,1.0,110.0,-130.0,125.0,-175.0,140.0,-150.0,0.08503985144655712,0.0,0.0,2026-08-01
--1.0,-1.0,-1.0,0.0,Noah Gugnon,milos janicic,noah gugnon,,,,,,,-500.0,375.0,-138.0,-120.0,-105.0,118.0,,,,2026-08-01
--1.0,-1.0,-1.0,0.0,Stephanie Luciano,marina spasic,stephanie luciano,,,,,,,250.0,-300.0,250.0,-425.0,334.0,-333.0,,,,2026-08-01
--1.0,-1.0,-1.0,0.0,Michael Oliveira,oban elliott,michael oliveira,,,,,,,235.0,-275.0,275.0,-910.0,575.0,-350.0,,,,2026-08-01
+-250.0,-350.0,-310.0,1.0,Rizvan Kuniev,rizvan kuniev,tyrell fortune,rizvan kuniev,rizvan kuniev,rizvan kuniev,1.0,1.0,1.0,-250.0,210.0,-350.0,250.0,-310.0,275.0,0.05834956841886693,0.04252421494589649,0.0793454135737774,2026-07-25
+-300.0,-560.0,-549.0,1.0,Magomed Ankalaev,magomed ankalaev,bogdan guskov,magomed ankalaev,magomed ankalaev,magomed ankalaev,1.0,1.0,1.0,-300.0,250.0,-560.0,390.0,-549.0,410.0,0.05620425316731105,0.0,0.0,2026-07-25
+-1.0,-1.0,-1.0,1.0,Magomed Zaynukov,magomed zaynukov,damian rzepecki,,,,,,,-275.0,235.0,-286.0,206.0,-241.0,215.0,,,,2026-07-25
+-1.0,-1.0,-1.0,0.0,Ramazan Temirov,steve erceg,ramazan temirov,steve erceg,steve erceg,steve erceg,1.0,1.0,1.0,-150.0,130.0,-115.0,-119.0,-101.0,-104.0,0.12229623606617335,0.13178877019508778,0.13285340862557934,2026-07-25
+-1.0,-1.0,-1.0,1.0,Abubakar Vagaev,abubakar vagaev,saygid izagakhmaev,,,,,,,-205.0,175.0,-275.0,164.0,-190.0,210.0,,,,2026-07-25
+-250.0,-210.0,-188.0,1.0,Valter Walker,valter walker,thomas petersen,valter walker,valter walker,valter walker,1.0,1.0,1.0,-250.0,210.0,-210.0,150.0,-188.0,175.0,0.1500673890217071,0.1729930569510932,0.17497319931922228,2026-07-25
 -1.0,-1.0,-1.0,1.0,Borislav Nikolic,borislav nikolic,mark vologdin,,,,,,,-150.0,130.0,-230.0,163.0,-200.0,190.0,,,,2026-08-01
--1.0,-1.0,-1.0,0.0,Bogdan Grad,dennis buzukja,bogdan grad,,,,,,,,,,,,,,,,2026-08-01
+-1.0,-1.0,-1.0,1.0,Jovan Leka,jovan leka,alexander poppeck,,,,,,,-300.0,250.0,-360.0,225.0,-290.0,280.0,,,,2026-08-01
 -500.0,-1100.0,-649.0,1.0,Mateusz Rebecki,mateusz rebecki,kyle prepolec,mateusz rebecki,mateusz rebecki,mateusz rebecki,1.0,1.0,1.0,-500.0,385.0,-1100.0,450.0,-649.0,709.0,0.0,0.0,0.0,2026-08-01
 -1.0,-1.0,-1.0,1.0,Nina Milosevic,nina milosevic,hailey cowan,,,,,,,-500.0,385.0,-910.0,350.0,-500.0,575.0,,,,2026-08-01
--1.0,-1.0,-1.0,1.0,Jovan Leka,jovan leka,alexander poppeck,,,,,,,-300.0,250.0,-360.0,225.0,-290.0,280.0,,,,2026-08-01
-186.0,-167.0,-160.0,1.0,Diyar Nurgozhay,diyar nurgozhay,bruno lopes,diyar nurgozhay,diyar nurgozhay,diyar nurgozhay,1.0,1.0,1.0,186.0,-220.0,-167.0,130.0,-160.0,141.0,0.07367611309483915,0.15352681966523543,0.15568970943161198,2026-08-08
--190.0,-370.0,-333.0,1.0,Juliana Miller,juliana miller,ravena oliveira,juliana miller,juliana miller,juliana miller,1.0,1.0,1.0,-190.0,165.0,-370.0,250.0,-333.0,290.0,0.06279162292533141,0.0,0.0,2026-08-08
--175.0,-220.0,-200.0,1.0,Miles Johns,miles johns,gianni vazquez,miles johns,miles johns,miles johns,1.0,1.0,1.0,-175.0,135.0,-220.0,163.0,-200.0,180.0,0.0,0.0,0.0,2026-08-08
--1.0,-1.0,-1.0,1.0,Manoel Sousa,manoel sousa,richie miranda,,,,,,,-500.0,383.0,-375.0,250.0,-333.0,290.0,,,,2026-08-08
--1.0,-1.0,-1.0,0.0,Jose Montanha,louie sutherland,jose montanha,,,,,,,-110.0,-110.0,-250.0,163.0,-205.0,205.0,,,,2026-08-08
--204.0,-333.0,-265.0,1.0,Steven Asplund,steven asplund,guilherme pat,steven asplund,steven asplund,steven asplund,1.0,1.0,1.0,-204.0,177.0,-333.0,219.0,-265.0,250.0,0.0,0.0,0.0,2026-08-08
--300.0,-330.0,-275.0,0.0,Alexia Thainara,amanda lemos,alexia thainara,alexia thainara,alexia thainara,alexia thainara,0.0,0.0,0.0,245.0,-300.0,210.0,-330.0,260.0,-275.0,0.05131290232726123,0.0,0.0,2026-08-08
--325.0,-2000.0,-800.0,0.0,Yadier del Valle,darren elkins,yadier del valle,yadier del valle,yadier del valle,yadier del valle,0.0,0.0,0.0,263.0,-325.0,500.0,-2000.0,950.0,-800.0,0.0,0.0,0.0,2026-08-08
--205.0,-188.0,-175.0,1.0,Diego Ferreira,diego ferreira,billy quarantillo,diego ferreira,diego ferreira,diego ferreira,1.0,1.0,1.0,-205.0,177.0,-188.0,143.0,-175.0,154.0,0.07995549105625403,0.10458562633404642,0.12388598508526238,2026-08-08
--1.0,-175.0,-150.0,0.0,Quillan Salkilld,mateusz gamrot,quillan salkilld,mateusz gamrot,quillan salkilld,quillan salkilld,1.0,0.0,0.0,-131.0,111.0,120.0,-175.0,141.0,-150.0,0.0,0.0,0.0,2026-08-08
+-501.0,-435.0,-350.0,1.0,Uros Medic,uros medic,daniel rodriguez,uros medic,uros medic,uros medic,1.0,1.0,1.0,-501.0,386.0,-435.0,280.0,-350.0,315.0,0.08610493161631726,0.10806737654534357,0.16369858438829982,2026-08-01
+-1.0,-1.0,-1.0,0.0,Stephanie Luciano,marina spasic,stephanie luciano,,,,,,,250.0,-300.0,250.0,-425.0,334.0,-333.0,,,,2026-08-01
+-1.0,-1.0,-1.0,0.0,Bogdan Grad,dennis buzukja,bogdan grad,,,,,,,,,,,,,,,,2026-08-01
+-200.0,-370.0,-330.0,0.0,Navajo Stirling,jan blachowicz,navajo stirling,navajo stirling,navajo stirling,navajo stirling,0.0,0.0,0.0,170.0,-200.0,250.0,-370.0,290.0,-330.0,0.14592043683918662,0.06524373223322855,0.09957539861432765,2026-08-01
+-1.0,-1.0,-1.0,0.0,Michael Oliveira,oban elliott,michael oliveira,,,,,,,235.0,-275.0,275.0,-910.0,575.0,-350.0,,,,2026-08-01
+-1.0,-1.0,-1.0,0.0,Tofiq Musayev,ludovit klein,tofiq musayev,ludovit klein,ludovit klein,ludovit klein,1.0,1.0,1.0,-145.0,125.0,-275.0,200.0,-250.0,225.0,0.120614851803625,0.17630163640936075,0.1891946449090618,2026-08-01
+-1.0,-1.0,-1.0,0.0,Noah Gugnon,milos janicic,noah gugnon,,,,,,,-500.0,375.0,-138.0,-120.0,-105.0,118.0,,,,2026-08-01
+-1.0,-1.0,-1.0,0.0,Gilbert Urbina,vlasto cepo,gilbert urbina,,,,,,,-400.0,300.0,-350.0,230.0,-280.0,275.0,,,,2026-08-01
+-250.0,-420.0,-350.0,1.0,Aleksandar Rakic,aleksandar rakic,marcin tybura,aleksandar rakic,aleksandar rakic,aleksandar rakic,1.0,1.0,1.0,-250.0,210.0,-420.0,260.0,-350.0,310.0,0.1522036771249182,0.1684506440647846,0.21292475593711124,2026-08-01
+-1.0,-1.0,-1.0,0.0,Robert Valentin,dusko todorovic,robert valentin,dusko todorovic,robert valentin,robert valentin,1.0,1.0,1.0,110.0,-130.0,125.0,-175.0,140.0,-150.0,0.0850407702716773,0.0,0.0,2026-08-01
 -175.0,-500.0,-400.0,0.0,Ty Miller,billy ray goff,ty miller,ty miller,ty miller,ty miller,0.0,0.0,0.0,153.0,-175.0,300.0,-500.0,380.0,-400.0,0.0,0.0,0.0,2026-08-08
+-205.0,-188.0,-175.0,1.0,Diego Ferreira,diego ferreira,billy quarantillo,diego ferreira,diego ferreira,diego ferreira,1.0,1.0,1.0,-205.0,177.0,-188.0,143.0,-175.0,154.0,0.08058307100621308,0.10499623854731326,0.12434108947244507,2026-08-08
+-325.0,-2000.0,-800.0,0.0,Yadier del Valle,darren elkins,yadier del valle,yadier del valle,yadier del valle,yadier del valle,0.0,0.0,0.0,263.0,-325.0,500.0,-2000.0,950.0,-800.0,0.0,0.0,0.0,2026-08-08
+-300.0,-330.0,-275.0,0.0,Alexia Thainara,amanda lemos,alexia thainara,alexia thainara,alexia thainara,alexia thainara,0.0,0.0,0.0,245.0,-300.0,210.0,-330.0,260.0,-275.0,0.05132352673858448,0.0,0.0,2026-08-08
+-204.0,-333.0,-265.0,1.0,Steven Asplund,steven asplund,guilherme pat,steven asplund,steven asplund,steven asplund,1.0,1.0,1.0,-204.0,177.0,-333.0,219.0,-265.0,250.0,0.0,0.0,0.0,2026-08-08
+-1.0,-175.0,-150.0,0.0,Quillan Salkilld,mateusz gamrot,quillan salkilld,mateusz gamrot,quillan salkilld,quillan salkilld,1.0,0.0,0.0,-131.0,111.0,120.0,-175.0,141.0,-150.0,0.0,0.0,0.0,2026-08-08
+-1.0,-1.0,-1.0,1.0,Manoel Sousa,manoel sousa,richie miranda,,,,,,,-500.0,383.0,-375.0,250.0,-333.0,290.0,,,,2026-08-08
+-175.0,-220.0,-200.0,1.0,Miles Johns,miles johns,gianni vazquez,miles johns,miles johns,miles johns,1.0,1.0,1.0,-175.0,135.0,-220.0,163.0,-200.0,180.0,0.0,0.0,0.0,2026-08-08
+-190.0,-370.0,-333.0,1.0,Juliana Miller,juliana miller,ravena oliveira,juliana miller,juliana miller,juliana miller,1.0,1.0,1.0,-190.0,165.0,-370.0,250.0,-333.0,290.0,0.06279140507464474,0.0,0.0,2026-08-08
 -1.0,-1.0,-1.0,0.0,Carol Foro,gigi canuto,carol foro,,,,,,,174.0,-200.0,160.0,-225.0,188.0,-205.0,,,,2026-08-08
+186.0,-167.0,-160.0,1.0,Diyar Nurgozhay,diyar nurgozhay,bruno lopes,diyar nurgozhay,diyar nurgozhay,diyar nurgozhay,1.0,1.0,1.0,186.0,-220.0,-167.0,130.0,-160.0,141.0,0.07367682992124495,0.15363780286001416,0.1555291589017768,2026-08-08
+-1.0,-1.0,-1.0,0.0,Jose Montanha,louie sutherland,jose montanha,,,,,,,-110.0,-110.0,-250.0,163.0,-205.0,205.0,,,,2026-08-08
