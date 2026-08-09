@@ -70,7 +70,7 @@ def plot_returns(ml_results, parlay_results, bankroll_results):
         axes[i].scatter(date, bankroll)
         axes[i].set_xlabel('Date')
         axes[i].set_ylabel('Bankroll')
-        axes[i].set_title(f'Bankroll for odds {type_}, Current total: {bankroll[-1]:.2f}')
+        axes[i].set_title(f'Bankroll for Odds Type {type_}, Current Total: {bankroll.iloc[-1]:.2f}')
 
     plt.tight_layout()
 
