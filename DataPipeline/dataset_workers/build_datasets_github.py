@@ -26,7 +26,6 @@ generate_model_df = True
 
 
 
-
 #Folders for ALL scraped data
 non_merged_stats = pd.read_csv(config.non_merged_stats_fp)
 non_merged_stats = non_merged_stats.drop(columns=[col for col in non_merged_stats.columns if "Unnamed" in col])
@@ -53,7 +52,6 @@ stats_history = stats_history[~stats_history.duplicated(
     subset=['fighter_red', 'fighter_blue', 'event_date'],
     keep='first'
 )]
-
 
 
 

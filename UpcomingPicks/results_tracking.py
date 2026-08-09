@@ -136,14 +136,13 @@ def calc_winner_parlay(df_parlay, df_single_event):
 
     winner_bool = df_single_event['winner']
     winner_name = df_single_event['winner_name']
-    print(f'Winner Name GT in Parlay: {winner_name}')
 
     choice_index_open = df_parlay['fight_index_open'].astype(int)
     choice_index_close1 = df_parlay['fight_index_close1_stack'].astype(int)
     choice_index_close2 = df_parlay['fight_index_close2_stack'].astype(int)
-    print(f'choice index open: {choice_index_open}')
-    print(f'choice index close1: {choice_index_close1}')
-    print(f'choice index close2: {choice_index_close2}')
+    # print(f'choice index open: {choice_index_open}')
+    # print(f'choice index close1: {choice_index_close1}')
+    # print(f'choice index close2: {choice_index_close2}')
 
     choice_fighters_open = df_parlay['choice_fighter_bool_open'].to_numpy(dtype=int)
     choice_fighters_close1 = df_parlay['choice_fighter_bool_close1_stack'].to_numpy(dtype=int)
@@ -191,9 +190,6 @@ def calc_winner_parlay(df_parlay, df_single_event):
     winner_name_close1 = winner_name.loc[choice_index_close1].to_numpy()
     winner_name_close2 = winner_name.loc[choice_index_close2].to_numpy()
 
-    print(f'Winner Name Parlay Open: {winner_name_open}')    
-    print(f'Winner Name Parlay close 1: {winner_name_close1}')
-    print(f'Winner Name Parlay Close2: {winner_name_close2}')
 
     parlay_results = pd.DataFrame({
         'open_net_fstar':open_net_fstar, 'close1_net_fstar':close1_net_fstar, 'close2_net_fstar':close2_net_fstar,
@@ -227,7 +223,6 @@ def calc_winner_parlay(df_parlay, df_single_event):
     })
     test = parlay_results[['winner_name', 'winner_name_close1', 'winner_name_close2']].head()
 
-    print(f'Parlay Results Columsn for winners: {test}')
     return parlay_results
 
 def calc_winner_ml(df_single_event, df_money_line):
@@ -298,7 +293,6 @@ def calc_winner_ml(df_single_event, df_money_line):
     )
 
     winner_name = df_single_event['winner_name'].to_numpy()
-    print(f'Winner Name in ML: {winner_name}')
 
     df_data = pd.DataFrame({
         "net_odds_open": profit_open,
@@ -446,16 +440,15 @@ def returns_by_date(starting_bankroll=500):
     for type_ in types: 
 
         date_index = df_ml['date']
-        win_bet = pd.Series(np.nan, index=date_index)
-        mask = ~pd.isna(df_ml[f'pred_winner_{type_}'])
 
-        win_bet = pd.Series(np.nan, index=date_index)
-        mask = df_ml[f"pred_winner_{type_}"].notna().to_numpy()
+        win_bet = pd.Series(0, index=date_index, dtype='boolean')
+        mask_bet = df_ml[f"pred_winner_{type_}"].notna().to_numpy()
 
-        win_bet.iloc[mask] = (
-            df_ml.loc[mask, f"pred_winner_{type_}"].astype(int).to_numpy()
-            == df_ml.loc[mask, "winner_bool"].astype(int).to_numpy()
+        win_bet.iloc[mask_bet] = (
+            df_ml.loc[mask_bet, f"pred_winner_{type_}"].astype(int).to_numpy()
+            == df_ml.loc[mask_bet, "winner_bool"].astype(int).to_numpy()
         )
+        win_bet[~mask_bet] = False
 
         choice_stake = pd.Series(
             np.array(
@@ -464,6 +457,7 @@ def returns_by_date(starting_bankroll=500):
         index=date_index
         )
         net_stake = choice_stake.where(win_bet, -choice_stake)
+        net_stake = net_stake.where(mask_bet, 0)
 
         choice_odds = pd.Series(
             np.where(
@@ -475,9 +469,10 @@ def returns_by_date(starting_bankroll=500):
         )
         choice_odds = choice_odds.fillna(0)
         net_odds = choice_odds.where(win_bet, -1)
+        net_odds = net_odds.where(mask_bet, 0)
 
-        ml_data[f'net_stake_{type_}'] = net_stake.where(mask, 0)
-        ml_data[f'net_odds_{type_}'] = net_odds.where(mask, 0)
+        ml_data[f'net_stake_{type_}'] = net_stake.copy()
+        ml_data[f'net_odds_{type_}'] = net_odds.copy()
 
 
         date_index = df_parlay['date']
@@ -516,9 +511,10 @@ def returns_by_date(starting_bankroll=500):
         profits = []
         for date in date_index.unique():
 
-            wins = win_bet.loc[date]
-            stakes = choice_stake.loc[date]
-            odds = choice_odds.loc[date]
+            # carry the mask to select only where bets where placed 
+            wins = win_bet[mask_bet].loc[date]
+            stakes = choice_stake[mask_bet].loc[date]
+            odds = choice_odds[mask_bet].loc[date]
 
             profit_ml = np.where(
                 wins, 
@@ -561,7 +557,6 @@ def returns_by_date(starting_bankroll=500):
     commit_if_changed(ml_results, config.ml_returns_fp, f'Saving Money Line Results')
     commit_if_changed(parlay_results, config.parlay_returns_fp, f'Saving Parlay Line Results')
     commit_if_changed(bankroll_results, config.bankroll_returns_fp, f'Saving Bankroll Results')
-
 
 
 if __name__ == "__main__":
