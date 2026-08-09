@@ -152,4 +152,4 @@ plot_returns(ml_results, parlay_results, bankroll_results)
 
 df_accuracy, df_bet_types = accuracy_analysis(ml_results, parlay_results)
 display_paginated_df(df_accuracy, title='Returns Accuracy', key_prefix='returns')
-display_paginated_df(df_bet_types, title='Bet Type Stats', key_prefix='returns')
+display_paginated_df(df_bet_types, title='Bet Type Stats', key_prefix='')
