@@ -22,7 +22,6 @@ from config import config
 BASE_DIR = config.base_dir  
 
 
-
 df_ml = pd.read_csv( config.ml_returns_fp)
 df_parlay = pd.read_csv(config.parlay_returns_fp)
 df_bankroll = pd.read_csv(config.bankroll_returns_fp)
@@ -86,15 +85,26 @@ def accuracy_analysis(ml_results, parlay_results):
     types = ['open', 'close1', 'close2']
 
     for type_ in types: 
-        accuracy_all = (ml_results[f'pred_winner_{type_}'] == ml_results['winner_bool']).mean()
+        no_draws = ml_results[ml_results['winner_bool'] >= 2]
+        accuracy_all = (no_draws[f'pred_winner_{type_}'] == no_draws['winner_bool']).mean()
         accuracies[f'accuracy_all_{type_}'].append(accuracy_all)
 
-        bets_only = ml_results[ml_results[f'fstar_{type_}'] > 0]
+        bets_only = no_draws[no_draws[f'fstar_{type_}'] > 0]
         accuracy_bets = (bets_only[f'pred_winner_{type_}'] == bets_only['winner_bool']).mean()
         accuracies[f'accuracy_bets_{type_}'].append(accuracy_bets)
 
         parlay_accuracy = (parlay_results[f'net_odds_{type_}'] > 0).mean()
         accuracies[f'accuracy_parlays_{type_}'].append(parlay_accuracy)
+
+        odds = no_draws[[f'{type_}_blue', f'{type_}_red']].to_numpy()
+
+        vegas_accuracy = np.where(
+            odds[:, 0] == odds[:, 1],
+            1,
+            np.argmin(odds, axis=1)
+        ).mean()
+
+        accuracies[f'accuracy_vegas_{type_}'] = vegas_accuracy
 
     return pd.DataFrame(accuracies)
 

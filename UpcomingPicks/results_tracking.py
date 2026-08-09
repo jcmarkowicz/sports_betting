@@ -419,41 +419,146 @@ def get_missing_stats(prev_fight_date):
     return missing_stats, missing_odds, odds_stats_df[odds_stats_df['date'] >= prev_fight_date]
 
 
-def returns_by_date():
+from collections import defaultdict
+def american_to_decimal(odds):
+    odds = np.asarray(odds)
+    return np.where(
+        odds > 0, 
+        1 + odds / 100, 
+        1 + 100 / abs(odds)
+    )
+
+def returns_by_date(starting_bankroll=500):
     
     df_ml = pd.read_csv(config.ml_history_fp)
     df_parlay = pd.read_csv(config.parlay_history_fp)
 
     types = ['open', 'close1', 'close2']
-    ml_pct_returns = {type_:[] for type_ in types}
-    parlay_pct_returns = {type_:[] for type_ in types}
 
-    ml_pct_returns['date'] = []
-    parlay_pct_returns['date'] = [] 
+    df_ml = pd.read_csv(config.ml_history_fp)
+    df_parlay = pd.read_csv(config.parlay_history_fp)
 
-    for date, group in df_ml.groupby('date'): 
-        
-        parlay_group = df_parlay[df_parlay['date']==date]
+    bankroll_data = defaultdict(list)
+    parlay_data = defaultdict(list)
+    ml_data = defaultdict(list)
+    
+    ml_data['date'] = df_ml['date']
+    bankroll_data['date'] = df_parlay.groupby('date')['date'].first()
+    parlay_data['date'] = df_parlay.groupby('date')['date'].first()
 
-        for type_ in types: 
+    for type_ in types: 
 
-            total_net_odds = np.sum(np.where(group[f'fstar_{type_}'] > 0, group[f'net_odds_{type_}'], 0))
-            ml_pct_returns[type_].append(total_net_odds)
+        date_index = df_ml['date']
+        win_bet = pd.Series(np.nan, index=date_index)
+        mask = ~pd.isna(df_ml[f'pred_winner_{type_}'])
 
-            valid_parlay = parlay_group[f'{type_}_fstar'].iloc[0] > 0 
-            total_net_odds = parlay_group[f'{type_}_net_odds'].iloc[0] if valid_parlay else 0 
-            parlay_pct_returns[type_].append(total_net_odds)
-        
-        ml_pct_returns['date'].append(date)
-        parlay_pct_returns['date'].append(date)
+        win_bet = pd.Series(np.nan, index=date_index)
+        mask = df_ml[f"pred_winner_{type_}"].notna().to_numpy()
 
-    df_ml_pct = pd.DataFrame(ml_pct_returns)
-    df_parlay_pct = pd.DataFrame(parlay_pct_returns)
+        win_bet.iloc[mask] = (
+            df_ml.loc[mask, f"pred_winner_{type_}"].astype(int).to_numpy()
+            == df_ml.loc[mask, "winner_bool"].astype(int).to_numpy()
+        )
 
-    commit_if_changed(df_ml_pct, config.ml_pct_returns_fp, f'Saving Percent Returns ML')
-    commit_if_changed(df_parlay_pct, config.parlay_pct_returns_fp, f'Saving Percent Returns Parlay')
+        choice_stake = pd.Series(
+            np.array(
+                df_ml[f'fstar_{type_}'].fillna(0)
+            ), 
+        index=date_index
+        )
+        net_stake = choice_stake.where(win_bet, -choice_stake)
 
-    return df_ml_pct, df_parlay_pct
+        choice_odds = pd.Series(
+            np.where(
+                df_ml[f'pred_winner_{type_}'] == 1, 
+                american_to_decimal(df_ml[f'{type_}_red'])-1, 
+                american_to_decimal(df_ml[f'{type_}_blue'])-1
+            ),
+        index=date_index
+        )
+        choice_odds = choice_odds.fillna(0)
+        net_odds = choice_odds.where(win_bet, -1)
+
+        ml_data[f'net_stake_{type_}'] = net_stake.where(mask, 0)
+        ml_data[f'net_odds_{type_}'] = net_odds.where(mask, 0)
+
+
+        date_index = df_parlay['date']
+
+        leg_win = pd.Series(
+            (df_parlay[f'choice_fighter_bool_{type_}'] == df_parlay[f'winner_bool_{type_}']).to_numpy(), 
+            index=date_index
+        )
+        win_parlay = leg_win.groupby(level=0).all()
+        single_date_index = win_parlay.index
+
+        choice_parlay_odds = pd.Series(
+            np.where(
+                df_parlay[f'choice_fighter_bool_{type_}'] == 1,
+                american_to_decimal(df_parlay[f'{type_}_red']),
+                american_to_decimal(df_parlay[f'{type_}_blue'])
+            ), 
+            index=date_index
+        ).fillna(0)
+
+        parlay_stake = pd.Series(
+            df_parlay.groupby('date')[f'{type_}_fstar'].first().fillna(0),
+            index=single_date_index
+        )
+        parlay_net_stake = parlay_stake.where(win_parlay, -parlay_stake)
+
+        parlay_odds = pd.Series(np.array(choice_parlay_odds.groupby(level=0).prod() - 1), index=single_date_index)
+        parlay_net_odds = parlay_odds.where(win_parlay, -parlay_odds)
+
+        parlay_data[f'net_odds_{type_}'] = parlay_net_odds.copy()
+        parlay_data[f'net_stake_{type_}'] = parlay_net_stake.copy()
+
+        bankroll = starting_bankroll
+        profits = []
+
+        for date in date_index.unique():
+
+            wins = win_bet.loc[date]
+            stakes = choice_stake.loc[date]
+            odds = choice_odds.loc[date]
+
+            profit_ml = np.where(
+                wins, 
+                stakes * bankroll * odds, 
+                -stakes * bankroll
+            )
+
+            wins_parlay = win_parlay.loc[date]
+            stakes_parlay = parlay_stake.loc[date]
+            odds_parlay = parlay_odds.loc[date]
+
+            profit_parlay = stakes_parlay * odds_parlay * bankroll if wins_parlay else -stakes_parlay * bankroll 
+
+            total_profit = profit_ml.sum() + profit_parlay
+            profits.append(total_profit)
+            bankroll += total_profit.sum()
+
+        bankroll_data[f'bankroll_{type_}'] = profits
+
+    other_info = df_ml[[
+        'open_red', 'open_blue', 'close1_red', 'close2_blue',
+        'fighter_red', 'fighter_blue', 'pred_winner_open', 'pred_winner_close1', 'pred_winner_close2',
+        'winner_bool', 'winner_name'
+    ]].reset_index(drop=True)
+
+    ml_results = {
+        key: value.to_numpy()
+        for key, value in dict(ml_data).items()
+    }
+    ml_results = pd.DataFrame(ml_results)
+    ml_results = pd.concat([ml_results, other_info], axis=1)
+
+    parlay_results = pd.DataFrame(dict(parlay_data))
+    bankroll_results = pd.DataFrame(dict(bankroll_data))
+
+    commit_if_changed(ml_results, config.ml_returns_fp, f'Saving Money Line Results')
+    commit_if_changed(parlay_results, config.parlay_returns_fp, f'Saving Parlay Line Results')
+    commit_if_changed(bankroll_results, config.bankroll_returns_fp, f'Saving Bankroll Results')
 
 
 
