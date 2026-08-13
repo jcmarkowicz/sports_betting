@@ -21,7 +21,7 @@ from config import config
 import time 
 
 #start_date='2026-02-23'
-def archive_results(start_date='2026-08-08'):
+def archive_results(start_date='2026-08-08', delete_old=False):
     """
     Maintain moneyline and parlay history betting results. 
 
@@ -107,8 +107,9 @@ def archive_results(start_date='2026-08-08'):
             ).dt.date
             df_parlay_history = df_parlay_history.drop_duplicates(subset=['choice_fighter_name_open','choice_fighter_name_close1','choice_fighter_name_close2', 'date'])
 
-            # all of these deleted files are regenerated in the above functions 
-            delete_old_files(date_str)
+            # all of these deleted files are regenerated in the above functions
+            if delete_old: 
+                delete_old_files(date_str)
 
     commit_if_changed(df_parlay_history, config.parlay_history_fp, f'Updating parlay results')
     commit_if_changed(df_ml_history, config.ml_history_fp, f'updating money line results')
