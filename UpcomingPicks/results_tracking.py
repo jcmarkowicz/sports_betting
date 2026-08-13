@@ -87,6 +87,10 @@ def archive_results(start_date='2026-08-08', delete_old=False):
             #     df_ml, df_parlay = generate_bets(event_group, select_odds=None)
 
             df_ml, df_parlay = generate_bets(event_group, select_odds=None)
+            pred_close1 = df_ml['pred_name_close1_stack']
+            pred_close2 = df_ml['pred_name_close2_stack']
+            print(pred_close1)
+            print(pred_close2)
 
             # calculate the winners and commit 
             df_results_ml = calc_winner_ml(event_group, df_ml)
@@ -270,8 +274,7 @@ def calc_winner_ml(df_single_event, df_money_line):
     name_open = df_money_line['pred_name_open'].to_list()
     name_close1 = df_money_line['pred_name_close1_stack'].to_list()
     name_close2 = df_money_line['pred_name_close2_stack'].to_list()
-    print(name_close1)
-    print(name_close2)
+
 
 
     winner_name = df_single_event['winner_name'].to_numpy()
