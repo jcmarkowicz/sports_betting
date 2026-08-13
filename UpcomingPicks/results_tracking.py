@@ -21,7 +21,7 @@ from config import config
 import time 
 
 #start_date='2026-02-23'
-def archive_results(start_date='2026-08-01'):
+def archive_results(start_date='2026-08-08'):
     """
     Maintain moneyline and parlay history betting results. 
 
@@ -269,28 +269,13 @@ def calc_winner_ml(df_single_event, df_money_line):
     name_open = df_money_line['pred_name_open'].to_list()
     name_close1 = df_money_line['pred_name_close1_stack'].to_list()
     name_close2 = df_money_line['pred_name_close2_stack'].to_list()
+    print(name_close1)
+    print(name_close2)
 
-    net_odds_open = np.where(
-        pred_open == winner_bool,
-        open_odds,
-        -1
-    )
-    net_odds_close1 = np.where(
-        pred_close1 == winner_bool,
-        close1_odds, 
-        -1
-    )
-    net_odds_close2 = np.where(
-        pred_close2 == winner_bool,
-        close2_odds,    
-        -1
-    )
+
     winner_name = df_single_event['winner_name'].to_numpy()
 
     df_data = pd.DataFrame({
-        "net_odds_open": net_odds_open,
-        "net_odds_close1": net_odds_close1,
-        "net_odds_close2": net_odds_close2,
         'fstar_open':open_stake, 
         'fstar_close1':close1_stake, 
         'fstar_close2':close2_stake,
@@ -299,9 +284,9 @@ def calc_winner_ml(df_single_event, df_money_line):
         'pred_name_open':name_open, 
         'pred_name_close1':name_close1,
         'pred_name_close2':name_close2,
-        'pred_open':pred_open,
-        'pred_close1':pred_close1, 
-        'pred_close2':pred_close2, 
+        'pred_winner_open':pred_open,
+        'pred_winner_close1':pred_close1, 
+        'pred_winner_close2':pred_close2, 
         'pred_color_open':pred_color_open, 
         'pred_color_close1':pred_color_close1,
         'pred_color_close2':pred_color_close2
