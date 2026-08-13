@@ -54,8 +54,8 @@ class config:
     parlay_folder = base_dir / "Data" / "upcoming_events" / "parlays" 
 
     # --- Results Tracking Params ---
-    ml_history_fp = base_dir / 'Data' / 'betting_results' / 'moneyline_results.csv'
-    parlay_history_fp = base_dir / 'Data' / 'betting_results' / 'parlay_results.csv'
+    ml_history_fp = base_dir / 'Data' / 'betting_results' / 'moneyline_results_test.csv'
+    parlay_history_fp = base_dir / 'Data' / 'betting_results' / 'parlay_results_test.csv'
     event_features_folder = base_dir / "Data" / "upcoming_events" / "event_features" 
 
     non_merged_stats_fp = base_dir / "Data" / "non_merged_features" / "non_merged_stats.csv"

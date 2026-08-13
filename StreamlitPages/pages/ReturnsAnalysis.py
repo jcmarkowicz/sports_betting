@@ -92,7 +92,7 @@ def accuracy_analysis(ml_results, parlay_results):
 
     for type_ in types: 
 
-        no_draws = ml_results[ml_results[f'pred_winner_{type_}'] < 2]
+        no_draws = ml_results[ml_results[f'pred_winner_{type_}'] < 2].dropna(subset=[f'{type_}_red', f'{type_}_blue'])
         all_preds = no_draws.dropna(subset=[f'pred_winner_{type_}'])
         bets_only = all_preds[all_preds[f'net_stake_{type_}'] != 0]
 
@@ -105,7 +105,7 @@ def accuracy_analysis(ml_results, parlay_results):
         parlay_accuracy = (parlay_results[f'net_odds_{type_}'] > 0).mean()
         accuracies[f'parlays_{type_}'].append(parlay_accuracy)
 
-        avail_vegas = no_draws.dropna(subset=[f'{type_}_red', f'{type_}_blue'])
+        avail_vegas = no_draws.copy()
         odds_vegas = avail_vegas[[f'{type_}_blue', f'{type_}_red']].to_numpy()
         winners = avail_vegas['winner_bool']
 
@@ -116,13 +116,19 @@ def accuracy_analysis(ml_results, parlay_results):
         )
         accuracies[f'vegas_{type_}'] = (vegas_preds == winners).mean()
 
-        choice_odds = np.where(bets_only[f'pred_winner_{type_}'] == 1, bets_only[f'{type_}_red'], bets_only[f'{type_}_blue'])
+        choice_odds = np.where(
+            bets_only[f'pred_winner_{type_}'] == 1, 
+            bets_only[f'{type_}_red'], 
+            bets_only[f'{type_}_blue']
+        )
+        
         dog_bets = bets_only[choice_odds > 0]
+        fav_bets = bets_only[choice_odds < 0]
+
         total_dog = dog_bets.shape[0]
         win_dog = dog_bets[f'pred_winner_{type_}'] == dog_bets[f'winner_bool']
         n_win_dog = win_dog.sum()
 
-        fav_bets = bets_only[choice_odds < 0]
         total_fav = fav_bets.shape[0]
         win_dog = fav_bets[f'pred_winner_{type_}'] == fav_bets[f'winner_bool']
         n_win_fav = win_dog.sum()

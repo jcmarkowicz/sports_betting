@@ -20,8 +20,8 @@ from DataPipeline.utils.bets_utils import generate_bets
 from config import config
 import time 
 
-
-def archive_results(start_date='2026-02-23'):
+#start_date='2026-02-23'
+def archive_results(start_date='2026-08-01'):
     """
     Maintain moneyline and parlay history betting results. 
 
@@ -173,13 +173,8 @@ def calc_winner_parlay(df_parlay, df_single_event):
     close1_stake = df_parlay['parlay_fstar_close1_stack'].to_numpy()
     close2_stake = df_parlay['parlay_fstar_close2_stack'].to_numpy()
 
-    profits = moneyline_profit(open_stake, open_odds)
     profit_open = np.where(open_win, open_odds, -1)
-  
-    profits = moneyline_profit(close1_stake, close1_odds)
     profit_close1 = np.where(close1_win, close1_odds, -1)
-
-    profits = moneyline_profit(close2_stake, close2_odds)
     profit_close2 = np.where(close2_win, close2_odds, -1)
 
     open_net_fstar = np.where(open_win, open_stake, -open_stake)
@@ -221,7 +216,6 @@ def calc_winner_parlay(df_parlay, df_single_event):
         'winner_name_close1': winner_name_close1,
         'winner_name_close2': winner_name_close2, 
     })
-    test = parlay_results[['winner_name', 'winner_name_close1', 'winner_name_close2']].head()
 
     return parlay_results
 
@@ -258,7 +252,6 @@ def calc_winner_ml(df_single_event, df_money_line):
                 odds[i] = df[f"{odds_type}_blue"].iloc[i]
             else:
                 odds[i] = np.nan  # Handle NaN or unexpected values
-
         return odds
     
     pred_color_open = calc_color(pred_open)
@@ -273,58 +266,57 @@ def calc_winner_ml(df_single_event, df_money_line):
     close1_stake = df_money_line['fstar_close1_stack'].to_numpy(dtype=float)
     close2_stake = df_money_line['fstar_close2_stack'].to_numpy(dtype=float)
 
-    profits = moneyline_profit(open_stake, open_odds)
-    profit_open = np.where(
+    name_open = df_money_line['pred_name_open'].to_list()
+    name_close1 = df_money_line['pred_name_close1_stack'].to_list()
+    name_close2 = df_money_line['pred_name_close2_stack'].to_list()
+
+    net_odds_open = np.where(
         pred_open == winner_bool,
         open_odds,
         -1
     )
-    profits = moneyline_profit(close1_stake, close1_odds)
-    profit_close1 = np.where(
+    net_odds_close1 = np.where(
         pred_close1 == winner_bool,
         close1_odds, 
         -1
     )
-    profits = moneyline_profit(close2_stake, close2_odds)
-    profit_close2 = np.where(
+    net_odds_close2 = np.where(
         pred_close2 == winner_bool,
         close2_odds,    
         -1
     )
-
     winner_name = df_single_event['winner_name'].to_numpy()
 
     df_data = pd.DataFrame({
-        "net_odds_open": profit_open,
-        "net_odds_close1": profit_close1,
-        "net_odds_close2": profit_close2,
+        "net_odds_open": net_odds_open,
+        "net_odds_close1": net_odds_close1,
+        "net_odds_close2": net_odds_close2,
+        'fstar_open':open_stake, 
+        'fstar_close1':close1_stake, 
+        'fstar_close2':close2_stake,
         'winner_bool': winner_bool,
         'winner_name':winner_name,
+        'pred_name_open':name_open, 
+        'pred_name_close1':name_close1,
+        'pred_name_close2':name_close2,
+        'pred_open':pred_open,
+        'pred_close1':pred_close1, 
+        'pred_close2':pred_close2, 
+        'pred_color_open':pred_color_open, 
+        'pred_color_close1':pred_color_close1,
+        'pred_color_close2':pred_color_close2
     })
 
     df_data = pd.concat([
         df_data,
         df_money_line[[
             "fighter_red", "fighter_blue",
-
-            "pred_name_open","pred_name_close1", "pred_name_close2",
-            'pred_winner_open', 'pred_winner_close1_stack','pred_winner_close2_stack',
-
             "open_red", "open_blue",
             "close1_red", "close1_blue",
             "close2_red", "close2_blue",
-
-            "fstar_open", "fstar_close1", "fstar_close2",
         ]].reset_index(drop=True),
     ], axis=1)
 
-    df_data = df_data.rename(columns={'pred_winner_close1_stack': 'pred_winner_close1',
-                    'pred_winner_close2_stack': 'pred_winner_close2'})
-    # mask = (
-    #     (df_money_line['fstar_open'] != 0 | df_money_line['fstar_open'].notna()) &
-    #     (df_data['net_odds_open'] != 0 | df_data['net_odds_open'].notna())
-    # )
-    # assert mask.all(), "Money Line results profit error"
     return df_data
 
 
@@ -500,7 +492,7 @@ def returns_by_date(starting_bankroll=500):
         parlay_net_stake = parlay_stake.where(win_parlay, -parlay_stake)
 
         parlay_odds = pd.Series(np.array(choice_parlay_odds.groupby(level=0).prod() - 1), index=single_date_index)
-        parlay_net_odds = parlay_odds.where(win_parlay, -parlay_odds)
+        parlay_net_odds = parlay_odds.where(win_parlay, -1)
 
         parlay_data[f'net_odds_{type_}'] = parlay_net_odds.copy()
         parlay_data[f'net_stake_{type_}'] = parlay_net_stake.copy()
