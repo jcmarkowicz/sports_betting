@@ -68,6 +68,11 @@ def archive_results(start_date='2026-08-08', delete_old=False):
     for date, event_group in upcoming_df.groupby('date'):
 
         event_group =  event_group.copy().reset_index(drop=True)
+        commit_if_changed(
+            event_group, 
+            fr'C:\Users\jcmar\my_files\SportsBetting\Data\test_features_{date}', 
+            f'Saving Test Features'
+        )
 
         date_str = date.strftime("%Y-%m-%d")
         d_ts = pd.to_datetime(date_str)  
