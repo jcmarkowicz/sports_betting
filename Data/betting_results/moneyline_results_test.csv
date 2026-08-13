@@ -1,0 +1,13 @@
+fstar_open,fstar_close1,fstar_close2,winner_bool,winner_name,pred_name_open,pred_name_close1,pred_name_close2,pred_winner_open,pred_winner_close1,pred_winner_close2,pred_color_open,pred_color_close1,pred_color_close2,fighter_red,fighter_blue,open_red,open_blue,close1_red,close1_blue,close2_red,close2_blue,date
+0.05132352673858448,0.2112955186704853,0.21021204765682505,0.0,Alexia Thainara,alexia thainara,alexia thainara,alexia thainara,0.0,0.0,0.0,blue,blue,blue,amanda lemos,alexia thainara,245.0,-300.0,210.0,-330.0,260.0,-275.0,2026-08-08
+0.0,0.0,0.0,0.0,Quillan Salkilld,mateusz gamrot,quillan salkilld,quillan salkilld,1.0,0.0,0.0,red,blue,blue,mateusz gamrot,quillan salkilld,-131.0,111.0,120.0,-175.0,141.0,-150.0,2026-08-08
+0.08058307100621308,0.20221088888224886,0.20180247954984729,1.0,Diego Ferreira,diego ferreira,diego ferreira,diego ferreira,1.0,1.0,1.0,red,red,red,diego ferreira,billy quarantillo,-205.0,177.0,-188.0,143.0,-175.0,154.0,2026-08-08
+0.0,0.0,0.0,0.0,Yadier del Valle,yadier del valle,yadier del valle,yadier del valle,0.0,0.0,0.0,blue,blue,blue,darren elkins,yadier del valle,263.0,-325.0,500.0,-2000.0,950.0,-800.0,2026-08-08
+0.06279140507464474,0.2306444059716789,0.23034000366495008,1.0,Juliana Miller,juliana miller,juliana miller,juliana miller,1.0,1.0,1.0,red,red,red,juliana miller,ravena oliveira,-190.0,165.0,-370.0,250.0,-333.0,290.0,2026-08-08
+0.0,0.0,0.0,0.0,Ty Miller,ty miller,ty miller,ty miller,0.0,0.0,0.0,blue,blue,blue,billy ray goff,ty miller,153.0,-175.0,300.0,-500.0,380.0,-400.0,2026-08-08
+,,,0.0,Jose Montanha,,,,,,,,,,louie sutherland,jose montanha,-110.0,-110.0,-250.0,163.0,-205.0,205.0,2026-08-08
+,,,1.0,Manoel Sousa,,,,,,,,,,manoel sousa,richie miranda,-500.0,383.0,-375.0,250.0,-333.0,290.0,2026-08-08
+0.0,0.20015205468316818,0.19953805671310165,1.0,Miles Johns,miles johns,miles johns,miles johns,1.0,1.0,1.0,red,red,red,miles johns,gianni vazquez,-175.0,135.0,-220.0,163.0,-200.0,180.0,2026-08-08
+0.07367683047102297,0.18793464712120184,0.18880307695291026,1.0,Diyar Nurgozhay,diyar nurgozhay,diyar nurgozhay,diyar nurgozhay,1.0,1.0,1.0,red,red,red,diyar nurgozhay,bruno lopes,186.0,-220.0,-167.0,130.0,-160.0,141.0,2026-08-08
+0.0,0.21591471992236289,0.21201717453173535,1.0,Steven Asplund,steven asplund,steven asplund,steven asplund,1.0,1.0,1.0,red,red,red,steven asplund,guilherme pat,-204.0,177.0,-333.0,219.0,-265.0,250.0,2026-08-08
+,,,0.0,Carol Foro,,,,,,,,,,gigi canuto,carol foro,174.0,-200.0,160.0,-225.0,188.0,-205.0,2026-08-08
