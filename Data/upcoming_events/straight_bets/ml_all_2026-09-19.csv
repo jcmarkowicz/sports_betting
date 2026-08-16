@@ -1,14 +1,14 @@
 date,fighter_red,fighter_blue,open_red,open_blue,close1_red,close2_red,close1_blue,close2_blue,pred_name_open,pred_winner_open,choice_proba_open,fstar_open,stake_open,edge_open,ev_open,pred_name_close1,pred_winner_close1,choice_proba_close1,fstar_close1,stake_close1,edge_close1,ev_close1,pred_name_close2,pred_winner_close2,choice_proba_close2,fstar_close2,stake_close2,edge_close2,ev_close2,pred_name_close1_stack,pred_winner_close1_stack,choice_proba_close1_stack,fstar_close1_stack,stake_close1_stack,edge_close1_stack,ev_close1_stack,pred_name_close2_stack,pred_winner_close2_stack,choice_proba_close2_stack,fstar_close2_stack,stake_close2_stack,edge_close2_stack,ev_close2_stack
 2026-09-19,renato moicano,brian ortega,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-09-19,joshua van,alexandre pantoja,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-09-19,arman tsarukyan,mauricio ruffy,-350.0,280.0,-400.0,-380.0,280.0,303.0,arman tsarukyan,1.0,0.8165446118556292,0.17162020968953248,600.6707339133637,0.053794468146007524,0.04984307238580887,arman tsarukyan,1.0,0.812179919076679,0.15496810458397428,542.38836604391,0.03444630260331982,0.015224898845848711,arman tsarukyan,1.0,0.8191260627193865,0.1874721998845684,656.1526995959894,0.04173565785855082,0.03468555290869865,arman tsarukyan,1.0,0.9226546287536621,0.32815646667209436,1148.5476333523302,0.14492101228030296,0.15331828594207764,arman tsarukyan,1.0,0.9226546287536621,0.3280680332215032,1148.238116275261,0.14526422389282645,0.1654584784256784
+2026-09-19,arman tsarukyan,mauricio ruffy,-350.0,280.0,-400.0,-380.0,280.0,303.0,arman tsarukyan,1.0,0.8165425733336463,0.17161370620353825,600.6479717123839,0.05379242962402464,0.04984045142897375,arman tsarukyan,1.0,0.8121784380584361,0.15496144173273624,542.3650460645769,0.034444821585077,0.015223047573045184,arman tsarukyan,1.0,0.8191244523680598,0.1874649663552245,656.1273822432858,0.04173404750722409,0.034683518780706996,arman tsarukyan,1.0,0.9226546287536621,0.32815646667209436,1148.5476333523302,0.14492101228030296,0.15331828594207764,arman tsarukyan,1.0,0.9226546287536621,0.3280680332215032,1148.238116275261,0.14526422389282645,0.1654584784256784
 2026-09-19,marlon vera,charles jourdain,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-09-19,patricio pitbull,dooho choi,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-09-19,gable steveson,sean sharaf,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-09-19,ryan gandra,ozzy diaz,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-09-19,tai tuivasa,robelis despaigne,316.0,-400.0,350.0,415.0,-590.0,-500.0,robelis despaigne,0.0,0.7254324782058663,0.0,0.0,-0.06029573440631275,-0.0932094022426671,robelis despaigne,0.0,0.7645249932404677,0.0,0.0,-0.06650633338879752,-0.10589449943063942,robelis despaigne,0.0,0.7599636578280833,0.0,0.0,-0.06421574985351819,-0.08804361060630009,robelis despaigne,0.0,0.8310705423355103,0.00023208862011298172,0.0,3.921570624498827e-05,-0.02807004370931851,robelis despaigne,0.0,0.8310705423355103,0.039194127167023696,0.0,0.0068911346539087814,-0.002715349197387723
-2026-09-19,giga chikadze,joanderson brito,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-09-19,casey oneill,eduarda moura,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-09-19,michael aswell jr,joosang yoo,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-09-19,edmen shahbazyan,brunno ferreira,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-09-19,alonzo menifield,iwo baraniewski,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-09-19,casey oneill,eduarda moura,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-09-19,tai tuivasa,robelis despaigne,316.0,-400.0,350.0,409.0,-590.0,-500.0,robelis despaigne,0.0,0.7254311497210144,0.0,0.0,-0.060297062891164654,-0.09321106284873198,robelis despaigne,0.0,0.7645240604789209,0.0,0.0,-0.06650726615034441,-0.10589559028736376,robelis despaigne,0.0,0.759496909063885,0.0,0.0,-0.06392968077964822,-0.08860370912333804,robelis despaigne,0.0,0.8310705423355103,0.00023208862011298172,0.0,3.921570624498827e-05,-0.02807004370931851,robelis despaigne,0.0,0.8310705423355103,0.043290507246835995,0.0,0.007643952491977024,-0.002715349197387723
+2026-09-19,edmen shahbazyan,brunno ferreira,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-09-19,giga chikadze,joanderson brito,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-09-19,ryan gandra,ozzy diaz,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-09-19,michael aswell jr,joosang yoo,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-09-19,gable steveson,sean sharaf,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
