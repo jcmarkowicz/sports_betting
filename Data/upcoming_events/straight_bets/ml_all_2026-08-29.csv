@@ -1,10 +1,10 @@
 date,fighter_red,fighter_blue,open_red,open_blue,close1_red,close2_red,close1_blue,close2_blue,pred_name_open,pred_winner_open,choice_proba_open,fstar_open,stake_open,edge_open,ev_open,pred_name_close1,pred_winner_close1,choice_proba_close1,fstar_close1,stake_close1,edge_close1,ev_close1,pred_name_close2,pred_winner_close2,choice_proba_close2,fstar_close2,stake_close2,edge_close2,ev_close2,pred_name_close1_stack,pred_winner_close1_stack,choice_proba_close1_stack,fstar_close1_stack,stake_close1_stack,edge_close1_stack,ev_close1_stack,pred_name_close2_stack,pred_winner_close2_stack,choice_proba_close2_stack,fstar_close2_stack,stake_close2_stack,edge_close2_stack,ev_close2_stack
-2026-08-29,aoriqileng,kai asakura,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-08-29,liu ce,junior tafa,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-08-29,umar nurmagomedov,song yadong,-700.0,525.0,-550.0,-480.0,325.0,420.0,umar nurmagomedov,1.0,0.8611491740734107,0.0,0.0,-0.0033285347646468955,-0.0158295153446735,umar nurmagomedov,1.0,0.8282615832171388,0.04456063216395517,0.0,0.008009689234402928,-0.02114540165247225,umar nurmagomedov,1.0,0.8359150481783532,0.08398305312771985,293.94068594701946,0.01504478004894294,0.01006401654884334,umar nurmagomedov,1.0,0.9167958498001099,0.3173336921866014,1110.6679226531048,0.09654395581737396,0.08348600430922079,umar nurmagomedov,1.0,0.9167958498001099,0.31746818928460696,1111.1386624961244,0.09592558167069964,0.1077949851751327
-2026-08-29,yan xiaonan,denise gomes,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-08-29,jack jenkins,sean woodson,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-08-29,namsrai batbayar,andre lima,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-08-29,rei tsuruya,kevin borjas,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-08-29,xiong jingnan,julia polastri,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-08-29,alex perez,sumudaerji,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-08-29,xiong jingnan,julia polastri,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-08-29,rei tsuruya,kevin borjas,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-08-29,liu ce,junior tafa,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-08-29,aoriqileng,kai asakura,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-08-29,yan xiaonan,denise gomes,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-08-29,umar nurmagomedov,song yadong,-700.0,525.0,-550.0,-480.0,325.0,420.0,umar nurmagomedov,1.0,0.8611499241390191,0.0,0.0,-0.003327784699038494,-0.01582865812683533,umar nurmagomedov,1.0,0.8282625973165316,0.04456627394464069,0.0,0.008010703333795721,-0.021144203171371667,umar nurmagomedov,1.0,0.835916142900414,0.08398916409117038,293.96207431909636,0.015045874771003831,0.010065339338000245,umar nurmagomedov,1.0,0.9167958498001099,0.3173336921866014,1110.6679226531048,0.09654395581737396,0.08348600430922079,umar nurmagomedov,1.0,0.9167958498001099,0.31746818928460696,1111.1386624961244,0.09592558167069964,0.1077949851751327
+2026-08-29,namsrai batbayar,andre lima,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
