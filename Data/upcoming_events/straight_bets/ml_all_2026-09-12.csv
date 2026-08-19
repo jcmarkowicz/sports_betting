@@ -1,11 +1,11 @@
 date,fighter_red,fighter_blue,open_red,open_blue,close1_red,close2_red,close1_blue,close2_blue,pred_name_open,pred_winner_open,choice_proba_open,fstar_open,stake_open,edge_open,ev_open,pred_name_close1,pred_winner_close1,choice_proba_close1,fstar_close1,stake_close1,edge_close1,ev_close1,pred_name_close2,pred_winner_close2,choice_proba_close2,fstar_close2,stake_close2,edge_close2,ev_close2,pred_name_close1_stack,pred_winner_close1_stack,choice_proba_close1_stack,fstar_close1_stack,stake_close1_stack,edge_close1_stack,ev_close1_stack,pred_name_close2_stack,pred_winner_close2_stack,choice_proba_close2_stack,fstar_close2_stack,stake_close2_stack,edge_close2_stack,ev_close2_stack
-2026-09-12,waldo cortes acosta,curtis blaydes,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-09-12,ignacio bahamondes,muslim salikhov,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-09-12,david martinez,dan ige,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-09-12,brandon moreno,joseph morales,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-09-12,manon fiorot,alexa grasso,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-09-12,jj aldrich,regina tarin,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-09-12,kelvin gastelum,yousri belgaroui,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-09-12,tommy mcmillen,marwan rahiki,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-09-12,yair rodriguez,jean silva,280.0,-350.0,250.0,275.0,-360.0,-325.0,jean silva,0.0,0.7552972608114826,0.0,0.0,-0.007452882898139057,-0.028903521813808147,jean silva,0.0,0.7425901014760363,0.0,0.0,-0.015155285245240346,-0.05113487033617589,jean silva,0.0,0.7482369852228847,0.0,0.0,-0.004705820557605267,-0.021536250093150716,jean silva,0.0,0.8298785090446472,0.22855212552615295,799.9324393415353,0.07213312232337055,0.060400317112604684,jean silva,0.0,0.8298785090446472,0.22743614330241055,796.026501558437,0.07693570326415722,0.0852257425968464
+2026-09-12,kelvin gastelum,yousri belgaroui,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-09-12,tim elliott,edgar chairez,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-09-12,jj aldrich,regina tarin,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-09-12,waldo cortes acosta,curtis blaydes,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-09-12,manon fiorot,alexa grasso,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-09-12,brandon moreno,joseph morales,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-09-12,yair rodriguez,jean silva,280.0,-350.0,250.0,275.0,-360.0,-325.0,jean silva,0.0,0.7553008636823132,0.0,0.0,-0.007449280027308491,-0.0288988895513117,jean silva,0.0,0.7425883733818326,0.0,0.0,-0.015157013339444081,-0.05113707845654733,jean silva,0.0,0.7482350786569636,0.0,0.0,-0.004707727123526406,-0.021538743294739898,jean silva,0.0,0.8298785090446472,0.22855212552615295,799.9324393415353,0.07213312232337055,0.060400317112604684,jean silva,0.0,0.8298785090446472,0.22743614330241055,796.026501558437,0.07693570326415722,0.0852257425968464
+2026-09-12,david martinez,dan ige,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
