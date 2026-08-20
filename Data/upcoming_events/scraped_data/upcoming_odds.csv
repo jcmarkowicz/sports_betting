@@ -1,35 +1,37 @@
-blue_fighter,open_blue,close1_blue,close2_blue,red_fighter,open_red,close1_red,close2_red,og_blue_name,event_date,og_red_fighter
-Sumudaerji Sumudaerji,-115,100,132,Alex Perez,-105,-157,-125,Sumudaerji,2026-05-30,Alex Perez
-Movsar Evloev,-110,-113,-102,Alexander Volkanovski,-120,-120,-112,Movsar Evloev,2026-10-24,Alexander Volkanovski
-Gregory Rodrigues,145,130,143,Anthony Hernandez,-165,-184,-160,Gregory Rodrigues,2026-08-22,Anthony Hernandez
-Ysidro Gutierrez,-200,-400,-400,Art Hernandez,150,260,260,Gregory Rodrigues,2024-07-27,Anthony Hernandez
-Terrance Chatman,709,600,750,Anthony Wint,-1100,-1200,-1000,Terrance Chatman,2026-08-22,Anthony Wint
-Mauricio Ruffy,280,280,303,Arman Tsarukyan,-350,-400,-380,Mauricio Ruffy,2026-09-20,Arman Tsarukyan
-Jeisla Chaves,330,360,420,Carli Judice,-400,-625,-525,Jeisla Chaves,2026-08-22,
-Nasrat Haqparast,-155,-122,-115,Chris Padilla,135,-105,100,Nasrat Haqparast,2026-08-22,Chris Padilla
-Marcio Alexandre Jr.,135,140,145,Court McGee,-175,-165,-160,Eric Nolan,2015-12-12,Court McGee
-Murad Guseinov,-275,-275,-275,David Martinez,200,200,200,Dan Ige,2023-11-25,David Martinez
-Sean Sharaf,900,600,850,Gable Steveson,-1600,-1800,-1408,Sean Sharaf,2026-09-10,Gable Steveson
-Stanley Dorsainvil,174,102,110,Gauge Young,-200,-138,-122,Stan Dorsainvil,2026-08-22,Gauge Young
-Gillian Robertson,-160,-139,-115,Jj Aldrich,140,-105,115,Regina Tarin,2022-03-12,JJ Aldrich
-Lerryan Douglas,-300,-400,-380,Jamall Emmers,250,280,310,Lerryan Douglas,2026-08-22,Jamall Emmers
-Alexandre Pantoja,-185,-108,105,Joshua van,160,-125,-112,Alexandre Pantoja,2026-09-19,Joshua Van
-Alexandre Pantoja,-270,-235,-185,Joshua van,230,160,195,Alexandre Pantoja,2025-12-07,Joshua Van
-Shamil Gaziev,110,-148,-135,Kennedy Nzechukwu,-130,110,118,Shamil Gaziev,2026-08-22,Kennedy Nzechukwu
-Mason Jones,-300,-290,-265,Marquel Mederos,250,210,220,Mason Jones,2026-08-22,
-Ryan Kuse,661,560,650,Marcio Barbosa,-1000,-1000,-925,Ryan Kuse,2026-08-22,Marcio Barbosa
-Jose Aldo,-125,-161,-137,Marlon Vera,105,117,130,Charles Jourdain,2020-12-19,Marlon Vera
-Merab Dvalishvili,150,120,149,Petr Yan,-175,-170,-150,Merab Dvalishvili,2026-10-24,Petr Yan
-Merab Dvalishvili,-330,-440,150,Petr Yan,240,-175,340,Merab Dvalishvili,2025-12-07,Petr Yan
-Merab Dvalishvili,150,200,220,Petr Yan,-175,-286,-240,Merab Dvalishvili,2023-03-11,Petr Yan
-Roman Dolidze,285,265,316,Reinier de Ridder,-350,-400,-370,Roman Dolidze,2026-08-22,Reinier de Ridder
-Brian Ortega,140,158,160,Renato Moicano,-180,-185,-183,Brian Ortega,2017-07-29,Renato Moicano
-Vitor Petrino,-235,-175,-145,Serghei Spivac,200,125,140,Vitor Petrino,2026-08-22,Serghei Spivac
-Elise Reed,385,460,550,Shanelle Dyer,-500,-850,-715,Elise Reed,2026-08-22,Shanelle Dyer
-Luisa Fernanda Cifuentes,450,500,550,Shanelle Dyer,-800,-800,-800,Elise Reed,2023-09-30,Shanelle Dyer
-Robelis Despaigne,-400,-590,-500,Tai Tuivasa,316,350,409,Robelis Despaigne,2026-09-20,Tai Tuivasa
-Song Yadong,525,325,420,Umar Nurmagomedov,-700,-550,-480,Song Yadong,2026-08-29,Umar Nurmagomedov
-Cory Sandhagen,225,275,290,Umar Nurmagomedov,-278,-395,-340,Song Yadong,2024-08-03,Umar Nurmagomedov
-Jackson McVey,-200,-188,-180,Wes Schultz,170,143,157,Jackson McVey,2026-08-22,Wes Schultz
-Jean Silva,-350,-360,-325,Yair Rodriguez,280,250,275,Jean Silva,2026-09-13,Yair Rodriguez
-Jean Silva,-250,-375,-350,Yair Rodriguez,207,250,280,Jean Silva,2026-08-13,Yair Rodriguez
+red_fighter,blue_fighter,open_blue,close1_blue,close2_blue,open_red,close1_red,close2_red,og_blue_name,event_date,og_red_fighter
+Alex Perez,Sumudaerji Sumudaerji,-115,100,132,-105,-157,-125,Sumudaerji,2026-05-30,Alex Perez
+Alexander Volkanovski,Movsar Evloev,-110,-113,-102,-120,-120,-112,Movsar Evloev,2026-10-24,Alexander Volkanovski
+Anthony Hernandez,Gregory Rodrigues,145,140,155,-165,-185,-175,Gregory Rodrigues,2026-08-22,Anthony Hernandez
+Art Hernandez,Ysidro Gutierrez,-200,-400,-400,150,260,260,Gregory Rodrigues,2024-07-27,Anthony Hernandez
+Anthony Wint,Terrance Chatman,709,600,800,-1100,-1430,-950,Terrance Chatman,2026-08-23,Anthony Wint
+Arman Tsarukyan,Mauricio Ruffy,280,280,303,-350,-400,-380,Mauricio Ruffy,2026-09-20,Arman Tsarukyan
+Carli Judice,Jeisla Chaves,330,360,430,-400,-625,-525,Jeisla Chaves,2026-08-22,
+Chris Padilla,Nasrat Haqparast,-155,-125,-115,135,-105,102,Nasrat Haqparast,2026-08-22,Chris Padilla
+Court McGee,Marcio Alexandre Jr.,135,140,145,-175,-165,-160,Eric Nolan,2015-12-12,Court McGee
+Dan Hooker,Salahdine Parnasse,-400,-400,-400,300,300,300,Salahdine Parnasse,2026-09-05,Dan Hooker
+David Martinez,Murad Guseinov,-275,-275,-275,200,200,200,Dan Ige,2023-11-25,David Martinez
+Gable Steveson,Sean Sharaf,900,600,850,-1600,-1800,-1408,Sean Sharaf,2026-09-10,Gable Steveson
+Gauge Young,Stanley Dorsainvil,174,110,135,-200,-166,-138,Stan Dorsainvil,2026-08-22,Gauge Young
+Jj Aldrich,Gillian Robertson,-160,-139,-115,140,-105,115,Regina Tarin,2022-03-12,JJ Aldrich
+Jamall Emmers,Lerryan Douglas,-300,-410,-380,250,290,303,Lerryan Douglas,2026-08-22,Jamall Emmers
+Joshua van,Alexandre Pantoja,-185,-108,105,160,-125,-112,Alexandre Pantoja,2026-09-19,Joshua Van
+Joshua van,Alexandre Pantoja,-270,-235,-185,230,160,195,Alexandre Pantoja,2025-12-07,Joshua Van
+Kennedy Nzechukwu,Shamil Gaziev,110,-150,-135,-130,110,125,Shamil Gaziev,2026-08-22,Kennedy Nzechukwu
+Marquel Mederos,Mason Jones,-300,-300,-275,250,210,240,Mason Jones,2026-08-22,
+Marcio Barbosa,Ryan Kuse,661,500,600,-1000,-1000,-800,Ryan Kuse,2026-08-22,Marcio Barbosa
+Marlon Vera,Jose Aldo,-125,-161,-137,105,117,130,Charles Jourdain,2020-12-19,Marlon Vera
+Nikita Krylov,Ed Herman,160,200,205,-210,-240,-240,Abdul Rakhman Yakhyaev,2016-07-30,Nikita Krylov
+Petr Yan,Merab Dvalishvili,150,120,149,-175,-170,-150,Merab Dvalishvili,2026-10-24,Petr Yan
+Petr Yan,Merab Dvalishvili,-330,-440,150,240,-175,340,Merab Dvalishvili,2025-12-07,Petr Yan
+Petr Yan,Merab Dvalishvili,150,200,220,-175,-286,-240,Merab Dvalishvili,2023-03-11,Petr Yan
+Reinier de Ridder,Roman Dolidze,285,285,316,-350,-400,-385,Roman Dolidze,2026-08-22,Reinier de Ridder
+Renato Moicano,Brian Ortega,140,158,160,-180,-185,-183,Brian Ortega,2017-07-29,Renato Moicano
+Serghei Spivac,Vitor Petrino,-235,-175,-140,200,118,140,Vitor Petrino,2026-08-22,Serghei Spivac
+Shanelle Dyer,Elise Reed,385,500,700,-500,-1250,-750,Elise Reed,2026-08-22,Shanelle Dyer
+Shanelle Dyer,Luisa Fernanda Cifuentes,450,500,550,-800,-800,-800,Elise Reed,2023-09-30,Shanelle Dyer
+Tai Tuivasa,Robelis Despaigne,-400,-590,-500,316,350,409,Robelis Despaigne,2026-09-20,Tai Tuivasa
+Umar Nurmagomedov,Song Yadong,525,325,420,-700,-550,-480,Song Yadong,2026-08-29,Umar Nurmagomedov
+Umar Nurmagomedov,Cory Sandhagen,225,275,290,-278,-395,-340,Song Yadong,2024-08-03,Umar Nurmagomedov
+Wes Schultz,Jackson McVey,-200,-188,-171,170,144,150,Jackson McVey,2026-08-22,Wes Schultz
+Yair Rodriguez,Jean Silva,-350,-350,-350,275,275,275,Jean Silva,2026-09-13,Yair Rodriguez
+Yair Rodriguez,Jean Silva,-250,-375,-350,207,250,280,Jean Silva,2026-08-13,Yair Rodriguez
