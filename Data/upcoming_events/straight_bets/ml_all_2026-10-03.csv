@@ -1,8 +1,8 @@
 date,fighter_red,fighter_blue,open_red,open_blue,close1_red,close2_red,close1_blue,close2_blue,pred_name_open,pred_winner_open,choice_proba_open,fstar_open,stake_open,edge_open,ev_open,pred_name_close1,pred_winner_close1,choice_proba_close1,fstar_close1,stake_close1,edge_close1,ev_close1,pred_name_close2,pred_winner_close2,choice_proba_close2,fstar_close2,stake_close2,edge_close2,ev_close2,pred_name_close1_stack,pred_winner_close1_stack,choice_proba_close1_stack,fstar_close1_stack,stake_close1_stack,edge_close1_stack,ev_close1_stack,pred_name_close2_stack,pred_winner_close2_stack,choice_proba_close2_stack,fstar_close2_stack,stake_close2_stack,edge_close2_stack,ev_close2_stack
-2026-10-03,marvin vettori,ismail naurdiev,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-10-03,deiveson figueiredo,payton talbott,207.0,-250.0,415.0,415.0,-550.0,-550.0,payton talbott,0.0,0.7454853942425903,0.14249157467524431,498.7205113633551,0.047332543623358814,0.04367955193962636,payton talbott,0.0,0.7890106717789341,0.0,0.0,-0.0441554886647908,-0.06753284244307778,payton talbott,0.0,0.7930160771238701,0.0,0.0,-0.04015008331985481,-0.06279918158088071,payton talbott,0.0,0.8588075637817383,0.15368487819466342,537.897073681322,0.025641403338013347,0.014954393560236201,payton talbott,0.0,0.8588075637817383,0.15368487819466342,537.897073681322,0.025641403338013347,0.014954393560236201
-2026-10-03,johnny walker,mick parkin,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-10-03,damian pinas,andrey pulyaev,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-10-03,imanol rodriguez,alden coria,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-03,deiveson figueiredo,payton talbott,207.0,-250.0,415.0,415.0,-550.0,-550.0,payton talbott,0.0,0.7454706249349826,0.14248538428415353,498.69884499453735,0.04731777431575113,0.043658874908975576,payton talbott,0.0,0.7889989512897032,0.0,0.0,-0.044167209154021725,-0.0675466939303507,payton talbott,0.0,0.7930031396423192,0.0,0.0,-0.04016302080140577,-0.06281447133180457,payton talbott,0.0,0.8588075637817383,0.15368487819466342,537.897073681322,0.025641403338013347,0.014954393560236201,payton talbott,0.0,0.8588075637817383,0.15368487819466342,537.897073681322,0.025641403338013347,0.014954393560236201
 2026-10-03,court mcgee,eric nolan,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-03,damian pinas,andrey pulyaev,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-03,marvin vettori,ismail naurdiev,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-10-03,ateba gautier,roman kopylov,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-03,johnny walker,mick parkin,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-03,imanol rodriguez,alden coria,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
