@@ -1,25 +1,38 @@
 fstar_open,fstar_close1,fstar_close2,winner_bool,winner_name,pred_name_open,pred_name_close1,pred_name_close2,pred_winner_open,pred_winner_close1,pred_winner_close2,pred_color_open,pred_color_close1,pred_color_close2,fighter_red,fighter_blue,open_red,open_blue,close1_red,close1_blue,close2_red,close2_blue,date
-0.06279140507464474,0.2306444059716789,0.23034000366495008,1.0,Juliana Miller,juliana miller,juliana miller,juliana miller,1.0,1.0,1.0,red,red,red,juliana miller,ravena oliveira,-190.0,165.0,-370.0,250.0,-333.0,290.0,2026-08-08
 ,,,0.0,Carol Foro,,,,,,,,,,gigi canuto,carol foro,174.0,-200.0,160.0,-225.0,188.0,-205.0,2026-08-08
-0.0,0.0,0.0,0.0,Quillan Salkilld,mateusz gamrot,quillan salkilld,quillan salkilld,1.0,0.0,0.0,red,blue,blue,mateusz gamrot,quillan salkilld,-131.0,111.0,120.0,-175.0,141.0,-150.0,2026-08-08
+0.06279140507464474,0.2306444059716789,0.23034000366495008,1.0,Juliana Miller,juliana miller,juliana miller,juliana miller,1.0,1.0,1.0,red,red,red,juliana miller,ravena oliveira,-190.0,165.0,-370.0,250.0,-333.0,290.0,2026-08-08
 0.0,0.0,0.0,0.0,Yadier del Valle,yadier del valle,yadier del valle,yadier del valle,0.0,0.0,0.0,blue,blue,blue,darren elkins,yadier del valle,263.0,-325.0,500.0,-2000.0,950.0,-800.0,2026-08-08
 0.05132352673858448,0.2112955186704853,0.21021204765682505,0.0,Alexia Thainara,alexia thainara,alexia thainara,alexia thainara,0.0,0.0,0.0,blue,blue,blue,amanda lemos,alexia thainara,245.0,-300.0,210.0,-330.0,260.0,-275.0,2026-08-08
-0.08058307100621308,0.20221088888224886,0.20180247954984729,1.0,Diego Ferreira,diego ferreira,diego ferreira,diego ferreira,1.0,1.0,1.0,red,red,red,diego ferreira,billy quarantillo,-205.0,177.0,-188.0,143.0,-175.0,154.0,2026-08-08
-0.0,0.21591471992236289,0.21201717453173535,1.0,Steven Asplund,steven asplund,steven asplund,steven asplund,1.0,1.0,1.0,red,red,red,steven asplund,guilherme pat,-204.0,177.0,-333.0,219.0,-265.0,250.0,2026-08-08
-0.07367683047102297,0.18793464712120184,0.18880307695291026,1.0,Diyar Nurgozhay,diyar nurgozhay,diyar nurgozhay,diyar nurgozhay,1.0,1.0,1.0,red,red,red,diyar nurgozhay,bruno lopes,186.0,-220.0,-167.0,130.0,-160.0,141.0,2026-08-08
+0.0,0.0,0.0,0.0,Ty Miller,ty miller,ty miller,ty miller,0.0,0.0,0.0,blue,blue,blue,billy ray goff,ty miller,153.0,-175.0,300.0,-500.0,380.0,-400.0,2026-08-08
+0.0,0.0,0.0,0.0,Quillan Salkilld,mateusz gamrot,quillan salkilld,quillan salkilld,1.0,0.0,0.0,red,blue,blue,mateusz gamrot,quillan salkilld,-131.0,111.0,120.0,-175.0,141.0,-150.0,2026-08-08
+0.07367683247361405,0.18793464712120184,0.18880307695291026,1.0,Diyar Nurgozhay,diyar nurgozhay,diyar nurgozhay,diyar nurgozhay,1.0,1.0,1.0,red,red,red,diyar nurgozhay,bruno lopes,186.0,-220.0,-167.0,130.0,-160.0,141.0,2026-08-08
 ,,,0.0,Jose Montanha,,,,,,,,,,louie sutherland,jose montanha,-110.0,-110.0,-250.0,163.0,-205.0,205.0,2026-08-08
 ,,,1.0,Manoel Sousa,,,,,,,,,,manoel sousa,richie miranda,-500.0,383.0,-375.0,250.0,-333.0,290.0,2026-08-08
 0.0,0.20015205468316818,0.19953805671310165,1.0,Miles Johns,miles johns,miles johns,miles johns,1.0,1.0,1.0,red,red,red,miles johns,gianni vazquez,-175.0,135.0,-220.0,163.0,-200.0,180.0,2026-08-08
-0.0,0.0,0.0,0.0,Ty Miller,ty miller,ty miller,ty miller,0.0,0.0,0.0,blue,blue,blue,billy ray goff,ty miller,153.0,-175.0,300.0,-500.0,380.0,-400.0,2026-08-08
-0.1854899173354902,0.2784316022347233,0.2779516974449977,1.0,Islam Makhachev,islam makhachev,islam makhachev,islam makhachev,1.0,1.0,1.0,red,red,red,islam makhachev,ian machado garry,-400.0,330.0,-360.0,250.0,-330.0,280.0,2026-08-15
+0.08058256911552455,0.20221088888224886,0.20180247954984729,1.0,Diego Ferreira,diego ferreira,diego ferreira,diego ferreira,1.0,1.0,1.0,red,red,red,diego ferreira,billy quarantillo,-205.0,177.0,-188.0,143.0,-175.0,154.0,2026-08-08
+0.0,0.21591471992236289,0.21201717453173535,1.0,Steven Asplund,steven asplund,steven asplund,steven asplund,1.0,1.0,1.0,red,red,red,steven asplund,guilherme pat,-204.0,177.0,-333.0,219.0,-265.0,250.0,2026-08-08
+0.1854919736900853,0.2784316022347233,0.2779516974449977,1.0,Islam Makhachev,islam makhachev,islam makhachev,islam makhachev,1.0,1.0,1.0,red,red,red,islam makhachev,ian machado garry,-400.0,330.0,-360.0,250.0,-330.0,280.0,2026-08-15
 0.0,0.176253407684131,0.1752371113886523,1.0,Mackenzie Dern,mackenzie dern,mackenzie dern,mackenzie dern,1.0,1.0,1.0,red,red,red,mackenzie dern,gillian robertson,-211.0,181.0,-245.0,150.0,-188.0,203.0,2026-08-15
 0.0,0.13821600930961672,0.14010549457621033,1.0,Jalin Turner,jalin turner,jalin turner,jalin turner,1.0,1.0,1.0,red,red,red,jalin turner,kaue fernandes,-200.0,174.0,-122.0,-112.0,-112.0,104.0,2026-08-15
-0.1072473478838889,0.3805886221028587,0.37821230507669956,0.0,Dustin Stoltzfus,mansur abdul malik,mansur abdul malik,mansur abdul malik,1.0,1.0,1.0,red,red,red,mansur abdul malik,dustin stoltzfus,-650.0,476.0,-800.0,450.0,-649.0,550.0,2026-08-15
-0.02454629195147268,0.0,0.0,0.0,Esteban Ribovics,esteban ribovics,esteban ribovics,esteban ribovics,0.0,0.0,0.0,blue,blue,blue,edson barboza,esteban ribovics,245.0,-300.0,450.0,-800.0,561.0,-649.0,2026-08-15
-0.1583576074024385,0.3811993411190362,0.37949743378081696,1.0,Donte Johnson,donte johnson,donte johnson,donte johnson,1.0,1.0,1.0,red,red,red,donte johnson,eric mcconico,-225.0,189.0,-370.0,225.0,-300.0,290.0,2026-08-15
+0.10724194392302697,0.3805886221028587,0.37821230507669956,0.0,Dustin Stoltzfus,mansur abdul malik,mansur abdul malik,mansur abdul malik,1.0,1.0,1.0,red,red,red,mansur abdul malik,dustin stoltzfus,-650.0,476.0,-800.0,450.0,-649.0,550.0,2026-08-15
+0.08707447400426427,0.12158541055284103,0.12027007989969939,1.0,Neil Magny,neil magny,neil magny,neil magny,1.0,1.0,1.0,red,red,red,neil magny,ramiz brahimaj,105.0,-125.0,118.0,-160.0,135.0,-148.0,2026-08-15
+0.1583576068162537,0.3811993411190362,0.37949743378081696,1.0,Donte Johnson,donte johnson,donte johnson,donte johnson,1.0,1.0,1.0,red,red,red,donte johnson,eric mcconico,-225.0,189.0,-370.0,225.0,-300.0,290.0,2026-08-15
 ,,,1.0,Charles Johnson,,,,,,,,,,charles johnson,eduardo chapolin,,,,,,,2026-08-15
+0.055964181297891165,0.022517776647252408,0.016732415077574843,0.0,Tresean Gore,tresean gore,vicente luque,vicente luque,0.0,1.0,1.0,blue,red,red,vicente luque,tresean gore,-110.0,-110.0,-112.0,-120.0,-105.0,-110.0,2026-08-15
 ,,,0.0,Lucas Fernando,,,,,,,,,,rafael tobias,lucas fernando,177.0,-205.0,210.0,-320.0,250.0,-275.0,2026-08-15
-0.1634672958484445,0.0,0.0,1.0,Jeremiah Wells,myktybek orolbai,myktybek orolbai,myktybek orolbai,0.0,0.0,0.0,blue,blue,blue,jeremiah wells,myktybek orolbai,263.0,-325.0,600.0,-2000.0,950.0,-1000.0,2026-08-15
-0.0870759939460539,0.12158541055284103,0.12027007989969939,1.0,Neil Magny,neil magny,neil magny,neil magny,1.0,1.0,1.0,red,red,red,neil magny,ramiz brahimaj,105.0,-125.0,118.0,-160.0,135.0,-148.0,2026-08-15
+0.16346738900404656,0.0,0.0,1.0,Jeremiah Wells,myktybek orolbai,myktybek orolbai,myktybek orolbai,0.0,0.0,0.0,blue,blue,blue,jeremiah wells,myktybek orolbai,263.0,-325.0,600.0,-2000.0,950.0,-1000.0,2026-08-15
+0.02454801581621765,0.0,0.0,0.0,Esteban Ribovics,esteban ribovics,esteban ribovics,esteban ribovics,0.0,0.0,0.0,blue,blue,blue,edson barboza,esteban ribovics,245.0,-300.0,450.0,-800.0,561.0,-649.0,2026-08-15
 0.0,0.0,0.0,1.0,Chidi Njokuani,joel alvarez,joel alvarez,joel alvarez,0.0,0.0,0.0,blue,blue,blue,chidi njokuani,joel alvarez,245.0,-300.0,250.0,-380.0,300.0,-333.0,2026-08-15
-0.055964604246072705,0.022517776647252408,0.016732415077574843,0.0,Tresean Gore,tresean gore,vicente luque,vicente luque,0.0,1.0,1.0,blue,red,red,vicente luque,tresean gore,-110.0,-110.0,-112.0,-120.0,-105.0,-110.0,2026-08-15
+,,,1.0,Marcio Barbosa,,,,,,,,,,marcio barbosa,ryan kuse,-1000.0,661.0,-1667.0,500.0,-800.0,850.0,2026-08-22
+0.08209729252249923,0.13848811479151174,0.1324735729264149,1.0,Chris Padilla,chris padilla,chris padilla,chris padilla,1.0,1.0,1.0,red,red,red,chris padilla,nasrat haqparast,135.0,-155.0,-130.0,-110.0,-110.0,110.0,2026-08-22
+,,,0.0,Stan Dorsainvil,,,,,,,,,,gauge young,stan dorsainvil,,,,,,,2026-08-22
+0.20268819018587422,0.33621711591881537,0.3803951096821232,1.0,Shanelle Dyer,shanelle dyer,shanelle dyer,shanelle dyer,1.0,1.0,1.0,red,red,red,shanelle dyer,elise reed,-500.0,385.0,-1430.0,500.0,-700.0,800.0,2026-08-22
+0.0,0.0,0.0,1.0,Jamall Emmers,lerryan douglas,lerryan douglas,lerryan douglas,0.0,0.0,0.0,blue,blue,blue,jamall emmers,lerryan douglas,250.0,-300.0,295.0,-420.0,320.0,-375.0,2026-08-22
+,,,1.0,Anthony Wint,,,,,,,,,,anthony wint,terrance chatman,-1100.0,709.0,-1430.0,600.0,-900.0,800.0,2026-08-22
+0.0,0.24800427679604053,0.2898985686909499,1.0,Carli Judice,carli judice,carli judice,carli judice,1.0,1.0,1.0,red,red,red,carli judice,jeisla chaves,-400.0,330.0,-700.0,400.0,-549.0,500.0,2026-08-22
+0.0,0.22088548199105165,0.23261245084635163,1.0,MarQuel Mederos,mason jones,mason jones,mason jones,0.0,0.0,0.0,blue,blue,blue,marquel mederos,mason jones,250.0,-300.0,260.0,-440.0,340.0,-340.0,2026-08-22
+0.18935015848196088,0.39962746631067014,0.39666568275312103,1.0,Reinier de Ridder,reinier de ridder,reinier de ridder,reinier de ridder,1.0,1.0,1.0,red,red,red,reinier de ridder,roman dolidze,-350.0,285.0,-435.0,300.0,-390.0,310.0,2026-08-22
+0.016994832560023446,0.04020636338413296,0.03105573706378575,0.0,Vitor Petrino,vitor petrino,vitor petrino,vitor petrino,0.0,0.0,0.0,blue,blue,blue,serghei spivac,vitor petrino,200.0,-235.0,110.0,-150.0,125.0,-138.0,2026-08-22
+0.15187040918355252,0.30680417898704543,0.30469637377318637,0.0,Gregory Rodrigues,anthony hernandez,anthony hernandez,anthony hernandez,1.0,1.0,1.0,red,red,red,anthony hernandez,gregory rodrigues,-165.0,145.0,-225.0,170.0,-205.0,180.0,2026-08-22
+0.10349694004564237,0.13930822913504684,0.1383548670251802,0.0,Shamil Gaziev,kennedy nzechukwu,kennedy nzechukwu,kennedy nzechukwu,1.0,1.0,1.0,red,red,red,kennedy nzechukwu,shamil gaziev,-130.0,110.0,-105.0,-126.0,108.0,-115.0,2026-08-22
+,,,0.0,Jackson McVey,,,,,,,,,,wes schultz,jackson mcvey,170.0,-200.0,143.0,-195.0,155.0,-172.0,2026-08-22
