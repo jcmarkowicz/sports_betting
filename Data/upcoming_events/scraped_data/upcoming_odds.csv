@@ -1,25 +1,33 @@
 red_fighter,blue_fighter,open_blue,close1_blue,close2_blue,open_red,close1_red,close2_red,og_blue_name,event_date,og_red_fighter
-Alex Perez,Sumudaerji Sumudaerji,-160,-240,-220,140,175,200,Sumudaerji,2026-08-29,Alex Perez
+Alex Perez,Sumudaerji Sumudaerji,-160,-250,-225,140,175,205,Sumudaerji,2026-08-29,Alex Perez
 Alex Perez,Sumudaerji Sumudaerji,-115,100,132,-105,-157,-125,Sumudaerji,2026-05-30,Alex Perez
 Alexander Volkanovski,Movsar Evloev,-110,-113,-105,-120,-120,-110,Movsar Evloev,2026-10-24,Alexander Volkanovski
 Aoriqileng,Kai Asakura,-300,-480,-400,250,300,350,Kai Asakura,2026-08-29,
 Arman Tsarukyan,Mauricio Ruffy,280,280,303,-350,-400,-380,Mauricio Ruffy,2026-09-19,Arman Tsarukyan
 Bilal Hasan,Nilson Rojas,375,350,500,-500,-700,-500,Nilson Rojas,2026-08-29,Bilal Hasan
 Court McGee,Marcio Alexandre Jr.,135,140,145,-175,-165,-160,Eric Nolan,2015-12-12,Court McGee
-Dan Hooker,Salahdine Parnasse,-400,-400,-400,300,300,300,Salahdine Parnasse,2026-09-05,Dan Hooker
+Dan Hooker,Salahdine Parnasse,-400,-480,-400,300,300,370,Salahdine Parnasse,2026-09-05,Dan Hooker
 David Martinez,Murad Guseinov,-275,-275,-275,200,200,200,Dan Ige,2023-11-25,David Martinez
 Deiveson Figueiredo,Payton Talbott,-250,-550,-550,207,415,415,Payton Talbott,2026-10-04,Deiveson Figueiredo
-Ding Meng,Cameron Nelson,-150,-102,110,130,-132,-120,Cameron Nelson,2026-08-29,Ding Meng
+Ding Meng,Cameron Nelson,-150,105,125,130,-150,-125,Cameron Nelson,2026-08-29,Ding Meng
+Fares Ziam,Axel Sola,153,130,130,-175,-150,-150,Axel Sola,2026-09-05,Fares Ziam
 Gable Steveson,Sean Sharaf,900,600,800,-1600,-1800,-1408,Sean Sharaf,2026-09-19,Gable Steveson
 Jj Aldrich,Gillian Robertson,-160,-139,-115,140,-105,115,Regina Tarin,2022-03-12,JJ Aldrich
 Jack Jenkins,Sean Woodson,-125,-164,-150,105,120,130,Sean Woodson,2026-08-29,Jack Jenkins
 Joshua van,Alexandre Pantoja,-185,-112,-105,160,-120,-112,Alexandre Pantoja,2026-09-19,Joshua Van
 Joshua van,Alexandre Pantoja,-270,-235,-185,230,160,195,Alexandre Pantoja,2025-12-07,Joshua Van
+Kurtis Campbell,Trevor Peek,285,269,269,-355,-333,-333,Trevor Peek,2026-09-05,Kurtis Campbell
 Lawrence Lui,Hector Santiago,250,230,260,-300,-333,-300,Hector Santiago,2026-08-29,Lawrence Lui
+Losene Keita,Muhammad Naimov,207,222,222,-250,-270,-270,Muhammad Naimov,2026-09-05,Losene Keita
+Mario Pinto,Ryan Spann,189,189,189,-225,-225,-225,Ryan Spann,2026-09-05,Mario Pinto
 Marlon Vera,Jose Aldo,-125,-161,-137,105,117,130,Charles Jourdain,2020-12-19,Marlon Vera
+Michael Page,Nursulton Ruziboev,145,170,170,-165,-195,-195,Nursulton Ruziboev,2026-09-05,Michael Page
+Morgan Charriere,Felipe Lima,-185,-193,-193,161,168,168,Felipe Lima,2026-09-05,Morgan Charriere
 Namsrai Batbayar,Andre Lima,-286,-265,-225,246,175,205,Andre Lima,2026-08-29,
+Nathaniel Wood,Mairon Santos,-165,-135,-135,145,115,115,Mairon Santos,2026-09-05,Nathaniel Wood
 Nikita Krylov,Ed Herman,160,200,205,-210,-240,-240,Abdul Rakhman Yakhyaev,2016-07-30,Nikita Krylov
-Petr Yan,Merab Dvalishvili,150,127,157,-175,-182,-163,Merab Dvalishvili,2026-10-24,Petr Yan
+Oumar Sy,Modestas Bukauskas,167,153,153,-192,-175,-175,Modestas Bukauskas,2026-09-05,Oumar Sy
+Petr Yan,Merab Dvalishvili,150,127,177,-175,-205,-163,Merab Dvalishvili,2026-10-24,Petr Yan
 Petr Yan,Merab Dvalishvili,-330,-440,150,240,-175,340,Merab Dvalishvili,2025-12-07,Petr Yan
 Petr Yan,Merab Dvalishvili,150,200,220,-175,-286,-240,Merab Dvalishvili,2023-03-11,Petr Yan
 Rei Tsuruya,Kevin Borjas,385,400,475,-500,-715,-549,Kevin Borjas,2026-08-29,Rei Tsuruya
@@ -29,6 +37,6 @@ Umar Nurmagomedov,Song Yadong,525,350,400,-700,-550,-455,Song Yadong,2026-08-29,
 Umar Nurmagomedov,Cory Sandhagen,225,275,290,-278,-395,-340,Song Yadong,2024-08-03,Umar Nurmagomedov
 Xiao Long,Francesco Nuzzi,250,145,155,-300,-196,-175,Francesco Nuzzi,2026-08-29,Xiao Long
 Jingnan Xiong,Julia Polastri,-215,-250,-230,170,176,195,Julia Polastri,2026-08-29,Xiong Jingnan
-Xiong Jingnan,Julia Polastri,-146,-265,-225,126,163,219,Julia Polastri,2026-08-29,Xiong Jingnan
+Xiong Jingnan,Julia Polastri,-146,-255,-225,126,163,211,Julia Polastri,2026-08-29,Xiong Jingnan
 Yair Rodriguez,Jean Silva,-250,-375,-350,207,250,280,Jean Silva,2026-08-13,Yair Rodriguez
-Yan Xiaonan,Denise Gomes,110,135,138,-130,-178,-155,Denise Gomes,2026-08-29,Yan Xiaonan
+Yan Xiaonan,Denise Gomes,110,129,138,-130,-178,-149,Denise Gomes,2026-08-29,Yan Xiaonan
