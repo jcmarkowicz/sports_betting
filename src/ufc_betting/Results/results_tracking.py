@@ -69,8 +69,7 @@ def archive_results(start_date='2026-08-28', delete_old=True):
             ], axis=0)
 
             generated_moneyline = MoneylineDataFrame.from_generated(
-                frame = df_ml,
-                event_date = date_str,
+                frame = df_ml
             )
             settled_moneyline = generated_moneyline.with_results(event_group)
             df_moneyline_results = settled_moneyline.frame
