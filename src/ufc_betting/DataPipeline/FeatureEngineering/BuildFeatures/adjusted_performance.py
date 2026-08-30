@@ -16,6 +16,110 @@ def time_decay_average(arr, decay_lambda=0.13):
 def mean_absolute_deviation(series):
     return np.mean(np.abs(series - np.mean(series)))
 
+
+class AdjustedPerformanceHistory:
+    """Maintain prefight histories used by adjusted-performance features."""
+
+    def __init__(self, performance_col, opponent_performance_col, decay_lambda=0.13):
+        self.performance_col = performance_col
+        self.opponent_performance_col = opponent_performance_col
+        self.decay_lambda = decay_lambda
+
+        # Only completed prior dates are visible to prefight calculations.
+        self.weight_class_history = defaultdict(list)
+        self.fighter_allowed_history = defaultdict(list)
+        self.fighter_adjusted_history = defaultdict(list)
+
+        # Values from the current date are committed when the date changes.
+        self.event_weight_class_history = defaultdict(list)
+        self.event_fighter_allowed_history = defaultdict(list)
+        self.event_fighter_adjusted_history = defaultdict(list)
+        self.current_date = None
+
+    def _commit_event(self):
+        for weight_class, values in self.event_weight_class_history.items():
+            self.weight_class_history[weight_class].extend(values)
+
+        for fighter, values in self.event_fighter_allowed_history.items():
+            self.fighter_allowed_history[fighter].extend(values)
+
+        for fighter, values in self.event_fighter_adjusted_history.items():
+            self.fighter_adjusted_history[fighter].extend(values)
+
+        self.event_weight_class_history.clear()
+        self.event_fighter_allowed_history.clear()
+        self.event_fighter_adjusted_history.clear()
+
+    def start_date(self, date):
+        if self.current_date is not None and date != self.current_date:
+            self._commit_event()
+        self.current_date = date
+
+    def historical_adjusted_performance(self, fighter, time_decay=False):
+        history = self.fighter_adjusted_history[fighter]
+        if not history:
+            return None
+        if time_decay:
+            return time_decay_average(history, self.decay_lambda)
+        return history[-1]
+
+    def compute_current_performance(self, hero_performance, villain, weight_class, k=3):
+        """Calculate the current fight's score using completed prior dates only."""
+        if pd.isna(hero_performance) or pd.isna(weight_class):
+            return None
+
+        villain_history = self.fighter_allowed_history[villain]
+        weight_class_history = self.weight_class_history[weight_class]
+        if not villain_history or not weight_class_history:
+            return None
+
+        villain_values = np.asarray(villain_history, dtype=float)
+        weight_class_values = np.asarray(weight_class_history, dtype=float)
+
+        n = len(villain_values)
+        bayes_weight = n / (n + k)
+
+        villain_allowed_mean = time_decay_average(
+            villain_values,
+            self.decay_lambda,
+        )
+        weight_class_allowed_mean = np.mean(weight_class_values)
+        allowed_mean = (
+            bayes_weight * villain_allowed_mean
+            + (1 - bayes_weight) * weight_class_allowed_mean
+        )
+
+        villain_mad = mean_absolute_deviation(villain_values)
+        weight_class_mad = mean_absolute_deviation(weight_class_values)
+        shrunk_mad = (
+            bayes_weight * villain_mad
+            + (1 - bayes_weight) * weight_class_mad
+        )
+        shrunk_mad = max(shrunk_mad, 1e-3)
+
+        adjusted = (hero_performance - allowed_mean) / shrunk_mad
+        return np.clip(adjusted, -7, 7)
+
+    def buffer_fight(self, row, red_adjusted, blue_adjusted):
+        """Buffer raw and adjusted values until the current date is complete."""
+        weight_class = row["weight_class"]
+        if pd.isna(weight_class):
+            return
+
+        for color, adjusted in (
+            ("red", red_adjusted),
+            ("blue", blue_adjusted),
+        ):
+            fighter = row[f"fighter_{color}"]
+            allowed = row[f"{self.opponent_performance_col}_{color}"]
+
+            if pd.notna(allowed):
+                self.event_weight_class_history[weight_class].append(allowed)
+                self.event_fighter_allowed_history[fighter].append(allowed)
+
+            if pd.notna(adjusted):
+                self.event_fighter_adjusted_history[fighter].append(adjusted)
+
 def adjusted_performance(df, row, hero, villain, weight_class, fight_date, performance_col, opponent_performance_col, hero_color, k=3):
     """
     Usage: performance col=sig strikes landed, opponent performance col=sig strikes absorbed
@@ -77,48 +181,53 @@ def adjusted_performance(df, row, hero, villain, weight_class, fight_date, perfo
 
 
 def compute_adjusted_performance(df_, performance_col, opponent_performance_col, time_decay=False):
-        """
-        assumes data frame already sorted by date ascending 
-        assumes CURRENT FIGHT STATS
-        """
-        
-        df = df_.copy()
+    """
+    Build prefight adjusted-performance history in chronological order.
 
-        red_arr = []
-        blue_arr = []
-        fighter_dict = defaultdict(lambda: [None])
+    Fights on the same date are buffered together so they cannot influence one
+    another's prefight features.
+    """
+    df = df_.copy()
+    df["date"] = pd.to_datetime(df["date"])
+    df = df.sort_values("date", kind="stable").reset_index(drop=True)
 
-        for _, row in df.iterrows():
-             
-            red_fighter = row['fighter_red']
-            blue_fighter = row['fighter_blue']
+    history = AdjustedPerformanceHistory(
+        performance_col=performance_col,
+        opponent_performance_col=opponent_performance_col,
+    )
+    red_arr = []
+    blue_arr = []
 
-            if time_decay:
+    for row in df.itertuples(index=False):
+        row = row._asdict()
+        history.start_date(row["date"])
 
-                red_adj_hist = [x for x in fighter_dict[red_fighter] if x is not None]
-                blue_adj_hist = [x for x in fighter_dict[blue_fighter] if x is not None]
+        red_fighter = row["fighter_red"]
+        blue_fighter = row["fighter_blue"]
+        red_arr.append(
+            history.historical_adjusted_performance(
+                red_fighter,
+                time_decay=time_decay,
+            )
+        )
+        blue_arr.append(
+            history.historical_adjusted_performance(
+                blue_fighter,
+                time_decay=time_decay,
+            )
+        )
 
-                red_adj_dec = time_decay_average(red_adj_hist) if len(red_adj_hist) != 0 else None 
-                blue_adj_dec = time_decay_average(blue_adj_hist) if len(blue_adj_hist) != 0 else None 
+        red_adjusted = history.compute_current_performance(
+            hero_performance=row[f"{performance_col}_red"],
+            villain=blue_fighter,
+            weight_class=row["weight_class"],
+        )
+        blue_adjusted = history.compute_current_performance(
+            hero_performance=row[f"{performance_col}_blue"],
+            villain=red_fighter,
+            weight_class=row["weight_class"],
+        )
 
-                red_arr.append(red_adj_dec)
-                blue_arr.append(blue_adj_dec)
-                
-            else:         
-                red_arr.append(fighter_dict[red_fighter][-1])
-                blue_arr.append(fighter_dict[blue_fighter][-1])
+        history.buffer_fight(row, red_adjusted, blue_adjusted)
 
-            hero_perf_col = performance_col #+ '_red'
-            villain_perf_col = opponent_performance_col #+ '_blue'
-            red_adj_perf = adjusted_performance(df, row, hero=red_fighter, villain=blue_fighter, weight_class=row['weight_class'], fight_date=row['date'], 
-                                                performance_col=hero_perf_col, opponent_performance_col=villain_perf_col, hero_color='red')
-            
-            hero_perf_col = performance_col #+ '_blue'
-            villain_perf_col = opponent_performance_col #+ '_red'
-            blue_adj_perf = adjusted_performance(df, row, hero=blue_fighter, villain=red_fighter, weight_class=row['weight_class'], fight_date=row['date'],
-                                                  performance_col=hero_perf_col, opponent_performance_col=villain_perf_col, hero_color='blue')
-            
-            fighter_dict[red_fighter].append(red_adj_perf)
-            fighter_dict[blue_fighter].append(blue_adj_perf)
-  
-        return np.column_stack([red_arr, blue_arr])
+    return np.column_stack([red_arr, blue_arr])
