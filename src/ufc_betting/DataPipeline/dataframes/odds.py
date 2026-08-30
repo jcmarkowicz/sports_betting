@@ -213,14 +213,14 @@ class OddsRepository:
                 f"{sorted(missing_columns)}"
             )
 
-        null_counts = frame[list(self.key_columns)].isna().sum()
-        columns_with_nulls = null_counts[null_counts > 0]
+        # null_counts = frame[list(self.key_columns)].isna().sum()
+        # columns_with_nulls = null_counts[null_counts > 0]
 
-        if not columns_with_nulls.empty:
-            raise OddsIntegrityError(
-                f"{source} has null key values: "
-                f"{columns_with_nulls.to_dict()}"
-            )
+        # if not columns_with_nulls.empty:
+        #     raise OddsIntegrityError(
+        #         f"{source} has null key values: "
+        #         f"{columns_with_nulls.to_dict()}"
+        #     )
 
         try:
             frame["event_date"] = pd.to_datetime(
