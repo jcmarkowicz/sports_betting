@@ -18,6 +18,9 @@ def commit_if_changed(df, file_path, msg, branch="main"):
     repo = os.environ["GITHUB_REPOSITORY"]
     token = os.environ["GITHUB_TOKEN"]
 
+    file_path = Path(file_path)
+    file_path.parent.mkdir(parents=True, exist_ok=True)
+
     if not numeric_changed(df, file_path):
         return
 
