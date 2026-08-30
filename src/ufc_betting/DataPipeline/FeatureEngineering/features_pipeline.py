@@ -405,7 +405,7 @@ class FeatureEngineering:
 
         odds = self.standardize_dates(stats, odds)
         odds = odds.drop_duplicates(subset=['red_clean', 'blue_clean', 'date'], keep='first').reset_index(drop=True)
-        odds.to_csv(settings.data_dir / 'Data/features_test_files\look_at_odds.csv')
+        # odds.to_csv(settings.data_dir /'features_test_files/look_at_odds.csv')
 
         # drop duplicate columns before merge
         columns_to_drop = ['fighter_red', 'fighter_blue']  # list of columns

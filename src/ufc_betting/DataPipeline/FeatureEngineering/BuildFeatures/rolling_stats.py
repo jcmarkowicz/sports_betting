@@ -78,42 +78,91 @@ def compute_defense_feats(fighter_name, row, feat, color, df_dict, stats_dict, t
 
     return stats_dict, df_dict
 
+class AccuracyFeats: 
 
-def compute_accuracy_feats(fighter_name, feat, color, df_dict, stats_dict, time_col, df, weight_class, date, shrinkage_k=3):
-    """
-    computes the following feat types: attempted, landed, pct
-    pct feats: landed / attempted
-    use bayesian shringage for pct feats
+    def __init__(self, weight_classes, feats, suffixes=['attempted', 'landed']):
 
-    returns None for first instance of a fighter  
-    """
+        self.weight_classes = pd.unique(weight_classes.dropna())
+        self.feats = feats
+        self.suffixes = suffixes
+        self.data_dict = {
+            f"{wc}_{feat}_{suffix}": []
+            for wc in self.weight_classes
+            for feat in feats
+            for suffix in suffixes
+        }
+        self.event_dict = {
+            key: [] for key in self.data_dict
+        }
+        self.curr_date = None
 
-    if len(stats_dict[fighter_name][time_col]) == 0:
-        acc_pct = None
-    
-    else: 
-        total_att = stats_dict[fighter_name][f'{feat}_attempted']
-        total_land = stats_dict[fighter_name][f'{feat}_landed']
+    def update_data_dict(self, date, row):
+            if self.curr_date is not None and date != self.curr_date:
+                for key in self.data_dict:
+                    self.data_dict[key].extend(self.event_dict[key])
+                    self.event_dict[key].clear()
 
-        # mostly for takedowns 
-        # get average pct feat
-        # get weight class stats pre fight date
-        df_weight_class = df[(df['weight_class'] == weight_class) & (df['date'] < date)]
+            self.curr_date = date
+            wc = row["weight_class"]
 
-        n = len(stats_dict[fighter_name][f'{feat}_attempted'])
-        weight = n / (n + shrinkage_k)
+            for feat in self.feats:
+                for suffix in self.suffixes:
+                    key = f"{wc}_{feat}_{suffix}"
+                    for color in ("red", "blue"):
+                        value = row[f"{feat}_{suffix}_{color}"]
+                        if pd.notna(value):
+                            self.event_dict[key].append(value)
 
-        wc_mean_attempted = df_weight_class[[f'{feat}_attempted_red', f'{feat}_attempted_blue']].mean().mean()
-        wc_mean_landed = df_weight_class[[f'{feat}_landed_red', f'{feat}_landed_blue']].mean().mean()
 
-        total_att_weighted = weight * time_decay_average(total_att) + (1-weight) * wc_mean_attempted
-        total_land_weighted = weight * time_decay_average(total_land) + (1-weight) * wc_mean_landed
+    def compute_accuracy_feats(self, fighter_name, feat, color, df_dict, stats_dict, time_col, df, weight_class, date, shrinkage_k=3):
+        """
+        computes the following feat types: attempted, landed, pct
+        pct feats: landed / attempted
+        use bayesian shringage for pct feats
 
-        acc_pct = total_land_weighted / total_att_weighted
+        returns None for first instance of a fighter  
+        """
 
-    # attempted feats appended to stats dict in prefight stats function
-    df_dict[f'{feat}_accuracy_pct_{color}'].append(acc_pct)
-    return df_dict
+        if len(stats_dict[fighter_name][time_col]) == 0:
+            acc_pct = None
+        
+        else: 
+            total_att = stats_dict[fighter_name][f'{feat}_attempted']
+            total_land = stats_dict[fighter_name][f'{feat}_landed']
+
+            # mostly for takedowns 
+            # get average pct feat
+            # get weight class stats pre fight date
+            # df_weight_class = df[(df['weight_class'] == weight_class) & (df['date'] < date)]
+            attempted_history = self.data_dict[
+                f"{weight_class}_{feat}_attempted"
+            ]
+            landed_history = self.data_dict[
+                f"{weight_class}_{feat}_landed"
+            ]
+
+            wc_attempted_mean = (
+                np.mean(attempted_history)
+                if attempted_history
+                else 0.0
+            )
+            wc_landed_mean = (
+                np.mean(landed_history)
+                if landed_history
+                else 0.0
+            )
+
+            n = len(stats_dict[fighter_name][f'{feat}_attempted'])
+            weight = n / (n + shrinkage_k)
+
+            total_att_weighted = weight * time_decay_average(total_att) + (1-weight) * wc_attempted_mean
+            total_land_weighted = weight * time_decay_average(total_land) + (1-weight) * wc_landed_mean
+
+            acc_pct = total_land_weighted / total_att_weighted if total_att_weighted != 0 else 0
+
+        # attempted feats appended to stats dict in prefight stats function
+        df_dict[f'{feat}_accuracy_pct_{color}'].append(acc_pct)
+        return df_dict
 
 
 def prefight_stats(stats_dict, df_dict, fighter_name, feature, row, time_col, color, time_decay=False, lm=.13):
@@ -185,10 +234,15 @@ def apply_rolling_stats(ufc_features):
     colors = ['red', 'blue']
     time_col = 'fight_minutes'
 
+    accuracy_feats = AccuracyFeats(
+        weight_classes=ufc_features['weight_class'], feats=accuracy_features
+    )
+
     for _, row in per_fight_features.iterrows(): 
     
         red_fighter = row['fighter_red']
         blue_fighter = row['fighter_blue']
+        accuracy_feats.update_data_dict(row['date'], row)
         
         # compute PRE fight rolling feats for ACC and DEFENSE
         for feat in defense_features: 
@@ -196,8 +250,8 @@ def apply_rolling_stats(ufc_features):
             stats_dict, df_dict = compute_defense_feats(blue_fighter, row, feat, 'blue', df_dict, stats_dict, time_col, per_fight_features, row['weight_class'], row['date'])
 
         for feat in accuracy_features: 
-            df_dict = compute_accuracy_feats(red_fighter, feat,'red', df_dict, stats_dict, time_col, per_fight_features, row['weight_class'], row['date'])
-            df_dict = compute_accuracy_feats(blue_fighter, feat,'blue', df_dict, stats_dict, time_col, per_fight_features, row['weight_class'], row['date'])
+            df_dict = accuracy_feats.compute_accuracy_feats(red_fighter, feat,'red', df_dict, stats_dict, time_col, per_fight_features, row['weight_class'], row['date'])
+            df_dict = accuracy_feats.compute_accuracy_feats(blue_fighter, feat,'blue', df_dict, stats_dict, time_col, per_fight_features, row['weight_class'], row['date'])
 
         # Compute PM rates, append result to df dict
         for feature in striking_features + grapling_features:
