@@ -39,11 +39,13 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
+          python -m pip install -e .
+
 
       - name: Run script
         env:
           EMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
         run: |
-          python UpcomingPicks/results_tracking.py
+          python -m ufc_betting.Results.results_tracking
 
