@@ -12,7 +12,7 @@ from zoneinfo import ZoneInfo
 
 from StreamlitPages.utils import display_paginated_df
 
-from config import config
+from ufc_betting.config import config
 ###
 
 def extract_date(filename):

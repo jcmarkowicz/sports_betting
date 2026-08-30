@@ -7,7 +7,7 @@ sys.path.append(
 
 import streamlit as st
 from StreamlitPages.utils import show_image
-from config import config
+from ufc_betting.config import config
 
 BASE_DIR = config.base_dir
 

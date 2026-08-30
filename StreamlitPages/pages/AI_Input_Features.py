@@ -1,12 +1,7 @@
-import sys
-import os
 
-sys.path.append(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
-)
 
 import streamlit as st
-from config import config
+from ufc_betting.config import config, settings
 
 from StreamlitPages.utils import display_paginated_df, show_image
 
@@ -30,7 +25,7 @@ UFC stats data was scraped from the following website:
 """, unsafe_allow_html=True)
 
 
-fp = BASE_DIR / "Data" / "plot_pngs" / "input_plots.png" 
+fp = settings.data_dir/ "plot_pngs" / "input_plots.png" 
 show_image(fp, title='Model Input Features (no odds)')
 
 

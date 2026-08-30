@@ -1,16 +1,10 @@
-import sys
 import os
-
-sys.path.append(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
-)
+print(os.getcwd())
 
 import streamlit as st
+from StreamlitPages.utils import show_image
+from ufc_betting.config import config, settings
 
-from utils import show_image
-from config import config
-
-BASE_DIR = config.base_dir
 
 st.markdown('<h2>Motivation</h2>', unsafe_allow_html=True)
 
@@ -66,21 +60,21 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-train_open_fp = BASE_DIR / "Data" / "plot_pngs" / "train_open_model_metrics.png" 
-test_open_fp = BASE_DIR / "Data" / "plot_pngs" / "test_open_model_metrics.png" 
+train_open_fp = settings.data_dir/ "plot_pngs" / "train_open_model_metrics.png" 
+test_open_fp = settings.data_dir/  "plot_pngs" / "test_open_model_metrics.png" 
 
 show_image(train_open_fp, title='Train Open Results')
 show_image(test_open_fp, title='Test Open Results')
 
 
-train_close1_fp = BASE_DIR / "Data" / "plot_pngs" / "train_close1_model_metrics.png" 
-test_close1_fp = BASE_DIR / "Data" / "plot_pngs" / "test_close1_model_metrics.png" 
+train_close1_fp = settings.data_dir/  "plot_pngs" / "train_close1_model_metrics.png" 
+test_close1_fp = settings.data_dir/  "plot_pngs" / "test_close1_model_metrics.png" 
 
 show_image(train_close1_fp, title='Train Close1 Results')
 show_image(test_close1_fp, title='Test Close1 Results')
 
-train_close2_fp = BASE_DIR / "Data" / "plot_pngs" / "train_close2_model_metrics.png" 
-test_close2_fp = BASE_DIR / "Data" / "plot_pngs" / "test_close2_model_metrics.png" 
+train_close2_fp = settings.data_dir/ "plot_pngs" / "train_close2_model_metrics.png" 
+test_close2_fp = settings.data_dir/ "plot_pngs" / "test_close2_model_metrics.png" 
 
 show_image(train_close2_fp, title='Train Close2 Results')
 show_image(test_close2_fp, title='Test Close2 Results')
