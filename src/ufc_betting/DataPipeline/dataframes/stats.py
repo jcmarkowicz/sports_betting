@@ -56,7 +56,7 @@ class StatsRepository:
 
     def load_history(self) -> pd.DataFrame:
         history = self._read_csv(self.stats_history_file)
-        history.drop_duplicates(
+        history = history.drop_duplicates(
             subset=list(self.key_columns),
             keep="last",
         ).reset_index(drop=True)
