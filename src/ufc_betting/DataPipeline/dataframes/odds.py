@@ -40,6 +40,12 @@ class OddsRepository:
         "event_date",
         "blue_fighter",
         "red_fighter",
+        "open_blue",
+        "close1_blue",
+        "close2_blue",
+        "open_red",
+        "close1_red",
+        "close2_red",
     )
 
     odds_columns: tuple[str, ...] = (
@@ -67,6 +73,10 @@ class OddsRepository:
 
     def load_history(self) -> pd.DataFrame:
         history = self._read_csv(self.odds_history_file)
+        history = history.drop_duplicates(
+                subset=list(self.key_columns),
+                keep="last",
+            )
         self._validate_frame(history, source="odds history")
         return history
 
