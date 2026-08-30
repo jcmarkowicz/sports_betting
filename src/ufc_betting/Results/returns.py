@@ -1,7 +1,10 @@
+import os
+import subprocess
+from collections import defaultdict
+from pathlib import Path
+
 import numpy as np 
 import pandas as pd
-from collections import defaultdict
-
 import seaborn as sns 
 import matplotlib.pyplot as plt
 
@@ -11,6 +14,59 @@ from ufc_betting.DataPipeline.dataframes.moneylines import (
 )
 from ufc_betting.DataPipeline.dataframes.parlays import ParlayDataFrame
 from ufc_betting.DataPipeline.utils.github_utils import commit_if_changed
+
+
+def commit_figure_if_changed(
+    file_path: str | Path,
+    message: str | None = None,
+    branch: str = "main",
+) -> bool:
+    """Commit and push a saved figure when its file contents changed."""
+    file_path = Path(file_path)
+
+    if not file_path.is_file():
+        raise FileNotFoundError(f"Figure does not exist: {file_path}")
+
+    subprocess.run(["git", "add", str(file_path)], check=True)
+
+    diff = subprocess.run(
+        ["git", "diff", "--cached", "--quiet", "--", str(file_path)],
+        check=False,
+    )
+    if diff.returncode == 0:
+        return False
+    if diff.returncode != 1:
+        raise subprocess.CalledProcessError(diff.returncode, diff.args)
+
+    subprocess.run(
+        ["git", "config", "--global", "user.name", "github-actions[bot]"],
+        check=True,
+    )
+    subprocess.run(
+        [
+            "git",
+            "config",
+            "--global",
+            "user.email",
+            "github-actions[bot]@users.noreply.github.com",
+        ],
+        check=True,
+    )
+
+    commit_message = message or f"Updating {file_path.name}"
+    subprocess.run(
+        ["git", "commit", "-m", commit_message, "--", str(file_path)],
+        check=True,
+    )
+
+    repo = os.environ["GITHUB_REPOSITORY"]
+    token = os.environ["GITHUB_TOKEN"]
+    push_url = f"https://x-access-token:{token}@github.com/{repo}.git"
+    subprocess.run(
+        ["git", "push", push_url, f"HEAD:{branch}"],
+        check=True,
+    )
+    return True
 
 
 def returns_by_date(
@@ -146,6 +202,7 @@ def plot_returns(ml_results, parlay_results, bankroll_results):
         dpi=300,
         bbox_inches="tight"
     )
+    commit_figure_if_changed(path)
 
     fig, axes = plt.subplots(nrows=3, figsize=(15,6))
     date = bankroll_results['date']
@@ -165,6 +222,7 @@ def plot_returns(ml_results, parlay_results, bankroll_results):
         dpi=300,
         bbox_inches="tight"
     )
+    commit_figure_if_changed(path)
 
 
 def accuracy_analysis(ml_results, parlay_results):
