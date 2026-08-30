@@ -132,6 +132,10 @@ class StatsRepository:
             return history
 
         staged_stats = non_merged_stats.copy()
+        staged_stats.drop_duplicates(
+            subset=list(self.key_columns),
+            keep="last",
+        ).reset_index(drop=True)
 
         self._validate_frame(
             staged_stats,
@@ -233,6 +237,7 @@ class StatsRepository:
         #         f"{bad_rows.head().to_string(index=False)}"
         #     )
 
+        #TODO 
         self._validate_no_duplicates(frame, source=source)
 
     @staticmethod
