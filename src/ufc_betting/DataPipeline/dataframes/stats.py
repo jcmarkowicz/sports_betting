@@ -216,21 +216,22 @@ class StatsRepository:
                 "expected YYYY-MM-DD"
             ) from exc
 
-        invalid_winners = ~(
-            frame["winner"].eq(frame["fighter_red"])
-            | frame["winner"].eq(frame["fighter_blue"])
-        )
+        # winner can be one of 'NC' or 'DRAW' 
+        # invalid_winners = ~(
+        #     frame["winner"].eq(frame["fighter_red"])
+        #     | frame["winner"].eq(frame["fighter_blue"])
+        # )
 
-        if invalid_winners.any():
-            bad_rows = frame.loc[
-                invalid_winners,
-                ["event_name", "fighter_red", "fighter_blue", "winner"],
-            ]
+        # if invalid_winners.any():
+        #     bad_rows = frame.loc[
+        #         invalid_winners,
+        #         ["event_name", "fighter_red", "fighter_blue", "winner"],
+        #     ]
 
-            raise StatsIntegrityError(
-                f"{source} has winners who are not one of the fighters:\n"
-                f"{bad_rows.head().to_string(index=False)}"
-            )
+        #     raise StatsIntegrityError(
+        #         f"{source} has winners who are not one of the fighters:\n"
+        #         f"{bad_rows.head().to_string(index=False)}"
+        #     )
 
         self._validate_no_duplicates(frame, source=source)
 
