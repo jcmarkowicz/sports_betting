@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 
-from BettingStrategy.kelly_worker import parlay_top_ev, run_per_bet_scaling
+from ufc_betting.BettingStrategy.kelly_worker import parlay_top_ev, run_per_bet_scaling
 from ufc_betting.UpcomingPicks.set_column_names import set_ml_bets_cols, set_parlay_cols, get_ml_bet_cols, get_parlay_cols
 from ufc_betting.UpcomingPicks.test_helpers import df_bets_tests, df_parlay_tests
 from ufc_betting.UpcomingPicks.model_helpers import logit_predict, xgboost_predict
