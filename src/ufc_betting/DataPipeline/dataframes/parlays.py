@@ -1,4 +1,6 @@
 from dataclasses import dataclass
+from pathlib import Path
+from typing import Self
 
 import pandas as pd
 
@@ -53,6 +55,39 @@ class ParlayDataFrame:
         prepared = frame.copy()
         prepared["date"] = event_date
         return cls(prepared)
+
+    @classmethod
+    def from_history_file(
+        cls,
+        file_path: str | Path,
+    ) -> Self | None:
+        """Load validated parlay history, or return ``None`` if absent."""
+        file_path = Path(file_path)
+        if not file_path.is_file():
+            return None
+        return cls(pd.read_csv(file_path))
+
+    @classmethod
+    def concatenate(
+        cls,
+        *frames: Self | None,
+    ) -> Self | None:
+        """Combine available parlay frames and validate the result."""
+        available_frames = [
+            parlays.frame
+            for parlays in frames
+            if parlays is not None
+        ]
+        if not available_frames:
+            return None
+
+        return cls(
+            pd.concat(
+                available_frames,
+                axis=0,
+                ignore_index=True,
+            )
+        )
 
     def with_results(
         self,

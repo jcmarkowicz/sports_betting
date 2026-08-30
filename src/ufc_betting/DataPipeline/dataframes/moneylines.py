@@ -1,4 +1,6 @@
 from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Self
 
 import pandas as pd
 
@@ -62,6 +64,39 @@ class MoneylineDataFrame:
     ) -> "MoneylineDataFrame":
         """Create a validated moneyline wrapper from generated bets."""
         return cls(frame.copy())
+
+    @classmethod
+    def from_history_file(
+        cls,
+        file_path: str | Path,
+    ) -> Self | None:
+        """Load validated moneyline history, or return ``None`` if absent."""
+        file_path = Path(file_path)
+        if not file_path.is_file():
+            return None
+        return cls(pd.read_csv(file_path))
+
+    @classmethod
+    def concatenate(
+        cls,
+        *frames: Self | None,
+    ) -> Self | None:
+        """Combine available moneyline frames and validate the result."""
+        available_frames = [
+            moneylines.frame
+            for moneylines in frames
+            if moneylines is not None
+        ]
+        if not available_frames:
+            return None
+
+        return cls(
+            pd.concat(
+                available_frames,
+                axis=0,
+                ignore_index=True,
+            )
+        )
 
     def with_results(
         self,

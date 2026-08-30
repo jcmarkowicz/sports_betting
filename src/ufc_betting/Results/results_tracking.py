@@ -35,15 +35,13 @@ def archive_results(start_date='2026-08-28', delete_old=True):
         - delete 
     """
 
-    if settings.ml_history_file.exists():
-        df_ml_history = pd.read_csv(settings.ml_history_file)
-    else: 
-         df_ml_history = pd.DataFrame()
+    df_ml_history = MoneylineDataFrame.from_history_file(
+        settings.ml_history_file
+    )
 
-    if settings.parlay_history_file.exists(): 
-        df_parlay_history = pd.read_csv(settings.parlay_history_file)
-    else: 
-        df_parlay_history = pd.DataFrame()
+    df_parlay_history = ParlayDataFrame.from_history_file(
+        settings.parlay_history_file
+    )
 
     scraped_stats, scraped_odds, df_upcoming = get_missing_stats(start_date) 
     for date, event_group in df_upcoming.groupby('date'):
@@ -62,30 +60,36 @@ def archive_results(start_date='2026-08-28', delete_old=True):
                 event_date=date_str,
             )
             settled_parlay = generated_parlay.with_results(event_group)
-            df_parlay_results = settled_parlay.frame
-
-            df_parlay_history = pd.concat([
-                df_parlay_history, 
-                df_parlay_results
-            ], axis=0)
+            df_parlay_history = ParlayDataFrame.concatenate(
+                df_parlay_history,
+                settled_parlay,
+            )
 
             generated_moneyline = MoneylineDataFrame.from_generated(
                 frame = df_ml
             )
             settled_moneyline = generated_moneyline.with_results(event_group)
-            df_moneyline_results = settled_moneyline.frame
-
-            df_ml_history = pd.concat([
-                df_ml_history, 
-                df_moneyline_results
-            ], axis=0)
+            df_ml_history = MoneylineDataFrame.concatenate(
+                df_ml_history,
+                settled_moneyline,
+            )
 
             # all of these deleted files are regenerated in the above functions
             if delete_old: 
                 delete_old_files(date_str)
 
-    commit_if_changed(df_parlay_history, settings.parlay_history_file, f'Updating parlay results')
-    commit_if_changed(df_ml_history, settings.ml_history_file, f'updating money line results')
+    if df_parlay_history is not None:
+        commit_if_changed(
+            df_parlay_history.frame,
+            settings.parlay_history_file,
+            'Updating parlay results',
+        )
+    if df_ml_history is not None:
+        commit_if_changed(
+            df_ml_history.frame,
+            settings.ml_history_file,
+            'updating money line results',
+        )
 
 
 def delete_old_files(date_str):
