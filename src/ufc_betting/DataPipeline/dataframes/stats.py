@@ -252,7 +252,8 @@ class StatsRepository:
         history_columns = list(history.columns)
         non_merged_columns = list(non_merged.columns)
 
-        if history_columns == non_merged_columns:
+        # use set so order doesnt matter
+        if set(history_columns) == set(non_merged_columns):
             return
 
         only_in_history = sorted(

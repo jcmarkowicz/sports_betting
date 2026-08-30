@@ -166,7 +166,7 @@ def apply_rolling_stats(ufc_features):
     # df dict holds the rolling stats PRE FIGHT 
     df_dict = defaultdict(list)
 
-    
+    # datetime and sorted values should be handled prior 
     per_fight_features = ufc_features.copy()
     per_fight_features['date'] = pd.to_datetime(per_fight_features['date'])
     per_fight_features = per_fight_features.sort_values(by='date', ascending=True).reset_index(drop=True)
