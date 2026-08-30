@@ -63,6 +63,7 @@ def archive_results(start_date='2026-08-28', delete_old=True):
             )
             settled_parlay = generated_parlay.with_results(event_group)
             df_parlay_results = settled_parlay.frame
+            
             df_parlay_history = pd.concat([
                 df_parlay_history, 
                 df_parlay_results
@@ -73,6 +74,7 @@ def archive_results(start_date='2026-08-28', delete_old=True):
             )
             settled_moneyline = generated_moneyline.with_results(event_group)
             df_moneyline_results = settled_moneyline.frame
+
             df_ml_history = pd.concat([
                 df_ml_history, 
                 df_moneyline_results

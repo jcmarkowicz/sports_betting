@@ -32,8 +32,13 @@ def adjusted_performance(df, row, hero, villain, weight_class, fight_date, perfo
 
     # bayesian shrinkage
     n = df_villain.shape[0]
-    villain_allowed = np.where(df_villain['fighter_red'] == villain, df_villain[opponent_performance_col + '_red'], df_villain[opponent_performance_col + '_blue'])
+    villain_allowed = np.where(
+         df_villain['fighter_red'] == villain, 
+         df_villain[opponent_performance_col + '_red'], 
+         df_villain[opponent_performance_col + '_blue']
+    )
     villain_allowed_mean = time_decay_average(villain_allowed)
+    
     if n == 0:
          print('wrong df villain ')
 

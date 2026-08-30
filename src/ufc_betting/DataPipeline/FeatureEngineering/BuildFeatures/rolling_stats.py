@@ -358,11 +358,15 @@ def apply_rolling_stats(ufc_features):
     # print(f'REACHED ADJ perf')
     # time.sleep(5)
 
-    adjusted_sig_str_cols= compute_adjusted_performance(per_fight_features, performance_col='sig_str_landed', 
-                                                        opponent_performance_col='sig_str_absorbed', time_decay=True)
+    adjusted_sig_str_cols= compute_adjusted_performance(
+        per_fight_features, performance_col='sig_str_landed', 
+        opponent_performance_col='sig_str_absorbed', time_decay=True
+    )
     
-    adjusted_td_cols = compute_adjusted_performance(per_fight_features, performance_col='td_landed', 
-                                                    opponent_performance_col='td_defended', time_decay=True)
+    adjusted_td_cols = compute_adjusted_performance(
+        per_fight_features, performance_col='td_landed', 
+        opponent_performance_col='td_defended', time_decay=True
+    )
     
     
     # Build one DataFrame containing all new columns
