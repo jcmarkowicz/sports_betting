@@ -263,12 +263,10 @@ class MoneylineDataFrame:
         for bet_type in self.bet_types:
             self._validate_bet_type(bet_type)
 
-        winner_values = self.frame["winner_bool"].dropna()
-
-        if not winner_values.isin([0, 1]).all():
-            raise MoneylineIntegrityError(
-                "winner_bool values must be 0, 1, or null"
-            )
+        # how to handle ties 
+        self.frame = self.frame.loc[
+            self.frame["winner_bool"].isin([0, 1])
+        ].copy()
 
     def _validate_bet_type(self, bet_type: str) -> None:
         required_columns = {
