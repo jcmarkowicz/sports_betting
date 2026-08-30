@@ -19,8 +19,9 @@ class MoneylineDataFrame:
     normalized to midnight. Settlement fields retain the canonical
     ``open``, ``close1_stack``, and ``close2_stack`` suffixes.
 
-    Net returns use the Kelly fraction as ``net_stake`` and the selected
-    American odds converted to a net profit multiplier as ``net_odds``.
+    Net returns use the Kelly fraction as ``net_stake``. ``chosen_odds``
+    stores the selected American line, while ``net_odds`` stores the settled
+    American result: the selected line for a win and -100 for a loss.
     """
 
     frame: pd.DataFrame
@@ -138,19 +139,8 @@ class MoneylineDataFrame:
             resolved = predictions.notna() & winners.notna()
             win_bet = predictions.eq(winners).where(resolved)
 
-            profit_multiplier = (
-                chosen_odds / 100
-            ).where(
-                chosen_odds > 0,
-                100 / chosen_odds.abs(),
-            )
-
             net_stake = fstar.where(win_bet, -fstar).where(resolved)
-            net_odds = (
-                profit_multiplier
-                .where(win_bet, -1.0)
-                .where(resolved)
-            )
+            net_odds = chosen_odds.where(win_bet, -100.0).where(resolved)
 
             settled[f"chosen_odds_{bet_type}"] = chosen_odds.astype(
                 "Float64"
