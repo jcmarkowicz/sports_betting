@@ -292,7 +292,17 @@ def accuracy_analysis(ml_results, parlay_results):
         bet_types[f'accuracy_dog_{type_}'].append(win_pct_dog)
 
     df_accuracies = pd.DataFrame(accuracies)
-    df_accuracies = df_accuracies.T.set_axis(['Accuracies'], axis=1).round(2)
+    df_accuracies = (
+        df_accuracies.T
+        .rename_axis("metric")
+        .reset_index(name="Accuracies")
+        .round(4)
+    )
 
-    df_bet_types = pd.DataFrame(bet_types).T.set_axis(['Bet Type Stats'], axis=1).round(2)
+    df_bet_types = (
+        pd.DataFrame(bet_types).T
+        .rename_axis("metric")
+        .reset_index(name="Bet Type Stats")
+        .round(4)
+    )
     return df_accuracies, df_bet_types

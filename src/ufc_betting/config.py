@@ -14,7 +14,6 @@ def find_project_root() -> Path:
         "Could not find the project root containing pyproject.toml"
     )
 
-
 PROJECT_ROOT = find_project_root()
 DATA_DIR = PROJECT_ROOT / "Data"
 
