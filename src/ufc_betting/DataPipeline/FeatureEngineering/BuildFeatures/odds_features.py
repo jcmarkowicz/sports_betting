@@ -1,5 +1,4 @@
 import numpy as np 
-import pandas as pd 
 from math import isfinite
 
 def implied_probs_from_decimal(odds):

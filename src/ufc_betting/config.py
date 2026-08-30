@@ -161,45 +161,45 @@ class config:
     parlay_top_ev = 2  
 
     # --- Paths --- 
-    base_dir = Path(__file__).resolve().parents[0]
+    
     db_scrape_date = r'2026-02-26'
 
-    stats_history_file_string = base_dir / "Data" / "scraped_data_main" / f"stats_history_{db_scrape_date}.csv"
-    odds_history_file_string = base_dir / "Data" / "scraped_data_main" / f"odds_history_{db_scrape_date}.csv"
+    stats_history_file_string = settings.data_dir / "scraped_data_main" / f"stats_history_{db_scrape_date}.csv"
+    odds_history_file_string = settings.data_dir/ "scraped_data_main" / f"odds_history_{db_scrape_date}.csv"
 
-    upcoming_scraped_stats_string = base_dir / "Data" / "upcoming_events" / "scraped_data" / "upcoming_stats"
-    upcoming_scraped_odds_string = base_dir / "Data" /"upcoming_events" /"scraped_data" / "upcoming_odds"
+    upcoming_scraped_stats_string = settings.data_dir/ "upcoming_events" / "scraped_data" / "upcoming_stats"
+    upcoming_scraped_odds_string = settings.data_dir /"upcoming_events" /"scraped_data" / "upcoming_odds"
 
     # folder for stats/odds FEATURES per event 
-    upcoming_events_folder =  base_dir / "Data" / "upcoming_events" / "event_features" 
+    upcoming_events_folder =  settings.data_dir/ "upcoming_events" / "event_features" 
 
     # folder for model 
-    ml_bets_folder = base_dir / "Data" / "upcoming_events" / "straight_bets" 
-    parlay_bets_folder = base_dir / "Data" / "upcoming_events" / "parlays"
+    ml_bets_folder = settings.data_dir / "upcoming_events" / "straight_bets" 
+    parlay_bets_folder = settings.data_dir/ "upcoming_events" / "parlays"
 
-    model_open_path = base_dir / "Data" / "saved_models" / "logit_model_open.pkl"
-    model_close1_path = base_dir / "Data" / "saved_models" / "logit_model_close1.pkl"
-    model_close2_path = base_dir / "Data" / "saved_models" / "logit_model_close2.pkl"
-    xgb_stack_path = base_dir / "Data" / "saved_models" / "xgboost_stacked.pkl"
+    model_open_path = settings.data_dir/ "saved_models" / "logit_model_open.pkl"
+    model_close1_path = settings.data_dir/ "saved_models" / "logit_model_close1.pkl"
+    model_close2_path = settings.data_dir / "saved_models" / "logit_model_close2.pkl"
+    xgb_stack_path = settings.data_dir/ "saved_models" / "xgboost_stacked.pkl"
 
-    scaler_open_path = base_dir / "Data" / "saved_models" / "scaler_open.pkl"
-    scaler_close1_path = base_dir / "Data" / "saved_models" / "scaler_close1.pkl"
-    scaler_close2_path = base_dir / "Data" / "saved_models" / "scaler_close2.pkl"
+    scaler_open_path = settings.data_dir/ "saved_models" / "scaler_open.pkl"
+    scaler_close1_path = settings.data_dir/ "saved_models" / "scaler_close1.pkl"
+    scaler_close2_path = settings.data_dir/ "saved_models" / "scaler_close2.pkl"
 
-    ml_folder = base_dir / "Data" / "upcoming_events" / "straight_bets"
-    parlay_folder = base_dir / "Data" / "upcoming_events" / "parlays" 
+    ml_folder = settings.data_dir/ "upcoming_events" / "straight_bets"
+    parlay_folder = settings.data_dir/ "upcoming_events" / "parlays" 
 
     # --- Results Tracking Params ---
-    ml_history_fp = base_dir / 'Data' / 'betting_results' / 'moneyline_results.csv'
-    parlay_history_fp = base_dir / 'Data' / 'betting_results' / 'parlay_results.csv'
-    event_features_folder = base_dir / "Data" / "upcoming_events" / "event_features" 
+    ml_history_fp =settings.data_dir/ 'betting_results' / 'moneyline_results.csv'
+    parlay_history_fp =settings.data_dir/ 'betting_results' / 'parlay_results.csv'
+    event_features_folder = settings.data_dir/ "upcoming_events" / "event_features" 
 
-    non_merged_stats_fp = base_dir / "Data" / "non_merged_features" / "non_merged_stats.csv"
-    non_merged_odds_fp = base_dir / "Data" / "non_merged_features" / "non_merged_odds.csv"
+    non_merged_stats_fp = settings.data_dir/ "non_merged_features" / "non_merged_stats.csv"
+    non_merged_odds_fp = settings.data_dir/ "non_merged_features" / "non_merged_odds.csv"
 
-    ml_returns_fp = base_dir / 'Data' / 'betting_results' / 'ml_returns.csv'
-    parlay_returns_fp = base_dir / 'Data' / 'betting_results' / 'parlay_returns.csv'
-    bankroll_returns_fp = base_dir / 'Data' / 'betting_results' / 'bankroll_returns.csv'
+    ml_returns_fp =settings.data_dir/ 'betting_results' / 'ml_returns.csv'
+    parlay_returns_fp =settings.data_dir/ 'betting_results' / 'parlay_returns.csv'
+    bankroll_returns_fp =settings.data_dir/ 'betting_results' / 'bankroll_returns.csv'
 
     # email params
     sender_email = "jcmarkufc@gmail.com"

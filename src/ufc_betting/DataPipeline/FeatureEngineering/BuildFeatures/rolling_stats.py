@@ -3,8 +3,8 @@ import pandas as pd
 
 from collections import defaultdict
 
-from DataPipeline.FeatureEngineering.BuildFeatures.stats_ratios import control_pr_ratio, td_ratio, sig_strikes_ratio
-from DataPipeline.FeatureEngineering.BuildFeatures.adjusted_performance import compute_adjusted_performance
+from ufc_betting.DataPipeline.FeatureEngineering.BuildFeatures.stats_ratios import control_pr_ratio, td_ratio, sig_strikes_ratio
+from ufc_betting.DataPipeline.FeatureEngineering.BuildFeatures.adjusted_performance import compute_adjusted_performance
 
 import time
 

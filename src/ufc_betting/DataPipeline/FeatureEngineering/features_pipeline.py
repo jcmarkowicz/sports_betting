@@ -1,14 +1,13 @@
 
 import pandas as pd 
-from DataPipeline.FeatureEngineering.BuildFeatures.final_feats_df import non_rolling_stats
-from DataPipeline.FeatureEngineering.BuildFeatures.fight_time_feats import single_event_features, upcoming_event_features
-from DataPipeline.FeatureEngineering.BuildFeatures.rolling_stats import apply_rolling_stats
-from DataPipeline.FeatureEngineering.BuildFeatures.odds_features import build_odds_features
-from DataPipeline.FeatureEngineering.BuildFeatures.feature_functions import count_fav_dog
+from ufc_betting.DataPipeline.FeatureEngineering.BuildFeatures.final_feats_df import non_rolling_stats
+from ufc_betting.DataPipeline.FeatureEngineering.BuildFeatures.fight_time_feats import single_event_features, upcoming_event_features
+from ufc_betting.DataPipeline.FeatureEngineering.BuildFeatures.rolling_stats import apply_rolling_stats
+from ufc_betting.DataPipeline.FeatureEngineering.BuildFeatures.odds_features import build_odds_features
+from ufc_betting.DataPipeline.FeatureEngineering.BuildFeatures.feature_functions import count_fav_dog
 
-from ufc_betting.config import config
+from ufc_betting.config import settings
 
-BASE_DIR = config.base_dir
 
 class FeatureEngineering: 
     """Requires df with all stats and odds merged, computes ai model features"""
@@ -29,12 +28,12 @@ class FeatureEngineering:
         # combine upcoming odds and odds history
         total_odds = pd.concat([odds_df, upcoming_odds]).reset_index(drop=True) if not ignore_upcoming else odds_df 
         total_odds = build_odds_features(total_odds)
-        total_odds.to_csv(BASE_DIR / 'Data/features_test_files/all_odds_features.csv', index=False)
+        total_odds.to_csv(settings.data_dir / 'features_test_files/all_odds_features.csv', index=False)
 
         # compute features for past events
         past_event_stats = single_event_features(stats_df.copy())
         past_event_stats = past_event_stats.loc[:, ~past_event_stats.columns.str.contains('^Unnamed')]
-        past_event_stats.to_csv(BASE_DIR / 'Data/features_test_files/ufc_single_event_features.csv', index=False)
+        past_event_stats.to_csv(settings.data_dir / 'features_test_files/ufc_single_event_features.csv', index=False)
         print(f'Fight time feats shape" {past_event_stats.shape}')
 
         # features for upcoming event
@@ -68,21 +67,21 @@ class FeatureEngineering:
         combined_df = pd.concat([empty_df, past_event_stats], axis=0).reset_index(drop=True) if not ignore_upcoming else past_event_stats
 
         # compute rolling stats
-        rolling_fp = BASE_DIR / 'Data/features_test_files/ufc_new_rolling.csv'
+        rolling_fp = settings.data_dir / 'features_test_files/ufc_new_rolling.csv'
         rolling_df = apply_rolling_stats(combined_df) #sort here
         rolling_df.to_csv(rolling_fp, index=False)
         print('Rolling features shape:', rolling_df.shape)
 
         # compute non rolling stats
         total_df = non_rolling_stats(rolling_df)
-        total_df.to_csv(BASE_DIR / 'Data/features_test_files/new_combined.csv', index=False)
+        total_df.to_csv(settings.data_dir / 'features_test_files/new_combined.csv', index=False)
         total_df = total_df.copy()
         print('Total features shape:', total_df.shape)
 
         # merge odds and features
         merged_df = self.standardized_merge(total_df, total_odds)
         print('Merged df shape:', merged_df.shape)
-        merged_df.to_csv(BASE_DIR / 'Data/features_test_files/stats_odds_merged.csv', index=False)
+        merged_df.to_csv(settings.data_dir / 'Data/features_test_files/stats_odds_merged.csv', index=False)
 
         # counts of fav and dog 
         cols = ['fav_counts_red','dog_counts_red','fav_counts_blue','dog_counts_blue']
@@ -406,7 +405,7 @@ class FeatureEngineering:
 
         odds = self.standardize_dates(stats, odds)
         odds = odds.drop_duplicates(subset=['red_clean', 'blue_clean', 'date'], keep='first').reset_index(drop=True)
-        odds.to_csv(BASE_DIR / 'Data/features_test_files\look_at_odds.csv')
+        odds.to_csv(settings.data_dir / 'Data/features_test_files\look_at_odds.csv')
 
         # drop duplicate columns before merge
         columns_to_drop = ['fighter_red', 'fighter_blue']  # list of columns

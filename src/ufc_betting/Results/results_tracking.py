@@ -1,8 +1,5 @@
-import time 
-import numpy as np
+
 import pandas as pd 
-
-
 from ufc_betting.DataPipeline.utils.github_utils import commit_if_changed, delete_and_commit
 from ufc_betting.DataPipeline.utils.bets_utils import generate_bets
 from ufc_betting.DataPipeline.dataset_workers.update_datasets import get_missing_stats
@@ -40,13 +37,11 @@ def archive_results(start_date='2026-08-28', delete_old=True):
 
     if settings.ml_history_file.exists():
         df_ml_history = pd.read_csv(settings.ml_history_file)
-        df_ml_history = df_ml_history.loc[:, ~df_ml_history.columns.str.contains('^Unnamed')]
     else: 
          df_ml_history = pd.DataFrame()
 
     if settings.parlay_history_file.exists(): 
         df_parlay_history = pd.read_csv(settings.parlay_history_file)
-        df_parlay_history = df_parlay_history.loc[:, ~df_parlay_history.columns.str.contains('^Unnamed')]
     else: 
         df_parlay_history = pd.DataFrame()
 

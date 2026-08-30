@@ -1,7 +1,7 @@
 import numpy as np 
 import pandas as pd 
 
-from BettingStrategy.kelly_scaling import expected_value, kelly_edge
+from ufc_betting.BettingStrategy.kelly_scaling import expected_value, kelly_edge
 
 def merge_bets_types(df_bets, df_bets_combined):
     """ matching rows by their index and adding the columns  """

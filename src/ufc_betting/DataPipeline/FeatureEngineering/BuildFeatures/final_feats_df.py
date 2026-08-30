@@ -1,18 +1,17 @@
 import sys
 import os
 
-# Add the project root to the Python path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 
 import numpy as np 
 import pandas as pd 
 
-from RatingAlgos.elo import elo_rating
-from RatingAlgos.glicko import glicko_rating
-from RatingAlgos.glicko2 import glicko2_run
-from RatingAlgos.elo_scope import run_elo_on_matches
+from ufc_betting.DataPipeline.FeatureEngineering.RatingAlgos.elo import elo_rating
+from ufc_betting.DataPipeline.FeatureEngineering.RatingAlgos.glicko import glicko_rating
+from ufc_betting.DataPipeline.FeatureEngineering.RatingAlgos.glicko2 import glicko2_run
+from ufc_betting.DataPipeline.FeatureEngineering.RatingAlgos.elo_scope import run_elo_on_matches
 
-from DataPipeline.FeatureEngineering.BuildFeatures.feature_functions import obs_per_fighter, total_bonus,\
+from ufc_betting.DataPipeline.FeatureEngineering.BuildFeatures.feature_functions import obs_per_fighter, total_bonus,\
       womens_fight, mma_math, win_lose_streak, months_since_last, method_wins, method_win_pct,\
       avg_fight_time, title_fights_stats_columns, method_losses, max_rating_won_against, opponent_avg_features, expected_value_stats
 

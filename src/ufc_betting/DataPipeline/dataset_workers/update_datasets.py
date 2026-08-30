@@ -1,7 +1,4 @@
 
-import numpy as np
-import pandas as pd 
-
 from ufc_betting.DataPipeline.FeatureEngineering.features_pipeline import FeatureEngineering
 from ufc_betting.DataPipeline.webscrapers.scraping_pipeline import UFC_Webscraper
 from ufc_betting.DataPipeline.utils.github_utils import commit_if_changed

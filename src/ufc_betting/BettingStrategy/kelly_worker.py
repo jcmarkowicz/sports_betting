@@ -1,12 +1,7 @@
 
 import numpy as np 
 import pandas as pd 
-
-import sys
-from pathlib import Path
-sys.path.append(str(Path(__file__).parent))
-
-from BettingStrategy.kelly_scaling import scale_mdd, scale_kelly_for_mdd
+from ufc_betting.BettingStrategy.kelly_scaling import scale_mdd, scale_kelly_for_mdd
 
 def parlay_top_ev(data, bankroll, type, top_n=[0,1], parlay_mdd=0.5, N=250):
 
