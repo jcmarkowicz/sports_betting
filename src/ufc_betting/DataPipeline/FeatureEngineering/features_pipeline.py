@@ -81,7 +81,7 @@ class FeatureEngineering:
         # merge odds and features
         merged_df = self.standardized_merge(total_df, total_odds)
         print('Merged df shape:', merged_df.shape)
-        merged_df.to_csv(settings.data_dir / 'Data/features_test_files/stats_odds_merged.csv', index=False)
+        # merged_df.to_csv(settings.data_dir / 'Data/features_test_files/stats_odds_merged.csv', index=False)
 
         # counts of fav and dog 
         cols = ['fav_counts_red','dog_counts_red','fav_counts_blue','dog_counts_blue']
