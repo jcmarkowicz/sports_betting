@@ -7,7 +7,7 @@ sys.path.append(
 )
 
 import streamlit as st
-from StreamlitPages.utils import display_paginated_df, show_image
+from utils import display_paginated_df, show_image
 from ufc_betting.config import config
 
 import pandas as pd 

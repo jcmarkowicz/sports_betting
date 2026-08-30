@@ -3,7 +3,7 @@
 import streamlit as st
 from ufc_betting.config import config, settings
 
-from StreamlitPages.utils import display_paginated_df, show_image
+from utils import display_paginated_df, show_image
 
 BASE_DIR = config.base_dir
 

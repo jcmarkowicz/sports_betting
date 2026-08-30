@@ -1,4 +1,8 @@
 
+# Install the repository's src/ package when this is the requirements file
+# selected by Streamlit Cloud.
+-e .
+
 # Scientific / Data
 numpy
 pandas

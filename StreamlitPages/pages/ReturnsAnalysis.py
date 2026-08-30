@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd 
 
-from StreamlitPages.utils import display_paginated_df, show_image
+from utils import display_paginated_df, show_image
 from ufc_betting.config import config, settings
 
 

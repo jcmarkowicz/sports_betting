@@ -10,7 +10,7 @@ import os
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from StreamlitPages.utils import display_paginated_df
+from utils import display_paginated_df
 
 from ufc_betting.config import config
 ###
