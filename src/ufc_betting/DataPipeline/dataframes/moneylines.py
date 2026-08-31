@@ -101,12 +101,14 @@ class MoneylineDataFrame:
     def with_results(
         self,
         single_event: pd.DataFrame,
-    ) -> "MoneylineDataFrame":
+    ) -> "MoneylineDataFrame | None":
         """
         Return a new moneyline frame populated with available results.
 
-        Rows remain unsettled when the actual winner or the corresponding
-        model prediction is unavailable.
+        Results are matched by normalized fighter names rather than row
+        position. Draws, no-contests, null results, and other non-binary
+        outcomes are excluded because they cannot settle as a moneyline win
+        or loss. Rows remain unsettled when a model prediction is unavailable.
         """
         required_event_columns = {
             "fighter_red",
@@ -124,25 +126,112 @@ class MoneylineDataFrame:
                 f"{sorted(missing_event_columns)}"
             )
 
-        if len(single_event) != len(self.frame):
-            raise MoneylineIntegrityError(
-                "Single-event results and moneyline bets have "
-                "different row counts"
+        event_rows = single_event.copy()
+        settled = self.frame.copy()
+        match_columns = ("fighter_red", "fighter_blue")
+        match_keys: list[str] = []
+
+        for column in match_columns:
+            key = f"_{column}_key"
+            match_keys.append(key)
+            event_rows[key] = (
+                event_rows[column]
+                .astype("string")
+                .str.strip()
+                .str.casefold()
+            )
+            settled[key] = (
+                settled[column]
+                .astype("string")
+                .str.strip()
+                .str.casefold()
             )
 
-        event_rows = single_event.reset_index(drop=True).copy()
-        settled = self.frame.reset_index(drop=True).copy()
+        if event_rows.duplicated(match_keys).any():
+            duplicates = event_rows.loc[
+                event_rows.duplicated(match_keys, keep=False),
+                list(match_columns),
+            ]
+            raise MoneylineIntegrityError(
+                "Single-event results contain duplicate fights: "
+                f"{duplicates.to_dict('records')}"
+            )
 
-        self._validate_fighter_alignment(settled, event_rows)
+        if settled.duplicated(match_keys).any():
+            duplicates = settled.loc[
+                settled.duplicated(match_keys, keep=False),
+                list(match_columns),
+            ]
+            raise MoneylineIntegrityError(
+                "Moneyline data contains duplicate fights: "
+                f"{duplicates.to_dict('records')}"
+            )
+
+        result_rows = event_rows[
+            [*match_keys, "winner", "winner_name"]
+        ].rename(
+            columns={
+                "winner": "_event_winner",
+                "winner_name": "_event_winner_name",
+            }
+        )
+        settled = settled.merge(
+            result_rows,
+            how="left",
+            on=match_keys,
+            sort=False,
+            validate="one_to_one",
+            indicator=True,
+        )
+
+        missing_matches = settled["_merge"].eq("left_only")
+        if missing_matches.any():
+            missing_fights = settled.loc[
+                missing_matches,
+                list(match_columns),
+            ]
+            raise MoneylineIntegrityError(
+                "Moneyline fights are missing from single-event results: "
+                f"{missing_fights.to_dict('records')}"
+            )
 
         winners = pd.to_numeric(
-            event_rows["winner"],
+            settled["_event_winner"],
             errors="coerce",
-        ).astype("Int64")
-        winner_names = event_rows["winner_name"].astype("string")
+        )
+        nonnumeric_winners = (
+            settled["_event_winner"].notna() & winners.isna()
+        )
+        if nonnumeric_winners.any():
+            invalid_values = (
+                settled.loc[nonnumeric_winners, "_event_winner"]
+                .unique()
+                .tolist()
+            )
+            raise MoneylineIntegrityError(
+                "Single-event results contain nonnumeric winner values: "
+                f"{invalid_values}"
+            )
 
+        # Ties and other non-binary outcomes cannot settle a moneyline bet.
+        binary_results = winners.isin([0, 1])
+        settled = settled.loc[binary_results].copy()
+        if settled.empty:
+            return None
+
+        winners = winners.loc[binary_results].astype("Int64")
         settled["winner_bool"] = winners
-        settled["winner_name"] = winner_names
+        settled["winner_name"] = settled[
+            "_event_winner_name"
+        ].astype("string")
+        settled = settled.drop(
+            columns=[
+                *match_keys,
+                "_event_winner",
+                "_event_winner_name",
+                "_merge",
+            ]
+        )
 
         for bet_type in self.settled_types:
             prediction_column = f"pred_winner_{bet_type}"
@@ -197,6 +286,14 @@ class MoneylineDataFrame:
 
     def validate(self) -> None:
         """Validate identity, betting, date, and nullable result fields."""
+        invalid_winner = (
+            self.frame["winner_bool"].notna()
+            & ~self.frame["winner_bool"].isin([0, 1])
+        )
+        # Preserve unsettled nulls, but exclude ties and other outcomes that
+        # cannot settle as a moneyline win or loss.
+        self.frame = self.frame.loc[~invalid_winner].copy()
+
         if self.frame.empty:
             raise MoneylineIntegrityError("Moneyline DataFrame is empty")
 
@@ -263,11 +360,6 @@ class MoneylineDataFrame:
         for bet_type in self.bet_types:
             self._validate_bet_type(bet_type)
 
-        # how to handle ties 
-        self.frame = self.frame.loc[
-            self.frame["winner_bool"].isin([0, 1])
-        ].copy()
-
     def _validate_bet_type(self, bet_type: str) -> None:
         required_columns = {
             f"pred_name_{bet_type}",
@@ -322,24 +414,6 @@ class MoneylineDataFrame:
                     f"{column} cannot contain negative values"
                 )
 
-    def _validate_fighter_alignment(
-        self,
-        bets: pd.DataFrame,
-        event: pd.DataFrame,
-    ) -> None:
-        for color in ("red", "blue"):
-            column = f"fighter_{color}"
-            bet_names = bets[column].astype("string").str.strip().str.lower()
-            event_names = (
-                event[column].astype("string").str.strip().str.lower()
-            )
-
-            if not bet_names.equals(event_names):
-                raise MoneylineIntegrityError(
-                    "Single-event results are not aligned with moneyline "
-                    f"bets by {column}"
-                )
-
     def _remove_exported_index(self) -> None:
         self.frame = self.frame.loc[
             :,
@@ -347,7 +421,21 @@ class MoneylineDataFrame:
         ].copy()
 
     def _ensure_result_columns(self) -> None:
-        self._ensure_column("winner_bool", "Int64")
+        if "winner_bool" not in self.frame:
+            self.frame["winner_bool"] = pd.Series(
+                pd.NA,
+                index=self.frame.index,
+                dtype="Int64",
+            )
+        else:
+            raw_winners = self.frame["winner_bool"]
+            numeric_winners = pd.to_numeric(raw_winners, errors="coerce")
+            keep_winner = raw_winners.isna() | numeric_winners.isin([0, 1])
+            self.frame = self.frame.loc[keep_winner].copy()
+            self.frame["winner_bool"] = numeric_winners.loc[
+                keep_winner
+            ].astype("Int64")
+
         self._ensure_column("winner_name", "string")
 
         for bet_type in self.settled_types:
