@@ -1,0 +1,13 @@
+metric,Accuracies
+preds_all_open,0.7235
+bets_open,0.7589
+parlays_open,0.625
+vegas_open,0.6636
+preds_all_close1_stack,0.6774
+bets_close1_stack,0.6895
+parlays_close1_stack,0.4167
+vegas_close1_stack,0.7327
+preds_all_close2_stack,0.6774
+bets_close2_stack,0.6895
+parlays_close2_stack,0.36
+vegas_close2_stack,0.7281
