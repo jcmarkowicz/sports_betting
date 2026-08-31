@@ -92,18 +92,24 @@ class ParlayDataFrame:
     def with_results(
         self,
         single_event: pd.DataFrame,
-    ) -> "ParlayDataFrame":
+    ) -> "ParlayDataFrame | None":
         """
         Return a new parlay frame populated with available fight results.
 
-        A betting type remains unsettled when any selected fight is
-        missing a winner. Settlement values are repeated for each parlay
-        leg, matching the row-oriented representation used by the
-        generated parlay DataFrame.
+        A betting type is excluded from settlement when any selected fight
+        is a draw, no-contest, null result, or other non-binary outcome.
+        Other betting types may still settle when they reference unaffected
+        fights. Settlement values are repeated for each parlay leg, matching
+        the row-oriented representation used by the generated DataFrame.
         """
         settled = self.frame.copy()
 
-        required_event_columns = {"winner", "winner_name"}
+        required_event_columns = {
+            "fighter_red",
+            "fighter_blue",
+            "winner",
+            "winner_name",
+        }
         missing_event_columns = (
             required_event_columns - set(single_event.columns)
         )
@@ -114,15 +120,25 @@ class ParlayDataFrame:
                 f"{sorted(missing_event_columns)}"
             )
 
+        event_rows = single_event.reset_index(drop=True).copy()
+        for color in ("red", "blue"):
+            event_rows[f"_fighter_{color}_key"] = (
+                event_rows[f"fighter_{color}"]
+                .astype("string")
+                .str.strip()
+                .str.casefold()
+            )
+        settled_any = False
+
         for bet_type in self.settled_types:
+            name_column = f"choice_fighter_name_{bet_type}"
             choice_column = f"choice_fighter_bool_{bet_type}"
-            index_column = f"fight_index_{bet_type}"
             fstar_column = f"parlay_fstar_{bet_type}"
             odds_column = f"parlay_odds_{bet_type}"
 
             required_columns = {
+                name_column,
                 choice_column,
-                index_column,
                 fstar_column,
                 odds_column,
             }
@@ -134,39 +150,90 @@ class ParlayDataFrame:
                     f"{sorted(missing_columns)}"
                 )
 
-            choices = pd.to_numeric(
-                settled[choice_column],
-                errors="coerce",
-            ).astype("Int64")
+            raw_choices = settled[choice_column]
+            choices = pd.to_numeric(raw_choices, errors="coerce")
+            invalid_choices = (
+                raw_choices.notna()
+                & (choices.isna() | ~choices.isin([0, 1]))
+            )
+            if invalid_choices.any():
+                raise ParlayIntegrityError(
+                    f"{choice_column} values must be 0, 1, or null"
+                )
+            choices = choices.astype("Int64")
 
             # A model may not have generated this betting type.
             if choices.isna().all():
                 continue
 
-            indexes = pd.to_numeric(
-                settled[index_column],
-                errors="coerce",
-            )
-
-            if indexes.isna().any():
+            if choices.isna().any():
                 raise ParlayIntegrityError(
-                    f"{bet_type} has invalid fight indexes"
+                    f"{bet_type} has incomplete parlay legs"
                 )
 
-            indexes = indexes.astype(int)
-
-            try:
-                event_rows = single_event.loc[indexes]
-            except KeyError as exc:
+            choice_names = (
+                settled[name_column]
+                .astype("string")
+                .str.strip()
+                .str.casefold()
+            )
+            if choice_names.isna().any():
                 raise ParlayIntegrityError(
-                    f"{bet_type} references a missing fight index"
-                ) from exc
+                    f"{bet_type} has missing fighter names"
+                )
+
+            selected_indexes: list[int] = []
+            for choice, choice_name in zip(choices, choice_names):
+                color = "red" if choice == 1 else "blue"
+                matches = event_rows[f"_fighter_{color}_key"].eq(
+                    choice_name
+                )
+                match_count = int(matches.sum())
+                if match_count == 0:
+                    raise ParlayIntegrityError(
+                        f"{bet_type} fighter {choice_name!r} is missing "
+                        "from single-event results"
+                    )
+                if match_count > 1:
+                    raise ParlayIntegrityError(
+                        f"{bet_type} fighter {choice_name!r} matches "
+                        "multiple single-event fights"
+                    )
+                selected_indexes.append(int(matches.idxmax()))
+
+            if len(set(selected_indexes)) != len(selected_indexes):
+                raise ParlayIntegrityError(
+                    f"{bet_type} contains duplicate parlay legs"
+                )
+
+            selected_results = event_rows.loc[selected_indexes]
 
             winners = pd.to_numeric(
-                event_rows["winner"],
+                selected_results["winner"],
                 errors="coerce",
-            ).astype("Int64")
-            winner_names = event_rows["winner_name"].astype("string")
+            )
+            nonnumeric_winners = (
+                selected_results["winner"].notna() & winners.isna()
+            )
+            if nonnumeric_winners.any():
+                invalid_values = (
+                    selected_results.loc[nonnumeric_winners, "winner"]
+                    .unique()
+                    .tolist()
+                )
+                raise ParlayIntegrityError(
+                    "Single-event results contain nonnumeric winner values: "
+                    f"{invalid_values}"
+                )
+
+            # One tied, missing, or otherwise non-binary leg voids this
+            # parlay type without affecting other independently selected types.
+            if not winners.isin([0, 1]).all():
+                self._clear_settlement(settled, bet_type)
+                continue
+
+            winners = winners.astype("Int64")
+            winner_names = selected_results["winner_name"].astype("string")
 
             settled[f"winner_bool_{bet_type}"] = pd.Series(
                 winners.to_numpy(),
@@ -178,11 +245,6 @@ class ParlayDataFrame:
                 index=settled.index,
                 dtype="string",
             )
-
-            resolved = choices.notna() & winners.reset_index(drop=True).notna()
-
-            if not resolved.all():
-                continue
 
             parlay_won = bool(
                 choices.reset_index(drop=True)
@@ -204,6 +266,14 @@ class ParlayDataFrame:
                 settled[odds_column],
                 errors="coerce",
             )
+            if fstar.isna().any() or fstar.lt(0).any():
+                raise ParlayIntegrityError(
+                    f"{fstar_column} must contain nonnegative numeric values"
+                )
+            if odds.isna().any() or odds.le(0).any():
+                raise ParlayIntegrityError(
+                    f"{odds_column} must contain positive numeric values"
+                )
 
             settled[f"net_stake_{bet_type}"] = pd.Series(
                 fstar if parlay_won else -fstar,
@@ -215,6 +285,11 @@ class ParlayDataFrame:
                 index=settled.index,
                 dtype="Float64",
             )
+
+            settled_any = True
+
+        if not settled_any:
+            return None
 
         return type(self)(settled)
 
@@ -240,10 +315,32 @@ class ParlayDataFrame:
 
     def _ensure_result_columns(self) -> None:
         for bet_type in self.settled_types:
-            self._ensure_column(
-                f"winner_bool_{bet_type}",
-                "Int64",
-            )
+            winner_column = f"winner_bool_{bet_type}"
+            invalid_winner = pd.Series(False, index=self.frame.index)
+
+            if winner_column not in self.frame:
+                self.frame[winner_column] = pd.Series(
+                    pd.NA,
+                    index=self.frame.index,
+                    dtype="Int64",
+                )
+            else:
+                raw_winners = self.frame[winner_column]
+                numeric_winners = pd.to_numeric(
+                    raw_winners,
+                    errors="coerce",
+                )
+                invalid_winner = (
+                    raw_winners.notna()
+                    & (
+                        numeric_winners.isna()
+                        | ~numeric_winners.isin([0, 1])
+                    )
+                )
+                self.frame[winner_column] = numeric_winners.where(
+                    ~invalid_winner
+                ).astype("Int64")
+
             self._ensure_column(
                 f"winner_name_{bet_type}",
                 "string",
@@ -260,6 +357,39 @@ class ParlayDataFrame:
                 f"net_odds_{bet_type}",
                 "Float64",
             )
+
+            if invalid_winner.any():
+                affected_rows = invalid_winner
+                if "date" in self.frame:
+                    affected_dates = self.frame.loc[
+                        invalid_winner,
+                        "date",
+                    ]
+                    affected_rows = self.frame["date"].isin(affected_dates)
+                self._clear_settlement(
+                    self.frame,
+                    bet_type,
+                    affected_rows,
+                )
+
+    def _clear_settlement(
+        self,
+        frame: pd.DataFrame,
+        bet_type: str,
+        rows: pd.Series | None = None,
+    ) -> None:
+        """Clear every derived result when a parlay type is void."""
+        if rows is None:
+            rows = pd.Series(True, index=frame.index)
+
+        for prefix in (
+            "winner_bool",
+            "winner_name",
+            "win_parlay",
+            "net_stake",
+            "net_odds",
+        ):
+            frame.loc[rows, f"{prefix}_{bet_type}"] = pd.NA
 
     def _ensure_column(self, column: str, dtype: str) -> None:
         if column not in self.frame:
