@@ -227,30 +227,34 @@ def plot_returns(ml_results, parlay_results, bankroll_results):
 
 def accuracy_analysis(ml_results, parlay_results):
 
-    accuracies = defaultdict(list)
-    bet_types = defaultdict(list)
+    accuracies = {}
+    bet_types = {}
 
     type_to_odds = {
         'open': 'open',
         'close1_stack': 'close1',
         'close2_stack': 'close2',
     }
-
+    parlay_events = parlay_results.groupby('date').first()
+    
     for type_, odds_type in type_to_odds.items():
 
         no_draws = ml_results[ml_results[f'pred_winner_{type_}'] < 2].dropna(subset=[f'{odds_type}_red', f'{odds_type}_blue'])
         all_preds = no_draws.dropna(subset=[f'pred_winner_{type_}'])
-        bets_only = all_preds[all_preds[f'net_stake_{type_}'] != 0]
+        bets_only = all_preds[
+            all_preds[f'net_stake_{type_}'].notna()
+            & (all_preds[f'net_stake_{type_}'] != 0)
+        ]
 
         accuracy_all = (all_preds[f'pred_winner_{type_}'] == all_preds['winner_bool']).mean()
-        accuracies[f'preds_all_{type_}'].append(accuracy_all)
+        accuracies[f'preds_all_{type_}'] = accuracy_all
 
         accuracy_bets = (bets_only[f'pred_winner_{type_}'] == bets_only['winner_bool']).mean()
-        accuracies[f'bets_{type_}'].append(accuracy_bets)
+        accuracies[f'bets_{type_}'] = accuracy_bets
 
-        parlay_events = parlay_results.groupby('date').first()
-        parlay_accuracy = (parlay_events[f'net_odds_{type_}'] > 0).mean()
-        accuracies[f'parlays_{type_}'].append(parlay_accuracy)
+        parlay_net = parlay_events[f'net_odds_{type_}'].dropna()
+        parlay_accuracy = (parlay_net > 0).mean()
+        accuracies[f'parlays_{type_}'] = parlay_accuracy 
 
         avail_vegas = no_draws.copy()
         odds_vegas = avail_vegas[[f'{odds_type}_blue', f'{odds_type}_red']].to_numpy()
@@ -273,36 +277,35 @@ def accuracy_analysis(ml_results, parlay_results):
         fav_bets = bets_only[choice_odds < 0]
 
         total_dog = dog_bets.shape[0]
-        win_dog = dog_bets[f'pred_winner_{type_}'] == dog_bets[f'winner_bool']
+        win_dog = dog_bets[f'pred_winner_{type_}'] == dog_bets['winner_bool']
         n_win_dog = win_dog.sum()
 
         total_fav = fav_bets.shape[0]
-        win_dog = fav_bets[f'pred_winner_{type_}'] == fav_bets[f'winner_bool']
-        n_win_fav = win_dog.sum()
+        win_fav = fav_bets[f'pred_winner_{type_}'] == fav_bets['winner_bool']
+        n_win_fav = win_fav.sum()
 
-        bet_types[f'total_fav_{type_}'].append(total_fav)
-        bet_types[f'total_dog_{type_}'].append(total_dog)
-        bet_types[f'n_win_fav_{type_}'].append(n_win_fav)
-        bet_types[f'n_win_dog_{type_}'].append(n_win_dog)
+        bet_types[f'total_fav_{type_}'] = total_fav
+        bet_types[f'total_dog_{type_}'] = total_dog
+        bet_types[f'n_win_fav_{type_}'] = n_win_fav
+        bet_types[f'n_win_dog_{type_}'] = n_win_dog
 
         win_pct_fav = n_win_fav / total_fav if total_fav != 0 else np.nan
-        bet_types[f'accuracy_fav_{type_}'].append(win_pct_fav)
+        bet_types[f'accuracy_fav_{type_}'] = win_pct_fav
 
         win_pct_dog = n_win_dog / total_dog if total_dog != 0 else np.nan
-        bet_types[f'accuracy_dog_{type_}'].append(win_pct_dog)
+        bet_types[f'accuracy_dog_{type_}'] = win_pct_dog
 
-    df_accuracies = pd.DataFrame(accuracies)
     df_accuracies = (
-        df_accuracies.T
+        pd.Series(accuracies, name="Accuracies")
         .rename_axis("metric")
-        .reset_index(name="Accuracies")
+        .reset_index()
         .round(4)
     )
-
+    
     df_bet_types = (
-        pd.DataFrame(bet_types).T
+        pd.Series(bet_types, name="Bet Type Stats")
         .rename_axis("metric")
-        .reset_index(name="Bet Type Stats")
+        .reset_index()
         .round(4)
     )
     return df_accuracies, df_bet_types
