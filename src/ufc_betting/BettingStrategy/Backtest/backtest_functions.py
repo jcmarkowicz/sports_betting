@@ -2,7 +2,14 @@ import numpy as np
 import pandas as pd
 from itertools import combinations
 
-from BettingStrategy.kelly_scaling import scale_mdd, kelly_edge, kelly_edge, expected_value, log_return_volatility, scale_kelly_for_mdd
+from ufc_betting.BettingStrategy.kelly_scaling import (
+    scale_mdd, 
+    kelly_edge, 
+    kelly_edge, 
+    expected_value, 
+    log_return_volatility, 
+    scale_kelly_for_mdd
+)
 
 
 def calculate_positive_ev_parlays(data, bankroll, n_legs):
@@ -633,11 +640,15 @@ def simulate_kelly(
             bankroll += 1000
 
         group_df = pd.DataFrame(group_stats)
-        group_df[['juice_open_red', 'juice_open_blue', 'juice_close1_red',
-                'juice_close1_blue', 'juice_close2_red', 'juice_close2_blue', 'open_red', 'open_blue',
-                'close1_red', 'close1_blue', 'close2_red', 'close2_blue']] = group[['juice_open_red', 'juice_open_blue', 'juice_close1_red',
-                'juice_close1_blue', 'juice_close2_red', 'juice_close2_blue',
-                'open_red', 'open_blue', 'close1_red', 'close1_blue', 'close2_red', 'close2_blue']].copy() 
+        # group_df[[
+        #     'juice_open_red', 'juice_open_blue', 'juice_close1_red',
+        #     'juice_close1_blue', 'juice_close2_red', 'juice_close2_blue', 
+        #     'open_red', 'open_blue','close1_red', 'close1_blue', 'close2_red', 'close2_blue'
+        # ]] = group[[
+        #     'juice_open_red', 'juice_open_blue', 'juice_close1_red',
+        #     'juice_close1_blue', 'juice_close2_red', 'juice_close2_blue',
+        #     'open_red', 'open_blue', 'close1_red', 'close1_blue', 'close2_red', 'close2_blue'
+        # ]].copy() 
         
         if calc_parlay is True: 
             df_parlay = pd.concat([df_parlay, df_top_n], axis=0)

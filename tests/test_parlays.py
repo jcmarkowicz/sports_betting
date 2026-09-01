@@ -97,7 +97,7 @@ class ParlayDataFrameTests(unittest.TestCase):
             [2.5, 2.5],
         )
 
-    def test_all_nonbinary_parlay_types_return_none(self) -> None:
+    def test_all_nonbinary_parlay_types_return_empty_dataframe(self) -> None:
         frame = parlay_frame()
         frame["choice_fighter_name_close1_stack"] = [
             "Red One",
@@ -109,7 +109,10 @@ class ParlayDataFrameTests(unittest.TestCase):
             event_date="2026-08-01",
         )
 
-        self.assertIsNone(parlays.with_results(event_results()))
+        settled = parlays.with_results(event_results())
+
+        self.assertIsInstance(settled, ParlayDataFrame)
+        self.assertTrue(settled.frame.empty)
 
     def test_extra_and_reordered_event_rows_match_by_fighter(self) -> None:
         parlays = ParlayDataFrame.from_generated(
@@ -214,14 +217,68 @@ class ParlayDataFrameTests(unittest.TestCase):
                 parlays.frame[f"{prefix}_open"].isna().all()
             )
 
-    def test_concatenate_ignores_all_tie_result(self) -> None:
+    def test_all_tie_result_returns_empty_dataframe(self) -> None:
+        parlays = ParlayDataFrame.from_generated(
+            parlay_frame(),
+            event_date="2026-08-01",
+        )
+        event = event_results().assign(winner=2, winner_name="DRAW")
+
+        settled = parlays.with_results(event)
+
+        self.assertIsInstance(settled, ParlayDataFrame)
+        self.assertTrue(settled.frame.empty)
+
+    def test_concatenate_ignores_empty_parlay(self) -> None:
         history_frame = parlay_frame()
         history_frame["date"] = "2026-07-01"
         history = ParlayDataFrame(history_frame)
+        empty = ParlayDataFrame(history.frame.iloc[0:0].copy())
 
-        combined = ParlayDataFrame.concatenate(history, None)
+        combined = ParlayDataFrame.concatenate(history, empty)
 
         self.assertIsNotNone(combined)
+        assert combined is not None
+        self.assertEqual(len(combined.frame), 2)
+
+    def test_concatenate_replaces_entire_event_and_keeps_all_legs(self) -> None:
+        old_event = ParlayDataFrame.from_generated(
+            parlay_frame(),
+            event_date="2026-08-01",
+        )
+        other_event = ParlayDataFrame.from_generated(
+            parlay_frame(),
+            event_date="2026-07-01",
+        )
+        history = ParlayDataFrame.concatenate(other_event, old_event)
+        assert history is not None
+
+        updated_frame = parlay_frame()
+        updated_frame["parlay_odds_open"] = [4.0, 4.0]
+        updated_event = ParlayDataFrame.from_generated(
+            updated_frame,
+            event_date="2026-08-01",
+        )
+
+        combined = ParlayDataFrame.concatenate(history, updated_event)
+
+        assert combined is not None
+        august = combined.frame.loc[
+            combined.frame["date"].eq(pd.Timestamp("2026-08-01"))
+        ]
+        self.assertEqual(len(combined.frame), 4)
+        self.assertEqual(len(august), 2)
+        self.assertEqual(august["parlay_odds_open"].tolist(), [4.0, 4.0])
+
+    def test_concatenate_removes_exact_duplicate_rows(self) -> None:
+        frame = parlay_frame()
+        frame["date"] = "2026-08-01"
+        duplicated = ParlayDataFrame(
+            pd.concat([frame, frame], ignore_index=True)
+        )
+
+        combined = ParlayDataFrame.concatenate(duplicated)
+
         assert combined is not None
         self.assertEqual(len(combined.frame), 2)
 

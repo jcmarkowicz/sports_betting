@@ -98,11 +98,13 @@ def devig_shin(p_imp, tol=1e-8, debug=False):
     return fair / fair.sum()
 
 
-def fair_odds_curve_df(df,
-                       red_col="dec_open_red",
-                       blue_col="dec_open_blue",
-                       method="shin",   # "normalize" | "power" | "shin"
-                       n_bins=25):
+def fair_odds_curve_df(
+    df,
+    red_col="dec_open_red",
+    blue_col="dec_open_blue",
+    method="shin",   # "normalize" | "power" | "shin"
+    n_bins=25
+):
     """
     For each row, devig the two-way market, compute fair probs & fair odds.
     Then bin by fair probability of 'red' and aggregate to a smooth curve.

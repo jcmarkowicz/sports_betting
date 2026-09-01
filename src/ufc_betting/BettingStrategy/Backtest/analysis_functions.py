@@ -6,7 +6,6 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 
-
 def compare_parlay(parlay_open, parlay_close): 
 
     n_same = 0

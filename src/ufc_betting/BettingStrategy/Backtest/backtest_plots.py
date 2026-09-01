@@ -343,7 +343,7 @@ def plot_backtest(df_results, init_bankroll, path=None):
     axs[0].plot(x_positions, bankroll_history, marker='o', label='Bankroll')
     axs[0].axhline(init_bankroll, color='gray', linestyle='--', label='Initial Bankroll')
     axs[0].set_ylabel("Bankroll")
-    axs[0].set_title(f"TOTAL Bankroll Over Time | Event Win Rate: {proportion_wins_total:.2%}")
+    axs[0].set_title(f"TOTAL Bankroll Over Time | Event Win Rate: {proportion_wins_total:.2%} | Final Bankroll: {bankroll_history[-1]:.2f}")
     axs[0].legend(loc='upper left')
 
     # RESTORE MILESTONE BOX 

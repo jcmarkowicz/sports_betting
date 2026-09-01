@@ -132,6 +132,39 @@ class MoneylineDataFrameTests(unittest.TestCase):
         self.assertEqual(moneylines.frame["winner_bool"].iloc[0], 1)
         self.assertTrue(pd.isna(moneylines.frame["winner_bool"].iloc[1]))
 
+    def test_concatenate_replaces_event_and_keeps_all_fights(self) -> None:
+        old_event = MoneylineDataFrame(moneyline_frame())
+        other_frame = moneyline_frame()
+        other_frame["date"] = "2026-07-01"
+        other_event = MoneylineDataFrame(other_frame)
+        history = MoneylineDataFrame.concatenate(other_event, old_event)
+        assert history is not None
+
+        updated_frame = moneyline_frame()
+        updated_frame["open_red"] = [-200, 175]
+        updated_event = MoneylineDataFrame(updated_frame)
+
+        combined = MoneylineDataFrame.concatenate(history, updated_event)
+
+        assert combined is not None
+        august = combined.frame.loc[
+            combined.frame["date"].eq(pd.Timestamp("2026-08-01"))
+        ]
+        self.assertEqual(len(combined.frame), 4)
+        self.assertEqual(len(august), 2)
+        self.assertEqual(august["open_red"].tolist(), [-200, 175])
+
+    def test_concatenate_removes_exact_duplicate_rows(self) -> None:
+        frame = moneyline_frame()
+        duplicated = MoneylineDataFrame(
+            pd.concat([frame, frame], ignore_index=True)
+        )
+
+        combined = MoneylineDataFrame.concatenate(duplicated)
+
+        assert combined is not None
+        self.assertEqual(len(combined.frame), 2)
+
 
 if __name__ == "__main__":
     unittest.main()

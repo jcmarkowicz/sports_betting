@@ -72,7 +72,7 @@ class ParlayDataFrame:
         cls,
         *frames: Self | None,
     ) -> Self | None:
-        """Combine available parlay frames and validate the result."""
+        """Combine parlay frames, replacing older events by date."""
         available_frames = [
             parlays.frame
             for parlays in frames
@@ -81,18 +81,30 @@ class ParlayDataFrame:
         if not available_frames:
             return None
 
-        return cls(
-            pd.concat(
-                available_frames,
+        combined = available_frames[0].drop_duplicates(
+            keep="last",
+        ).copy()
+
+        for incoming in available_frames[1:]:
+            incoming = incoming.drop_duplicates(
+                keep="last",
+            ).copy()
+            updated_dates = incoming["date"].dropna().unique()
+            combined = combined.loc[
+                ~combined["date"].isin(updated_dates)
+            ]
+            combined = pd.concat(
+                [combined, incoming],
                 axis=0,
                 ignore_index=True,
             )
-        )
+
+        return cls(combined)
 
     def with_results(
         self,
         single_event: pd.DataFrame,
-    ) -> "ParlayDataFrame | None":
+    ) -> "ParlayDataFrame":
         """
         Return a new parlay frame populated with available fight results.
 
@@ -289,14 +301,14 @@ class ParlayDataFrame:
             settled_any = True
 
         if not settled_any:
-            return None
+            return type(self)(settled.iloc[0:0].copy())
 
         return type(self)(settled)
 
     def validate(self) -> None:
         """Validate the generic date and nullable settlement contract."""
         if self.frame.empty:
-            raise ParlayIntegrityError("Parlay DataFrame is empty")
+            return
 
         for bet_type in self.settled_types:
             winner_column = f"winner_bool_{bet_type}"

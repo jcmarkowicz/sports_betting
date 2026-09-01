@@ -98,3 +98,56 @@ def delete_and_commit(path, message):
 
     # 4. Push
     subprocess.run(["git", "push"], check=False)
+
+
+def commit_figure_if_changed(
+    file_path: str | Path,
+    message: str | None = None,
+    branch: str = "main",
+) -> bool:
+    """Commit and push a saved figure when its file contents changed."""
+    file_path = Path(file_path)
+
+    if not file_path.is_file():
+        raise FileNotFoundError(f"Figure does not exist: {file_path}")
+
+    subprocess.run(["git", "add", str(file_path)], check=True)
+
+    diff = subprocess.run(
+        ["git", "diff", "--cached", "--quiet", "--", str(file_path)],
+        check=False,
+    )
+    if diff.returncode == 0:
+        return False
+    if diff.returncode != 1:
+        raise subprocess.CalledProcessError(diff.returncode, diff.args)
+
+    subprocess.run(
+        ["git", "config", "--global", "user.name", "github-actions[bot]"],
+        check=True,
+    )
+    subprocess.run(
+        [
+            "git",
+            "config",
+            "--global",
+            "user.email",
+            "github-actions[bot]@users.noreply.github.com",
+        ],
+        check=True,
+    )
+
+    commit_message = message or f"Updating {file_path.name}"
+    subprocess.run(
+        ["git", "commit", "-m", commit_message, "--", str(file_path)],
+        check=True,
+    )
+
+    repo = os.environ["GITHUB_REPOSITORY"]
+    token = os.environ["GITHUB_TOKEN"]
+    push_url = f"https://x-access-token:{token}@github.com/{repo}.git"
+    subprocess.run(
+        ["git", "push", push_url, f"HEAD:{branch}"],
+        check=True,
+    )
+    return True

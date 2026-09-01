@@ -81,7 +81,7 @@ class MoneylineDataFrame:
         cls,
         *frames: Self | None,
     ) -> Self | None:
-        """Combine available moneyline frames and validate the result."""
+        """Combine moneyline frames, replacing older events by date."""
         available_frames = [
             moneylines.frame
             for moneylines in frames
@@ -90,13 +90,28 @@ class MoneylineDataFrame:
         if not available_frames:
             return None
 
-        return cls(
-            pd.concat(
-                available_frames,
+        combined = available_frames[0].drop_duplicates(
+            keep="last",
+        ).copy()
+
+        for incoming in available_frames[1:]:
+            incoming = incoming.drop_duplicates(
+                keep="last",
+            ).copy()
+
+            updated_dates = incoming["date"].dropna().unique()
+
+            combined = combined.loc[
+                ~combined["date"].isin(updated_dates)
+            ]
+
+            combined = pd.concat(
+                [combined, incoming],
                 axis=0,
                 ignore_index=True,
             )
-        )
+
+        return cls(combined)
 
     def with_results(
         self,
@@ -137,8 +152,8 @@ class MoneylineDataFrame:
             event_rows[key] = (
                 event_rows[column]
                 .astype("string")
-                .str.strip()
-                .str.casefold()
+                .str.strip() # remove whitespace at start and end of string
+                .str.casefold() # language aware str.lower()
             )
             settled[key] = (
                 settled[column]
@@ -175,13 +190,15 @@ class MoneylineDataFrame:
                 "winner_name": "_event_winner_name",
             }
         )
+
+        # assert that every fight as a result 
         settled = settled.merge(
             result_rows,
             how="left",
             on=match_keys,
             sort=False,
             validate="one_to_one",
-            indicator=True,
+            indicator=True, # creates column that indicates if match found 
         )
 
         missing_matches = settled["_merge"].eq("left_only")
@@ -237,6 +254,7 @@ class MoneylineDataFrame:
             prediction_column = f"pred_winner_{bet_type}"
             odds_type = self.odds_type_by_settled_type[bet_type]
 
+            # errors="coerce" forces any non numeric value to na 
             predictions = pd.to_numeric(
                 settled[prediction_column],
                 errors="coerce",
@@ -255,23 +273,30 @@ class MoneylineDataFrame:
                 predictions.eq(1),
                 blue_odds.where(predictions.eq(0)),
             )
+            chosen_ev = pd.to_numeric(
+                settled[f"ev_{bet_type}"],
+                errors='coerce'
+            ).astype("Float64")
             fstar = pd.to_numeric(
                 settled[f"fstar_{bet_type}"],
                 errors="coerce",
             ).astype("Float64")
 
             resolved = predictions.notna() & winners.notna()
-            win_bet = predictions.eq(winners).where(resolved)
+            positive_ev = chosen_ev.gt(0).fillna(False)
+
+            qualifying_bet = resolved & positive_ev
+            win_bet = predictions.eq(winners).where(qualifying_bet)
 
             decimal_odds = (1 + chosen_odds / 100).where(
                 chosen_odds > 0,
                 1 + 100 / chosen_odds.abs(),
             )
-            net_stake = fstar.where(win_bet, -fstar).where(resolved)
+            net_stake = fstar.where(win_bet, -fstar).where(qualifying_bet)
             net_odds = (decimal_odds - 1).where(
                 win_bet,
                 -1.0,
-            ).where(resolved)
+            ).where(qualifying_bet)
 
             settled[f"chosen_odds_{bet_type}"] = chosen_odds.astype(
                 "Float64"
