@@ -5,6 +5,7 @@ from pathlib import Path
 
 import numpy as np 
 import pandas as pd
+from sklearn.metrics import brier_score_loss
 
 from ufc_betting.config import settings
 from ufc_betting.DataPipeline.dataframes.moneylines import (
@@ -21,11 +22,16 @@ SETTLED_TYPES = (
 )
 
 
-def _event_return_fractions(
+def _event_return_components(
     ml_results: pd.DataFrame,
     parlay_results: pd.DataFrame,
-) -> tuple[pd.Series, dict[str, pd.Series]]:
-    """Return deduplicated, loss-capped return fractions by event date."""
+) -> tuple[
+    pd.Series,
+    dict[str, pd.Series],
+    dict[str, pd.Series],
+    dict[str, pd.Series],
+]:
+    """Return moneyline, parlay, and combined returns by event date."""
     ml_results = ml_results.drop_duplicates(keep="last")
     parlay_results = parlay_results.drop_duplicates(keep="last")
 
@@ -40,7 +46,9 @@ def _event_return_fractions(
         .reset_index(drop=True)
     )
 
-    returns_by_type: dict[str, pd.Series] = {}
+    ml_returns_by_type: dict[str, pd.Series] = {}
+    parlay_returns_by_type: dict[str, pd.Series] = {}
+    combined_returns_by_type: dict[str, pd.Series] = {}
     for bet_type in SETTLED_TYPES:
         net_stake_column = f"net_stake_{bet_type}"
         net_odds_column = f"net_odds_{bet_type}"
@@ -67,12 +75,32 @@ def _event_return_fractions(
             * parlay_daily[net_odds_column]
         ).fillna(0.0)
 
+        ml_returns_by_type[bet_type] = ml_daily_return
+        parlay_returns_by_type[bet_type] = parlay_daily_return
+
         # A bankroll cannot lose more than its full value on one event.
-        returns_by_type[bet_type] = (
+        combined_returns_by_type[bet_type] = (
             ml_daily_return + parlay_daily_return
         ).clip(lower=-1.0)
 
-    return all_dates, returns_by_type
+    return (
+        all_dates,
+        ml_returns_by_type,
+        parlay_returns_by_type,
+        combined_returns_by_type,
+    )
+
+
+def _event_return_fractions(
+    ml_results: pd.DataFrame,
+    parlay_results: pd.DataFrame,
+) -> tuple[pd.Series, dict[str, pd.Series]]:
+    """Return deduplicated, loss-capped return fractions by event date."""
+    all_dates, _, _, combined_returns = _event_return_components(
+        ml_results,
+        parlay_results,
+    )
+    return all_dates, combined_returns
 
 
 
@@ -133,7 +161,6 @@ def returns_by_date(
             amount_added = 0.0
             if replenished:
                 amount_added = float(replenishment_amount)
-                bankroll += amount_added
                 replenishment_count += 1
 
             profit_history.append(profit)
@@ -141,6 +168,9 @@ def returns_by_date(
             replenished_history.append(replenished)
             replenishment_history.append(amount_added)
             replenishment_count_history.append(replenishment_count)
+
+            if replenished:
+                bankroll = amount_added
 
         event_return = event_returns[bet_type]
         bankroll_results[f"return_fraction_{bet_type}"] = (
@@ -246,7 +276,12 @@ def accuracy_analysis(ml_results, parlay_results):
         'close2_stack': 'close2',
     }
     parlay_events = parlay_results.groupby('date').first()
-    event_dates, event_returns = _event_return_fractions(
+    (
+        event_dates,
+        ml_event_returns,
+        parlay_event_returns,
+        event_returns,
+    ) = _event_return_components(
         ml_results,
         parlay_results,
     )
@@ -266,6 +301,40 @@ def accuracy_analysis(ml_results, parlay_results):
         accuracy_bets = (bets_only[f'pred_winner_{type_}'] == bets_only['winner_bool']).mean()
         accuracies[f'bets_{type_}'] = accuracy_bets
 
+        probability_column = f'choice_proba_{type_}'
+        scored_predictions = all_preds.dropna(
+            subset=[probability_column, 'winner_bool']
+        ).copy()
+        scored_bets = bets_only.dropna(
+            subset=[probability_column, 'winner_bool']
+        ).copy()
+
+        for label, scored_rows in (
+            ('all', scored_predictions),
+            ('bets', scored_bets),
+        ):
+            choice_probability = pd.to_numeric(
+                scored_rows[probability_column],
+                errors='coerce',
+            )
+            valid_probability = choice_probability.between(0, 1)
+            scored_rows = scored_rows.loc[valid_probability]
+            choice_probability = choice_probability.loc[valid_probability]
+
+            red_probability = choice_probability.where(
+                scored_rows[f'pred_winner_{type_}'].eq(1),
+                1.0 - choice_probability,
+            )
+            brier_score = (
+                brier_score_loss(
+                    scored_rows['winner_bool'],
+                    red_probability,
+                )
+                if not scored_rows.empty
+                else np.nan
+            )
+            accuracies[f'brier_{label}_{type_}'] = brier_score
+
         parlay_net = parlay_events[f'net_odds_{type_}'].dropna()
         parlay_accuracy = (parlay_net > 0).mean()
         accuracies[f'parlays_{type_}'] = parlay_accuracy 
@@ -278,6 +347,25 @@ def accuracy_analysis(ml_results, parlay_results):
         accuracies[f'profitable_event_pct_{type_}'] = (
             profitable_events.mean()
         )
+        accuracies[f'total_event_profit_pct_{type_}'] = (
+            profitable_events.mean()
+        )
+
+        profitable_ml_events = ml_event_returns[type_].gt(0)
+        accuracies[f'profitable_ml_events_{type_}'] = int(
+            profitable_ml_events.sum()
+        )
+        accuracies[f'ml_event_profit_pct_{type_}'] = (
+            profitable_ml_events.mean()
+        )
+
+        profitable_parlay_events = parlay_event_returns[type_].gt(0)
+        accuracies[f'profitable_parlay_events_{type_}'] = int(
+            profitable_parlay_events.sum()
+        )
+        accuracies[f'parlay_event_profit_pct_{type_}'] = (
+            profitable_parlay_events.mean()
+        )
 
         avail_vegas = no_draws.copy()
         odds_vegas = avail_vegas[[f'{odds_type}_blue', f'{odds_type}_red']].to_numpy()
@@ -289,6 +377,44 @@ def accuracy_analysis(ml_results, parlay_results):
             np.argmin(odds_vegas, axis=1)
         )
         accuracies[f'vegas_{type_}'] = (vegas_preds == winners).mean()
+
+        red_american = pd.to_numeric(
+            avail_vegas[f'{odds_type}_red'],
+            errors='coerce',
+        )
+        blue_american = pd.to_numeric(
+            avail_vegas[f'{odds_type}_blue'],
+            errors='coerce',
+        )
+        valid_vegas = (
+            red_american.notna()
+            & blue_american.notna()
+            & red_american.ne(0)
+            & blue_american.ne(0)
+            & avail_vegas['winner_bool'].notna()
+        )
+        red_american = red_american.loc[valid_vegas]
+        blue_american = blue_american.loc[valid_vegas]
+        vegas_winners = avail_vegas.loc[valid_vegas, 'winner_bool']
+
+        red_decimal = (1 + red_american / 100).where(
+            red_american > 0,
+            1 + 100 / red_american.abs(),
+        )
+        blue_decimal = (1 + blue_american / 100).where(
+            blue_american > 0,
+            1 + 100 / blue_american.abs(),
+        )
+        red_implied = 1 / red_decimal
+        blue_implied = 1 / blue_decimal
+        vegas_red_probability = red_implied / (
+            red_implied + blue_implied
+        )
+        accuracies[f'brier_vegas_{type_}'] = (
+            brier_score_loss(vegas_winners, vegas_red_probability)
+            if not vegas_winners.empty
+            else np.nan
+        )
 
         choice_odds = np.where(
             bets_only[f'pred_winner_{type_}'] == 1, 

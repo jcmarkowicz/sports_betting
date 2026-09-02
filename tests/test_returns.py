@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import patch
 
 import pandas as pd
+from sklearn.metrics import brier_score_loss
 
 from ufc_betting.Results.returns import (
     _event_return_fractions,
@@ -66,13 +67,14 @@ class ReturnTests(unittest.TestCase):
                 results[f"replenishment_count_{bet_type}"].iloc[0],
                 1,
             )
-            self.assertEqual(results[f"bankroll_{bet_type}"].iloc[0], 1000.0)
+            self.assertEqual(results[f"bankroll_{bet_type}"].iloc[0], 0.0)
         commit_if_changed.assert_called_once()
 
     def test_accuracy_reports_profitable_event_percentage(self) -> None:
         moneylines, parlays = return_frames()
         for bet_type in BET_TYPES:
             moneylines[f"pred_winner_{bet_type}"] = [1, 0]
+            moneylines[f"choice_proba_{bet_type}"] = [0.8, 0.7]
             moneylines[f"winner_bool"] = [1, 0]
             moneylines[f"open_red"] = [-150, -150]
             moneylines[f"open_blue"] = [130, 130]
@@ -88,6 +90,52 @@ class ReturnTests(unittest.TestCase):
             self.assertEqual(values[f"profitable_events_{bet_type}"], 0)
             self.assertEqual(values[f"total_events_{bet_type}"], 1)
             self.assertEqual(values[f"profitable_event_pct_{bet_type}"], 0)
+            self.assertEqual(values[f"total_event_profit_pct_{bet_type}"], 0)
+            self.assertEqual(values[f"profitable_ml_events_{bet_type}"], 0)
+            self.assertEqual(values[f"ml_event_profit_pct_{bet_type}"], 0)
+            self.assertEqual(
+                values[f"profitable_parlay_events_{bet_type}"],
+                0,
+            )
+            self.assertEqual(
+                values[f"parlay_event_profit_pct_{bet_type}"],
+                0,
+            )
+            self.assertEqual(values[f"brier_all_{bet_type}"], 0.065)
+            self.assertEqual(values[f"brier_bets_{bet_type}"], 0.065)
+            red_implied = 1 / (1 + 100 / 150)
+            blue_implied = 1 / (1 + 130 / 100)
+            vegas_red_probability = red_implied / (
+                red_implied + blue_implied
+            )
+            expected_vegas_brier = brier_score_loss(
+                [1, 0],
+                [vegas_red_probability, vegas_red_probability],
+            )
+            self.assertAlmostEqual(
+                values[f"brier_vegas_{bet_type}"],
+                round(expected_vegas_brier, 4),
+            )
+
+    def test_brier_score_excludes_missing_probabilities(self) -> None:
+        moneylines, parlays = return_frames()
+        for bet_type, odds_type in (
+            ("open", "open"),
+            ("close1_stack", "close1"),
+            ("close2_stack", "close2"),
+        ):
+            moneylines[f"pred_winner_{bet_type}"] = [1, 0]
+            moneylines[f"choice_proba_{bet_type}"] = [1.0, pd.NA]
+            moneylines["winner_bool"] = [1, 1]
+            moneylines[f"{odds_type}_red"] = [-150, -150]
+            moneylines[f"{odds_type}_blue"] = [130, 130]
+
+        accuracies, _ = accuracy_analysis(moneylines, parlays)
+        values = accuracies.set_index("metric")["Accuracies"]
+
+        for bet_type in BET_TYPES:
+            self.assertEqual(values[f"brier_all_{bet_type}"], 0.0)
+            self.assertEqual(values[f"brier_bets_{bet_type}"], 0.0)
 
 
 if __name__ == "__main__":

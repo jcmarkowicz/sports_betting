@@ -286,34 +286,19 @@ def plot_backtest(df_results, init_bankroll, path=None):
 
     bankroll_history = df_group['bankroll_postevent'].values
 
-    df_plus_ev_ml = df_group[df_group['event_payout_money_line'] != 0]
-    proportion_wins_per_bet = (
-        df_plus_ev_ml.groupby('date')['event_payout_money_line']
-        .first()
-        .gt(0)
-        .mean()
+    proportion_profitable_ml_events = (
+        df_group['event_payout_money_line'].gt(0).mean()
     )
 
-    # proportion of events where bankroll increased
-    df_any_bets = df_group[df_group['bankroll_postevent'] != 0]
-    proportion_wins_total = (
-        df_any_bets.groupby('date')['bankroll_postevent']
-        .first()
-        .diff()
-        .dropna()
-        .gt(0)
-        .mean()
+    # Use the event's actual return instead of differences between recorded
+    # bankroll balances, which are distorted by bankroll replenishments.
+    proportion_profitable_total_events = (
+        df_group['bankroll_pct_change'].gt(0).mean()
     )
 
-    # proportion of events where parlay won
-    parlay_plus_ev = df_group[df_group['parlay_ev'] > 0]
-    proportion_wins_parlay = (
-        parlay_plus_ev.groupby('date')['parlay_net']
-        .first()
-        .gt(0)
-        .mean()
+    proportion_profitable_parlay_events = (
+        df_group['parlay_net'].gt(0).mean()
     )
-
 
     # MONEY LINE NET PROFIT
     df_group_profit = df_results.groupby('date')['event_payout_money_line'].first().reset_index()
@@ -343,7 +328,7 @@ def plot_backtest(df_results, init_bankroll, path=None):
     axs[0].plot(x_positions, bankroll_history, marker='o', label='Bankroll')
     axs[0].axhline(init_bankroll, color='gray', linestyle='--', label='Initial Bankroll')
     axs[0].set_ylabel("Bankroll")
-    axs[0].set_title(f"TOTAL Bankroll Over Time | Event Win Rate: {proportion_wins_total:.2%} | Final Bankroll: {bankroll_history[-1]:.2f}")
+    axs[0].set_title(f"TOTAL Bankroll Over Time | Profitable Events: {proportion_profitable_total_events:.2%} | Final Bankroll: {bankroll_history[-1]:.2f}")
     axs[0].legend(loc='upper left')
 
     # RESTORE MILESTONE BOX 
@@ -365,12 +350,12 @@ def plot_backtest(df_results, init_bankroll, path=None):
     )
 
     axs[1].plot(x_parlay, parlay_cumsum, marker='o', color='orange', label='Cumulative Parlay Net')
-    axs[1].set_title(f"Parlay Net Profit | Parlay Win Rate: {proportion_wins_parlay:.2%}")
+    axs[1].set_title(f"Parlay Event Profit | Profitable Events: {proportion_profitable_parlay_events:.2%}")
     axs[1].set_ylabel("Cumulative Profit")
     axs[1].legend()
 
     axs[2].plot(per_fight_net, marker='o', label='Money Line Bet Profit')
-    axs[2].set_title(f"Per Fight Bet Profit | Win Rate: {proportion_wins_per_bet:.2%}")
+    axs[2].set_title(f"Moneyline Event Profit | Profitable Events: {proportion_profitable_ml_events:.2%}")
     axs[2].set_ylabel("Cumulative Profit")
     axs[2].legend()
 

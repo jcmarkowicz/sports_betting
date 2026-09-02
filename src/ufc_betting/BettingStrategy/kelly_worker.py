@@ -5,9 +5,7 @@ from ufc_betting.BettingStrategy.kelly_scaling import scale_mdd, scale_kelly_for
 
 def parlay_top_ev(data, bankroll, type, top_n=[0,1], parlay_mdd=0.5, N=250):
 
-    data = data[data['choice_ev'] > 0]
-
-    if len(data) < 2:
+    if len(data) < len(top_n):
         cols = [
             f'choice_fighter_name_{type}', 
             f'parlay_fstar_{type}',

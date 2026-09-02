@@ -636,8 +636,8 @@ def simulate_kelly(
         # print([(key, len(value)) for key,value in group_stats.items()])
 
         if bankroll_floor is not None and bankroll < bankroll_floor:
-            print(f"Bankroll low on {date}, adding funds")
-            bankroll += 1000
+            print(f"Bankroll low on {date}, replenishing funds")
+            bankroll = 500
 
         group_df = pd.DataFrame(group_stats)
         # group_df[[

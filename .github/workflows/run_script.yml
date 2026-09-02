@@ -1,4 +1,4 @@
-name: Run Python Script
+name: Run Data Scraping
 
 on:
   schedule:
@@ -42,12 +42,13 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
+          python -m pip install -e .
 
       - name: Run script
         env:
           EMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
         run: |
-          python -m DataPipeline.dataset_workers.build_datasets_github
+          python -m ufc_betting.DataPipeline.dataset_workers.build_datasets_github
 
 
