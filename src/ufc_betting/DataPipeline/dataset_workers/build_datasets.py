@@ -6,9 +6,8 @@ import sys
 from datetime import datetime 
 
 # Add the project root to the Python path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))) 
-from DataPipeline.FeatureEngineering.features_pipeline import FeatureEngineering
-from DataPipeline.webscrapers.scraping_pipeline import UFC_Webscraper
+from ufc_betting.DataPipeline.FeatureEngineering.features_pipeline import FeatureEngineering
+from ufc_betting.DataPipeline.webscrapers.scraping_pipeline import UFC_Webscraper
 
 from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parents[1]

@@ -7,7 +7,7 @@ from email import encoders
 
 import os 
 
-from DataPipeline.utils.bets_utils import generate_bets
+from ufc_betting.DataPipeline.utils.bets_utils import generate_bets
 from ufc_betting.config import config
 
 # Email setup
