@@ -1,8 +1,9 @@
 red_fighter,blue_fighter,open_blue,close1_blue,close2_blue,open_red,close1_red,close2_red,og_blue_name,event_date,og_red_fighter
 Alexander Volkanovski,Movsar Evloev,-110,-113,-107,-120,-120,-108,Movsar Evloev,2026-10-24,Alexander Volkanovski
+Alonzo Menifield,Iwo Baraniewski,-250,-250,-225,208,175,208,Iwo Baraniewski,2026-09-20,Alonzo Menifield
 Alonzo Menifield,Iwo Baraniewski,-350,-250,-225,280,175,208,Iwo Baraniewski,2026-09-10,Alonzo Menifield
 Arman Tsarukyan,Mauricio Ruffy,280,250,280,-350,-390,-325,Mauricio Ruffy,2026-09-19,Arman Tsarukyan
-Brandon Moreno,Joseph Morales,149,-128,-110,-170,-110,100,Joseph Morales,2026-09-13,Brandon Moreno
+Brandon Moreno,Joseph Morales,149,-124,-110,-170,-110,100,Joseph Morales,2026-09-13,Brandon Moreno
 Brendan Allen,Reinier de Ridder,-175,-240,-210,140,165,200,Christian Leroy Duncan,2025-10-18,Brendan Allen
 Brendan Allen,Chris Curtis,225,175,190,-278,-250,-210,Christian Leroy Duncan,2024-04-06,Brendan Allen
 Brendan Allen,Chris Curtis,250,255,290,-300,-375,-305,Christian Leroy Duncan,2021-12-04,Brendan Allen
@@ -10,20 +11,20 @@ Brendan Allen,Ian Heinisch,-110,100,105,-110,-125,-122,Christian Leroy Duncan,20
 Brendan Allen,Chris Harris,-165,-175,-175,125,135,135,Christian Leroy Duncan,2017-08-04,Brendan Allen
 Casey O'Neill,Eduarda Moura,174,138,153,-200,-182,-170,Eduarda Moura,2026-09-19,Casey O'Neill
 Court McGee,Marcio Alexandre Jr.,135,140,145,-175,-165,-160,Eric Nolan,2015-12-12,Court McGee
-David Martinez,Dan Ige,230,290,320,-280,-420,-385,Dan Ige,2026-09-13,David Martinez
+David Martinez,Dan Ige,230,300,440,-280,-670,-400,Dan Ige,2026-09-13,David Martinez
 David Martinez,Murad Guseinov,-275,-275,-275,200,200,200,Dan Ige,2023-11-25,David Martinez
 Deiveson Figueiredo,Payton Talbott,-250,-700,-530,207,350,505,Payton Talbott,2026-10-04,Deiveson Figueiredo
-Drakkar Klose,Tommy Gantt,-500,-500,-435,383,335,360,Tommy Gantt,2026-09-13,
+Drakkar Klose,Tommy Gantt,-500,-480,-420,383,310,350,Tommy Gantt,2026-09-13,
 Edmen Shahbazyan,Brunno Ferreira,-115,123,135,-105,-164,-155,Brunno Ferreira,2026-09-19,Edmen Shahbazyan
 Gable Steveson,Sean Sharaf,900,600,850,-1600,-1800,-1408,Sean Sharaf,2026-09-19,Gable Steveson
 Giga Chikadze,Joanderson Brito,-425,-360,-340,334,255,280,Joanderson Brito,2026-09-19,Giga Chikadze
 Ignacio Bahamondes,Muslim Salikhov,245,390,425,-300,-590,-525,Muslim Salikhov,2026-09-13,Ignacio Bahamondes
-Jj Aldrich,Regina Tarin,-300,-315,-275,245,225,240,Regina Tarin,2026-09-13,JJ Aldrich
+Jj Aldrich,Regina Tarin,-300,-315,-275,245,210,240,Regina Tarin,2026-09-13,JJ Aldrich
 Jj Aldrich,Gillian Robertson,-160,-139,-115,140,-105,115,Regina Tarin,2022-03-12,JJ Aldrich
 Jean Silva,Jose Delgado,295,310,333,-360,-450,-420,Jose Delgado,2026-09-12,Jean Silva
 Joshua van,Alexandre Pantoja,-185,-107,-101,160,-120,-115,Alexandre Pantoja,2026-09-19,Joshua Van
 Joshua van,Alexandre Pantoja,-270,-235,-185,230,160,195,Alexandre Pantoja,2025-12-07,Joshua Van
-Manon Fiorot,Alexa Grasso,184,175,205,-216,-250,-225,Alexa Grasso,2026-09-13,
+Manon Fiorot,Alexa Grasso,184,175,222,-216,-270,-225,Alexa Grasso,2026-09-13,
 Marlon Vera,Charles Jourdain,-164,-265,-250,144,198,215,Charles Jourdain,2026-09-19,Marlon Vera
 Marlon Vera,Jose Aldo,-125,-161,-137,105,117,130,Charles Jourdain,2020-12-19,Marlon Vera
 Montel Jackson,Ricky Simon,-175,105,110,145,-130,-125,Ricky Simon,2018-08-04,Montel Jackson
@@ -32,12 +33,13 @@ Nikita Krylov,Ed Herman,160,200,205,-210,-240,-240,Abdul Rakhman Yakhyaev,2016-0
 Petr Yan,Merab Dvalishvili,150,140,150,-175,-190,-172,Merab Dvalishvili,2026-10-24,Petr Yan
 Petr Yan,Merab Dvalishvili,-330,-440,150,240,-175,340,Merab Dvalishvili,2025-12-07,Petr Yan
 Petr Yan,Merab Dvalishvili,150,200,220,-175,-286,-240,Merab Dvalishvili,2023-03-11,Petr Yan
-Rafa Garcia,Rongzhu,130,-188,-158,-150,138,150,Rongzhu,2026-09-13,Rafa Garcia
+Rafa Garcia,Rongzhu,130,-188,-160,-150,140,150,Rongzhu,2026-09-13,Rafa Garcia
+Renato Moicano,Brian Ortega,169,160,170,-200,-210,-200,Brian Ortega,2026-09-20,Renato Moicano
 Renato Moicano,Brian Ortega,299,160,170,-375,-210,-200,Brian Ortega,2026-09-10,Renato Moicano
 Renato Moicano,Brian Ortega,140,158,160,-180,-185,-183,Brian Ortega,2017-07-29,Renato Moicano
 Sean King,Jessie Rosas,130,155,177,-150,-205,-195,Jessie Rosas,2026-09-13,Sean King III
 Tai Tuivasa,Robelis Despaigne,-400,-650,-530,316,360,482,Robelis Despaigne,2026-09-19,Tai Tuivasa
 Tim Elliott,Edgar Chairez,-175,-225,-215,153,170,183,Edgar Chairez,2026-09-13,Tim Elliott
-Tommy McMillen,Marwan Rahiki,115,125,142,-135,-175,-157,Marwan Rahiki,2026-09-13,Tommy McMillen
+Tommy McMillen,Marwan Rahiki,115,125,140,-135,-175,-151,Marwan Rahiki,2026-09-13,Tommy McMillen
 Waldo Cortes-Acosta,Curtis Blaydes,110,160,175,-130,-225,-190,Curtis Blaydes,2026-09-13,Waldo Cortes Acosta
-Yousri Belgaroui,Djorden Santos,446,500,600,-600,-1000,-750,Djorden Santos,2026-09-13,
+Yousri Belgaroui,Djorden Santos,446,500,700,-600,-1250,-750,Djorden Santos,2026-09-13,
