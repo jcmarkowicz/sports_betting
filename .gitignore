@@ -2,6 +2,7 @@
 venv/
 .venv/
 env/
+.odds-classification-deps/
 
 chrome-win64/
 *.dll

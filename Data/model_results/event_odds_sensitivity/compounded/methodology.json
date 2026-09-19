@@ -1,0 +1,21 @@
+{
+  "starting_bankroll": 3500,
+  "events": 73,
+  "risk_parameters": {
+    "mdd_open": 0.4,
+    "mdd_close1": 0.4,
+    "N_open": 250,
+    "N_close1": 250
+  },
+  "maximum_event_stake_fraction": 1.4518281688709882,
+  "opening_ending_bankroll": 5012319.378811284,
+  "opening_ev_percent_definition": "100 * sum(close1 expected bankroll return percentages) / sum(opening expected bankroll return percentages); aggregate across identical test events, not a uniform per-event percentage",
+  "increment": "0-100% close1-to-open price interpolation; 1% steps inherited from event curves",
+  "formula": "B_n = B_0 * product(1 + event_expected_bankroll_return_pct / 100)",
+  "notes": [
+    "Same shift used for every event in each scenario; probabilities and fstar were recomputed upstream.",
+    "Multiplying model means is a deterministic projection, not a realized backtest or expected log growth.",
+    "Each event uses its current projected bankroll as the staking base; no within-event compounding.",
+    "Risk parameters inherited from event analysis; see risk_parameters. No exposure cap added."
+  ]
+}

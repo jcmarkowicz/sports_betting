@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd 
 
 from ufc_betting.BettingStrategy.kelly_scaling import expected_value, kelly_edge
+from ufc_betting.UpcomingPicks.set_column_names import set_ml_bets_cols, set_parlay_cols, get_ml_bet_cols, get_parlay_cols
 
 def merge_bets_types(df_bets, df_bets_combined):
     """ matching rows by their index and adding the columns  """
@@ -41,6 +42,10 @@ def get_bets_input(
         real_odds, 
         fair_odds
     ):
+    """ 
+    take model results and generate a dataframe thats ready for kelly scaling,
+    aligns by yhat index which comes from required_df_idx, which is the same as the df index.
+    """
         
     fighter_red = df["fighter_red"].to_numpy()
     fighter_blue = df["fighter_blue"].to_numpy()
@@ -109,18 +114,15 @@ def get_bets_input(
 
     return bets_input_df
 
-def get_parlay_input(df, bets_input_df, fighter_red, fighter_blue, required_idx):
-
-    fighter_red = df["fighter_red"].to_numpy()
-    fighter_blue = df["fighter_blue"].to_numpy()
-    dates = df["date"].to_numpy()
+def get_parlay_input(bets_input_df, fighter_red, fighter_blue, dates, required_idx):
+    """ all cols should be aligned by required_idx which comes from df """
 
     parlay_input_df = pd.DataFrame({
-        "choice_ev": bets_input_df['choice_ev'].to_numpy(),
-        "choice_proba": bets_input_df['choice_proba'].to_numpy(),
-        "choice_real_odds": bets_input_df['choice_real_odds'].to_numpy(),
-        'choice_fighter_name':bets_input_df['pred_winner_names'].to_numpy(),
-        'choice_fighter_bool':bets_input_df['pred_winner_bool'].to_numpy(),
+        "choice_ev": bets_input_df['choice_ev'],
+        "choice_proba": bets_input_df['choice_proba'],
+        "choice_real_odds": bets_input_df['choice_real_odds'],
+        'choice_fighter_name':bets_input_df['pred_winner_names'],
+        'choice_fighter_bool':bets_input_df['pred_winner_bool'],
         "fighter_red": fighter_red,
         "fighter_blue": fighter_blue,
         "date": dates,
@@ -128,29 +130,45 @@ def get_parlay_input(df, bets_input_df, fighter_red, fighter_blue, required_idx)
 
     return parlay_input_df.dropna()
 
-def get_parlay_pkt(df_parlay, type):
+def get_parlay_pkt(df_parlay, type, all_na=False):
     parlay_pkt = {
-        'choice_fighter_name_col': df_parlay[f'choice_fighter_name_{type}'].to_numpy(),
-        'choice_fighter_bool_col': df_parlay[f'choice_fighter_bool_{type}'].to_numpy(),
-        'parlay_fstar_col': df_parlay[f'parlay_fstar_{type}'].to_numpy(),
-        'parlay_odds_col': df_parlay[f'parlay_odds_{type}'].to_numpy(), 
-        'stake_col': df_parlay[f'stake_{type}'].to_numpy(), 
-        'parlay_ev_col': df_parlay[f'parlay_ev_{type}'].to_numpy(), 
-        'parlay_prob_col': df_parlay[f'parlay_prob_{type}'].to_numpy()
+        'choice_fighter_name_col': df_parlay[f'choice_fighter_name_{type}'],
+        'choice_fighter_bool_col': df_parlay[f'choice_fighter_bool_{type}'],
+        'parlay_fstar_col': df_parlay[f'parlay_fstar_{type}'],
+        'parlay_odds_col': df_parlay[f'parlay_odds_{type}'], 
+        'stake_col': df_parlay[f'stake_{type}'], 
+        'parlay_ev_col': df_parlay[f'parlay_ev_{type}'], 
+        'parlay_prob_col': df_parlay[f'parlay_prob_{type}']
     }
-    return parlay_pkt
 
-def get_bets_pkt(bets_input_df, df_per_bet):
+    df = set_parlay_cols(
+        type_=type,
+        pkt=parlay_pkt,
+        required_idx=df_parlay.index,
+        all_na=all_na
+    )
+
+    return df
+
+def get_bets_pkt(bets_input_df, df_per_bet, type_, required_idx, all_na) -> dict:
+    """ take columns from bets_input and df_per_bet and rename them """
     bets_pkt = {
-            'pred_name_col': bets_input_df['pred_winner_names'].to_numpy(), 
-            'pred_winner_col': bets_input_df['pred_winner_bool'].to_numpy(), 
-            'choice_proba_col': bets_input_df['choice_proba'].to_numpy(), 
-            'choice_fstar_col': df_per_bet['fstar_scaled'].to_numpy(), 
-            'choice_stake_col': df_per_bet['stake'].to_numpy(),
-            'edge_col': bets_input_df['choice_edge'].to_numpy(), 
-            'ev_col': bets_input_df['choice_ev'].to_numpy(),
-        }   
-    return bets_pkt
+            'pred_name_col': bets_input_df['pred_winner_names'], 
+            'pred_winner_col': bets_input_df['pred_winner_bool'], 
+            'choice_proba_col': bets_input_df['choice_proba'], 
+            'choice_fstar_col': df_per_bet['fstar_scaled'], 
+            'choice_stake_col': df_per_bet['stake'],
+            'edge_col': bets_input_df['choice_edge'], 
+            'ev_col': bets_input_df['choice_ev'],
+        }
+
+    df = set_ml_bets_cols(
+        type_=type_, 
+        pkt=bets_pkt, 
+        required_idx=required_idx, 
+        all_na=all_na
+    )
+    return df
 
 def get_X_stacked(df, df_proba, df_bets_combined, required_df_idx):
 

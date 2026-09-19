@@ -13,7 +13,7 @@ from ufc_betting.Results.returns import (
     returns_by_date,
 )
 
-from ufc_betting.config import settings
+from ufc_betting.config import settings, config
 
 #start_date='2026-02-23'
 def archive_results(start_date='2026-02-23', delete_old=True):
@@ -43,23 +43,30 @@ def archive_results(start_date='2026-02-23', delete_old=True):
         settings.parlay_history_file
     )
 
-    scraped_stats, scraped_odds, df_upcoming = get_missing_stats(start_date) 
-    for date, event_group in df_upcoming.groupby('date'):
+    scraped_stats, scraped_odds, df_feats = get_missing_stats(start_date) 
 
-        event_group = event_group.copy().reset_index(drop=True)
+    commit_if_changed(
+        df_feats,
+        config.test_feats_file,
+        f'Updating Test Features starting at {start_date}',
+    )
+
+    for date, event_feats in df_feats.groupby('date'):
+
+        event_feats = event_feats.copy().reset_index(drop=True)
         date_str = date.strftime("%Y-%m-%d")
         d_ts = pd.to_datetime(date_str)  
 
         # check if event date is in the past 
         if pd.Timestamp.now().normalize() > d_ts:
 
-            df_ml, df_parlay = generate_bets(event_group, select_odds=None)
+            df_ml, df_parlay = generate_bets(event_feats, select_odds=None)
 
             generated_parlay = ParlayDataFrame.from_generated(
                 frame=df_parlay,
                 event_date=date_str,
             )
-            settled_parlay = generated_parlay.with_results(event_group)
+            settled_parlay = generated_parlay.with_results(event_feats)
             df_parlay_history = ParlayDataFrame.concatenate(
                 df_parlay_history,
                 settled_parlay,
@@ -68,7 +75,7 @@ def archive_results(start_date='2026-02-23', delete_old=True):
             generated_moneyline = MoneylineDataFrame.from_generated(
                 frame = df_ml
             )
-            settled_moneyline = generated_moneyline.with_results(event_group)
+            settled_moneyline = generated_moneyline.with_results(event_feats)
             df_ml_history = MoneylineDataFrame.concatenate(
                 df_ml_history,
                 settled_moneyline,

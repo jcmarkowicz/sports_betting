@@ -1,0 +1,15 @@
+{
+  "split": "test",
+  "bin_width": 50,
+  "max_shift": 5000,
+  "step": 10,
+  "excluded_unsettled": {
+    "close1": 0,
+    "close2": 0
+  },
+  "bin_definition": "[low, high), based on unadjusted closing choice American odds",
+  "return_definition": "100 * total net profit / total stake; one unit per choice",
+  "target": "Opening model picks at opening prices on the same fights in each bin",
+  "adjustment_units": "continuous American moneyline points; -150 to +150 is 100 points",
+  "interpretation": "Historical fixed-pick payout sensitivity; not a forecast or retrained betting strategy"
+}

@@ -1,0 +1,20 @@
+{
+  "seed": 42,
+  "samples_requested_per_event": 5000,
+  "events": 73,
+  "grid": "Inherited evenly spaced 0-100% movement grid",
+  "sampling": "Beta mixtures: centers uniform in [0.001,0.999], concentrations 2,10,50; rounded to grid, duplicate vectors removed; all uniform reference vectors included.",
+  "deduplication": "Exact ordered shift vector within event; swapping shifts across distinct fights is a distinct scenario.",
+  "aggregation": "Sum cached per-fight expected bankroll contributions. No shared exposure constraint; verified uniform sums against prior event curves.",
+  "bands": "5-point bins of mean movement; sampled percentiles and extrema, not confidence intervals or exhaustive bin-specific bounds.",
+  "global_bounds": "Sum each fight's grid minimum/maximum; exact for the discrete grid with independent per-bet stakes, not conditional on average movement.",
+  "scenario_vectors": "Indices into grid; see fight_order.json for the ordered fighters.",
+  "scope": "Within-event sensitivity; no cross-event bankroll probability distribution inferred.",
+  "zero_opening_ev": "Ratios are undefined and saved as missing. Those event plots show expected bankroll return percentages instead.",
+  "risk_parameters": {
+    "mdd_open": 0.4,
+    "mdd_close1": 0.4,
+    "N_open": 250,
+    "N_close1": 250
+  }
+}

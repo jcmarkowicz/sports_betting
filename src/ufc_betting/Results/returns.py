@@ -1,7 +1,3 @@
-import os
-import subprocess
-from collections import defaultdict
-from pathlib import Path
 
 import numpy as np 
 import pandas as pd
@@ -17,8 +13,8 @@ from ufc_betting.DataPipeline.utils.github_utils import commit_if_changed, commi
 
 SETTLED_TYPES = (
     "open",
-    "close1_stack",
-    "close2_stack",
+    "close1",
+    "close2",
 )
 
 
@@ -206,7 +202,7 @@ def plot_returns(ml_results, parlay_results, bankroll_results):
     import matplotlib.pyplot as plt
     import seaborn as sns
 
-    types = ['open', 'close1_stack', 'close2_stack']
+    types = SETTLED_TYPES
     fig, axes = plt.subplots(2, len(types), figsize=(15,6))
     
     for i, type_ in enumerate(types):
@@ -272,8 +268,8 @@ def accuracy_analysis(ml_results, parlay_results):
 
     type_to_odds = {
         'open': 'open',
-        'close1_stack': 'close1',
-        'close2_stack': 'close2',
+        'close1': 'close1',
+        'close2': 'close2',
     }
     parlay_events = parlay_results.groupby('date').first()
     (

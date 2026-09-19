@@ -1,0 +1,67 @@
+{
+  "training_audit": {
+    "training_rows": 3550,
+    "last_training_date": "2024-05-04"
+  },
+  "total_events": 73,
+  "changed_selection_events": 39,
+  "excluded_same_fighters": 34,
+  "mdd": 0.5,
+  "N": 250,
+  "initial_rule_training_events": 12,
+  "selection": "Top two individual EV fighters; no heavy-favorite parlays",
+  "probability": "Fixed opening model with snapshot fair-market feature; leg probabilities multiplied",
+  "comparison": "Keep opening fighters at current snapshot prices versus current selected fighters; both resized at same MDD/N",
+  "evaluation": "Earlier changed-selection events tune threshold, next quarter tests it; close2 never informs close1 choices",
+  "limitations": [
+    "Conditional on the available modeled fight cohort, not necessarily every fight on each card.",
+    "Retrospective threshold-grid winner is descriptive, not an independently validated optimum.",
+    "Bootstrap is paired by event, assumes independent events, and is exploratory.",
+    "These historical outcomes have been examined in previous analyses."
+  ]
+}
+ stage                     policy  switches  events  mean_event_return_pct  compounded_return_pct  profitable_events  max_drawdown_pct
+close1              always_switch        27      27               1.490576              -7.075079                 11         48.187337
+close1                  keep_open         0      27               5.666686             164.013476                 14         42.281723
+close1                    learned         2      27               5.015568             113.517598                 14         49.830397
+close1  positive_bankroll_ev_gain        18      27               2.097116              -1.731028                 12         49.126331
+close1           positive_ev_gain        24      27               3.366362              34.693711                 11         48.187337
+close1 positive_expected_log_gain        18      27               2.097116              -1.731028                 12         49.126331
+close2              always_switch        24      27               4.885622              71.576680                 12         52.510088
+close2                  keep_open         0      27               8.746819             357.480889                 16         47.735606
+close2                    learned         7      27               4.171291              37.641967                 12         69.060942
+close2  positive_bankroll_ev_gain        14      27               5.065813              67.136592                 12         54.438033
+close2           positive_ev_gain        21      27               6.863941             154.398803                 12         52.510088
+close2 positive_expected_log_gain        13      27               4.556219              52.254199                 12         54.438033
+ stage test_start  training_events  test_events            rule  threshold
+close1 2024-10-12               12            4 expected_return      0.015
+close1 2025-01-01               16            5 expected_return      0.025
+close1 2025-04-01               21            7 expected_return      0.025
+close1 2025-07-01               28            2 expected_return      0.025
+close1 2025-10-01               30            7 expected_return      0.025
+close1 2026-01-01               37            2 expected_return      0.020
+close2 2024-10-12               12            4            keep      0.000
+close2 2025-01-01               16            5              ev     -0.200
+close2 2025-04-01               21            7            keep      0.000
+close2 2025-07-01               28            2            keep      0.000
+close2 2025-10-01               30            7              ev      0.100
+close2 2026-01-01               37            2              ev      0.400
+FULL SAMPLE BEST (DESCRIPTIVE ONLY)
+ stage            rule  threshold  log_growth  switches  events  mean_event_return_pct  compounded_return_pct  profitable_events  max_drawdown_pct
+close2 expected_return      0.070    1.996387         1      39               8.031339             636.241097                 22         44.469427
+close2 expected_return      0.060    1.996387         1      39               8.031339             636.241097                 22         44.469427
+close2 expected_return      0.050    1.996387         1      39               8.031339             636.241097                 22         44.469427
+close1 expected_return      0.020    1.604562         4      39               6.164072             397.567940                 22         32.901848
+close1 expected_return      0.015    1.541739         5      39               6.029864             367.270953                 22         32.901848
+close1 expected_return      0.030    1.343495         1      39               5.354040             283.241365                 21         42.281723
+ stage                     policy  mean_gain_pp  bootstrap_low_pp  bootstrap_high_pp
+close1              always_switch     -4.176110        -12.081737           3.945042
+close1                    learned     -0.651118         -1.731390           0.000000
+close1  positive_bankroll_ev_gain     -3.569571         -9.799952           2.497492
+close1           positive_ev_gain     -2.300324         -9.487346           5.444240
+close1 positive_expected_log_gain     -3.569571         -9.597826           2.422125
+close2              always_switch     -3.861197        -13.167671           5.761435
+close2                    learned     -4.575528        -10.682717           0.291417
+close2  positive_bankroll_ev_gain     -3.681006        -11.323553           3.612438
+close2           positive_ev_gain     -1.882878        -10.945207           8.099111
+close2 positive_expected_log_gain     -4.190600        -11.551424           3.135936

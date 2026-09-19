@@ -36,35 +36,38 @@ class FeatureEngineering:
         past_event_stats.to_csv(settings.data_dir / 'features_test_files/ufc_single_event_features.csv', index=False)
         print(f'Fight time feats shape" {past_event_stats.shape}')
 
-        # features for upcoming event
-        upcoming_single_event = upcoming_event_features(upcoming_stats)
-        print('Upcoming single event features shape:', upcoming_single_event.shape)
-        
-        # Create empty rows/columns for pre fight stats 
-        exclude_cols = ['fighter_red', 'fighter_blue']
-        stats_cols = [col for col in past_event_stats.columns if col not in exclude_cols]
-        upcoming_features_NA = pd.DataFrame(index=range(upcoming_single_event.shape[0]), columns=stats_cols) 
+        if ignore_upcoming:
+            combined_df = past_event_stats
+            upcoming_count = 0
+        else:
+            # features for upcoming event
+            upcoming_single_event = upcoming_event_features(upcoming_stats)
+            print('Upcoming single event features shape:', upcoming_single_event.shape)
 
-        # Combine fighter names with NaN stats
-        empty_df = pd.concat([upcoming_single_event[exclude_cols], upcoming_features_NA], axis=1) 
-        empty_df.columns = past_event_stats.columns # Assumes same order and length
+            # Create empty rows/columns for pre fight stats
+            exclude_cols = ['fighter_red', 'fighter_blue']
+            stats_cols = [col for col in past_event_stats.columns if col not in exclude_cols]
+            upcoming_features_NA = pd.DataFrame(index=range(upcoming_single_event.shape[0]), columns=stats_cols)
 
-        # Overwrite the scraped columns with actual values
-        scraped_columns = [
-            'fighter_red', 'fighter_blue', 'weight_class', 'event_date',
-            'reach_red', 'reach_blue', 'height_red', 'height_blue',
-            'age_red', 'age_blue', 'event_location', 'title_fight'
-        ]
-        
-        for col in scraped_columns:
-            if col in empty_df.columns and col in upcoming_single_event.columns:
-                empty_df[col] = upcoming_single_event[col]
+            # Combine fighter names with NaN stats
+            empty_df = pd.concat([upcoming_single_event[exclude_cols], upcoming_features_NA], axis=1)
+            empty_df.columns = past_event_stats.columns # Assumes same order and length
 
-        # Make sure event_date is datetime
-        empty_df['date'] = pd.to_datetime(empty_df['event_date'], format="%Y-%m-%d")
+            # Overwrite the scraped columns with actual values
+            scraped_columns = [
+                'fighter_red', 'fighter_blue', 'weight_class', 'event_date',
+                'reach_red', 'reach_blue', 'height_red', 'height_blue',
+                'age_red', 'age_blue', 'event_location', 'title_fight'
+            ]
 
-        # Combine with past event stats
-        combined_df = pd.concat([empty_df, past_event_stats], axis=0).reset_index(drop=True) if not ignore_upcoming else past_event_stats
+            for col in scraped_columns:
+                if col in empty_df.columns and col in upcoming_single_event.columns:
+                    empty_df[col] = upcoming_single_event[col]
+
+            # Make sure event_date is datetime
+            empty_df['date'] = pd.to_datetime(empty_df['event_date'], format="%Y-%m-%d")
+            upcoming_count = upcoming_stats.shape[0]
+            combined_df = pd.concat([empty_df, past_event_stats], axis=0).reset_index(drop=True)
 
         # compute rolling stats
         rolling_fp = settings.data_dir / 'features_test_files/ufc_new_rolling.csv'
@@ -93,8 +96,12 @@ class FeatureEngineering:
         merged_df['dog_counts_diff'] = merged_df['dog_counts_red'] - merged_df['dog_counts_blue']
 
         # seperate the upcoming fight stats/odds from the history
-        odds_stats_history = merged_df.iloc[:-upcoming_stats.shape[0], :] if not ignore_upcoming else merged_df 
-        upcoming_df = merged_df.iloc[-upcoming_stats.shape[0]:, :]
+        if ignore_upcoming:
+            odds_stats_history = merged_df
+            upcoming_df = merged_df.iloc[0:0].copy()
+        else:
+            odds_stats_history = merged_df.iloc[:-upcoming_count, :]
+            upcoming_df = merged_df.iloc[-upcoming_count:, :]
 
         return odds_stats_history, upcoming_df
 
@@ -421,9 +428,3 @@ class FeatureEngineering:
         new_df = new_df.sort_values(by='date', ascending=True).reset_index(drop=True)
 
         return new_df
-
-
-
-        
-
-   

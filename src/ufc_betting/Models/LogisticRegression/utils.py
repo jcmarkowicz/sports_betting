@@ -3,23 +3,29 @@ import pandas as pd
 
 from sklearn.metrics import accuracy_score
 
-def save_results(df_model, probs_2d, fp):
+def save_results(df_model, proba_red, fp):
     """
     df_model : full dataframe BEFORE splitting
     probs_2d : blue model probs, red model probs
     fp : output filepath
     """
     df = df_model.copy()
-    df[['proba_blue', 'proba_red']] = probs_2d
+    df['proba_red'] = proba_red
+    df['proba_blue'] = 1 - proba_red
 
-    df["pred_winner"] = np.argmax(probs_2d, axis=1)
+    df["pred_winner"] = (
+        df[["proba_blue", "proba_red"]]
+        .to_numpy()
+        .argmax(axis=1)
+    )
     df["correct_pred"] = (df["pred_winner"] == df["winner"]).astype(int)
     df["prob_winner"] = df[["proba_blue", "proba_red"]].max(axis=1)
 
-    df['Date'] = df['event_date']
-    df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
-
+    df['date'] = pd.to_datetime(df['date'], format='%Y-%m-%d', errors='coerce'
+        ).dt.normalize()
+    
     df.to_csv(fp, index=False)
+
     return df
 
 

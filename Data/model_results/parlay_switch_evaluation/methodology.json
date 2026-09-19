@@ -1,0 +1,22 @@
+{
+  "training_audit": {
+    "training_rows": 3550,
+    "last_training_date": "2024-05-04"
+  },
+  "total_events": 73,
+  "changed_selection_events": 39,
+  "excluded_same_fighters": 34,
+  "mdd": 0.5,
+  "N": 250,
+  "initial_rule_training_events": 12,
+  "selection": "Top two individual EV fighters; no heavy-favorite parlays",
+  "probability": "Fixed opening model with snapshot fair-market feature; leg probabilities multiplied",
+  "comparison": "Keep opening fighters at current snapshot prices versus current selected fighters; both resized at same MDD/N",
+  "evaluation": "Earlier changed-selection events tune threshold, next quarter tests it; close2 never informs close1 choices",
+  "limitations": [
+    "Conditional on the available modeled fight cohort, not necessarily every fight on each card.",
+    "Retrospective threshold-grid winner is descriptive, not an independently validated optimum.",
+    "Bootstrap is paired by event, assumes independent events, and is exploratory.",
+    "These historical outcomes have been examined in previous analyses."
+  ]
+}

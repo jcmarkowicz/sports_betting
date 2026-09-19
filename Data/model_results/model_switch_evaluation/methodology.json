@@ -1,0 +1,29 @@
+{
+  "training_audit": {
+    "open": {
+      "training_rows": 3550,
+      "last_training_date": "2024-05-04"
+    },
+    "close1": {
+      "training_rows": 3550,
+      "last_training_date": "2024-05-04"
+    }
+  },
+  "excluded_test_rows_at_or_before_training_end": 0,
+  "initial_selection_events": 24,
+  "holdout_events": 49,
+  "update_every_events": 10,
+  "shared_mdd": 0.4,
+  "shared_N": 250,
+  "event_exposure_cap": 1.0,
+  "distance": "absolute red fair-probability change from actual opening, in percentage points; symmetric for blue",
+  "selection": "expanding prior events only; log-loss selector and log-growth selector; tie order favors always-open then always-close1",
+  "scenarios": "11 hypothetical shared offered prices: 0% opening through 100% close1. Evaluate each separately, equal scenario weight for training rules.",
+  "limitations": [
+    "Saved model weights fixed. Training-feature audit does not establish provenance of earlier feature engineering or hyperparameter decisions.",
+    "Test outcomes have been inspected in prior analyses; this is retrospective chronological validation, not an untouched prospective holdout.",
+    "Interpolated odds are hypothetical and rely on historical closing endpoints; live snapshots required before using returns as attainable performance.",
+    "Distance-bin summaries pool correlated scenarios; unique fights reported separately.",
+    "Paired event bootstrap preserves within-event scenarios but assumes independent events; intervals are exploratory."
+  ]
+}

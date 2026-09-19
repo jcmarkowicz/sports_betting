@@ -1,0 +1,16 @@
+{
+  "model": "C:\\Users\\jcmar\\my_files\\SportsBetting\\Data\\saved_models\\logit_model_open.pkl",
+  "mdd": 0.4,
+  "N": 250,
+  "z": 0.5,
+  "event_exposure_cap": 1.0,
+  "parlays": false,
+  "events": 73,
+  "fights": 651,
+  "movement": "Uniform fraction of each side's decimal gap from close1 to open; 0%=close1, 100%=open",
+  "target": "Opening model EV at opening prices using identical sizing and uncertainty treatment",
+  "stakes": "simulate_kelly per-bet defaults including edge-adjusted MDD, then event uncertainty multiplier and exposure cap",
+  "search": "First 1%-grid movement meeting or exceeding each target. Not necessarily exact equality or a sustained crossing.",
+  "zero_targets": "Ratios undefined when opening EV is zero; omitted from ratio chart, retained in CSV",
+  "interpretation": "Model-implied expected return, not realized returns or predicted typical wealth"
+}

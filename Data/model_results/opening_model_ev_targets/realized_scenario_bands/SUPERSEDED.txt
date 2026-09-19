@@ -1,0 +1,1 @@
+Historical output using target-based stake reduction. Do not use for the current natural-EV analysis. Corrected sampled results are in ../natural_ev_scenario_bands. The corrected analysis preserves backtest stakes and filters combinations within +/-1 percentage point of the requested opening-EV ratio.

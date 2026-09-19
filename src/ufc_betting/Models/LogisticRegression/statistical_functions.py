@@ -99,6 +99,8 @@ def run_logit_model(
     # --- add constant ---
     X_train_sm = sm.add_constant(X_train.copy())
     X_test_sm = sm.add_constant(X_test.copy())
+    # X_train_sm = X_train.copy()
+    # X_test_sm = X_test.copy()
 
     # --- predictions ---
     if reg is False: 
@@ -112,8 +114,8 @@ def run_logit_model(
         
     else:
         model = sm.Logit(y_train, X_train_sm).fit_regularized(
-        method=method,     
-        alpha=alpha # to multiply l1 penalty term     
+            method=method,     
+            alpha=alpha # to multiply l1 penalty term     
         )
 
         train_pred = model.predict(X_train_sm)
@@ -133,8 +135,15 @@ def run_logit_model(
 
     check_vif(X_train)
 
-    proba_se_test = model.get_prediction(X_test_sm).summary_frame()
-    proba_se_train = model.get_prediction(X_train_sm).summary_frame()
+    trimmed = np.asarray(model.mle_retvals["trimmed"])
+    selected = model.params.index[~trimmed]
+    inference_model = sm.Logit(
+        y_train,
+        X_train_sm[selected],
+    ).fit(disp=False)
+
+    proba_se_test = inference_model.get_prediction(X_test_sm[selected]).summary_frame()
+    proba_se_train = inference_model.get_prediction(X_train_sm[selected]).summary_frame()
     print(proba_se_test)
 
     cov = model.cov_params()

@@ -1,0 +1,114 @@
+{
+  "mnlogit": {
+    "accuracy": 0.33691756272401435,
+    "classification_report": {
+      "open": {
+        "precision": 0.7777777777777778,
+        "recall": 0.021505376344086023,
+        "f1-score": 0.04185351270553064,
+        "support": 651.0
+      },
+      "close1": {
+        "precision": 0.34701857282502446,
+        "recall": 0.5453149001536098,
+        "f1-score": 0.4241338112305854,
+        "support": 651.0
+      },
+      "close2": {
+        "precision": 0.3168859649122807,
+        "recall": 0.44393241167434716,
+        "f1-score": 0.36980166346769033,
+        "support": 651.0
+      },
+      "accuracy": 0.33691756272401435,
+      "macro avg": {
+        "precision": 0.48056077183836104,
+        "recall": 0.33691756272401435,
+        "f1-score": 0.27859632913460214,
+        "support": 1953.0
+      },
+      "weighted avg": {
+        "precision": 0.480560771838361,
+        "recall": 0.33691756272401435,
+        "f1-score": 0.27859632913460214,
+        "support": 1953.0
+      }
+    }
+  },
+  "nearest_neighbors": {
+    "accuracy": 0.36507936507936506,
+    "classification_report": {
+      "open": {
+        "precision": 0.3691215616681455,
+        "recall": 0.6390168970814132,
+        "f1-score": 0.46794150731158607,
+        "support": 651.0
+      },
+      "close1": {
+        "precision": 0.36666666666666664,
+        "recall": 0.30414746543778803,
+        "f1-score": 0.33249370277078083,
+        "support": 651.0
+      },
+      "close2": {
+        "precision": 0.34615384615384615,
+        "recall": 0.15207373271889402,
+        "f1-score": 0.2113127001067236,
+        "support": 651.0
+      },
+      "accuracy": 0.36507936507936506,
+      "macro avg": {
+        "precision": 0.3606473581628861,
+        "recall": 0.3650793650793651,
+        "f1-score": 0.3372493033963635,
+        "support": 1953.0
+      },
+      "weighted avg": {
+        "precision": 0.3606473581628861,
+        "recall": 0.36507936507936506,
+        "f1-score": 0.33724930339636355,
+        "support": 1953.0
+      }
+    }
+  },
+  "data": {
+    "train_rows": 11046,
+    "test_rows": 1953,
+    "features": [
+      "proba_fair_current_diff",
+      "reach_diff",
+      "sub_att_pm_red",
+      "sub_att_pm_blue",
+      "ratio_control_diff",
+      "td_landed_pm_diff",
+      "ratio_td_diff",
+      "adjusted_td_red",
+      "adjusted_td_blue",
+      "sig_str_absorbed_total_diff",
+      "sig_str_accuracy_pct_diff",
+      "sig_str_defense_pct_diff",
+      "adjusted_sig_str_blue",
+      "adjusted_sig_str_red",
+      "win_pct_red",
+      "win_pct_blue",
+      "win_streak_diff",
+      "lose_streak_diff",
+      "elo_red",
+      "elo_blue",
+      "elo_pred",
+      "age_red",
+      "age_blue",
+      "proba_fair_open_diff"
+    ],
+    "purged_train_rows": 18,
+    "n_neighbors": 25,
+    "class_order": [
+      "open",
+      "close1",
+      "close2"
+    ],
+    "train_end": "2024-05-04 00:00:00",
+    "test_start": "2024-05-11 00:00:00",
+    "return_definition": "100 * sum(net_profit) / sum(stake); one unit per settled choice"
+  }
+}

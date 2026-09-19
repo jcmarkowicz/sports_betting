@@ -276,6 +276,11 @@ def plot_event_odds_stats(df_results, path=None):
 
 
 def plot_backtest(df_results, init_bankroll, path=None):
+    # Older moneyline-only backtests may omit the parlay columns entirely.
+    df_results = df_results.copy()
+    for column in ('parlay_net', 'parlay_net_odds'):
+        if column not in df_results:
+            df_results[column] = 0.0
     import numpy as np
     import matplotlib.pyplot as plt
 
@@ -349,8 +354,17 @@ def plot_backtest(df_results, init_bankroll, path=None):
         bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.5')
     )
 
-    axs[1].plot(x_parlay, parlay_cumsum, marker='o', color='orange', label='Cumulative Parlay Net')
-    axs[1].set_title(f"Parlay Event Profit | Profitable Events: {proportion_profitable_parlay_events:.2%}")
+    axs[1].plot(
+        x_parlay,
+        parlay_cumsum,
+        marker='o',
+        color='orange',
+        label='Cumulative Combined Parlay Profit',
+    )
+    axs[1].set_title(
+        "Combined Parlay Event Profit | "
+        f"Profitable Events: {proportion_profitable_parlay_events:.2%}"
+    )
     axs[1].set_ylabel("Cumulative Profit")
     axs[1].legend()
 
@@ -390,6 +404,9 @@ def plot_backtest(df_results, init_bankroll, path=None):
         fig.savefig(path,
             dpi=300,
             bbox_inches="tight")
+
+    plt.show()
+    return fig, axs
 
 
 def plot_bankroll_distributions(group_stats_, df_parlay):
@@ -580,6 +597,8 @@ def kelly_analysis(df_kelly, x_vars, y_var, bins=8):
 
 
 def parlay_analysis(df_parlay, path=None):
+    if df_parlay.empty:
+        return
     df_parlay['ev_bin'] = pd.cut(df_parlay['parlay_ev'], bins=10)
 
     # Create subplot

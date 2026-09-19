@@ -15,6 +15,7 @@ def get_ml_bet_cols(type_):
     }
 
 def get_parlay_cols(type_):
+    """ These are the names displayed in streamlit pages ^"""
     
     return {
         'choice_fighter_name_col' : f"choice_fighter_name_{type_}",

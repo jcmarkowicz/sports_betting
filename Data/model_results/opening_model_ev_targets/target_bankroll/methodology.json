@@ -1,0 +1,17 @@
+{
+  "starting_bankroll": 500,
+  "events": 73,
+  "target_levels": [
+    50,
+    60,
+    70,
+    80,
+    90,
+    100
+  ],
+  "formula": "product(1 + target_fraction * opening_expected_event_return/100)",
+  "implementation": "First qualifying movement per event, then proportionally reduce all event stakes by target EV / achieved EV. No stake increases.",
+  "zero_opening_ev": "No bet; bankroll unchanged. Ratio and required movement remain undefined.",
+  "risk": "Inherits notebook MDD .4, N 250, z .5, and 100% event exposure cap; target scaling only reduces exposure.",
+  "interpretation": "Exact model-EV targets; not an independently validated prediction of realized or typical compounded growth. 100% path equals opening benchmark by construction."
+}

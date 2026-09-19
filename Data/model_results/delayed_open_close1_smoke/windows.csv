@@ -1,0 +1,2 @@
+test_start,test_end,tuning_start,partial_test_window,training_rows,tuning_events,test_events,alpha,cv_brier,tuning_compounded_return,test_compounded_return,ending_bankroll,mdd,N,mdd_parlay,N_parlay,moneyline_min_american,moneyline_max_american
+2025-09-01,2025-12-01,2025-06-01,False,4323,11,11,5.874860728080803,0.21368936706304925,-0.418833860105709,-0.5114007470575592,244.2996264712204,0.18,1145,0.48,1195,-600,500

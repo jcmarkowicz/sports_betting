@@ -1,0 +1,27 @@
+{
+  "training_audit": {
+    "training_rows": 3550,
+    "last_training_date": "2024-05-04"
+  },
+  "changed_events": 39,
+  "steps": 200,
+  "resolution_pct": 0.5,
+  "opening_path": "O + t*(C-O)",
+  "close1_path": "C + t*(O-C)",
+  "probability": "Frozen opening Logit, recomputed with interpolated two-sided power-devig feature",
+  "fixed_selections": true,
+  "mdd": 0.5,
+  "N": 250,
+  "thresholds": [
+    0.0,
+    0.02
+  ],
+  "limitations": [
+    "Two ticket-specific hypothetical price paths, not one contemporaneous market except at midpoint.",
+    "Shared fighters may have different ticket-specific quotes away from midpoint.",
+    "Scenario returns reuse the same 39 outcomes; not independent samples or chronological new tests.",
+    "The 2pp rule was selected retrospectively in the previous analysis, not validated here.",
+    "No reselection of fighters as odds move; no heavy-favorite parlays.",
+    "Interpolation is linear in decimal odds, not American odds or implied probabilities."
+  ]
+}

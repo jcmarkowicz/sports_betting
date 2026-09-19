@@ -1,0 +1,40 @@
+date,opening_fighters,close1_fighters,positive_gain_intervals_pct,positive_gain_first_switch_pct,positive_gain_switch_at_start,positive_gain_switch_at_end,positive_gain_regions,two_point_gain_intervals_pct,two_point_gain_first_switch_pct,two_point_gain_switch_at_start,two_point_gain_switch_at_end,two_point_gain_regions,expected_gain_at_0_pp,expected_gain_at_50_pp,expected_gain_at_100_pp
+2024-05-11,rodrigo nascimento | sean woodson,joaquin buckley | sean woodson,"[[88.5, 100.0]]",88.5,False,True,1,[],,False,False,0,-3.509668637557512,-1.5697859921821453,0.49270744981963593
+2024-05-18,luana pinheiro | piera rodriguez,luana pinheiro | themba gorimbo,"[[30.5, 100.0]]",30.5,False,True,1,[],,False,False,0,-0.6748748504090116,0.4437291334875998,1.6828485256266748
+2024-06-15,brady hiestand | tatsuro taira,melquizael costa | tatsuro taira,"[[84.0, 100.0]]",84.0,False,True,1,[],,False,False,0,-5.560297153389158,-2.4415375019224563,1.1695424839885922
+2024-06-22,muin gafurov | rinat fakhretdinov,johnny walker | rinat fakhretdinov,"[[63.0, 100.0]]",63.0,False,True,1,[],,False,False,0,-0.9135478395611417,-0.21124938749495537,0.458106118527878
+2024-06-29,ian machado garry | joe pyfer,gillian robertson | ian machado garry,"[[60.5, 100.0]]",60.5,False,True,1,"[[82.0, 100.0]]",82.0,False,True,1,-4.838571880211321,-0.716482777382653,4.346632948920052
+2024-07-20,cody durden | luana carolina,cody durden | steve garcia,"[[0.0, 100.0]]",0.0,True,True,1,[],,False,False,0,0.9389626462413543,0.592041052431934,0.8690124848844828
+2024-08-03,rolando bedoya | viktoriia dudakova,rolando bedoya | sedriques dumas,"[[44.5, 100.0]]",44.5,False,True,1,"[[95.5, 100.0]]",95.5,False,True,1,-1.5297598039598417,0.20121199316527616,2.2909013121643778
+2024-08-10,yana santos | youssef zalal,karol rosa | yana santos,"[[59.0, 100.0]]",59.0,False,True,1,[],,False,False,0,-2.2577063852398553,-0.3671954317406856,1.4762477532221259
+2024-08-24,caio borralho | edmen shahbazyan,edmen shahbazyan | tabatha ricci,"[[63.5, 100.0]]",63.5,False,True,1,"[[85.0, 100.0]]",85.0,False,True,1,-4.4610760699981915,-1.268101857231781,3.0091462751208145
+2024-09-07,steve garcia | trevor peek,jaqueline amorim | steve garcia,"[[0.0, 100.0]]",0.0,True,True,1,"[[0.0, 100.0]]",0.0,True,True,1,3.2930752721801264,3.6547767251349916,3.1811063824312313
+2024-09-14,diego lopes | norma dumont,merab dvalishvili | norma dumont,"[[23.0, 100.0]]",23.0,False,True,1,"[[88.0, 100.0]]",88.0,False,True,1,-1.1714807636692697,1.0617905019543121,2.183037499948235
+2024-10-05,iasmin lucindo | joaquin buckley,carla esparza | iasmin lucindo,"[[32.0, 100.0]]",32.0,False,True,1,[],,False,False,0,-0.965997121172904,0.44326238019082587,1.3550611341967764
+2024-10-12,tatsuro taira | themba gorimbo,jonathan pearce | julia polastri,[],,False,False,0,[],,False,False,0,-5.117264494368788,-3.1596628682020897,-0.33908234381097163
+2024-10-26,ismail naurdiev | lerone murphy,ilia topuria | ismail naurdiev,"[[59.5, 100.0]]",59.5,False,True,1,"[[86.0, 100.0]]",86.0,False,True,1,-4.367407545694077,-0.6737513177927215,3.320349616401859
+2024-11-16,jonathan martinez | mickey gall,charles oliveira | jonathan martinez,"[[38.5, 100.0]]",38.5,False,True,1,"[[81.5, 100.0]]",81.5,False,True,1,-1.156354246556619,0.49989321037381473,2.874794421120152
+2024-12-07,chris weidman | michael chiesa,chris weidman | movsar evloev,"[[0.0, 100.0]]",0.0,True,True,1,"[[62.5, 100.0]]",62.5,False,True,1,1.1028015696844147,1.7075741622609004,3.248451638161659
+2025-01-11,nurullo aliev | roman kopylov,cesar almeida | jose johnson,"[[44.5, 100.0]]",44.5,False,True,1,[],,False,False,0,-0.6880988469063979,0.05346518676613642,0.13978163372387908
+2025-02-01,jasmine jasudavicius | nassourdine imavov,fares ziam | nassourdine imavov,"[[89.0, 100.0]]",89.0,False,True,1,[],,False,False,0,-2.0268203952269457,-1.2564117234357268,0.4796854452787158
+2025-02-15,gregory rodrigues | ketlen souza,ketlen souza | youssef zalal,"[[37.5, 100.0]]",37.5,False,True,1,"[[66.0, 100.0]]",66.0,False,True,1,-2.4138802039769973,0.6460139398150821,5.357555013663922
+2025-03-15,alexander hernandez | chidi njokuani,chidi njokuani | josiane nunes,"[[0.0, 100.0]]",0.0,True,True,1,[],,False,False,0,0.17973450761802762,0.787203342965044,1.2854950395666545
+2025-03-29,manuel torres | raul rosas jr,manuel torres | rafa garcia,"[[97.0, 100.0]]",97.0,False,True,1,[],,False,False,0,-2.187111288988536,-1.1810262367755202,0.09345078516429794
+2025-04-12,paddy pimblett | sean woodson,nikita krylov | sean woodson,"[[57.5, 100.0]]",57.5,False,True,1,"[[93.0, 100.0]]",93.0,False,True,1,-2.4013547785337725,-0.4644274687818223,2.242025064841465
+2025-04-26,jaqueline amorim | randy brown,damon blackshear | randy brown,"[[8.5, 100.0]]",8.5,False,True,1,"[[14.5, 100.0]]",14.5,False,True,1,-1.7437294391679232,9.40560780793106,7.419968243841593
+2025-05-03,reinier de ridder | yana santos,gillian robertson | yana santos,[],,False,False,0,[],,False,False,0,-3.7580941646901156,-3.857532323517999,-3.5666377627920958
+2025-06-07,joshua van | merab dvalishvili,merab dvalishvili | serghei spivac,[],,False,False,0,[],,False,False,0,-5.1517661399624055,-3.416008733753153,-0.4019321770347466
+2025-06-14,michael chiesa | phil rowe,jamey lyn horth | michael chiesa,"[[11.0, 100.0]]",11.0,False,True,1,"[[39.0, 100.0]]",39.0,False,True,1,-0.7531526957532141,2.806995038377423,5.487212894606105
+2025-06-21,ignacio bahamondes | klaudia sygula,hamdy abdelwahab | ismail naurdiev,"[[0.0, 100.0]]",0.0,True,True,1,[],,False,False,0,0.10133235335174628,0.4864829178742307,1.3594588182927296
+2025-06-28,joshua van | terrance mckinney,hyder amil | terrance mckinney,"[[100.0, 100.0]]",100.0,False,True,1,[],,False,False,0,-6.2008501514304655,-2.8688475563250675,0.016993086261393384
+2025-07-12,gabriel bonfim | steve garcia,jake matthews | steve garcia,[],,False,False,0,[],,False,False,0,-2.0984493309199577,-1.8367494552533534,-1.6127047123406428
+2025-07-26,amanda ribas | bryce mitchell,bryce mitchell | reinier de ridder,"[[57.5, 100.0]]",57.5,False,True,1,[],,False,False,0,-1.4158965585290086,-0.1691807738595473,0.9253380142181313
+2025-10-18,charles jourdain | reinier de ridder,charles jourdain | cody gibson,"[[9.5, 100.0]]",9.5,False,True,1,"[[40.5, 100.0]]",40.5,False,True,1,-0.6491769409292691,2.4807468858190442,2.8107474397633747
+2025-10-25,hamdy abdelwahab | ludovit klein,quillan salkilld | virna jandiroba,"[[69.5, 100.0]]",69.5,False,True,1,[],,False,False,0,-4.147845972263287,-1.114677146360124,1.3187798530895818
+2025-11-08,denise gomes | ricky simon,denise gomes | gabriel bonfim,"[[0.0, 100.0]]",0.0,True,True,1,[],,False,False,0,0.9009633949018908,1.4962105348986197,0.8932486379842508
+2025-11-15,bo nickal | kyle daukaus,bo nickal | valentina shevchenko,"[[40.0, 100.0]]",40.0,False,True,1,"[[69.0, 100.0]]",69.0,False,True,1,-3.3783913235985077,0.7823519840181415,2.952359254280089
+2025-11-22,tagir ulanbekov | waldo cortes acosta,ismail naurdiev | tagir ulanbekov,"[[28.0, 100.0]]",28.0,False,True,1,"[[68.5, 100.0]]",68.5,False,True,1,-1.209728236267074,1.0740191419809462,3.643058699767608
+2025-12-06,maycee barber | terrance mckinney,grant dawson | maycee barber,"[[12.0, 100.0]]",12.0,False,True,1,"[[34.5, 100.0]]",34.5,False,True,1,-1.1155427414108514,3.0859192680778453,6.253989622852428
+2025-12-13,kevin vallejos | melquizael costa,melquizael costa | tereza bleda,"[[31.5, 100.0]]",31.5,False,True,1,"[[60.5, 100.0]]",60.5,False,True,1,-2.0289579616360647,1.324823378716725,3.6669333575996346
+2026-01-24,natalia silva | waldo cortes acosta,paddy pimblett | waldo cortes acosta,"[[60.0, 100.0]]",60.0,False,True,1,"[[88.5, 100.0]]",88.5,False,True,1,-3.5499812744470796,-0.6819447122667441,2.6954816176154606
+2026-01-31,benoit st denis | tallison teixeira,jacob malkoun | tallison teixeira,"[[56.0, 100.0]]",56.0,False,True,1,[],,False,False,0,-1.8352498415694203,-0.14253913736030493,0.6944675610714591

@@ -2,19 +2,40 @@
 import numpy as np 
 import pandas as pd 
 import statsmodels.api as sm
-
+from ufc_betting.Models.LogisticRegression.train_test_builder import TrainTestBuilder
 
 def logit_predict(
         model, 
         df, 
         y_hat, 
-        feats, 
-        num_feats, 
-        cat_feats, 
+        feats:list[str], 
+        num_feats:list[str], 
+        cat_feats:list[str], 
         valid_mask, 
-        scaler, 
-        required_df_idx
+        scaler,
+        cat_encoder, 
+        required_df_idx,
+        rename_odds=None
 ):
+
+    if rename_odds:
+        feats_split = [f.split('_') for f in feats]
+        assert any(
+            'close1' in parts or 'close2' in parts
+            for parts in feats_split
+        ), "rename_odds should be used for close1 or close2 features only"
+
+        df = df.rename({
+            f'proba_fair_{rename_odds}_diff':'proba_fair_open_diff',
+        })
+        feats = [
+            'proba_fair_open_diff' if f == f'proba_fair_{rename_odds}_diff' else f
+            for f in feats
+        ]
+        num_feats = [
+            'proba_fair_open_diff' if f == f'proba_fair_{rename_odds}_diff' else f
+            for f in num_feats
+        ]
 
     # scale numeric features
     # use transform for scaler to avoid data leakage 
@@ -24,20 +45,23 @@ def logit_predict(
         index=required_df_idx[valid_mask]
     ) # len valid mask = len X_valid
 
-    # keep categorical features unchanged
-    cat_data = df.loc[valid_mask, cat_feats]
+    # handle categorical features that come from TrainTestBuilder
+    cat_data = TrainTestBuilder.encode_categorical(
+        df.loc[valid_mask, cat_feats], 
+        encoder=cat_encoder, 
+        categorical_columns=cat_feats
+    )
 
     # combine them
     scaled_valid = pd.concat([scaled_num, cat_data], axis=1)
 
     # keep original column order
-    X_valid = scaled_valid[feats]
-    X_valid = sm.add_constant(X_valid, has_constant='add')
+    X_valid = sm.add_constant(scaled_valid, has_constant='add')
 
-    constant_like_cols = [
-        col for col in X_valid.columns
-        if X_valid[col].nunique(dropna=False) == 1
-    ]
+    # constant_like_cols = [
+    #     col for col in X_valid.columns
+    #     if X_valid[col].nunique(dropna=False) == 1
+    # ]
     # print("Constant-like columns:", constant_like_cols)
 
     # ensure no duplicate 'const' column

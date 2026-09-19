@@ -28,14 +28,12 @@ class ParlayDataFrame:
         "open",
         "close1",
         "close2",
-        "close1_stack",
-        "close2_stack",
     )
 
     settled_types: tuple[str, ...] = (
         "open",
-        "close1_stack",
-        "close2_stack",
+        "close1",
+        "close2",
     )
 
     def __post_init__(self) -> None:

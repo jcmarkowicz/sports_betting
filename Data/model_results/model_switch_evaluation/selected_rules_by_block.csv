@@ -1,0 +1,11 @@
+criterion,rule,training_events,train_end,test_start,test_end,test_events
+prediction,open_near:12,24,2024-11-16,2024-11-23,2025-03-01,10
+return,open_near:12,24,2024-11-16,2024-11-23,2025-03-01,10
+prediction,open_near:12,34,2025-03-01,2025-03-08,2025-05-17,10
+return,open_near:12,34,2025-03-01,2025-03-08,2025-05-17,10
+prediction,open_near:12,44,2025-05-17,2025-05-31,2025-08-09,10
+return,open_near:12,44,2025-05-17,2025-05-31,2025-08-09,10
+prediction,open_near:12,54,2025-08-09,2025-08-16,2025-11-01,10
+return,open_near:12,54,2025-08-09,2025-08-16,2025-11-01,10
+prediction,open_near:12,64,2025-11-01,2025-11-08,2026-02-21,9
+return,open_near:12,64,2025-11-01,2025-11-08,2026-02-21,9

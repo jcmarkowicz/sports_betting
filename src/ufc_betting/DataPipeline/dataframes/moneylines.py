@@ -32,21 +32,19 @@ class MoneylineDataFrame:
         "open",
         "close1",
         "close2",
-        "close1_stack",
-        "close2_stack",
     )
 
     settled_types: tuple[str, ...] = (
         "open",
-        "close1_stack",
-        "close2_stack",
+        "close1",
+        "close2",
     )
 
     odds_type_by_settled_type: dict[str, str] = field(
         default_factory=lambda: {
             "open": "open",
-            "close1_stack": "close1",
-            "close2_stack": "close2",
+            "close1": "close1",
+            "close2": "close2",
         }
     )
 

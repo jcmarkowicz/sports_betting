@@ -1,0 +1,27 @@
+{
+  "steps": 100,
+  "formula": "d(t) = d_close1 + t * (d_open - d_close1)",
+  "expected_return": "100 * sum(fstar * (model_probability * offered_decimal - 1))",
+  "mdd_open": 0.4,
+  "mdd_close1": 0.4,
+  "N_open": 250,
+  "N_close1": 250,
+  "models": {
+    "open": "C:\\Users\\jcmar\\my_files\\SportsBetting\\Data\\saved_models\\logit_model_open.pkl",
+    "close1": "C:\\Users\\jcmar\\my_files\\SportsBetting\\Data\\saved_models\\logit_model_close1.pkl"
+  },
+  "diagnostics": {
+    "open_csv_probability_max_difference": 0.04437090437870772,
+    "close1_csv_probability_max_difference": 0.04763040896446202
+  },
+  "n_events": 73,
+  "n_fights": 651,
+  "notes": [
+    "Saved weights and preprocessing stay fixed. Picks may switch.",
+    "Power devig; fair-odds Kelly; positive-EV gate and existing MDD scaling.",
+    "Shared risk limits for open and close1; no parlays or event exposure cap added.",
+    "Expectations are evaluated using each model's own probabilities, not observed outcomes or validated future ROI.",
+    "Dates group available CSV fights; a card may be incomplete.",
+    "First crossing is on the sampled grid; curves need not be monotone."
+  ]
+}

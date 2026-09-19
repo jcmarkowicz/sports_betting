@@ -1,0 +1,20 @@
+{
+  "seed": 42,
+  "candidate_combinations_per_event": 10000,
+  "paths_per_ev_target": 5000,
+  "events": 73,
+  "model": "fixed saved opening model",
+  "mdd": 0.4,
+  "N": 250,
+  "z": 0.5,
+  "parlays": false,
+  "initial_bankroll": 500,
+  "bankroll_floor": 100,
+  "settlement": "Actual historical winners at sampled hypothetical offered prices. No randomized outcomes.",
+  "qualification": "EV >= target, then proportional stake reduction to exact target; never increase stakes. Recompute event uncertainty and exposure for each combination.",
+  "sampling": "Unique ordered fight vectors on 1% grid using prior beta-mixture sampler, includes all uniform scenarios. Uniform draws with replacement from qualifying pools, independently per event.",
+  "bands": "Pointwise 2.5th-97.5th percentiles, median, and 95th percentile across paths. Not simultaneous coverage or future-return confidence intervals.",
+  "floor": "Stop placing bets after bankroll falls below $100; no top-ups. EV target applies while active.",
+  "zero_opening_ev": "No bet and unchanged bankroll; no meaningful EV ratio.",
+  "limitations": "Hypothetical prices, fixed known outcomes, sampling-design dependent bands. Endpoints and model were explored retrospectively. This is scenario sensitivity, not a probability forecast."
+}

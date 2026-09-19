@@ -1,0 +1,13 @@
+stage,test_start,training_events,test_events,rule,threshold
+close1,2024-10-12,12,4,expected_return,0.015
+close1,2025-01-01,16,5,expected_return,0.025
+close1,2025-04-01,21,7,expected_return,0.025
+close1,2025-07-01,28,2,expected_return,0.025
+close1,2025-10-01,30,7,expected_return,0.025
+close1,2026-01-01,37,2,expected_return,0.02
+close2,2024-10-12,12,4,keep,0.0
+close2,2025-01-01,16,5,ev,-0.2
+close2,2025-04-01,21,7,keep,0.0
+close2,2025-07-01,28,2,keep,0.0
+close2,2025-10-01,30,7,ev,0.1
+close2,2026-01-01,37,2,ev,0.4

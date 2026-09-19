@@ -1,0 +1,20 @@
+{
+  "test_start": "2025-09-01",
+  "test_end": "2025-12-01",
+  "tuning_start": "2025-06-01",
+  "partial_test_window": false,
+  "training_rows": 4323,
+  "tuning_events": 11,
+  "test_events": 11,
+  "alpha": 5.874860728080803,
+  "cv_brier": 0.21368936706304925,
+  "tuning_compounded_return": -0.418833860105709,
+  "test_compounded_return": -0.5114007470575592,
+  "ending_bankroll": 244.2996264712204,
+  "mdd": 0.18,
+  "N": 1145,
+  "mdd_parlay": 0.48,
+  "N_parlay": 1195,
+  "moneyline_min_american": -600,
+  "moneyline_max_american": 500
+}

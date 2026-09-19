@@ -1,0 +1,4 @@
+number,value,datetime_start,datetime_complete,duration,params_N,params_N_parlay,params_mdd,params_mdd_parlay,params_moneyline_max_american,params_moneyline_min_american,user_attrs_compounded_return,user_attrs_profitable_events,state
+0,-1.1466913498781104,2026-09-14 10:14:30.485106,2026-09-14 10:14:30.530720,0 days 00:00:00.045614,1358,906,0.35,0.55,150,-525,-0.682313855284736,3,COMPLETE
+1,-0.5427186079399572,2026-09-14 10:14:30.530720,2026-09-14 10:14:30.577319,0 days 00:00:00.046599,1145,1195,0.18,0.48,500,-600,-0.418833860105709,3,COMPLETE
+2,-1.6274146115818022,2026-09-14 10:14:30.577319,2026-09-14 10:14:30.620893,0 days 00:00:00.043574,306,317,0.61,0.25,300,-450,-0.8035632164371854,4,COMPLETE
