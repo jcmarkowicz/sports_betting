@@ -137,6 +137,7 @@ def betting_pipeline(
     dates = df["date"]
 
     data_list = []
+    print(mdd_ml_arr)
     for i in range(len(feats_list)):
         dat = {
             'feats':feats_list[i],

@@ -151,11 +151,11 @@ class config:
     N_ml = [250, 250, 250]
 
     # just for closing odds 
-    mdd_ml = [.4, .4]
-    mdd_parlay = [.5, .5]
+    # mdd_ml = [.4, .4]
+    # mdd_parlay = [.5, .5]
 
-    N_ml = [250, 250]
-    N_parlay = [1000, 1000]
+    # N_ml = [250, 250]
+    # N_parlay = [1000, 1000]
 
     parlay_top_ev = 2  
 
