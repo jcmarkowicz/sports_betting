@@ -11,3 +11,4 @@ statsmodels
 scikit-learn
 seaborn
 matplotlib
+pyarrow
