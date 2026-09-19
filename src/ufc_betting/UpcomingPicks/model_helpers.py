@@ -66,7 +66,8 @@ def logit_predict(
 
     # ensure no duplicate 'const' column
     assert X_valid.columns.duplicated().sum() == 0, "Duplicate columns found in X_valid"
-    train_cols = model.model.exog_names            
+    train_cols = model.model.exog_names 
+    
 
     # test if missing or extra columns 
     missing = set(train_cols) - set(X_valid.columns)
@@ -75,7 +76,7 @@ def logit_predict(
         raise ValueError(f"Column mismatch — missing: {missing}, extra: {extra}")
 
     # test for nans 
-    X_valid = X_valid.reindex(columns=train_cols)
+    X_valid = X_valid[train_cols]        
     if X_valid.isna().any().any():
         raise ValueError("NaNs present after alignment")
 

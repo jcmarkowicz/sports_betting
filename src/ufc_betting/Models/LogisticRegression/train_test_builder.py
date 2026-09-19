@@ -15,6 +15,7 @@ class TrainTestBuilder:
         self.start_date = pd.Timestamp(year=year, month=month, day=day)
 
         cat_cols = ['math_red', 'math_blue', 'elo_pred', 'womens_fight']
+        self.cat_cols = cat_cols
         odds_cols = [
             f'dec_fair_{odds_type}_red', f'dec_fair_{odds_type}_blue',
             f'dec_{odds_type}_red', f'dec_{odds_type}_blue'
@@ -30,6 +31,7 @@ class TrainTestBuilder:
             'dec_close2_red', 'dec_close2_blue',
         ]
         valid_cols = feats + odds_cols + other_cols
+        self.valid_cols = valid_cols
         
         df = df.copy()
         df[date_col] = pd.to_datetime(
@@ -178,6 +180,8 @@ class TrainTestBuilder:
             'filtered_df':self.df.copy(), 
             'train_df':self.df.loc[X_train.index].copy(),
             'test_df':self.df.loc[X_test.index].copy(),
+            'num_cols':num_cols,
+            'cat_cols':cat_cols,
         }
         return pkt
 

@@ -180,6 +180,8 @@ class config:
     parlay_bets_folder = settings.data_dir/ "upcoming_events" / "parlays"
 
     model_open_path = settings.data_dir/ "saved_models" / "logit_model_open.pkl"
+    model_open_se_path = settings.data_dir/ "saved_models" / "logit_model_se_open.pkl"
+
     model_close1_path = settings.data_dir/ "saved_models" / "logit_model_close1.pkl"
     model_close2_path = settings.data_dir / "saved_models" / "logit_model_close2.pkl"
     xgb_path = settings.data_dir/ "saved_models" / "xgboosted.pkl"

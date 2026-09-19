@@ -159,7 +159,8 @@ def run_logit_model(
         "train_pred_class": train_class,
         "proba_train_se": proba_se_train['se'],
         'proba_test_se':proba_se_test['se'],
-        'model': model
+        'model': model,
+        'model_se': inference_model
     }
     
     print(model.summary())
