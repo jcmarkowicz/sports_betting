@@ -16,3 +16,5 @@ python-dateutil
 
 joblib
 cvxopt
+
+pyarrow
