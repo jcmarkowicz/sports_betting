@@ -58,10 +58,15 @@ def run_per_bet_scaling(
                 return_sigma=True,
             )
             stake = bankroll * f_final
-            win = int(winner) == int(bet_idx)
-            
-            profit = stake * (real_odds - 1) if win else -stake
-            net_odds = (real_odds - 1) if win else -1
+            if winner == 2:
+                # Refund draws/no-contests without changing pre-fight sizing.
+                win = pd.NA
+                profit = 0.0
+                net_odds = 0.0
+            else:
+                win = int(winner) == int(bet_idx)
+                profit = stake * (real_odds - 1) if win else -stake
+                net_odds = (real_odds - 1) if win else -1
 
         group_profit += profit
         rows.append({ 
@@ -119,7 +124,12 @@ def parlay_top_ev(
         parlay_win = (df_top_n['winner'] == df_top_n['pred_winner']).all()
         net_odds = parlay_odds - 1
 
-        if parlay_win:
+        if df_top_n['winner'].eq(2).any():
+            # Match tracking: a draw/no-contest voids the whole ticket.
+            # Keep the selected legs and stake; do not reselect using outcomes.
+            profit = 0.0
+            net_odds = 0.0
+        elif parlay_win:
             profit = stake * net_odds
         else:
             profit = -stake
@@ -302,7 +312,8 @@ def finalize_event_stats(
 
     kelly_valid = np.where(positive_ev, scaled_fstar, 0.0)
     group_stats['fstar_net'] = np.where(
-        pred_winner == winners, kelly_valid, -kelly_valid
+        winners == 2, 0.0,
+        np.where(pred_winner == winners, kelly_valid, -kelly_valid),
     )
     return group_stats, new_bankroll
 
@@ -444,6 +455,7 @@ def simulate_kelly(
         monthly_params=None,
         risk_prob_cols=None,
         heavy_parlay_mdd=None,
+        adjust_mdd_by_edge=True,
     ):
 
     """Simulate Kelly betting with optional regular and heavy-favorite parlays.
@@ -453,6 +465,10 @@ def simulate_kelly(
     ``best_heavy_parlay_max_legs`` or the configured parameter prefix.
     ``heavy_parlay_mdd`` controls heavy-parlay sizing independently; None
     inherits ``parlay_mdd``. Both strategies share ``N_parlay``.
+    Set ``adjust_mdd_by_edge=False`` to size moneylines using the supplied
+    drawdown limit without increasing it for larger edges. Walk-forward
+    parameter runs continue to disable this adjustment. This flag does not
+    disable the separate ``z`` uncertainty adjustment or exposure cap.
     """
     bankroll = init_bankroll
 
@@ -590,7 +606,7 @@ def simulate_kelly(
             max_drawdown=event_params['max_drawdown'],
             bankroll=scaled_bankroll,
             N=event_params['N'],
-            adjust_mdd_by_edge=not use_walk_forward_params,
+            adjust_mdd_by_edge=adjust_mdd_by_edge and not use_walk_forward_params,
         ) 
             
         parlay_net_money = 0
@@ -733,7 +749,7 @@ def simulate_kelly(
         if calc_parlay is True:
             parlay_net_money *= event_multiplier
             df_top_n['fstar_parlay'] *= event_multiplier
-            df_top_n['fstar_net'] = np.where(parlay_net_odds >= 0, df_top_n['fstar_parlay'], -df_top_n['fstar_parlay'])
+            df_top_n['fstar_net'] = np.sign(parlay_net_odds) * df_top_n['fstar_parlay']
             df_top_n['choice_decimal_odds'] = df_top_n['choice_real_odds'] 
 
             group_stats['parlay_net'] = np.full(group.shape[0], parlay_net_money)
@@ -747,10 +763,9 @@ def simulate_kelly(
             heavy_parlay_net_money *= event_multiplier
             if not heavy_parlay_df.empty:
                 heavy_parlay_df['fstar_parlay'] *= event_multiplier
-                heavy_parlay_df['fstar_net'] = np.where(
-                    heavy_parlay_net_odds >= 0,
-                    heavy_parlay_df['fstar_parlay'],
-                    -heavy_parlay_df['fstar_parlay'],
+                heavy_parlay_df['fstar_net'] = (
+                    np.sign(heavy_parlay_net_odds)
+                    * heavy_parlay_df['fstar_parlay']
                 )
                 heavy_parlay_df['choice_decimal_odds'] = (
                     heavy_parlay_df['choice_real_odds']

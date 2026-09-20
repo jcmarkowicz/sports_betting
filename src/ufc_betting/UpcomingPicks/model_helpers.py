@@ -25,9 +25,9 @@ def logit_predict(
             for parts in feats_split
         ), "rename_odds should be used for close1 or close2 features only"
 
-        df = df.rename({
-            f'proba_fair_{rename_odds}_diff':'proba_fair_open_diff',
-        })
+        # The opening column already exists; renaming creates duplicates.
+        df = df.copy()
+        df['proba_fair_open_diff'] = df[f'proba_fair_{rename_odds}_diff']
         feats = [
             'proba_fair_open_diff' if f == f'proba_fair_{rename_odds}_diff' else f
             for f in feats

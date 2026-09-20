@@ -2,7 +2,9 @@
 import numpy as np
 import pandas as pd
 
-from ufc_betting.BettingStrategy.kelly_worker import parlay_top_ev, run_per_bet_scaling
+from ufc_betting.BettingStrategy.kelly_worker import (
+    cap_event_exposure, parlay_top_ev, run_per_bet_scaling,
+)
 from ufc_betting.UpcomingPicks.set_column_names import set_ml_bets_cols, set_parlay_cols, get_ml_bet_cols, get_parlay_cols
 from ufc_betting.UpcomingPicks.test_helpers import df_bets_tests, df_parlay_tests
 from ufc_betting.UpcomingPicks.model_helpers import logit_predict, xgboost_predict
@@ -215,6 +217,9 @@ def betting_pipeline(
         df_parlay_combined = manage_parlay(
             df_parlay_combined, bets_input_df, fighter_red, fighter_blue, dates,
             required_df_idx, bankroll, type, mdd_parlay, N_parlay
+        )
+        df_bets_combined, df_parlay_combined = cap_event_exposure(
+            df_bets_combined, df_parlay_combined, type
         )
         
 

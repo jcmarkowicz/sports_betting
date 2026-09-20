@@ -1,6 +1,7 @@
 # Ignore Python virtual environment
 venv/
 .venv/
+.delayed-venv/
 env/
 .odds-classification-deps/
 

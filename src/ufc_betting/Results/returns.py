@@ -331,7 +331,11 @@ def accuracy_analysis(ml_results, parlay_results):
             )
             accuracies[f'brier_{label}_{type_}'] = brier_score
 
-        parlay_net = parlay_events[f'net_odds_{type_}'].dropna()
+        # Settlement stakes are signed: losses must remain in the denominator.
+        placed_parlays = parlay_events[f'net_stake_{type_}'].abs().gt(0)
+        parlay_net = parlay_events.loc[
+            placed_parlays, f'net_odds_{type_}'
+        ].dropna()
         parlay_accuracy = (parlay_net > 0).mean()
         accuracies[f'parlays_{type_}'] = parlay_accuracy 
 

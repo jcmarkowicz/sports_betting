@@ -6,7 +6,8 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder
 class TrainTestBuilder: 
 
     def __init__(
-            self, df, feats, target_col, date_col, odds_type, year, month, day
+            self, df, feats, target_col, date_col, odds_type, year, month, day,
+            required_features_only=False,
     ):
 
         self.selected_feats = feats
@@ -42,9 +43,22 @@ class TrainTestBuilder:
         ).dt.normalize()
         df = df.sort_values(by=date_col, ascending=True)
 
-        self.all_processed_df = self.process_feats(
-            df, valid_cols, target_col, cat_cols
-        )
+        if required_features_only:
+            # Preserve optional price columns without filtering opening history
+            # according to whether later market snapshots were recorded.
+            required = list(dict.fromkeys(feats + [target_col, date_col]))
+            missing = set(required) - set(df.columns)
+            if missing:
+                raise ValueError(f"Missing required columns: {sorted(missing)}")
+            for col in set(cat_cols) & set(df.columns):
+                df[col] = df[col].astype('category')
+            self.all_processed_df = df.loc[df[target_col].isin([0, 1])].dropna(
+                subset=required
+            ).reset_index(drop=True)
+        else:
+            self.all_processed_df = self.process_feats(
+                df, valid_cols, target_col, cat_cols
+            )
         self.df = self.filter_by_date(
             self.all_processed_df.copy(),
             year=year, 
@@ -150,7 +164,7 @@ class TrainTestBuilder:
         return feats_open
 
     def prepare_train_test(
-            self, train_size, scale=True,
+            self, train_size, scale=True, group_dates=False,
     ):
         """ curently handles all categorical columns as non ordinal, uses onehotencoder"""
         y = self.df[self.target_col]
@@ -163,6 +177,15 @@ class TrainTestBuilder:
         X_train, X_test, y_train, y_test = train_test_split(
             X, y, train_size=train_size, shuffle=False
         )
+        if group_dates:
+            # Move the entire boundary event to test; the 85% row target is
+            # approximate when an event would otherwise straddle the split.
+            boundary = dates.loc[X_test.index].min()
+            train_mask = dates < boundary
+            X_train, X_test = X.loc[train_mask], X.loc[~train_mask]
+            y_train, y_test = y.loc[train_mask], y.loc[~train_mask]
+            if X_train.empty or X_test.empty:
+                raise ValueError("Need events on both sides of the train/test split")
         scaler = None
         encoder = None
         if scale: 

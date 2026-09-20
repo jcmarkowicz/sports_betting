@@ -1,0 +1,13 @@
+date,fighter_red,fighter_blue,open_red,open_blue,close1_red,close2_red,close1_blue,close2_blue,pred_name_open,pred_winner_open,choice_proba_open,fstar_open,stake_open,edge_open,ev_open,pred_name_close1,pred_winner_close1,choice_proba_close1,fstar_close1,stake_close1,edge_close1,ev_close1,pred_name_close2,pred_winner_close2,choice_proba_close2,fstar_close2,stake_close2,edge_close2,ev_close2
+2026-11-14,drew dober,chris duncan,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-11-14,bia mesquita,macy chiasson,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-11-14,donte johnson,baisangur susurkaev,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-11-14,jim miller,terrance mckinney,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-11-14,stephen thompson,charles radtke,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-11-14,adrian yanez,juan diaz,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-11-14,uros medic,kevin holland,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-11-14,caio borralho,yousri belgaroui,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-11-14,kayla harrison,amanda nunes,-210.0,177.0,-210.0,-205.0,163.0,177.0,kayla harrison,1.0,0.7231781120343648,0.18295830682263164,640.3540738792108,0.06199273314047993,0.06754864157453855,kayla harrison,1.0,0.7231781120343648,0.2023307154184138,708.1575039644483,0.07022190489619051,0.06754864157453855,kayla harrison,1.0,0.7231781120343648,0.19043130354594376,666.5095624108031,0.06512051151045473,0.07594792278283541
+2026-11-14,ciryl gane,josh hokit,-150.0,130.0,-245.0,-240.0,188.0,205.0,ciryl gane,1.0,0.5807925879337915,0.0,0.0,-0.0031900471025185784,-0.03201235344368092,ciryl gane,1.0,0.5807925879337915,0.0,0.0,-0.10603021866572138,-0.18214921290955888,ciryl gane,1.0,0.5807925879337915,0.0,0.0,-0.11134438237773636,-0.17721050042712863
+2026-11-14,bilal hasan,luis gurule,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-11-14,nazim sadykhov,jefferson nascimento,,,,,,,,,,,,,,,,,,,,,,,,,,,

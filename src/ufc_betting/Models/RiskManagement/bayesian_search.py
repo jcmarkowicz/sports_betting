@@ -740,6 +740,7 @@ class BayesianSearchLR:
             winner_fold, val_idx, param, include_parlays=True,
             return_parlay_outcomes=False,
             include_heavy_favorite_parlays=True,
+            return_components=False,
         ):
         pred_class = (red_proba >= 0.5).astype(int)
         winner_fold = np.asarray(winner_fold)
@@ -856,6 +857,7 @@ class BayesianSearchLR:
             heavy_parlay_scores = pd.DataFrame(columns=empty_columns)
 
         event_returns = []
+        components = []
         parlay_outcomes = []
         for date, group in fold_results.groupby("date", sort=False):
             placed_moneylines = group["pct_return"].notna()
@@ -893,6 +895,8 @@ class BayesianSearchLR:
             )
             if total_fstar <= 0:
                 event_returns.append(np.nan)
+                components.append(dict(date=date, moneyline_return=0.0,
+                                       parlay_return=0.0, event_return=0.0))
                 continue
 
             p_vegas = 1 / group["fair_odds"].to_numpy()
@@ -956,7 +960,17 @@ class BayesianSearchLR:
                 * uncertainty_multiplier
                 * exposure_multiplier
             )
+            multiplier = uncertainty_multiplier * exposure_multiplier
+            components.append(dict(
+                date=date,
+                moneyline_return=float(moneyline_returns.sum() * multiplier),
+                parlay_return=float(sum(value for value in
+                    (parlay_return, heavy_parlay_return) if pd.notna(value)) * multiplier),
+                event_return=float(event_returns[-1]),
+            ))
 
+        if return_components:
+            return pd.DataFrame(components)
         return parlay_outcomes if return_parlay_outcomes else event_returns
 
     @staticmethod
@@ -1027,14 +1041,14 @@ class BayesianSearchLR:
                 })
                 continue
 
-            parlay_df = pd.merge(
-                parlay_df, winner_id, how='left', on='id'
-            )
+            # parlay_top_ev returns ticket fields, not fight IDs. Settle the
+            # actual selected legs rather than merging on a discarded column.
+            leg_outcomes = winner_id.set_index('id')['pred_win'].reindex(selected_ids)
             parlay_fstar = parlay_df['parlay_fstar_open'].iloc[0]
             parlay_net_odds = parlay_df['parlay_odds_open'].iloc[0]
             parlay_wins = (
-                parlay_df["pred_win"].notna().all()
-                and parlay_df["pred_win"].all()
+                leg_outcomes.notna().all()
+                and leg_outcomes.all()
             )
 
             if not np.isfinite(parlay_fstar) or parlay_fstar <= 0:

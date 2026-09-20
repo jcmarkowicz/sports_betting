@@ -1,7 +1,7 @@
 
 import numpy as np 
 import pandas as pd 
-from ufc_betting.BettingStrategy.kelly_scaling import scale_mdd, scale_kelly_for_mdd
+from ufc_betting.BettingStrategy.kelly_scaling import scale_kelly_for_mdd
 
 def parlay_top_ev(data, bankroll, type, top_n=[0,1], parlay_mdd=0.5, N=250):
 
@@ -94,9 +94,6 @@ def run_per_bet_scaling(
             bet_mu = 0
 
         else:
-            edge = p - (1/(fair_odds))
-            # adj_mdd = scale_mdd(edge, max_drawdown)
-            
             f_final, bet_sigma, bet_mu = scale_kelly_for_mdd(
                 p,
                 fair_odds,
@@ -123,6 +120,25 @@ def run_per_bet_scaling(
         "sharpe": sharpe,
     })
 
+
+
+def cap_event_exposure(moneylines, parlays, bet_type):
+    """Cap one event/odds strategy at full bankroll before settlement.
+
+    The parlay's fraction is repeated on each leg; count that ticket once.
+    Apply one proportional multiplier to both fractions and dollar stakes.
+    """
+    moneylines = moneylines.copy()
+    parlays = parlays.copy()
+    ml_fraction = f'fstar_{bet_type}'
+    parlay_fraction = f'parlay_fstar_{bet_type}'
+    ticket_fractions = parlays[parlay_fraction].dropna()
+    ticket_fraction = float(ticket_fractions.iloc[0]) if len(ticket_fractions) else 0.0
+    total_fraction = float(moneylines[ml_fraction].sum()) + ticket_fraction
+    multiplier = min(1.0, 1.0 / total_fraction) if total_fraction > 0 else 1.0
+    moneylines[[ml_fraction, f'stake_{bet_type}']] *= multiplier
+    parlays[[parlay_fraction, f'stake_{bet_type}']] *= multiplier
+    return moneylines, parlays
 
 
 # def check_neighbors(df_history, df_upcoming, feature_cols, n_neighbors=5):

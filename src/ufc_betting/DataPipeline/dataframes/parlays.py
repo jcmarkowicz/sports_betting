@@ -138,7 +138,6 @@ class ParlayDataFrame:
                 .str.strip()
                 .str.casefold()
             )
-        settled_any = False
 
         for bet_type in self.settled_types:
             name_column = f"choice_fighter_name_{bet_type}"
@@ -296,11 +295,8 @@ class ParlayDataFrame:
                 dtype="Float64",
             )
 
-            settled_any = True
-
-        if not settled_any:
-            return type(self)(settled.iloc[0:0].copy())
-
+        # Retain the event date and selected legs even when every type is void.
+        # concatenate() needs that date to replace an older settled ticket.
         return type(self)(settled)
 
     def validate(self) -> None:
