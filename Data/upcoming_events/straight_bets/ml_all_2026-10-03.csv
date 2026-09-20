@@ -1,14 +1,14 @@
 date,fighter_red,fighter_blue,open_red,open_blue,close1_red,close2_red,close1_blue,close2_blue,pred_name_open,pred_winner_open,choice_proba_open,fstar_open,stake_open,edge_open,ev_open,pred_name_close1,pred_winner_close1,choice_proba_close1,fstar_close1,stake_close1,edge_close1,ev_close1,pred_name_close2,pred_winner_close2,choice_proba_close2,fstar_close2,stake_close2,edge_close2,ev_close2
-2026-10-03,natalia silva,wang cong,-250.0,207.0,-230.0,-205.0,163.0,184.0,natalia silva,1.0,0.750003298060948,0.17176668008267967,601.1833802893789,0.05185044744171652,0.050004617285327124,natalia silva,1.0,0.750003298060948,0.2540022504119076,889.0078764416766,0.08512749628692018,0.0760916885222297,natalia silva,1.0,0.750003298060948,0.2606656319411759,912.3297117941157,0.0881481116575602,0.11585856540775191
-2026-10-03,deiveson figueiredo,payton talbott,207.0,-250.0,400.0,505.0,-700.0,-625.0,payton talbott,0.0,0.7403649662339422,0.1398374617028198,489.4311159598693,0.04221211561471072,0.03651095272751903,payton talbott,0.0,0.7403649662339422,0.0,0.0,-0.11258887733617862,-0.1538686100183518,payton talbott,0.0,0.7403649662339422,0.0,0.0,-0.11315810180244434,-0.1411766391686271
+2026-10-03,ateba gautier,roman kopylov,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-03,damian pinas,andrey pulyaev,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-03,natalia silva,wang cong,-250.0,207.0,-230.0,-205.0,163.0,184.0,natalia silva,1.0,0.7499813579661241,0.17169399841001248,600.9289944350437,0.051828507346892594,0.04997390115257366,natalia silva,1.0,0.727050278744873,0.18551534765629554,649.3037167970344,0.062174476970845216,0.04315909559046999,natalia silva,1.0,0.7249049575288009,0.18644651740242635,652.5628109084922,0.0630497711254131,0.07851713193309401
+2026-10-03,deiveson figueiredo,payton talbott,207.0,-250.0,400.0,505.0,-700.0,-625.0,payton talbott,0.0,0.7403580503761351,0.1398145513135355,489.3509295973743,0.04220519975690362,0.03650127052658908,payton talbott,0.0,0.832087803649292,0.0,0.0,-0.020866039920828805,-0.04904251011509489,payton talbott,0.0,0.8323715505579937,0.0,0.0,-0.021151517478392834,-0.034449001352727354
 2026-10-03,king green,esteban ribovics,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-10-03,khaos williams,roberto soldic,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-10-03,imanol rodriguez,alden coria,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-10-03,rafael dos anjos,alexander hernandez,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-10-03,johnny walker,mick parkin,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-10-03,marvin vettori,ismail naurdiev,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-10-03,court mcgee,eric nolan,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-10-03,anthony wint,lucas armand,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-10-03,damian pinas,andrey pulyaev,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-10-03,marcus mcghee,benardo sopaj,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-10-03,ateba gautier,roman kopylov,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-03,johnny walker,mick parkin,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-03,rafael dos anjos,alexander hernandez,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-03,marvin vettori,ismail naurdiev,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-03,anthony wint,lucas armand,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-03,imanol rodriguez,alden coria,,,,,,,,,,,,,,,,,,,,,,,,,,,
