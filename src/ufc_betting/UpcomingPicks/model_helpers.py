@@ -46,16 +46,15 @@ def logit_predict(
     ) # len valid mask = len X_valid
 
     # handle categorical features that come from TrainTestBuilder
-    cat_data = TrainTestBuilder.encode_categorical(
-        df.loc[valid_mask, cat_feats], 
-        encoder=cat_encoder, 
-        categorical_columns=cat_feats
+    encoded = pd.DataFrame(
+        cat_encoder.transform(df.loc[valid_mask, cat_feats]),
+        columns=cat_encoder.get_feature_names_out(cat_feats),
+        index=required_df_idx[valid_mask],
     )
-
     # combine them
-    scaled_valid = pd.concat([scaled_num, cat_data], axis=1)
+    scaled_valid = pd.concat([scaled_num, encoded], axis=1)
 
-    # keep original column order
+    # alwaysadd constant , check below that its not duplicated, other cat cols might trigger as constant 
     X_valid = sm.add_constant(scaled_valid, has_constant='add')
 
     # constant_like_cols = [

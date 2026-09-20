@@ -1,4 +1,5 @@
 import pandas as pd 
+import numpy as np 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 
@@ -28,9 +29,11 @@ class TrainTestBuilder:
             'num_wins_red', 'num_wins_blue', 'num_losses_red', 'num_losses_blue',
             'dec_fair_open_red', 'dec_fair_open_blue', 'dec_fair_close1_red', 'dec_fair_close1_blue',
             'dec_fair_close2_red', 'dec_fair_close2_blue', 'dec_open_red', 'dec_open_blue', 'dec_close1_red', 'dec_close1_blue',
-            'dec_close2_red', 'dec_close2_blue',
+            'dec_close2_red', 'dec_close2_blue', 
+            'proba_fair_open_diff', 'proba_fair_close1_diff', 'proba_fair_close2_diff'
         ]
         valid_cols = feats + odds_cols + other_cols
+        valid_cols = list(np.unique(valid_cols))
         self.valid_cols = valid_cols
         
         df = df.copy()
