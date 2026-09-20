@@ -2,18 +2,11 @@ import sys
 import os
 
 
-sys.path.append(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
-)
-
 import streamlit as st
 from utils import display_paginated_df, show_image
-from ufc_betting.config import config
+from ufc_betting.config import config, settings
 
 import pandas as pd 
-
-BASE_DIR = config.base_dir
-
 
 st.title("Monte Carlo Simulation")
 
@@ -57,18 +50,18 @@ The results of the parlay strategy indicate I may need to reduce risk tolerance.
 
 
 
-path =  BASE_DIR / "Data" / "plot_pngs" / "benchmark_results.csv"
+path =  settings.data_dir  / "plot_pngs" / "benchmark_results.csv"
 
 table = pd.read_csv(path)
 
 display_paginated_df(table, title='Probability of Final Bankrolls', key_prefix=f"mc_1")
 
 
-path =  BASE_DIR / "Data" / "plot_pngs" / "mc_paths_delay.png"
+path =  settings.data_dir / "plot_pngs" / "mc_paths_delay.png"
 show_image(path, title='Bankroll Paths for 10,000 Simulations')
 
-path = BASE_DIR / "Data" / "plot_pngs" / "mc_hists_delay.png"
+path = settings.data_dir  / "plot_pngs" / "mc_hists_delay.png"
 show_image(path, title='Final Distributions of Each Bankroll Type')
 
-path = BASE_DIR / "Data" / "plot_pngs" / "mc_below_zero_delay.png"
+path = settings.data_dir  / "plot_pngs" / "mc_below_zero_delay.png"
 show_image(path, title='Fraction of Simulations with Negative Returns')

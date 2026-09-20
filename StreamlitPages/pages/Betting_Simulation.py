@@ -1,15 +1,12 @@
 import sys
 import os
 
-sys.path.append(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
-)
 
 import streamlit as st
 from utils import show_image
-from ufc_betting.config import config
+from ufc_betting.config import config, settings
 
-BASE_DIR = config.base_dir
+
 
 st.title("Betting Simulation")
 
@@ -55,10 +52,10 @@ expect these concerns to not have much of an effect, its likely wealth will grow
 </p>
 """, unsafe_allow_html=True)
 
-path =  BASE_DIR / "Data" / "plot_pngs" / "open_kelly_sim.png"
+path =  settings.data_dir / "plot_pngs" / "open_kelly_sim.png"
 show_image(path, title='Open Odds Simulation')
 
-path = BASE_DIR / "Data" / "plot_pngs" / "returns_distributions_open.png"
+path = settings.data_dir / "plot_pngs" / "returns_distributions_open.png"
 show_image(path, title='Open Returns Distributions')
 
 
@@ -69,10 +66,10 @@ This data shows market behavior greatly diminishes the edge/equity from AI predi
 
 """)
 
-path =  BASE_DIR / "Data" / "plot_pngs" / "close1_kelly_sim.png"
+path =  settings.data_dir / "plot_pngs" / "close1_kelly_sim.png"
 show_image(path, title='Close1 Odds Simulation')
 
-path = BASE_DIR / "Data" / "plot_pngs" / "returns_distributions_close1.png"
+path = settings.data_dir / "plot_pngs" / "returns_distributions_close1.png"
 show_image(path, title='Close1 Returns Distributions')
 
 
@@ -85,11 +82,11 @@ Better results from close1 but still much worse results from Open
 """
 )
 
-path =  BASE_DIR / "Data" / "plot_pngs" / "close2_kelly_sim.png"
+path =  settings.data_dir / "plot_pngs" / "close2_kelly_sim.png"
 show_image(path, title='Close2 Simulation')
 
 
-path = BASE_DIR / "Data" / "plot_pngs" / "returns_distributions_close2.png"
+path = settings.data_dir / "plot_pngs" / "returns_distributions_close2.png"
 show_image(path, title='Close2 Returns Distributions')
 
 
@@ -109,9 +106,9 @@ strategies as demonstrated by the significant increases in returns.
 """
 )
 
-path =  BASE_DIR / "Data" / "plot_pngs" / "stacking_kelly_sim1.png"
+path =  settings.data_dir / "plot_pngs" / "stacking_kelly_sim1.png"
 show_image(path, title='Stacking Close1 Simulation')
 
 
-path = BASE_DIR / "Data" / "plot_pngs" / "stacking_kelly_sim.png"
+path = settings.data_dir / "plot_pngs" / "stacking_kelly_sim.png"
 show_image(path, title='Stacking Close2 Simulation')
