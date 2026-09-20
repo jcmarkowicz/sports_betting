@@ -1,10 +1,10 @@
 date,fighter_red,fighter_blue,open_red,open_blue,close1_red,close2_red,close1_blue,close2_blue,pred_name_open,pred_winner_open,choice_proba_open,fstar_open,stake_open,edge_open,ev_open,pred_name_close1,pred_winner_close1,choice_proba_close1,fstar_close1,stake_close1,edge_close1,ev_close1,pred_name_close2,pred_winner_close2,choice_proba_close2,fstar_close2,stake_close2,edge_close2,ev_close2
-2026-10-24,alexander volkov,rizvan kuniev,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-10-24,grant dawson,nurullo aliev,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-10-24,nikita krylov,abdul rakhman yakhyaev,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-10-24,abus magomedov,cam rowston,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-24,alexander volkanovski,movsar evloev,-120.0,-110.0,-120.0,-110.0,-115.0,103.0,movsar evloev,0.0,0.6453347644273327,0.13525904402727915,473.406654095477,0.15653877590607806,0.23200273208854438,movsar evloev,0.0,0.6499767328846247,0.19507144076467972,682.750042676379,0.1554829579471102,0.2151738919147329,movsar evloev,0.0,0.641638759127898,0.1908116746092403,667.840861132341,0.15735541288699767,0.3025266810296332
+2026-10-24,petr yan,merab dvalishvili,-175.0,150.0,-190.0,-172.0,140.0,153.0,petr yan,1.0,0.6239448419377354,0.0,0.0,0.0036875939970530958,-0.019515248383558725,petr yan,1.0,0.6268274938037198,0.0,0.0,0.00312379242088201,-0.04326329893116454,petr yan,1.0,0.6238133022628016,0.0,0.0,0.003713068736271974,-0.013504545258825218
 2026-10-24,loneer kavanagh,ramazan temirov,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-10-24,arnold allen,aaron pico,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-10-24,petr yan,merab dvalishvili,-175.0,150.0,-190.0,-172.0,140.0,153.0,petr yan,1.0,0.623948938527934,0.0,0.0,0.003691690587251717,-0.01950881088467521,petr yan,1.0,0.623948938527934,0.0,0.0,0.00024523714509616656,-0.047656883299469266,petr yan,1.0,0.623948938527934,0.0,0.0,0.003848705001404329,-0.013290050700011269
-2026-10-24,alexander volkanovski,movsar evloev,-120.0,-110.0,-120.0,-110.0,-115.0,103.0,movsar evloev,0.0,0.6453296249027137,0.13525460316473437,473.39111107657027,0.15653363638145906,0.23199292026881713,movsar evloev,0.0,0.6453296249027137,0.19448616558885365,680.7015795609877,0.15083584996519928,0.20648582047029085,movsar evloev,0.0,0.6453296249027137,0.1912465877913924,669.3630572698734,0.16104627866181337,0.31001913855250907
 2026-10-24,dominick reyes,azamat murzakanov,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-24,abus magomedov,cam rowston,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-24,nikita krylov,abdul rakhman yakhyaev,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-24,grant dawson,nurullo aliev,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-24,alexander volkov,rizvan kuniev,,,,,,,,,,,,,,,,,,,,,,,,,,,
