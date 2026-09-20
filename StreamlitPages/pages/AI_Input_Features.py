@@ -5,7 +5,6 @@ from ufc_betting.config import config, settings
 
 from utils import display_paginated_df, show_image
 
-BASE_DIR = config.base_dir
 
 st.title("Data Page")
 
