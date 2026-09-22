@@ -1,14 +1,14 @@
 date,fighter_red,fighter_blue,open_red,open_blue,close1_red,close2_red,close1_blue,close2_blue,pred_name_open,pred_winner_open,choice_proba_open,fstar_open,stake_open,edge_open,ev_open,pred_name_close1,pred_winner_close1,choice_proba_close1,fstar_close1,stake_close1,edge_close1,ev_close1,pred_name_close2,pred_winner_close2,choice_proba_close2,fstar_close2,stake_close2,edge_close2,ev_close2
-2026-10-03,ateba gautier,roman kopylov,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-10-03,damian pinas,andrey pulyaev,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-10-03,natalia silva,wang cong,-250.0,207.0,-225.0,-190.0,155.0,175.0,natalia silva,1.0,0.7499813579661241,0.17169399841001248,600.9289944350437,0.051828507346892594,0.04997390115257366,natalia silva,1.0,0.7213633573062567,0.18787266744649214,657.5543360627225,0.0644629748568426,0.041969293886815195,natalia silva,1.0,0.7142417623524856,0.19035478427582514,666.241744965388,0.06718936583503154,0.09015847938010951
-2026-10-03,deiveson figueiredo,payton talbott,207.0,-250.0,400.0,505.0,-715.0,-649.0,payton talbott,0.0,0.7403580503761351,0.1398145513135355,489.3509295973743,0.04220519975690362,0.03650127052658908,payton talbott,0.0,0.8329888553244109,0.0,0.0,-0.021775250905051058,-0.05050920686797923,payton talbott,0.0,0.8339470287743997,0.0,0.0,-0.022750688251062412,-0.03755574028963721
-2026-10-03,king green,esteban ribovics,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-10-03,khaos williams,roberto soldic,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-10-03,court mcgee,eric nolan,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-03,damian pinas,andrey pulyaev,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-03,natalia silva,wang cong,-250.0,207.0,-225.0,-200.0,160.0,177.0,natalia silva,1.0,0.7499795430521053,0.17168798608473831,600.9079512965841,0.051826692432873855,0.04997136027294741,natalia silva,1.0,0.7236719083286852,0.18695191550377213,654.3317042632025,0.06354352887588355,0.04530386758587862,natalia silva,1.0,0.7198887140998638,0.18842117946212864,659.4741281174503,0.06503726698378842,0.07983307114979565
+2026-10-03,deiveson figueiredo,payton talbott,207.0,-250.0,400.0,505.0,-715.0,-649.0,payton talbott,0.0,0.7403582687161844,0.13981527461578738,489.35346115525584,0.042205418096952885,0.03650157620265804,payton talbott,0.0,0.8329890133405103,0.0,0.0,-0.02177509288895163,-0.05050902675172603,payton talbott,0.0,0.8339471860646523,0.0,0.0,-0.02275053096080981,-0.037555558763598396
+2026-10-03,king green,esteban ribovics,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-03,ateba gautier,roman kopylov,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-03,anthony wint,lucas armand,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-10-03,marcus mcghee,benardo sopaj,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-10-03,johnny walker,mick parkin,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-10-03,rafael dos anjos,alexander hernandez,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-10-03,marvin vettori,ismail naurdiev,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-10-03,anthony wint,lucas armand,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-03,court mcgee,eric nolan,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-10-03,imanol rodriguez,alden coria,,,,,,,,,,,,,,,,,,,,,,,,,,,
