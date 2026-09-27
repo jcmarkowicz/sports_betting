@@ -1,6 +1,9 @@
 red_fighter,blue_fighter,open_blue,close1_blue,close2_blue,open_red,close1_red,close2_red,og_blue_name,event_date,og_red_fighter
-Alexander Volkanovski,Movsar Evloev,-110,-115,-106,-120,-117,-110,Movsar Evloev,2026-10-24,Alexander Volkanovski
-Ateba Gautier,Roman Kopylov,163,163,165,-200,-200,-195,Roman Kopylov,2026-10-11,
+Alexander Volkanovski,Movsar Evloev,-110,-115,-107,-120,-117,-103,Movsar Evloev,2026-10-24,Alexander Volkanovski
+Andre Fialho,Jakhongir Jumaev,150,125,125,-200,-175,-175,Kai Kamaka III,2024-05-18,Andre Fili
+Andre Fialho,Muslim Salikhov,-180,-118,-105,155,-115,100,Kai Kamaka III,2022-11-19,Andre Fili
+Andre Fialho,James Vick,-315,-300,-250,255,175,240,Kai Kamaka III,2021-01-30,Andre Fili
+Ateba Gautier,Roman Kopylov,163,145,163,-200,-205,-165,Roman Kopylov,2026-10-04,
 Brendan Allen,Reinier de Ridder,-175,-240,-210,140,165,200,Christian Leroy Duncan,2025-10-18,Brendan Allen
 Brendan Allen,Chris Curtis,225,175,190,-278,-250,-210,Christian Leroy Duncan,2024-04-06,Brendan Allen
 Brendan Allen,Chris Curtis,250,255,290,-300,-375,-305,Christian Leroy Duncan,2021-12-04,Brendan Allen
@@ -8,21 +11,21 @@ Brendan Allen,Ian Heinisch,-110,100,105,-110,-125,-122,Christian Leroy Duncan,20
 Brendan Allen,Chris Harris,-165,-175,-175,125,135,135,Christian Leroy Duncan,2017-08-04,Brendan Allen
 Ciryl Gane,Josh Hokit,130,200,224,-150,-278,-265,Josh Hokit,2026-11-15,Ciryl Gane
 Ciryl Gane,Jairzinho Rozenstruik,250,185,200,-300,-250,-225,Josh Hokit,2021-02-27,Ciryl Gane
-Court McGee,Eric Nolan,-350,-275,-250,280,200,207,Eric Nolan,2026-10-11,Court McGee
+Court McGee,Eric Nolan,-350,-275,-240,280,195,207,Eric Nolan,2026-10-11,Court McGee
 Court McGee,Marcio Alexandre Jr.,135,140,145,-175,-165,-160,Eric Nolan,2015-12-12,Court McGee
-Damian Pinas,Andrey Pulyaev,446,350,383,-600,-500,-500,Andrey Pulyaev,2026-10-11,Damian Pinas
-Deiveson Figueiredo,Payton Talbott,-250,-715,-649,207,400,475,Payton Talbott,2026-10-04,Deiveson Figueiredo
-Imanol Rodriguez,Alden Coria,-110,130,140,-110,-165,-160,Alden Coria,2026-10-11,Imanol Rodriguez
-Johnny Walker,Mick Parkin,-180,120,125,157,-150,-140,Mick Parkin,2026-10-11,Johnny Walker
+Damian Pinas,Andrey Pulyaev,446,350,383,-600,-520,-500,Andrey Pulyaev,2026-10-11,Damian Pinas
+Deiveson Figueiredo,Payton Talbott,-250,-715,-649,207,400,512,Payton Talbott,2026-10-04,Deiveson Figueiredo
+Imanol Rodriguez,Alden Coria,-110,130,140,-110,-175,-155,Alden Coria,2026-10-11,Imanol Rodriguez
+Johnny Walker,Mick Parkin,-180,116,125,157,-150,-140,Mick Parkin,2026-10-11,Johnny Walker
 Kayla Harrison,Amanda Nunes,177,150,169,-210,-210,-200,Amanda Nunes,2026-11-15,Kayla Harrison
 Kayla Harrison,Amanda Nunes,136,130,190,-162,-245,-155,Amanda Nunes,2026-01-25,Kayla Harrison
-King Green,Esteban Ribovics,-450,-290,-270,350,210,235,Esteban Ribovics,2026-10-11,King Green
+King Green,Esteban Ribovics,-450,-290,-250,350,207,235,Esteban Ribovics,2026-10-04,King Green
 Marcus McGhee,Benardo Sopaj,-110,110,135,-110,-155,-150,Benardo Sopaj,2026-10-11,Marcus McGhee
-Marvin Vettori,Ismail Naurdiev,149,-150,-120,-170,100,120,Ismail Naurdiev,2026-10-11,Marvin Vettori
-Natalia Silva,Wang Cong,207,160,175,-250,-225,-200,Wang Cong,2026-10-04,Natalia Silva
+Marvin Vettori,Ismail Naurdiev,149,-150,-118,-170,-102,120,Ismail Naurdiev,2026-10-11,Marvin Vettori
+Natalia Silva,Wang Cong,207,162,177,-250,-225,-205,Wang Cong,2026-10-04,Natalia Silva
 Nikita Krylov,Ed Herman,160,200,205,-210,-240,-240,Abdul Rakhman Yakhyaev,2016-07-30,Nikita Krylov
-Petr Yan,Merab Dvalishvili,150,140,153,-175,-190,-172,Merab Dvalishvili,2026-10-24,Petr Yan
+Petr Yan,Merab Dvalishvili,150,140,150,-175,-190,-170,Merab Dvalishvili,2026-10-24,Petr Yan
 Petr Yan,Merab Dvalishvili,-330,-440,150,240,-175,340,Merab Dvalishvili,2025-12-07,Petr Yan
 Petr Yan,Merab Dvalishvili,150,200,220,-175,-286,-240,Merab Dvalishvili,2023-03-11,Petr Yan
-Rafael Dos Anjos,Alexander Hernandez,-250,-250,-250,207,200,207,Alexander Hernandez,2026-10-11,Rafael Dos Anjos
-Roberto Soldic,Khaos Williams,174,225,245,-200,-300,-300,Khaos Williams,2026-10-11,Roberto Soldic
+Rafael Dos Anjos,Alexander Hernandez,-250,-300,-250,207,195,245,Alexander Hernandez,2026-10-11,Rafael Dos Anjos
+Roberto Soldic,Khaos Williams,174,225,263,-200,-340,-300,Khaos Williams,2026-10-04,Roberto Soldic
