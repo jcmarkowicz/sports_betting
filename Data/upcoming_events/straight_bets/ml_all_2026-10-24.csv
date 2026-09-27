@@ -1,10 +1,10 @@
 date,fighter_red,fighter_blue,open_red,open_blue,close1_red,close2_red,close1_blue,close2_blue,pred_name_open,pred_winner_open,choice_proba_open,fstar_open,stake_open,edge_open,ev_open,pred_name_close1,pred_winner_close1,choice_proba_close1,fstar_close1,stake_close1,edge_close1,ev_close1,pred_name_close2,pred_winner_close2,choice_proba_close2,fstar_close2,stake_close2,edge_close2,ev_close2
-2026-10-24,alexander volkanovski,movsar evloev,-120.0,-110.0,-117.0,-103.0,-115.0,-107.0,movsar evloev,0.0,0.6453441477681494,0.13526715180569568,473.43503131993486,0.15654815924689475,0.23202064573919434,movsar evloev,0.0,0.6526465225275179,0.19643950962121695,687.5382836742593,0.15487144864228303,0.22016523776883767,movsar evloev,0.0,0.6583209086205744,0.19942589112472908,697.9906189365518,0.15350757543501348,0.2735740942472794
-2026-10-24,petr yan,merab dvalishvili,-175.0,150.0,-190.0,-170.0,140.0,150.0,petr yan,1.0,0.6239307519099355,0.0,0.0,0.0036735039692532556,-0.0195373898558156,petr yan,1.0,0.6268134471831023,0.0,0.0,0.003109745800264463,-0.04328473851000186,petr yan,1.0,0.6207223284462479,0.0,0.0,0.004288654991362328,-0.014146890114782706
-2026-10-24,loneer kavanagh,ramazan temirov,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-10-24,alexander volkov,rizvan kuniev,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-10-24,arnold allen,aaron pico,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-10-24,azamat murzakanov,dominick reyes,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-10-24,nikita krylov,abdul rakhman yakhyaev,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-10-24,abus magomedov,cam rowston,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-10-24,grant dawson,nurullo aliev,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-24,azamat murzakanov,dominick reyes,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-24,petr yan,merab dvalishvili,-175.0,150.0,-190.0,-172.0,140.0,150.0,petr yan,1.0,0.623965359035563,0.0,0.0,0.003708111094880784,-0.019483007229829485,petr yan,1.0,0.6268479476857788,0.0,0.0,0.0031442463029409673,-0.043232079848021965,petr yan,1.0,0.6220523041677909,0.0,0.0,0.00407651921578267,-0.016289379455586395
+2026-10-24,alexander volkov,rizvan kuniev,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-24,loneer kavanagh,ramazan temirov,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-10-24,alexander volkanovski,movsar evloev,-120.0,-110.0,-117.0,-103.0,-115.0,-107.0,movsar evloev,0.0,0.645344404658429,0.13526737377455572,473.435808210945,0.15654841613717435,0.23202113616609177,movsar evloev,0.0,0.6526467769754001,0.19643983236383764,687.5394132734317,0.15487170309016524,0.22016571347574787,movsar evloev,0.0,0.658321161087918,0.19942621911196265,697.9917668918692,0.15350782790235717,0.27357458266541157
+2026-10-24,arnold allen,aaron pico,,,,,,,,,,,,,,,,,,,,,,,,,,,
