@@ -1,6 +1,7 @@
 date,fighter_red,fighter_blue,open_red,open_blue,close1_red,close2_red,close1_blue,close2_blue,pred_name_open,pred_winner_open,choice_proba_open,fstar_open,stake_open,edge_open,ev_open,pred_name_close1,pred_winner_close1,choice_proba_close1,fstar_close1,stake_close1,edge_close1,ev_close1,pred_name_close2,pred_winner_close2,choice_proba_close2,fstar_close2,stake_close2,edge_close2,ev_close2
-2026-11-14,ciryl gane,josh hokit,-150.0,130.0,-278.0,-265.0,200.0,224.0,ciryl gane,1.0,0.5804061181302711,0.0,0.0,-0.0035765169060389956,-0.032656469782881614,ciryl gane,1.0,0.6832450753883673,0.0,0.0,-0.02518094536126314,-0.07098331475970202,ciryl gane,1.0,0.6862151218034596,0.0,0.0,-0.02606456779877664,-0.05483577562919728
-2026-11-14,kayla harrison,amanda nunes,-210.0,177.0,-210.0,-200.0,150.0,169.0,kayla harrison,1.0,0.7231781132851278,0.18295831051399142,640.35408679897,0.061992734391242865,0.06754864342090305,kayla harrison,1.0,0.711011914223871,0.18734368369655957,655.7028929379585,0.06662614685293822,0.049589016235238204,kayla harrison,1.0,0.7152786965221293,0.1859689844459525,650.8914455608337,0.06505071800317552,0.07291804478319391
+2026-11-14,adrian yanez,juan diaz,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-11-14,ciryl gane,josh hokit,-150.0,130.0,-278.0,-265.0,200.0,224.0,ciryl gane,1.0,0.5807980435248923,0.0,0.0,-0.0031845915114178114,-0.03200326079184629,ciryl gane,1.0,0.6835933086824975,0.0,0.0,-0.024832712067133,-0.07050981769070491,ciryl gane,1.0,0.6865615878053365,0.0,0.0,-0.025718101796899706,-0.05435856773981962
+2026-11-14,kayla harrison,amanda nunes,-210.0,177.0,-210.0,-200.0,150.0,169.0,kayla harrison,1.0,0.7231781120343648,0.1829583068226314,640.3540738792099,0.06199273314047982,0.06754864157453855,kayla harrison,1.0,0.711011912940104,0.18734368008678104,655.7028803037337,0.06662614556917124,0.049589014340153614,kayla harrison,1.0,0.7152786952497264,0.18596898080836824,650.8914328292889,0.06505071673077267,0.07291804287458964
 2026-11-14,caio borralho,yousri belgaroui,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-11-14,uros medic,kevin holland,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-11-14,bilal hasan,luis gurule,,,,,,,,,,,,,,,,,,,,,,,,,,,
@@ -9,5 +10,4 @@ date,fighter_red,fighter_blue,open_red,open_blue,close1_red,close2_red,close1_bl
 2026-11-14,jim miller,terrance mckinney,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-11-14,donte johnson,baisangur susurkaev,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-11-14,bia mesquita,macy chiasson,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-11-14,adrian yanez,juan diaz,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-11-14,nazim sadykhov,jefferson nascimento,,,,,,,,,,,,,,,,,,,,,,,,,,,
