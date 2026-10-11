@@ -1,13 +1,13 @@
 date,fighter_red,fighter_blue,open_red,open_blue,close1_red,close2_red,close1_blue,close2_blue,pred_name_open,pred_winner_open,choice_proba_open,fstar_open,stake_open,edge_open,ev_open,pred_name_close1,pred_winner_close1,choice_proba_close1,fstar_close1,stake_close1,edge_close1,ev_close1,pred_name_close2,pred_winner_close2,choice_proba_close2,fstar_close2,stake_close2,edge_close2,ev_close2
-2026-11-14,drew dober,chris duncan,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-11-14,ciryl gane,josh hokit,-150.0,130.0,-275.0,-265.0,200.0,220.0,ciryl gane,1.0,0.5807954346411115,0.0,0.0,-0.003187200395198597,-0.03200760893148091,ciryl gane,1.0,0.6825406303745474,0.0,0.0,-0.02452639564602843,-0.06926277676198078,ciryl gane,1.0,0.6853782408917435,0.0,0.0,-0.025365775354757703,-0.05598846065854207
+2026-11-14,stephen thompson,charles radtke,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-11-14,ciryl gane,josh hokit,-150.0,130.0,-275.0,-265.0,200.0,220.0,ciryl gane,1.0,0.5804013253495371,0.0,0.0,-0.003581309686772949,-0.032664457750771536,ciryl gane,1.0,0.6821898335387931,0.0,0.0,-0.024877192481782662,-0.0697411360834638,ciryl gane,1.0,0.6850291326746021,0.0,0.0,-0.025714883571899105,-0.056469307825548154
+2026-11-14,kayla harrison,amanda nunes,-210.0,177.0,-210.0,-200.0,150.0,169.0,kayla harrison,1.0,0.7231804949015531,0.18296533934602693,640.3786877110942,0.06199511600766816,0.06755215914038798,kayla harrison,1.0,0.7110143586842248,0.187350557187358,655.726950155753,0.06662859131329202,0.0495926247243319,kayla harrison,1.0,0.715281119343597,0.18597591088214982,650.9156880875244,0.0650531408246432,0.07292167901539542
 2026-11-14,caio borralho,yousri belgaroui,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-11-14,uros medic,kevin holland,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-11-14,bilal hasan,luis gurule,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-11-14,kayla harrison,amanda nunes,-210.0,177.0,-210.0,-200.0,150.0,169.0,kayla harrison,1.0,0.7231804947942424,0.18296533902932252,640.3786866026288,0.061995115900357556,0.06755215898197692,kayla harrison,1.0,0.7110143585740827,0.18735055687765312,655.726949071786,0.06662859120314979,0.04959262456174118,kayla harrison,1.0,0.7152811192344297,0.18597591057005916,650.915686995207,0.06505314071547597,0.07292167885164458
-2026-11-14,donte johnson,baisangur susurkaev,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-11-14,uros medic,kevin holland,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-11-14,drew dober,chris duncan,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-11-14,jim miller,terrance mckinney,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-11-14,bia mesquita,macy chiasson,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-11-14,adrian yanez,juan diaz,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-11-14,nazim sadykhov,jefferson nascimento,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-11-14,jim miller,terrance mckinney,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-11-14,stephen thompson,charles radtke,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-11-14,donte johnson,baisangur susurkaev,,,,,,,,,,,,,,,,,,,,,,,,,,,
