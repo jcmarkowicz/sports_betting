@@ -1,27 +1,34 @@
-red_fighter,blue_fighter,open_blue,close1_blue,close2_blue,open_red,close1_red,close2_red,og_blue_name,event_date,og_red_fighter
-Alexander Volkanovski,Movsar Evloev,-110,-115,-108,-120,-115,-105,Movsar Evloev,2026-10-24,Alexander Volkanovski
-Amir Albazi,Alessandro Costa,250,333,400,-300,-525,-425,Alessandro Costa,2022-12-17,Amir Albazi
-Chad Anheliger,Steven Koslow,109,-158,-145,-129,120,126,Steven Koslow,2026-10-17,Chad Anheliger
-Charles Oliveira,Diego Lopes,145,122,145,-190,-190,-143,Diego Lopes,2026-12-13,Charles Oliveira
-Ciryl Gane,Josh Hokit,130,200,212,-150,-275,-255,Josh Hokit,2026-11-15,Ciryl Gane
-Ciryl Gane,Jairzinho Rozenstruik,250,185,200,-300,-250,-225,Josh Hokit,2021-02-27,Ciryl Gane
-Cody Chovancek,Suyoung You,170,110,120,-195,-150,-130,SuYoung You,2026-10-17,Cody Chovancek
-Erin Blanchfield,Jasmine Jasudavicius,192,250,262,-230,-350,-320,Jasmine Jasudavicius,2026-10-18,Erin Blanchfield
-Javad Mahjoub,Joel Faglier,-110,-112,100,-110,-120,-108,Joel Faglier,2026-10-17,Javad Mahjoub
-Joaquin Buckley,Mike Malott,245,-134,-125,-300,-102,110,Mike Malott,2026-10-18,Joaquin Buckley
-Joe Pyfer,Bo Nickal,-250,145,169,208,-200,-182,Bo Nickal,2026-12-13,Joe Pyfer
-Julien Leblanc,Nick Galanti,-500,-650,-599,385,400,458,Nick Galanti,2026-10-17,Julien Leblanc
-Katlyn Cerminara,Mackenzie Stiller,235,210,230,-275,-310,-270,Mackenzie Stiller,2026-10-17,Katlyn Cerminara
-Kayla Harrison,Amanda Nunes,177,150,165,-210,-210,-195,Amanda Nunes,2026-11-15,Kayla Harrison
-Kayla Harrison,Amanda Nunes,136,130,190,-162,-245,-155,Amanda Nunes,2026-01-25,Kayla Harrison
-Kyle Nelson,Cristian Perez,-400,-400,-350,330,260,300,Cristian Perez,2026-10-17,Kyle Nelson
-Louis Jourdain,Timmy Cuamba,-105,162,170,-135,-220,-200,Timmy Cuamba,2026-10-18,Louis Jourdain
-Mandel Nallo,Nate Landwehr,195,210,230,-235,-310,-265,Nate Landwehr,2026-10-18,Mandel Nallo
-Marc-Andre Barriault,Kyle Daukaus,-225,-235,-195,190,163,180,Kyle Daukaus,2026-10-18,Marc-Andre Barriault
-Melissa Croden,Chelsea Chandler,205,220,239,-250,-300,-270,Chelsea Chandler,2026-10-17,Melissa Croden
-Nikita Krylov,Ed Herman,160,200,205,-210,-240,-240,Abdul Rakhman Yakhyaev,2016-07-30,Nikita Krylov
-Petr Yan,Merab Dvalishvili,150,140,160,-175,-200,-172,Merab Dvalishvili,2026-10-24,Petr Yan
-Petr Yan,Merab Dvalishvili,-330,-440,150,240,-175,340,Merab Dvalishvili,2025-12-07,Petr Yan
-Petr Yan,Merab Dvalishvili,150,200,220,-175,-286,-240,Merab Dvalishvili,2023-03-11,Petr Yan
-Sergei Pavlovich,Alex Pereira,110,140,178,-140,-211,-175,Alex Pereira,2026-12-13,Sergei Pavlovich
-Tanner Boser,Jhonata Diniz,-225,-260,-240,190,195,208,Jhonata Diniz,2026-10-17,Tanner Boser
+blue_fighter,open_blue,close1_blue,close2_blue,red_fighter,open_red,close1_red,close2_red,og_blue_name,event_date,og_red_fighter
+Losene Keita,145,-125,-125,Aaron Pico,-165,105,105,Losene Keita,2026-10-24,Aaron Pico
+Cam Rowston,-110,-102,-102,Abus Magomedov,-106,-118,-118,Cam Rowston,2026-10-24,Abus Magomedov
+Movsar Evloev,-110,-115,-108,Alexander Volkanovski,-120,-115,-105,Movsar Evloev,2026-10-24,Alexander Volkanovski
+Rizvan Kuniev,222,105,105,Alexander Volkov,-270,-125,-125,Rizvan Kuniev,2026-10-24,Alexander Volkov
+Alessandro Costa,250,333,400,Amir Albazi,-300,-525,-425,Alessandro Costa,2022-12-17,Amir Albazi
+Dominick Reyes,173,177,177,Azamat Murzakanov,-205,-210,-210,Dominick Reyes,2026-10-24,Azamat Murzakanov
+Steven Koslow,109,-160,-147,Chad Anheliger,-129,120,135,Steven Koslow,2026-10-17,Chad Anheliger
+Diego Lopes,145,122,125,Charles Oliveira,-190,-160,-143,Diego Lopes,2026-12-13,Charles Oliveira
+Josh Hokit,130,200,216,Ciryl Gane,-150,-275,-260,Josh Hokit,2026-11-15,Ciryl Gane
+Jairzinho Rozenstruik,250,185,200,Ciryl Gane,-300,-250,-225,Josh Hokit,2021-02-27,Ciryl Gane
+Suyoung You,170,110,116,Cody Chovancek,-195,-146,-130,SuYoung You,2026-10-17,Cody Chovancek
+Jasmine Jasudavicius,192,250,262,Erin Blanchfield,-230,-350,-320,Jasmine Jasudavicius,2026-10-18,Erin Blanchfield
+Nurullo Aliev,-106,-110,-110,Grant Dawson,-110,-110,-110,Nurullo Aliev,2026-10-24,Grant Dawson
+Joel Faglier,-110,-120,-110,Javad Mahjoub,-110,-110,-104,Joel Faglier,2026-10-17,Javad Mahjoub
+Mike Malott,245,-134,-125,Joaquin Buckley,-300,-102,111,Mike Malott,2026-10-18,Joaquin Buckley
+Bo Nickal,-250,145,169,Joe Pyfer,208,-200,-182,Bo Nickal,2026-12-13,Joe Pyfer
+Nick Galanti,-500,-650,-599,Julien Leblanc,385,400,475,Nick Galanti,2026-10-17,Julien Leblanc
+Mackenzie Stiller,235,210,230,Katlyn Cerminara,-275,-310,-270,Mackenzie Stiller,2026-10-17,Katlyn Cerminara
+Amanda Nunes,177,150,165,Kayla Harrison,-210,-210,-195,Amanda Nunes,2026-11-15,Kayla Harrison
+Amanda Nunes,136,130,190,Kayla Harrison,-162,-245,-155,Amanda Nunes,2026-01-25,Kayla Harrison
+Cristian Perez,-400,-400,-350,Kyle Nelson,330,260,300,Cristian Perez,2026-10-17,Kyle Nelson
+Ramazan Temirov,135,-110,-110,Loneer Kavanagh,-155,-110,-110,Ramazan Temirov,2026-10-24,Lone'er Kavanagh
+Timmy Cuamba,-105,145,163,Louis Jourdain,-135,-205,-175,Timmy Cuamba,2026-10-18,Louis Jourdain
+Nate Landwehr,195,210,230,Mandel Nallo,-235,-310,-265,Nate Landwehr,2026-10-18,Mandel Nallo
+Kyle Daukaus,-225,-225,-190,Marc-Andre Barriault,190,160,172,Kyle Daukaus,2026-10-18,Marc-Andre Barriault
+Chelsea Chandler,205,220,239,Melissa Croden,-250,-300,-270,Chelsea Chandler,2026-10-17,Melissa Croden
+Abdul Rakhman Yakhyaev,-600,-450,-450,Nikita Krylov,451,354,354,Abdul Rakhman Yakhyaev,2026-10-24,Nikita Krylov
+Ed Herman,160,200,205,Nikita Krylov,-210,-240,-240,Abdul Rakhman Yakhyaev,2016-07-30,Nikita Krylov
+Merab Dvalishvili,150,140,160,Petr Yan,-175,-200,-172,Merab Dvalishvili,2026-10-24,Petr Yan
+Merab Dvalishvili,-330,-440,150,Petr Yan,240,-175,340,Merab Dvalishvili,2025-12-07,Petr Yan
+Merab Dvalishvili,150,200,220,Petr Yan,-175,-286,-240,Merab Dvalishvili,2023-03-11,Petr Yan
+Alex Pereira,110,140,178,Sergei Pavlovich,-140,-211,-175,Alex Pereira,2026-12-13,Sergei Pavlovich
+Jhonata Diniz,-225,-260,-240,Tanner Boser,190,195,208,Jhonata Diniz,2026-10-17,Tanner Boser
