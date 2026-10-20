@@ -1,0 +1,11 @@
+{
+  "z": 0.36000000000000004,
+  "N": 1203,
+  "N_parlay": 381,
+  "mdd": 0.37000000000000005,
+  "mdd_parlay": 0.23,
+  "moneyline_max_american": null,
+  "decay_rates": null,
+  "opening_params": null,
+  "moneyline_min_american": -550.0
+}

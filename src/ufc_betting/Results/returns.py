@@ -197,48 +197,60 @@ def returns_by_date(
     return bankroll_results
 
 
+def prepare_return_plot_data(ml_results, parlay_results, bankroll_results, odds_type):
+    """Return event, moneyline and parlay frames for backtest distribution plots.
+
+    Reconstruct pre-event balances to exclude replenishments from profit.
+    When the full-loss cap applies, scale both contributions proportionally.
+    Invalid market prices are excluded only from the accuracy inputs.
+    """
+    if odds_type not in SETTLED_TYPES:
+        raise ValueError(f"odds_type must be one of {SETTLED_TYPES}")
+    ml, pl, balances = (frame.copy() for frame in
+                        (ml_results, parlay_results, bankroll_results))
+    for frame in (ml, pl, balances):
+        frame['date'] = pd.to_datetime(frame['date']).dt.normalize()
+    dates, ml_returns, pl_returns, total_returns = _event_return_components(ml, pl)
+    balances = balances.set_index('date').reindex(dates)
+    before = balances[f'bankroll_{odds_type}'] - balances[f'profits_{odds_type}']
+    raw_total = ml_returns[odds_type] + pl_returns[odds_type]
+    scale = pd.Series(1.0, index=raw_total.index)
+    capped = raw_total.lt(-1)
+    scale.loc[capped] = -1.0 / raw_total.loc[capped]
+    events = pd.DataFrame({
+        'date': dates.to_numpy(),
+        'bankroll_pct_change': total_returns[odds_type].where(before.gt(0), 0).to_numpy(),
+        'bankroll_postevent': balances[f'bankroll_{odds_type}'].to_numpy(),
+        'event_payout_money_line': (before * ml_returns[odds_type] * scale).to_numpy(),
+        'parlay_net': (before * pl_returns[odds_type] * scale).to_numpy(),
+    })
+    ml['winner'] = ml['winner_bool']
+    ml['pred_winner'] = ml[f'pred_winner_{odds_type}']
+    # Negative settlement stakes are losing wagers, not absent wagers.
+    ml['choice_fstar'] = ml[f'net_stake_{odds_type}'].abs().fillna(0)
+    valid_prices = pd.Series(True, index=ml.index)
+    for side in ('red', 'blue'):
+        american = pd.to_numeric(ml[f'{odds_type}_{side}'], errors='coerce')
+        decimal = (1 + american / 100).where(american > 0, 1 + 100 / american.abs())
+        valid_prices &= np.isfinite(decimal) & decimal.gt(1)
+        ml[f'dec_{odds_type}_{side}'] = decimal
+    ml = ml.loc[valid_prices].merge(events, on='date', how='left', validate='many_to_one')
+    pl['fstar_parlay'] = pl[f'net_stake_{odds_type}'].abs().fillna(0)
+    pl['choice_fighter_name'] = pl[f'choice_fighter_name_{odds_type}']
+    eligible_names = pd.concat([
+        ml[['date', 'fighter_red']].rename(columns={'fighter_red': 'choice_fighter_name'}),
+        ml[['date', 'fighter_blue']].rename(columns={'fighter_blue': 'choice_fighter_name'}),
+    ]).drop_duplicates()
+    pl = pl[['date', 'choice_fighter_name', 'fstar_parlay']].merge(
+        eligible_names, on=['date', 'choice_fighter_name'], how='inner',
+    )
+    return events, ml, pl
+
+
 def plot_returns(ml_results, parlay_results, bankroll_results):
 
     import matplotlib.pyplot as plt
-    import seaborn as sns
-
     types = SETTLED_TYPES
-    fig, axes = plt.subplots(2, len(types), figsize=(15,6))
-    
-    for i, type_ in enumerate(types):
-
-        # ML percent returns
-        no_draws = ml_results[ml_results[f'pred_winner_{type_}'] < 2]
-        all_preds = no_draws.dropna(subset=[f'pred_winner_{type_}'])
-        bets_only = all_preds[all_preds[f'net_stake_{type_}'] != 0]
-
-        net_odds = bets_only[f'net_odds_{type_}']
-        sns.histplot(net_odds, ax=axes[0, i], kde=True, color='skyblue', bins=50)
-        avg_ml = np.mean(net_odds)
-        total_ml = np.sum(net_odds)
-        axes[0, i].set_title(f"ML {type_} — Avg: {avg_ml:.2f}, Total: {total_ml:.2f}")
-        
-        # Parlay percent returns
-        net_odds = (
-            parlay_results
-            .groupby('date', sort=False)[f"net_odds_{type_}"]
-            .first()
-            .dropna()
-        )
-        sns.histplot(net_odds, ax=axes[1, i], kde=True, color='salmon', bins=50)
-        avg_parlay = np.mean(net_odds)
-        total_parlay = np.sum(net_odds)
-        axes[1, i].set_title(f"Parlay {type_} — Avg: {avg_parlay:.2f}, Total: {total_parlay:.2f}")
-
-    plt.tight_layout()
-    path = settings.data_dir / 'plot_pngs' / 'avg_returns_live.png'
-    
-    fig.savefig(
-        path,
-        dpi=300,
-        bbox_inches="tight"
-    )
-    commit_figure_if_changed(path)
 
     fig, axes = plt.subplots(nrows=3, figsize=(15,6))
     date = bankroll_results['date']
@@ -252,13 +264,16 @@ def plot_returns(ml_results, parlay_results, bankroll_results):
 
     plt.tight_layout()
 
-    path = settings.data_dir / 'plot_pngs' / 'bankroll_returns_live.png'
+    path = settings.bankroll_returns_plot_file
+    path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(
         path,
         dpi=300,
         bbox_inches="tight"
     )
     commit_figure_if_changed(path)
+    plt.close(fig)
+    return path
 
 
 def accuracy_analysis(ml_results, parlay_results):
@@ -458,3 +473,77 @@ def accuracy_analysis(ml_results, parlay_results):
         .round(4)
     )
     return df_accuracies, df_bet_types
+
+
+
+def generate_test_accuracy_results(*, prediction_dir=None, output_dir=None,
+                                   model_type="open",
+                                   prediction_template="{split}_logit_{model_type}_with_{odds_type}.csv"):
+    """Save test-only event accuracy plots, OLS plots and coefficient CSVs.
+
+    Returns per-market artifact paths and combined result DataFrames. Uses only
+    test_<...> prediction files; never falls back to training or validation data.
+    Files are local exports, without Git commits/pushes. Existing exports are
+    replaced when this function is called. No simulations or parameter fitting
+    beyond the descriptive event-accuracy OLS regressions are performed.
+    """
+    from pathlib import Path
+    import matplotlib.pyplot as plt
+    from ufc_betting.Results.vegas_accuracy import (
+        load_accuracy_data, score_predictions, plot_accuracy,
+        plot_accuracy_regression, save_png, save_dataframe,
+    )
+
+    prediction_dir = Path(prediction_dir) if prediction_dir is not None else settings.model_predictions_folder
+    output_dir = Path(output_dir) if output_dir is not None else settings.betting_results_dir / "vegas_accuracy_test"
+    datasets, coverage_rows = {}, []
+    # Validate all inputs before replacing any artifacts.
+    for market in SETTLED_TYPES:
+        path = prediction_dir / prediction_template.format(
+            split="test", model_type=model_type, odds_type=market)
+        if not path.name.startswith("test_"):
+            raise ValueError("Test accuracy reports require prediction filenames starting with test_")
+        data, coverage = load_accuracy_data(path, market)
+        event_scores = data.assign(correct=data.model_prediction.eq(data.winner)).groupby("date").size()
+        vegas_events = data.assign(correct=data.vegas_prediction.eq(data.winner)).groupby("date").correct.mean()
+        if len(event_scores) < 3 or vegas_events.nunique() < 2:
+            raise ValueError(f"test/{market}: regression needs >=3 events and varying Vegas accuracy")
+        datasets[market] = data
+        coverage_rows.append(dict(split="test", market=market, **coverage))
+
+    artifacts, coefficient_frames, fit_rows, score_rows = {}, [], [], []
+    for market, data in datasets.items():
+        figures = []
+        try:
+            accuracy_fig, event_metrics = plot_accuracy(data, "test", market, model_type=model_type)
+            figures.append(accuracy_fig)
+            fit, coefficients, regression_fig = plot_accuracy_regression(data, "test", market)
+            figures.append(regression_fig)
+            prefix = f"test_{model_type}_{market}"
+            paths = {
+                "accuracy_plot": save_png(accuracy_fig, output_dir / f"{prefix}_event_accuracy.png"),
+                "regression_plot": save_png(regression_fig, output_dir / f"{prefix}_accuracy_regression.png"),
+                "coefficients": save_dataframe(coefficients, output_dir / f"{prefix}_regression_coefficients.csv"),
+                "event_metrics": save_dataframe(event_metrics, output_dir / f"{prefix}_event_metrics.csv", index=False),
+            }
+            artifacts[market] = paths
+            coefficient_frames.append(coefficients.reset_index().assign(split="test", market=market))
+            fit_rows.append(dict(split="test", market=market, events=int(fit.nobs),
+                                 r_squared=fit.rsquared, adjusted_r_squared=fit.rsquared_adj,
+                                 residual_df=fit.df_resid, f_statistic=fit.fvalue, f_p_value=fit.f_pvalue))
+            for source in ("vegas", "model"):
+                score_rows.append(dict(split="test", market=market, source=source,
+                                       fights=len(data), **score_predictions(data, source)))
+        finally:
+            for fig in figures:
+                plt.close(fig)
+
+    tables = {
+        "coefficients": pd.concat(coefficient_frames, ignore_index=True),
+        "fit_summary": pd.DataFrame(fit_rows),
+        "accuracy_summary": pd.DataFrame(score_rows),
+        "coverage": pd.DataFrame(coverage_rows),
+    }
+    table_paths = {name: save_dataframe(frame, output_dir / f"{name}.csv", index=False)
+                   for name, frame in tables.items()}
+    return dict(output_dir=output_dir, artifacts=artifacts, tables=tables, table_paths=table_paths)

@@ -307,6 +307,51 @@ class MoneylineDataFrame:
 
         return type(self)(settled)
 
+    def event_ev(self) -> pd.DataFrame:
+        """Return model-implied expected bankroll return by event and stage.
+
+        Each moneyline contributes ``fstar * ev``. Values are fractions of
+        bankroll, so ``0.05`` means an expected return of 5% of bankroll.
+        """
+        event_ev = pd.DataFrame({
+            "date": self.frame["date"].drop_duplicates().sort_values()
+        }).reset_index(drop=True)
+
+        for bet_type in self.bet_types:
+            fstar = pd.to_numeric(
+                self.frame[f"fstar_{bet_type}"], errors="coerce"
+            )
+            unit_ev = pd.to_numeric(
+                self.frame[f"ev_{bet_type}"], errors="coerce"
+            )
+            # Missing predictions/stakes represent no bet and therefore zero EV.
+            weighted_ev = (fstar * unit_ev).fillna(0.0)
+            by_date = weighted_ev.groupby(self.frame["date"]).sum()
+            event_ev[f"event_ev_{bet_type}"] = event_ev["date"].map(
+                by_date
+            )
+
+        return event_ev
+
+    def percent_of_opening_ev(self) -> pd.DataFrame:
+        """Return each event stage's EV as a percentage of opening EV.
+
+        The ratio follows the RiskManagement convention:
+        ``100 * stage event EV / opening event EV``. Ratios are missing when
+        opening event EV is zero or negative because no meaningful positive
+        opening benchmark exists.
+        """
+        event_ev = self.event_ev()
+        opening = event_ev["event_ev_open"].where(
+            event_ev["event_ev_open"] > 1e-10
+        )
+        result = event_ev[["date"]].copy()
+        for bet_type in self.bet_types:
+            result[f"pct_opening_ev_{bet_type}"] = (
+                100 * event_ev[f"event_ev_{bet_type}"] / opening
+            )
+        return result
+
     def validate(self) -> None:
         """Validate identity, betting, date, and nullable result fields."""
         invalid_winner = (

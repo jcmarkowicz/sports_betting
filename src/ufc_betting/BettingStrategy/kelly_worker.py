@@ -18,7 +18,8 @@ def parlay_top_ev(data, bankroll, type, top_n=[0,1], parlay_mdd=0.5, N=250):
         df_nans = pd.DataFrame({col: pd.NA for col in cols}, index=np.arange(2))        
         return df_nans
     
-    df_top_n = data.sort_values(by='choice_ev', ascending=False).iloc[top_n].copy()
+    # Equal-EV legs retain their input order, matching the backtest engine.
+    df_top_n = data.sort_values(by='choice_ev', ascending=False, kind='stable').iloc[top_n].copy()
 
     parlay_prob = np.prod(df_top_n['choice_proba'].to_numpy())
     parlay_odds = np.prod(df_top_n['choice_real_odds'].to_numpy())

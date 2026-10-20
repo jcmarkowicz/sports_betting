@@ -7,29 +7,7 @@ import pandas as pd
 from ufc_betting.config import settings
 
 
-def sample_movements(n_fights, n_samples, rng, levels=101):
-    """Mixture over movement centers and dispersion, rounded to the saved grid."""
-    if n_fights < 1 or n_samples < levels or levels < 2:
-        raise ValueError("Need fights and at least one sample per grid level")
-    # Uniform reference vectors are included exactly once.
-    vectors = np.repeat(np.arange(levels)[:, None], n_fights, axis=1)
-    target = min(n_samples, levels ** n_fights)
-    for _ in range(40):
-        if len(vectors) >= target:
-            break
-        count = max(2 * (target - len(vectors)), 1000)
-        mean = rng.uniform(.001, .999, (count, 1))
-        concentration = rng.choice([2., 10., 50.], size=(count, 1))
-        draws = rng.beta(mean * concentration, (1 - mean) * concentration,
-                         size=(count, n_fights))
-        draws = np.rint(draws * (levels - 1)).astype(int)
-        candidates = np.unique(np.concatenate([vectors, draws]), axis=0)
-        # Keep all reference vectors; randomly choose other unique vectors.
-        nonuniform = candidates[~np.all(candidates == candidates[:, :1], axis=1)]
-        take = min(target - levels, len(nonuniform))
-        vectors = np.concatenate([np.repeat(np.arange(levels)[:, None], n_fights, axis=1),
-                                  nonuniform[rng.choice(len(nonuniform), take, replace=False)]])
-    return vectors
+from ufc_betting.BettingStrategy.Convergence.odds_scenarios import sample_movements
 
 
 def scenario_totals(contributions, vectors):

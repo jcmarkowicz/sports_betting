@@ -3,11 +3,11 @@ import pandas as pd
 
 from sklearn.metrics import accuracy_score
 
-def save_results(df_model, proba_red, fp):
+def save_results(df_model, proba_red, fp=None, *, target_col='winner'):
     """
     df_model : full dataframe BEFORE splitting
     probs_2d : blue model probs, red model probs
-    fp : output filepath
+    fp : optional output filepath; omit to return results without writing
     """
     df = df_model.copy()
     df['proba_red'] = proba_red
@@ -18,13 +18,19 @@ def save_results(df_model, proba_red, fp):
         .to_numpy()
         .argmax(axis=1)
     )
-    df["correct_pred"] = (df["pred_winner"] == df["winner"]).astype(int)
+    if target_col in df:
+        df["correct_pred"] = (df["pred_winner"] == df[target_col]).astype('Int64')
+        df.loc[~df[target_col].isin([0, 1]), 'correct_pred'] = pd.NA
+    else:
+        df['correct_pred'] = pd.Series(pd.NA, index=df.index, dtype='Int64')
     df["prob_winner"] = df[["proba_blue", "proba_red"]].max(axis=1)
 
-    df['date'] = pd.to_datetime(df['date'], format='%Y-%m-%d', errors='coerce'
-        ).dt.normalize()
+    if 'date' in df:
+        df['date'] = pd.to_datetime(df['date'], format='%Y-%m-%d', errors='coerce'
+            ).dt.normalize()
     
-    df.to_csv(fp, index=False)
+    if fp is not None:
+        df.to_csv(fp, index=False)
 
     return df
 

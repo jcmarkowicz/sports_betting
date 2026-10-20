@@ -1,0 +1,7 @@
+odds_type,direction,samples,fraction
+close1,increase,555,0.42626728110599077
+close1,decrease,711,0.5460829493087558
+close1,unchanged,36,0.027649769585253458
+close2,increase,745,0.5721966205837173
+close2,decrease,518,0.3978494623655914
+close2,unchanged,39,0.029953917050691243

@@ -1,7 +1,10 @@
 import pandas as pd 
 import numpy as np 
+from pathlib import Path
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from ufc_betting.config import settings
+from ufc_betting.Models.LogisticRegression.odds_input import replace_opening_odds
 
 class TrainTestBuilder: 
 
@@ -41,7 +44,7 @@ class TrainTestBuilder:
         df[date_col] = pd.to_datetime(
             df[date_col], format='%Y-%m-%d', errors='coerce'
         ).dt.normalize()
-        df = df.sort_values(by=date_col, ascending=True)
+        df = df.sort_values(by=date_col, ascending=True, kind='stable')
 
         if required_features_only:
             # Preserve optional price columns without filtering opening history
@@ -72,8 +75,11 @@ class TrainTestBuilder:
     def process_feats(df, valid_cols, target_col, cat_cols):
         
         df[cat_cols] = df[cat_cols].astype('category')
-        df = df[valid_cols].copy()
-        df = df[df[target_col] < 2].dropna().reset_index(drop=True)
+        metadata_cols = [col for col in ('bout_position', 'event_name', 'event_type')
+                         if col in df.columns and col not in valid_cols]
+        df = df[valid_cols + metadata_cols].copy()
+        # Optional sampling metadata must not change the training cohort.
+        df = df[df[target_col] < 2].dropna(subset=valid_cols).reset_index(drop=True)
         return df
 
     @staticmethod
@@ -97,76 +103,115 @@ class TrainTestBuilder:
 
     @staticmethod
     def scale_encode(X_train, X_test, cat_cols, num_cols):
-        scaler = StandardScaler()
-        X_train_num = scaler.fit_transform(X_train[num_cols])
-        X_test_num = scaler.transform(X_test[num_cols])
-
-        encoder = OneHotEncoder(
-            drop="if_binary",
-            handle_unknown="ignore", # cat not present in train gets all 0s in test 
-            sparse_output=False,
-            dtype=int,
-        )
-        X_train_cat = encoder.fit_transform(X_train[cat_cols])
-        X_test_cat = encoder.transform(X_test[cat_cols])
-        encoded_cols = encoder.get_feature_names_out(cat_cols) # only columns fitted in X_train
-
-        X_train_cat = pd.DataFrame(
-            X_train_cat,
-            columns=encoded_cols,
-            index=X_train.index,
-        )
-        X_train_num = pd.DataFrame(
-            X_train_num, 
-            columns=num_cols,
-            index=X_train.index
-        )
-        X_test_cat = pd.DataFrame(
-            X_test_cat,
-            columns=encoded_cols,
-            index=X_test.index,
-        )
-        X_test_num = pd.DataFrame(
-            X_test_num, 
-            columns=num_cols,
-            index=X_test.index
-        )
-        X_train = pd.concat(
-            [X_train_num, X_train_cat], axis=1
-        )
-        X_test = pd.concat(
-            [X_test_num, X_test_cat], axis=1
-        )
-        pkt = {
-            'X_train': X_train, 
-            'X_test': X_test, 
-            'encoded_cols':encoded_cols, 
-            'scaler':scaler,
-            'encoder':encoder
+        # Fit only on training rows; both splits use the same fitted transforms.
+        scaler = StandardScaler().fit(X_train[num_cols]) if len(num_cols) else None
+        encoder = (OneHotEncoder(
+            drop="if_binary", handle_unknown="ignore", sparse_output=False, dtype=int,
+        ).fit(X_train[cat_cols]) if len(cat_cols) else None)
+        return {
+            'X_train': TrainTestBuilder.prepare_inference_data(X_train, scaler, encoder),
+            'X_test': TrainTestBuilder.prepare_inference_data(X_test, scaler, encoder),
+            'encoded_cols': (encoder.get_feature_names_out(cat_cols)
+                             if encoder is not None else np.array([])),
+            'scaler': scaler,
+            'encoder': encoder,
         }
-        return pkt
 
     @staticmethod
     def encode_categorical(features, encoder, categorical_columns):
-        """Encode categorical columns using an already-fitted encoder."""
-        categorical_columns = list(categorical_columns)
-        encoded = encoder.transform(features[categorical_columns])
+        """Preserve fitted one-hot column names and the input row index."""
+        columns = list(categorical_columns)
+        values = encoder.transform(features[columns])
+        if hasattr(values, 'toarray'):
+            values = values.toarray()
+        return pd.DataFrame(values, columns=encoder.get_feature_names_out(columns),
+                            index=features.index)
 
-        return pd.DataFrame(
-            encoded,
-            columns=encoder.get_feature_names_out(categorical_columns),
-            index=features.index,
-        )
+
+    @staticmethod
+    def transform_features(features, scaler, encoder):
+        """Apply training-fitted transforms without refitting or inferring dtypes."""
+        parts = []
+        if scaler is not None:
+            columns = list(scaler.feature_names_in_)
+            parts.append(pd.DataFrame(scaler.transform(features[columns]),
+                                      columns=columns, index=features.index))
+        if encoder is not None:
+            parts.append(TrainTestBuilder.encode_categorical(features, encoder, encoder.feature_names_in_))
+        if not parts:
+            return features.copy()
+        return pd.concat(parts, axis=1)
+
+    @staticmethod
+    def prepare_inference_data(
+        features, scaler=None, encoder=None, *, switch_open_odds=False, odds_type=None,
+    ):
+        """Prepare raw rows using fitted transforms, without fitting again.
+
+        Set switch_open_odds=True and odds_type='close1' or 'close2' to copy
+        recorded closing values into the opening feature names before scaling.
+        With switch_open_odds=False, odds values are left unchanged even when
+        odds_type is supplied. The input frame and row index are preserved.
+        """
+        if switch_open_odds:
+            if odds_type not in ('close1', 'close2'):
+                raise ValueError("switch_open_odds=True requires odds_type='close1' or 'close2'")
+            names = []
+            for transformer in (scaler, encoder):
+                if transformer is not None:
+                    names.extend(transformer.feature_names_in_)
+            if not names:
+                raise ValueError('Odds substitution requires fitted preprocessing')
+            # Only select model inputs and their market counterparts: preserve the
+            # recorded fair features instead of recomputing them from decimal odds.
+            sources = [name.replace('open', odds_type) for name in names]
+            columns = list(dict.fromkeys(names + sources))
+            features = replace_opening_odds(
+                features.loc[:, [name for name in columns if name in features]],
+                odds_type, features=names,
+            )
+        return TrainTestBuilder.transform_features(features, scaler, encoder)
 
     @staticmethod
     def close_odds_to_open(feats_open, feats_close, odds_type):
-        feats_open['proba_fair_open_diff'] = feats_close[f'proba_fair_{odds_type}_diff']
+        # Compatibility for existing notebooks; substitution lives in odds_input.
+        inputs = replace_opening_odds(feats_close, odds_type)
+        feats_open = feats_open.copy()
+        feats_open['proba_fair_open_diff'] = inputs['proba_fair_open_diff']
         return feats_open
 
     def prepare_train_test(
-            self, train_size, scale=True, group_dates=False,
+            self, train_size=0.8, scale=True, group_dates=True, *,
+            save_split=False, output_dir=None,
+            train_split_path=None, test_split_path=None,
+            val_start_date=None, test_start_date=None, val_split_path=None,
     ):
-        """ curently handles all categorical columns as non ordinal, uses onehotencoder"""
+        """Split chronologically using dates, or the legacy two-way ratio split.
+
+        Supply both val_start_date and test_start_date for three disjoint sets:
+        train < val_start_date; val_start_date <= val < test_start_date;
+        test >= test_start_date. Date boundaries override train_size/group_dates.
+        Transforms fit on training rows only. Optional card metadata is retained
+        in each full-row dataframe and saved split, not added to model inputs.
+
+        With save_split=True, save unscaled full rows as train_<odds_type>.csv
+        and val_<odds_type>.csv under Data/train_val_test/split, or output_dir.
+        Explicit train_split_path/test_split_path save the corresponding unscaled
+        full rows even without save_split=True, overriding the default filenames.
+        Whole event dates stay together by default, so proportions may vary.
+        Existing test-named return keys refer to the validation portion.
+        Categorical features use one-hot encoding when scale=True.
+        """
+        if val_start_date is not None or test_start_date is not None:
+            if val_start_date is None or test_start_date is None:
+                raise ValueError('Supply both val_start_date and test_start_date')
+            return self._prepare_dated_splits(
+                val_start_date, test_start_date, scale=scale, save_split=save_split,
+                output_dir=output_dir, train_split_path=train_split_path,
+                val_split_path=val_split_path, test_split_path=test_split_path,
+            )
+        if val_split_path is not None:
+            raise ValueError('val_split_path requires val_start_date and test_start_date')
         y = self.df[self.target_col]
         X = self.df[self.selected_feats]
         dates = self.df[self.date_col]
@@ -178,7 +223,7 @@ class TrainTestBuilder:
             X, y, train_size=train_size, shuffle=False
         )
         if group_dates:
-            # Move the entire boundary event to test; the 85% row target is
+            # Move the entire boundary date to test; the requested row target is
             # approximate when an event would otherwise straddle the split.
             boundary = dates.loc[X_test.index].min()
             train_mask = dates < boundary
@@ -209,6 +254,78 @@ class TrainTestBuilder:
             'num_cols':num_cols,
             'cat_cols':cat_cols,
         }
+        if save_split or train_split_path is not None or test_split_path is not None:
+            directory = (Path(output_dir) if output_dir is not None else
+                         settings.data_dir / 'train_val_test' / 'split')
+            paths = {}
+            for name, key, explicit_path in (
+                ('train', 'train_df', train_split_path),
+                ('val', 'test_df', test_split_path),
+            ):
+                if explicit_path is not None or save_split:
+                    paths[name] = (Path(explicit_path) if explicit_path is not None
+                                   else directory / f'{name}_{self.odds_type}.csv')
+            if len(paths) == 2 and paths['train'].resolve() == paths['val'].resolve():
+                raise ValueError('Train and test split paths must be different')
+            for name, key in (('train', 'train_df'), ('val', 'test_df')):
+                if name in paths:
+                    paths[name].parent.mkdir(parents=True, exist_ok=True)
+                    pkt[key].to_csv(paths[name], index=False)
+            pkt['split_paths'] = paths
+        return pkt
+
+    def _prepare_dated_splits(
+        self, val_start_date, test_start_date, *, scale, save_split, output_dir,
+        train_split_path, val_split_path, test_split_path,
+    ):
+        val_start = pd.Timestamp(val_start_date).normalize()
+        test_start = pd.Timestamp(test_start_date).normalize()
+        if pd.isna(val_start) or pd.isna(test_start) or val_start >= test_start:
+            raise ValueError('Dates must be valid and val_start_date must precede test_start_date')
+        dates = self.df[self.date_col]
+        masks = {'train': dates < val_start,
+                 'val': (dates >= val_start) & (dates < test_start),
+                 'test': dates >= test_start}
+        for name, mask in masks.items():
+            if not mask.any():
+                raise ValueError(f'{name} split has no eligible rows; check cutoff dates and feature data')
+        frames = {name: self.df.loc[mask].copy() for name, mask in masks.items()}
+        inputs = {name: frame[self.selected_feats].copy() for name, frame in frames.items()}
+        num_cols = inputs['train'].select_dtypes(include='number').columns
+        cat_cols = inputs['train'].select_dtypes(include='category').columns
+        scaler = encoder = None
+        if scale:
+            fitted = self.scale_encode(inputs['train'], inputs['val'], cat_cols, num_cols)
+            scaler, encoder = fitted['scaler'], fitted['encoder']
+            inputs['train'], inputs['val'] = fitted['X_train'], fitted['X_test']
+            inputs['test'] = self.prepare_inference_data(inputs['test'], scaler, encoder)
+        pkt = {'scaler': scaler, 'encoder': encoder, 'num_cols': num_cols,
+               'cat_cols': cat_cols, 'filtered_df': self.df.copy(),
+               'val_start_date': val_start, 'test_start_date': test_start}
+        summaries = []
+        for name, frame in frames.items():
+            pkt.update({f'X_{name}': inputs[name], f'y_{name}': frame[self.target_col],
+                        f'dates_{name}': frame[self.date_col], f'{name}_df': frame})
+            count = len(frame)
+            percentage = 100 * count / len(self.df)
+            first, last = frame[self.date_col].min(), frame[self.date_col].max()
+            summaries.append(dict(split=name, rows=count, percentage=percentage,
+                                  first_date=first, last_date=last))
+            print(f'{name}: {count:,} rows ({percentage:.2f}%) | {first.date()} to {last.date()}')
+        pkt['split_summary'] = pd.DataFrame(summaries)
+        directory = Path(output_dir) if output_dir is not None else settings.data_dir / 'train_val_test' / 'split'
+        paths = {}
+        for name, explicit in [('train', train_split_path), ('val', val_split_path),
+                               ('test', test_split_path)]:
+            if explicit is not None or save_split:
+                paths[name] = Path(explicit) if explicit is not None else directory / f'{name}_{self.odds_type}.csv'
+        if len({path.resolve() for path in paths.values()}) != len(paths):
+            raise ValueError('Train, validation and test split paths must be different')
+        for name, path in paths.items():
+            path.parent.mkdir(parents=True, exist_ok=True)
+            frames[name].to_csv(path, index=False)
+        if paths:
+            pkt['split_paths'] = paths
         return pkt
 
     @staticmethod

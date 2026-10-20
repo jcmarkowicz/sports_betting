@@ -44,6 +44,7 @@ jobs:
 
       - name: Run script
         env:
+          MPLBACKEND: Agg
           EMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
         run: |

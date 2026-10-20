@@ -2,10 +2,9 @@ import numpy as np
 import pandas as pd
 from itertools import combinations
 from collections import defaultdict
+from ufc_betting.BettingStrategy.betting_params import BettingParams
 
 from ufc_betting.BettingStrategy.kelly_scaling import (
-    scale_mdd, 
-    kelly_edge, 
     kelly_edge, 
     expected_value, 
     log_return_volatility, 
@@ -17,7 +16,7 @@ def run_per_bet_scaling(
     max_drawdown,
     bankroll,
     N,
-    adjust_mdd_by_edge=True,
+    adjust_mdd_by_edge=False,
 ):
 
     rows = []
@@ -42,19 +41,12 @@ def run_per_bet_scaling(
             sigma = 0
 
         else:
-            edge = p - (1/(fair_odds))
-            adjusted_mdd = (
-                scale_mdd(edge, max_drawdown)
-                if adjust_mdd_by_edge
-                else max_drawdown
-            )
-
             f_final, sigma, mu = scale_kelly_for_mdd(
                 p,
                 fair_odds,
                 f_star,
                 N=N,
-                max_drawdown=adjusted_mdd,
+                max_drawdown=max_drawdown,
                 return_sigma=True,
             )
             stake = bankroll * f_final
@@ -97,7 +89,7 @@ def parlay_top_ev(
 
     if not empty_parlay:
         df_top_n = data.sort_values(
-            by=sort_column, ascending=False
+            by=sort_column, ascending=False, kind='stable'
         ).iloc[top_n].copy()
 
         parlay_prob = np.prod(df_top_n['choice_proba'])
@@ -186,7 +178,7 @@ def parlay_heavy_favorites(
     candidates = data.loc[
         (data['choice_ev'] > 0)
         & (data['choice_american_odds'] <= favorite_cutoff)
-    ].sort_values(sort_column, ascending=False)
+    ].sort_values(sort_column, ascending=False, kind='stable')
 
     selected = candidates.head(max_legs).copy()
     if len(selected) < 2:
@@ -318,7 +310,7 @@ def finalize_event_stats(
     return group_stats, new_bankroll
 
 
-def resolve_walk_forward_params(group, defaults, prefix='best_'):
+def resolve_walk_forward_params(group, defaults, prefix='best_', include_heavy_favorite=True):
     """Resolve the single walk-forward parameter set assigned to an event."""
     mapping = {
         'max_drawdown': 'mdd',
@@ -328,9 +320,10 @@ def resolve_walk_forward_params(group, defaults, prefix='best_'):
         'z': 'z',
         'moneyline_min_american': 'moneyline_min_american',
         'moneyline_max_american': 'moneyline_max_american',
-        'heavy_max_legs': 'heavy_parlay_max_legs',
-        'heavy_favorite_cutoff': 'heavy_favorite_cutoff',
     }
+    if include_heavy_favorite:
+        mapping.update(heavy_max_legs='heavy_parlay_max_legs',
+                       heavy_favorite_cutoff='heavy_favorite_cutoff')
     resolved = defaults.copy()
     for output_name, parameter_name in mapping.items():
         column = f'{prefix}{parameter_name}'
@@ -345,7 +338,7 @@ def resolve_walk_forward_params(group, defaults, prefix='best_'):
 
     resolved['N'] = int(resolved['N'])
     heavy_mdd_column = f'{prefix}heavy_parlay_mdd'
-    if heavy_mdd_column in group:
+    if include_heavy_favorite and heavy_mdd_column in group:
         values = group[heavy_mdd_column].dropna().unique()
         if len(values) != 1:
             raise ValueError(f"Each event must have exactly one value for '{heavy_mdd_column}'")
@@ -353,9 +346,10 @@ def resolve_walk_forward_params(group, defaults, prefix='best_'):
     else:
         resolved['heavy_parlay_mdd'] = resolved['parlay_mdd']
     resolved['N_parlay'] = int(resolved['N_parlay'])
-    if resolved['heavy_max_legs'] not in (2, 3, 4):
+    if include_heavy_favorite and resolved['heavy_max_legs'] not in (2, 3, 4):
         raise ValueError("heavy_parlay_max_legs must be an integer between 2 and 4")
-    resolved['heavy_max_legs'] = int(resolved['heavy_max_legs'])
+    if include_heavy_favorite:
+        resolved['heavy_max_legs'] = int(resolved['heavy_max_legs'])
     resolved['moneyline_american_bounds'] = (
         float(resolved['moneyline_min_american']),
         float(resolved['moneyline_max_american']),
@@ -455,7 +449,11 @@ def simulate_kelly(
         monthly_params=None,
         risk_prob_cols=None,
         heavy_parlay_mdd=None,
-        adjust_mdd_by_edge=True,
+        adjust_mdd_by_edge=False,
+        decay_rates=None,
+        opening_data=None,
+        opening_params=None,
+        betting_params=None,
     ):
 
     """Simulate Kelly betting with optional regular and heavy-favorite parlays.
@@ -465,11 +463,54 @@ def simulate_kelly(
     ``best_heavy_parlay_max_legs`` or the configured parameter prefix.
     ``heavy_parlay_mdd`` controls heavy-parlay sizing independently; None
     inherits ``parlay_mdd``. Both strategies share ``N_parlay``.
-    Set ``adjust_mdd_by_edge=False`` to size moneylines using the supplied
-    drawdown limit without increasing it for larger edges. Walk-forward
-    parameter runs continue to disable this adjustment. This flag does not
-    disable the separate ``z`` uncertainty adjustment or exposure cap.
+    Sizing always uses the supplied drawdown limit. ``adjust_mdd_by_edge`` is
+    accepted for compatibility but has no effect. Uncertainty/exposure scaling
+    still applies.
+    ``decay_rates`` enables the existing fixed-policy allocation blend, with
+    ``opening_data`` supplying opening prices and ``opening_params`` supplying
+    its controls. The ordinary sizing arguments specify closing controls.
+    This mode disables edge-based MDD adjustment and uses no floor or top-ups.
+    ``betting_params`` accepts BettingParams or a parameter dictionary and takes
+    precedence over the individual sizing, opening-policy, and decay arguments.
     """
+    # A shared parameter object can supply both sizing policies and decay rates.
+    controls = (BettingParams.from_simulation_kwargs(locals()) if betting_params is None
+                else BettingParams.from_value(betting_params))
+    max_drawdown, parlay_mdd = controls.mdd, controls.mdd_parlay
+    N, N_parlay, z = controls.N, controls.N_parlay, controls.z
+    moneyline_american_bounds = controls.to_simulation_kwargs()['moneyline_american_bounds']
+    decay_rates = controls.decay_rates
+    opening_params = controls.to_simulation_kwargs()['opening_params']
+    if decay_rates is not None:
+        # Reuse the established decay backtest; its endpoint calls omit
+        # decay_rates, so they follow the ordinary simulation below.
+        from ufc_betting.Models.RiskManagement.exponential_decay_search import MoneylineDecaySearch
+        from ufc_betting.Models.RiskManagement.parlay_decay_search import ParlayDecaySearch
+        if opening_data is None or opening_params is None:
+            raise ValueError('Decay simulation requires opening_data and opening_params')
+        if (bankroll_floor is not None or use_walk_forward_params or monthly_params is not None
+                or calc_heavy_favorite_parlay or test_other_ev or test_bankroll_scaler):
+            raise ValueError('Decay simulation uses fixed controls, no floor, heavy parlays, or alternate bet rules')
+        frame = df_final.copy()
+        reference = opening_data.copy()
+        for target, source in (('date', date_col), ('winner', winner_col), ('pred_winner', pred_winner_col)):
+            frame[target] = df_final[source]
+        reference['date'] = opening_data[date_col]
+        for idx, side in enumerate(('blue', 'red')):
+            frame[f'proba_{side}'] = df_final[prob_cols[idx]]
+            frame[f'dec_fair_close1_{side}'] = df_final[fair_decimal_cols[idx]]
+            frame[f'dec_close1_{side}'] = df_final[real_decimal_cols[idx]]
+            if risk_prob_cols is not None:
+                frame[f'risk_proba_{side}'] = df_final[risk_prob_cols[idx]]
+        if prediction_se_col in df_final:
+            frame['prediction_se'] = df_final[prediction_se_col]
+        engine = MoneylineDecaySearch(frame, reference, opening_params, controls.to_policy(),
+                                     odds_type='close1', initial_bankroll=init_bankroll, k=2)
+        if calc_parlay:
+            return ParlayDecaySearch(engine).simulate_kelly(decay_rates)
+        rates = decay_rates.get('best_params', decay_rates)
+        return engine.simulate_kelly({name: rates[name] for name in ('k_down', 'k_up')})
+
     bankroll = init_bankroll
 
     df_results = pd.DataFrame()
@@ -496,7 +537,8 @@ def simulate_kelly(
     ):
         risk_prob_cols = ['risk_proba_blue', 'risk_proba_red']
 
-    df = df_final.sort_values(by=date_col)
+    # Preserve within-event ordering so equal-EV parlays match the search.
+    df = df_final.sort_values(by=date_col, kind='stable')
 
     for date, group in df.groupby(date_col, sort=True):
         group = group.reset_index(drop=True)
@@ -516,7 +558,8 @@ def simulate_kelly(
         }
         if use_walk_forward_params:
             event_params = resolve_walk_forward_params(
-                group, event_params, prefix=walk_forward_param_prefix
+                group, event_params, prefix=walk_forward_param_prefix,
+                include_heavy_favorite=calc_heavy_favorite_parlay,
             )
 
         group_stats = defaultdict(list)
@@ -667,78 +710,62 @@ def simulate_kelly(
                     heavy_parlay_df['fstar_parlay'].iloc[0]
                 )
 
-        uncertainty_multiplier = 1.0
+        from ufc_betting.BettingStrategy.betting_returns import BettingReturnCalculator as Calculator
         event_z = event_params['z']
+        raw_single_stakes = bets_out_df['f_star_scaled'].to_numpy(dtype=float, copy=True)
+        raw_exposure = raw_single_stakes.sum() + parlay_fstar + heavy_parlay_fstar
+        single_risk = np.ones(len(group))
+        ticket_risk = heavy_ticket_risk = 1.
         if event_z is not None:
             if not np.isfinite(event_z) or event_z < 0:
                 raise ValueError("z must be a finite non-negative number or None")
             if prediction_se_col not in group.columns:
-                raise KeyError(
-                    f"z was provided, but prediction standard-error column "
-                    f"'{prediction_se_col}' is missing"
-                )
-
-            model_probabilities = np.asarray(
-                group_stats['choice_risk_proba'], dtype=float
-            )
-            vegas_probabilities = 1 / np.asarray(
-                group_stats['choice_fair_odds'], dtype=float
-            )
+                raise KeyError(f"z was provided, but prediction standard-error column '{prediction_se_col}' is missing")
             prediction_se = group[prediction_se_col].to_numpy(dtype=float)
-            if not np.isfinite(prediction_se).all():
-                raise ValueError(
-                    f"Column '{prediction_se_col}' contains NaN or infinite values"
-                )
-            uncertainty_weights = bets_out_df[
-                'f_star_scaled'
-            ].to_numpy(dtype=float, copy=True)
-            for parlay_df, parlay_weight in (
-                (df_top_n, parlay_fstar),
-                (heavy_parlay_df, heavy_parlay_fstar),
-            ):
-                if (
-                    parlay_df is None
-                    or parlay_df.empty
-                    or parlay_weight <= 0
-                ):
-                    continue
-                leg_weight = parlay_weight / len(parlay_df)
-                uncertainty_weights += (
-                    np.isin(np.arange(len(group)), parlay_df.index)
-                    * leg_weight
-                )
+            if not np.isfinite(prediction_se).all() or (prediction_se < 0).any():
+                raise ValueError(f"Column '{prediction_se_col}' must contain finite nonnegative values")
+            probability = np.asarray(group_stats['choice_risk_proba'], dtype=float)
+            market_probability = 1 / np.asarray(group_stats['choice_fair_odds'], dtype=float)
+            raw_edges = np.maximum(probability - market_probability, 0.)
+            conservative_edges = np.maximum(probability - event_z * prediction_se - market_probability, 0.)
+            single_risk = Calculator.risk_multiplier(raw_single_stakes, raw_edges, conservative_edges)
+            def ticket_ratio(frame):
+                if frame is None or frame.empty:
+                    return 1.
+                ids = frame.index.to_numpy(dtype=int)
+                return float(Calculator.ticket_risk_multiplier(raw_edges[ids], conservative_edges[ids]))
+            ticket_risk = ticket_ratio(df_top_n)
+            heavy_ticket_risk = ticket_ratio(heavy_parlay_df)
 
-            raw_edges = np.maximum(
-                model_probabilities - vegas_probabilities,
-                0,
-            )
-            conservative_edges = np.maximum(
-                model_probabilities
-                - event_z * prediction_se
-                - vegas_probabilities,
-                0,
-            )
-            raw_score = np.sum(uncertainty_weights * raw_edges)
-            conservative_score = np.sum(
-                uncertainty_weights * conservative_edges
-            )
-            uncertainty_multiplier = (
-                np.clip(conservative_score / raw_score, 0.0, 1.0)
-                if raw_score > 0
-                else 0.0
-            )
+        # Adjust each bet before the shared exposure cap. The aggregate ratio
+        # is retained only as a diagnostic, never applied to another bet.
+        for column in ('f_star_scaled', 'stake', 'profit'):
+            bets_out_df[column] *= single_risk
+        parlay_fstar *= ticket_risk
+        parlay_net_money *= ticket_risk
+        heavy_parlay_fstar *= heavy_ticket_risk
+        heavy_parlay_net_money *= heavy_ticket_risk
+        if df_top_n is not None and not df_top_n.empty:
+            df_top_n['fstar_parlay'] *= ticket_risk
+            df_top_n['bet_risk_multiplier'] = ticket_risk
+        if heavy_parlay_df is not None and not heavy_parlay_df.empty:
+            heavy_parlay_df['fstar_parlay'] *= heavy_ticket_risk
+            heavy_parlay_df['bet_risk_multiplier'] = heavy_ticket_risk
+        adjusted_exposure = bets_out_df['f_star_scaled'].sum() + parlay_fstar + heavy_parlay_fstar
+        uncertainty_multiplier = adjusted_exposure / raw_exposure if raw_exposure > 0 else 1.
+        group_stats['bet_risk_multiplier'] = single_risk
 
         total_fstar = (
             bets_out_df['f_star_scaled'].sum()
             + parlay_fstar
             + heavy_parlay_fstar
-        ) * uncertainty_multiplier
+        )
         exposure_multiplier = (
             min(1.0, 1.0 / total_fstar)
             if total_fstar > 0
             else 1.0
         )
-        event_multiplier = uncertainty_multiplier * exposure_multiplier
+        event_multiplier = exposure_multiplier
 
         bets_out_df['f_star_scaled'] *= event_multiplier
         bets_out_df['stake'] *= event_multiplier

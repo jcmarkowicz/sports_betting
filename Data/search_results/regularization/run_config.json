@@ -1,0 +1,55 @@
+{
+  "input_path": "C:\\Users\\jcmar\\my_files\\SportsBetting\\Data\\train_val_test\\splits\\train.csv",
+  "selected_features": [
+    "proba_fair_open_diff",
+    "reach_diff",
+    "sub_att_pm_red",
+    "sub_att_pm_blue",
+    "td_attempted_pm_diff",
+    "td_defended_pm_diff",
+    "adjusted_td_diff",
+    "adjusted_control_diff",
+    "adjusted_sig_str_diff",
+    "sig_str_absorbed_pm_diff",
+    "kd_total_diff",
+    "sig_str_accuracy_pct_diff",
+    "sig_str_defense_pct_diff",
+    "win_pct_red",
+    "win_pct_blue",
+    "win_streak_diff",
+    "lose_streak_diff",
+    "elo_red",
+    "elo_blue",
+    "elo_pred",
+    "age_red",
+    "age_blue",
+    "opp_age_red",
+    "opp_age_blue"
+  ],
+  "target_col": "winner",
+  "date_col": "date",
+  "categorical_cols": [
+    "math_red",
+    "math_blue",
+    "elo_pred",
+    "womens_fight"
+  ],
+  "included_rows": 3994,
+  "n_trials": 50,
+  "n_splits": 5,
+  "gap": 0,
+  "seed": 42,
+  "logit_alpha_bounds": [
+    0.2,
+    7.0
+  ],
+  "glm_alpha_bounds": [
+    1e-05,
+    7.0
+  ],
+  "l1_wt_bounds": [
+    0.0,
+    1.0
+  ],
+  "objective": "mean_walk_forward_fold_brier"
+}

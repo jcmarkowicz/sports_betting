@@ -43,6 +43,44 @@ def moneyline_frame() -> pd.DataFrame:
 
 
 class MoneylineDataFrameTests(unittest.TestCase):
+    def test_event_ev_combines_moneylines_and_reports_percent_of_opening(self) -> None:
+        frame = moneyline_frame()
+        frame["fstar_open"] = [0.1, 0.2]
+        frame["ev_open"] = [0.5, 0.25]
+        frame["fstar_close1"] = [0.2, 0.1]
+        frame["ev_close1"] = [0.25, 0.5]
+        frame["fstar_close2"] = [0.1, 0.1]
+        frame["ev_close2"] = [0.2, 0.3]
+        moneylines = MoneylineDataFrame(frame)
+
+        event_ev = moneylines.event_ev().set_index("date")
+        percentages = moneylines.percent_of_opening_ev().set_index("date")
+        date = pd.Timestamp("2026-08-01")
+
+        self.assertAlmostEqual(event_ev.loc[date, "event_ev_open"], 0.1)
+        self.assertAlmostEqual(event_ev.loc[date, "event_ev_close1"], 0.1)
+        self.assertAlmostEqual(event_ev.loc[date, "event_ev_close2"], 0.05)
+        self.assertAlmostEqual(
+            percentages.loc[date, "pct_opening_ev_open"], 100
+        )
+        self.assertAlmostEqual(
+            percentages.loc[date, "pct_opening_ev_close1"], 100
+        )
+        self.assertAlmostEqual(
+            percentages.loc[date, "pct_opening_ev_close2"], 50
+        )
+
+    def test_percent_of_opening_ev_is_missing_for_zero_opening_ev(self) -> None:
+        frame = moneyline_frame()
+        frame["fstar_open"] = 0.0
+        moneylines = MoneylineDataFrame(frame)
+
+        percentages = moneylines.percent_of_opening_ev()
+
+        self.assertTrue(
+            percentages.filter(like="pct_opening_ev_").isna().all().all()
+        )
+
     def test_generated_moneylines_preserve_unsettled_rows(self) -> None:
         moneylines = MoneylineDataFrame.from_generated(moneyline_frame())
 

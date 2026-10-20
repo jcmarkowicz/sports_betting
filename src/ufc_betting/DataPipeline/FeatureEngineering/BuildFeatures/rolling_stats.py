@@ -276,6 +276,9 @@ def apply_rolling_stats(ufc_features):
 
     fighter_attr = ['age', 'height', 'reach']
     general_features = ['date', 'event_location', 'weight_class', 'title_fight']
+    # Carry original card metadata through without rolling or renumbering it.
+    general_features += [col for col in ('bout_position', 'event_name', 'event_type')
+                         if col in per_fight_features.columns]
     win_features = ["performance_bonus_winner", "fight_otn_bonus", 'method', 'winner', 'fighter_red', 'fighter_blue']
     colors = ['red', 'blue']
     time_col = 'fight_minutes'
@@ -358,16 +361,35 @@ def apply_rolling_stats(ufc_features):
     # print(f'REACHED ADJ perf')
     # time.sleep(5)
 
-    adjusted_sig_str_cols= compute_adjusted_performance(
-        per_fight_features, performance_col='sig_str_landed', 
-        opponent_performance_col='sig_str_absorbed', time_decay=True
+    # Individual-bout rates, not the rolling pre-fight rates in final_df.
+    # Unknown or zero durations cannot produce a valid rate.
+    fight_minutes = per_fight_features['fight_minutes'].where(
+        per_fight_features['fight_minutes'] > 0
+    )
+    for color in colors:
+        opponent = 'blue' if color == 'red' else 'red'
+        for feature in ('sig_str_landed', 'sig_str_absorbed', 'control'):
+            per_fight_features[f'{feature}_bout_pm_{color}'] = (
+                per_fight_features[f'{feature}_{color}'] / fight_minutes
+            )
+        per_fight_features[f'control_absorbed_bout_pm_{color}'] = (
+            per_fight_features[f'control_{opponent}'] / fight_minutes
+        )
+
+    adjusted_sig_str_cols = compute_adjusted_performance(
+        per_fight_features, performance_col='sig_str_landed_bout_pm',
+        opponent_performance_col='sig_str_absorbed_bout_pm', time_decay=True
+    )
+
+    adjusted_control_cols = compute_adjusted_performance(
+        per_fight_features, performance_col='control_bout_pm',
+        opponent_performance_col='control_absorbed_bout_pm', time_decay=True
     )
     
     adjusted_td_cols = compute_adjusted_performance(
         per_fight_features, performance_col='td_landed', 
-        opponent_performance_col='td_defended', time_decay=True
+        opponent_performance_col='td_absorbed', time_decay=True
     )
-    
     
     # Build one DataFrame containing all new columns
     new_cols = pd.DataFrame({
@@ -379,6 +401,8 @@ def apply_rolling_stats(ufc_features):
         'ratio_sig_str_blue': sigstrike_cols[:,1],
         'adjusted_sig_str_red': adjusted_sig_str_cols[:,0],
         'adjusted_sig_str_blue':adjusted_sig_str_cols[:,1],
+        'adjusted_control_red': adjusted_control_cols[:,0],
+        'adjusted_control_blue': adjusted_control_cols[:,1],
         'adjusted_td_red': adjusted_td_cols[:,0],
         'adjusted_td_blue': adjusted_td_cols[:,1]
     })

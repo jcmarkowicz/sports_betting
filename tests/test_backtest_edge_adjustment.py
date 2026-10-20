@@ -1,5 +1,4 @@
 import unittest
-from unittest.mock import patch
 
 import pandas as pd
 
@@ -7,7 +6,7 @@ from ufc_betting.BettingStrategy.Backtest.backtest_functions import simulate_kel
 
 
 class EdgeAdjustmentTests(unittest.TestCase):
-    def test_disable_uses_smaller_stake_and_default_remains_enabled(self):
+    def test_legacy_flag_never_changes_supplied_mdd_sizing(self):
         data = pd.DataFrame([dict(
             date='2026-01-01', fighter_red='Red', fighter_blue='Blue',
             winner=1, pred_winner=1, red=.8, blue=.2,
@@ -22,14 +21,10 @@ class EdgeAdjustmentTests(unittest.TestCase):
         )
         default, _ = simulate_kelly(data, **kwargs)
         enabled, _ = simulate_kelly(data, **kwargs, adjust_mdd_by_edge=True)
-        with patch(
-            'ufc_betting.BettingStrategy.Backtest.backtest_functions.scale_mdd',
-            side_effect=AssertionError('Edge adjustment must not run'),
-        ):
-            disabled, _ = simulate_kelly(data, **kwargs, adjust_mdd_by_edge=False)
+        disabled, _ = simulate_kelly(data, **kwargs, adjust_mdd_by_edge=False)
         pd.testing.assert_frame_equal(default, enabled)
         self.assertGreater(disabled.choice_fstar.iloc[0], 0)
-        self.assertLess(disabled.choice_fstar.iloc[0], enabled.choice_fstar.iloc[0])
+        pd.testing.assert_frame_equal(disabled, enabled)
 
 
 if __name__ == '__main__':

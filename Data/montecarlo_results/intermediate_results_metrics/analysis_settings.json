@@ -1,0 +1,15 @@
+{
+  "results_file": "C:\\Users\\jcmar\\my_files\\SportsBetting\\Data\\montecarlo_results\\intermediate_results.pkl",
+  "len_temp": 1,
+  "event_count": 72,
+  "targets": [
+    5000,
+    10000,
+    25000
+  ],
+  "bankroll_scale": "log when positive, otherwise symlog",
+  "return_scale": "symlog",
+  "ulcer_method": "RMS percentage drawdown across post-settlement balances",
+  "underwater_method": "count and percentage of settlements below running peak",
+  "sharpe_method": "mean(path-average event returns) / sample SD(path-average event returns); unannualized; no-bet and post-ruin events contribute zero"
+}

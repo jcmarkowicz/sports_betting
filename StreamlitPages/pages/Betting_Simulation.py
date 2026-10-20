@@ -1,114 +1,67 @@
-import sys
-import os
-
-
 import streamlit as st
 from utils import show_image
-from ufc_betting.config import config, settings
-
-
+from ufc_betting.config import settings
 
 st.title("Betting Simulation")
-
-# Section header
-st.markdown('<h2>Bets Sizing</h2>', unsafe_allow_html=True)
-
-# Second paragraph with link
-st.markdown("""
-<p style="font-size:18px; line-height:1.6;">
-Once fight predictions have been computed along with their probability of occurance, an optimal betting strategy can be derived. In short, 
-it can be proven that the Kelly Criterion is the optimal fraction of ones bankroll that one should bet which will maximize wealth in the log run. The formula's simplicty
-has made it effective in finance and its deriviation is shown here: <a href="https://en.wikipedia.org/wiki/Kelly_criterion" target="_blank">Wikipedia article</a>.
-The key property of this formula is that it only produces a value greater than 0 when the betting edge is positive, meaning the computed AI probability is greater than the probability derived from vegas money lines.
-</p>
-""", unsafe_allow_html=True)
-
-# Third paragraph
-st.markdown("""
-<p style="font-size:18px; line-height:1.6;">
-There are some limiations and risk when imposing the kelly strategy on real world data. For one, the formula assumes the probabilites are known, and the AI's probability is only an estimate. Therefore, the more calibrated (see AI training and testing page) the
-AI is, the more reliable its probabilites will be and wealth over the long run will grow at faster rates. Another noted limiation the formula faces is that the variance of returns it produces is often high, and so it is common
-to use a fraction of the kelly criterion in order to limit large drawdowns or swings. In my strategy, I implemented a binary search that finds the largest fraction of Kelly that keeps expected maximum drawdown less than pre selected amount.
-The expected maximum draw is derived using the variance of wealth growth under kelly and a heuristic which estimates max drawdown under Gaussian returns from that variance. In simpler terms, if we were to place a bet on the same fight a given number of times,
-the algorithm estimates the maximum possible difference in consecutive returns from high to low, and limits our strategy from crossing that threshold. As with all the following statistical models below, each comes with its own set of assumptions about the data that if broken
-can severly hinder the interpretation of results. 
-</p>
-""", unsafe_allow_html=True)
-
-st.markdown("""
-<p style="font-size:18px; line-height:1.6;">
-Some refernces for the deriviation of the maximum drawdown heuristic. Saving these for myself to explore more: <a href="https://en.wikipedia.org/wiki/Extreme_value_theory" target="_blank">Extreme Value Theory Wiki</a>.
-            
-</p><a href="https://en.wikipedia.org/wiki/Fisher%E2%80%93Tippett%E2%80%93Gnedenko_theorem?utm_source=chatgpt.com" target="_blank">extreme value theorem wiki</a>
-""", unsafe_allow_html=True)
-
-st.markdown('<h2>Results with Opening Odds</h2>', unsafe_allow_html=True)
-st.markdown("""
-<p style="font-size:18px; line-height:1.6;">
-With opening odds, the results are phenomenal with profit at is peak reaching 80 million. However, there are a couple of caveats with this strategy. Bankroll is updated
-after every event meaning current sizing is reflected by the previous event's profit/losses. This will rarely be the case in the real world because opening odds require placing bets potentially weeks in advance in order to 
-avoid shifting lines. Parlays are also effected from the staggered timeline because not all event fights are announced at once. Still, given the accuracy of both money line and parlay bets, I 
-expect these concerns to not have much of an effect, its likely wealth will grow slower then displayed at first. Achieving a fraction of the displayed results is convincing enough to attempt the strategy. 
-</p>
-""", unsafe_allow_html=True)
-
-path =  settings.data_dir / "plot_pngs" / "open_kelly_sim.png"
-show_image(path, title='Open Odds Simulation')
-
-path = settings.data_dir / "plot_pngs" / "returns_distributions_open.png"
-show_image(path, title='Open Returns Distributions')
-
-
-st.markdown("""
-## Close1 Odds Results
-
-This data shows market behavior greatly diminishes the edge/equity from AI predictions. All the more reason to lock in opening odds bets ahead of time 
-
-""")
-
-path =  settings.data_dir / "plot_pngs" / "close1_kelly_sim.png"
-show_image(path, title='Close1 Odds Simulation')
-
-path = settings.data_dir / "plot_pngs" / "returns_distributions_close1.png"
-show_image(path, title='Close1 Returns Distributions')
-
-
+st.subheader("Bet sizing")
 st.markdown(
-"""
-## Close2 Odds Results:
-            
-Better results from close1 but still much worse results from Open 
-
-"""
+    "The Kelly criterion gives the bankroll fraction that maximizes expected "
+    "logarithmic growth for a binary bet under the supplied win probability and payout. "
+    "For decimal odds d, net odds b = d − 1, and estimated win probability p:"
+)
+st.latex(r"f_{\mathrm{Kelly}} = \frac{bp-(1-p)}{b} = \frac{dp-1}{d-1}, \qquad f_{\mathrm{bet}}=\max(0,f_{\mathrm{Kelly}})")
+st.markdown(
+    "A positive Kelly stake requires p > 1/d, the break-even probability at the "
+    "offered price. The simulation applies saved moneyline and parlay risk controls "
+    "and probability-uncertainty adjustments to these base stakes, with a shared "
+    "event exposure limit. Closing-market runs also use the saved decay controls "
+    "that blend opening and closing stake allocations."
+)
+st.markdown(
+    "These are historical validation backtests starting with a $500 bankroll. "
+    "The opening model supplies predictions with opening, close1, or close2 inputs. "
+    "The saved betting controls were selected using validation data, so these "
+    "results describe that sample rather than a separate held-out test."
 )
 
-path =  settings.data_dir / "plot_pngs" / "close2_kelly_sim.png"
-show_image(path, title='Close2 Simulation')
-
-
-path = settings.data_dir / "plot_pngs" / "returns_distributions_close2.png"
-show_image(path, title='Close2 Returns Distributions')
-
-
-
+st.subheader("Reading the plots")
 st.markdown(
-"""
-## Update 5/29/26 Stacking Results:
-            
-By using a model(xgboost) that stacks the probability scores of each of the three 
-initial models, fight prediction accuracy increased resulting in more accurate
-betting edges and higher returns.
-
-Notable improvements in both the  Close 1 and Close 2 betting odds demonstrating the stacking models 
-high performance availability. This is biggest breakthrough in terms of profitable 
-strategies as demonstrated by the significant increases in returns.  
-
-"""
+    "**Bankroll and profit:** the three panels show total bankroll over time, "
+    "cumulative parlay profit, and cumulative moneyline profit. The component "
+    "profits are dollar contributions to the shared bankroll."
+)
+st.markdown(
+    "**Bankroll distributions:** the top row shows event returns as percentages "
+    "of the bankroll available before each event, for moneylines, parlays, and "
+    "their combined result. The bottom row shows each component's cumulative "
+    "profit relative to initial bankroll, followed by combined compounded return "
+    "and geometric average growth per event. These are observed event returns, "
+    "not distributions of simulated terminal bankrolls."
+)
+st.markdown(
+    "**Event accuracy and exposure:** compare the accuracy of wagered model picks "
+    "with Vegas favorites across all available fights and across wagered fights. "
+    "Each fight counts once, including fights selected through parlays; void outcomes "
+    "are excluded, and tied prices are excluded from favorite accuracy. The fourth "
+    "panel shows the percentage of starting bankroll allocated to singles and "
+    "parlays at each event. Accuracy alone does not determine profitability: prices "
+    "and stake sizes also matter."
 )
 
-path =  settings.data_dir / "plot_pngs" / "stacking_kelly_sim1.png"
-show_image(path, title='Stacking Close1 Simulation')
-
-
-path = settings.data_dir / "plot_pngs" / "stacking_kelly_sim.png"
-show_image(path, title='Stacking Close2 Simulation')
+plot_dir = settings.plot_pngs_dir
+for market, label, backtest_file in (
+    ("open", "Opening Odds", "open_backtest.png"),
+    ("close1", "Close1 Odds", "close1.png"),
+    ("close2", "Close2 Odds", "close2_backtest.png"),
+):
+    st.subheader(f"{label} — Validation Results")
+    for filename, caption in (
+        (backtest_file, "Bankroll and cumulative profit"),
+        (f"{market}_bankroll_distributions.png", "Event bankroll returns and growth"),
+        (f"{market}_event_accuracy.png", "Event accuracy and bankroll exposure"),
+    ):
+        path = plot_dir / filename
+        if path.is_file():
+            show_image(path, title=f"{label}: {caption}")
+        else:
+            st.info(f"Run val_results.ipynb to export {path}")

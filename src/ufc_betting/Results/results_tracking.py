@@ -13,10 +13,9 @@ from ufc_betting.Results.returns import (
     returns_by_date,
 )
 
-from ufc_betting.config import settings, config
+from ufc_betting.config import settings, config, TEST_START_DATE
 
-#start_date='2026-02-23'
-def archive_results(start_date='2026-02-23', delete_old=True):
+def archive_results(start_date=TEST_START_DATE, delete_old=True):
     """
     Maintain moneyline and parlay history betting results. 
 

@@ -299,6 +299,79 @@ class ParlayDataFrame:
         # concatenate() needs that date to replace an older settled ticket.
         return type(self)(settled)
 
+    def event_ev(self) -> pd.DataFrame:
+        """Return model-implied expected bankroll return by event and stage.
+
+        A parlay is stored once per leg, so its repeated ``parlay_fstar`` and
+        ``parlay_ev`` values are counted once. Values are fractions of
+        bankroll, so ``0.05`` means an expected return of 5% of bankroll.
+        """
+        event_ev = pd.DataFrame({
+            "date": self.frame["date"].drop_duplicates().sort_values()
+        }).reset_index(drop=True)
+
+        for bet_type in self.bet_types:
+            fstar_column = f"parlay_fstar_{bet_type}"
+            ev_column = f"parlay_ev_{bet_type}"
+            missing = {
+                fstar_column,
+                ev_column,
+            } - set(self.frame.columns)
+            if missing:
+                raise ParlayIntegrityError(
+                    "Parlay EV calculation is missing columns: "
+                    f"{sorted(missing)}"
+                )
+
+            ticket_values = self.frame[[
+                "date", fstar_column, ev_column
+            ]].copy()
+            for column in (fstar_column, ev_column):
+                ticket_values[column] = pd.to_numeric(
+                    ticket_values[column], errors="coerce"
+                )
+                inconsistent = ticket_values.groupby("date")[column].nunique(
+                    dropna=True
+                ).gt(1)
+                if inconsistent.any():
+                    dates = inconsistent.index[inconsistent].tolist()
+                    raise ParlayIntegrityError(
+                        f"{column} has multiple values for event dates: "
+                        f"{dates}"
+                    )
+
+            tickets = ticket_values.groupby("date")[
+                [fstar_column, ev_column]
+            ].first()
+            # Missing ticket fields represent no parlay and therefore zero EV.
+            by_date = (
+                tickets[fstar_column] * tickets[ev_column]
+            ).fillna(0.0)
+            event_ev[f"event_ev_{bet_type}"] = event_ev["date"].map(
+                by_date
+            )
+
+        return event_ev
+
+    def percent_of_opening_ev(self) -> pd.DataFrame:
+        """Return each event stage's EV as a percentage of opening EV.
+
+        The ratio follows the RiskManagement convention:
+        ``100 * stage event EV / opening event EV``. Ratios are missing when
+        opening event EV is zero or negative because no meaningful positive
+        opening benchmark exists.
+        """
+        event_ev = self.event_ev()
+        opening = event_ev["event_ev_open"].where(
+            event_ev["event_ev_open"] > 1e-10
+        )
+        result = event_ev[["date"]].copy()
+        for bet_type in self.bet_types:
+            result[f"pct_opening_ev_{bet_type}"] = (
+                100 * event_ev[f"event_ev_{bet_type}"] / opening
+            )
+        return result
+
     def validate(self) -> None:
         """Validate the generic date and nullable settlement contract."""
         if self.frame.empty:

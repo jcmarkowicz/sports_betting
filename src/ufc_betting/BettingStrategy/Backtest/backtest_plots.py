@@ -57,6 +57,171 @@ def pmf_plot(df_kelly):
     plt.show()
 
 
+def plot_event_accuracy_distributions(moneylines, parlays=None, *, odds_type=None, bins=10):
+    """Histogram event accuracy and percentage of total bankroll wagered.
+
+    Vegas picks the shorter decimal price. Tied prices have no favorite and
+    are excluded from Vegas accuracy; void/nonbinary outcomes are excluded
+    from every accuracy. Positive moneyline stakes and, when supplied, positive
+    parlay stakes identify wagered fights. Each fight counts once, not once per
+    ticket leg. Post-ruin rows are excluded from wagers when balances exist.
+    Events with no eligible observations have NaN accuracy, not zero accuracy.
+
+    odds_type selects dec_<market>_red/blue when available. Ordinary backtest
+    outputs instead expose execution prices as real_odds_red/blue. If no market
+    is specified and multiple recorded markets exist, an explicit choice is
+    required. 'All Vegas' covers all fights present in moneylines.
+    Returns (figure, axes, event_accuracy), with accuracies as fractions and
+    eligible fight counts and bankroll_wagered_pct (0-100). Inputs are not modified.
+    """
+    keys = ['date', 'fighter_red', 'fighter_blue']
+    required = set(keys + ['winner', 'pred_winner', 'choice_fstar'])
+    missing = required - set(moneylines.columns)
+    if missing:
+        raise ValueError(f'Missing accuracy columns: {sorted(missing)}')
+    if moneylines.empty:
+        raise ValueError('No fights to plot')
+    frame = moneylines.copy().reset_index(drop=True)
+    frame['date'] = pd.to_datetime(frame.date, errors='raise').dt.normalize()
+    if frame[keys].isna().any().any():
+        raise ValueError('Fight dates and names must be present')
+    if odds_type is not None and odds_type not in ('open', 'close1', 'close2'):
+        raise ValueError('odds_type must be open, close1, or close2')
+    if odds_type is not None and {f'dec_{odds_type}_red', f'dec_{odds_type}_blue'} <= set(frame):
+        red, blue = f'dec_{odds_type}_red', f'dec_{odds_type}_blue'
+    elif {'real_odds_red', 'real_odds_blue'} <= set(frame):
+        red, blue = 'real_odds_red', 'real_odds_blue'
+    else:
+        markets = [m for m in ('open', 'close1', 'close2')
+                   if {f'dec_{m}_red', f'dec_{m}_blue'} <= set(frame)]
+        if odds_type is not None or len(markets) != 1:
+            raise ValueError('Specify odds_type matching available decimal price columns')
+        red, blue = f'dec_{markets[0]}_red', f'dec_{markets[0]}_blue'
+    prices = frame[[red, blue]].to_numpy(float)
+    if not np.isfinite(prices).all() or (prices <= 1).any():
+        raise ValueError('Favorite comparisons require finite decimal odds above 1')
+    stakes = frame.choice_fstar.to_numpy(float)
+    if not np.isfinite(stakes).all() or (stakes < 0).any():
+        raise ValueError('Moneyline stakes must be finite and nonnegative')
+    active = np.ones(len(frame), dtype=bool)
+    if {'bankroll_postevent', 'event_payout_money_line', 'parlay_net'} <= set(frame):
+        before = frame.bankroll_postevent - frame.event_payout_money_line - frame.parlay_net
+        if not np.isfinite(before).all():
+            raise ValueError('Starting bankrolls must be finite')
+        active = before.to_numpy() > 0
+    frame['_active'] = active
+    frame['_wagered'] = (stakes > 0) & active
+    frame['_pick'] = frame.pred_winner
+
+    if parlays is not None and not parlays.empty:
+        if not {'date', 'fstar_parlay'} <= set(parlays):
+            raise ValueError('Parlays require date and fstar_parlay')
+        tickets = parlays.copy()
+        tickets['date'] = pd.to_datetime(tickets.date, errors='raise').dt.normalize()
+        ticket_stakes = tickets.fstar_parlay.to_numpy(float)
+        if not np.isfinite(ticket_stakes).all() or (ticket_stakes < 0).any():
+            raise ValueError('Parlay stakes must be finite and nonnegative')
+        for _, leg in tickets.loc[ticket_stakes > 0].iterrows():
+            match = frame.date.eq(leg.date)
+            if {'fighter_red', 'fighter_blue'} <= set(tickets):
+                match &= frame.fighter_red.eq(leg.fighter_red) & frame.fighter_blue.eq(leg.fighter_blue)
+            elif 'fight_index' in tickets:
+                idx = leg.fight_index
+                if pd.isna(idx) or int(idx) != idx or not 0 <= int(idx) < len(frame):
+                    raise ValueError('Invalid parlay fight_index; pass unfiltered simulation outputs')
+                match &= frame.index == int(idx)
+            elif 'choice_fighter_name' in tickets:
+                match &= frame.fighter_red.eq(leg.choice_fighter_name) | frame.fighter_blue.eq(leg.choice_fighter_name)
+            else:
+                raise ValueError('Parlay legs require fighter names, fight_index, or choice_fighter_name')
+            ids = frame.index[match]
+            if not len(ids) or len(frame.loc[ids, keys].drop_duplicates()) != 1:
+                raise ValueError('Parlay leg does not uniquely match a fight; pass matching simulation outputs')
+            side = frame.loc[ids, 'pred_winner'].to_numpy()
+            if 'choice_fighter_name' in tickets:
+                names = frame.loc[ids]
+                if not ((names.fighter_red == leg.choice_fighter_name) | (names.fighter_blue == leg.choice_fighter_name)).all():
+                    raise ValueError('Parlay fighter does not match its fight')
+                side = names.fighter_red.eq(leg.choice_fighter_name).astype(int).to_numpy()
+            elif 'pred_winner' in tickets:
+                side = np.full(len(ids), leg.pred_winner)
+            if ((frame.loc[ids, '_wagered'].to_numpy()) & (frame.loc[ids, '_pick'].to_numpy() != side)).any():
+                raise ValueError('Opposing wagered picks on one fight cannot count as one pick')
+            frame.loc[ids, '_pick'] = side
+            frame.loc[ids, '_wagered'] = frame.loc[ids, '_wagered'].to_numpy() | active[ids]
+
+    # Collapse repeated records while rejecting contradictory fight data.
+    consistent = ['winner', '_pick', red, blue]
+    if (frame.groupby(keys)[consistent].nunique(dropna=False) > 1).any().any():
+        raise ValueError('Conflicting records for the same fight')
+    frame['_wagered'] = frame.groupby(keys)['_wagered'].transform('any')
+    frame = frame.drop_duplicates(keys)
+    settled = frame.winner.isin([0, 1])
+    if not frame.loc[settled & frame._wagered, '_pick'].isin([0, 1]).all():
+        raise ValueError('Wagered picks must be binary: blue=0, red=1')
+    favorite = (frame[red] < frame[blue]).astype(int)
+    has_favorite = frame[red] != frame[blue]
+    series = {
+        'your_picks': (frame._pick == frame.winner, settled & frame._wagered),
+        'vegas_all': (favorite == frame.winner, settled & has_favorite),
+        'vegas_wagered': (favorite == frame.winner, settled & has_favorite & frame._wagered),
+    }
+    events = pd.DataFrame(index=pd.Index(sorted(frame.date.unique()), name='date'))
+    for name, (correct, eligible) in series.items():
+        grouped = correct.loc[eligible].groupby(frame.loc[eligible, 'date'])
+        events[name] = grouped.mean().reindex(events.index)
+        events[name + '_n'] = grouped.size().reindex(events.index, fill_value=0).astype(int)
+    # Simulator event totals already count each parlay ticket once, whereas
+    # the parlay frame commonly repeats its stake on every leg.
+    if 'event_total_fstar' in frame:
+        if (frame.groupby('date').event_total_fstar.nunique(dropna=False) > 1).any():
+            raise ValueError('Conflicting total exposure within an event')
+        exposure = frame.groupby('date').event_total_fstar.first()
+    else:
+        exposure = frame.groupby('date').choice_fstar.sum()
+        if parlays is not None and not parlays.empty:
+            ticket_keys = ['date'] + (['parlay_strategy'] if 'parlay_strategy' in tickets else [])
+            if (tickets.groupby(ticket_keys).fstar_parlay.nunique(dropna=False) > 1).any():
+                raise ValueError('Ambiguous parlay stakes; supply event_total_fstar')
+            ticket_exposure = tickets.drop_duplicates(ticket_keys).groupby('date').fstar_parlay.sum()
+            exposure = exposure.add(ticket_exposure, fill_value=0)
+    exposure = exposure.reindex(events.index, fill_value=0).astype(float)
+    if not np.isfinite(exposure).all() or (exposure < 0).any():
+        raise ValueError('Event exposure must be finite and nonnegative')
+    exposure = exposure.where(frame.groupby('date')._active.any(), 0.)
+    events['bankroll_wagered_pct'] = 100 * exposure
+    if isinstance(bins, bool) or not isinstance(bins, (int, np.integer)) or bins < 1:
+        raise ValueError('bins must be a positive integer')
+    fig, grid = plt.subplots(2, 2, figsize=(13, 9))
+    axes = grid.ravel()
+    labels = ('Your wagered picks', 'Vegas favorites: all fights', 'Vegas favorites: wagered fights')
+    for ax, name, label in zip(axes, series, labels):
+        values = events[name].dropna() * 100
+        if len(values):
+            ax.hist(values, bins=np.linspace(0, 100, bins + 1), edgecolor='black', alpha=.75)
+            ax.axvline(values.mean(), color='tab:orange', linestyle='--',
+                       label=f'Mean event accuracy: {values.mean():.1f}%')
+            ax.legend()
+        else:
+            ax.text(.5, .5, 'No eligible events', transform=ax.transAxes, ha='center')
+        ax.set(title=f'{label}\n{len(values)} events', xlabel='Event accuracy (%)', xlim=(0, 100))
+        ax.grid(axis='y', alpha=.25)
+    values = events['bankroll_wagered_pct']
+    axes[3].hist(values, bins=np.linspace(0, max(100., values.max()), bins + 1),
+                 edgecolor='black', alpha=.75, color='tab:green')
+    axes[3].axvline(values.mean(), color='tab:orange', linestyle='--',
+                    label=f'Mean wagered: {values.mean():.1f}%')
+    axes[3].set(title=f'Total bankroll wagered: singles + parlays\n{len(values)} events',
+                xlabel='Starting total bankroll wagered (%)', xlim=(0, max(100., values.max())))
+    axes[3].legend()
+    axes[3].grid(axis='y', alpha=.25)
+    for ax in axes:
+        ax.set_ylabel('Number of events')
+    fig.tight_layout()
+    plt.show()
+    return fig, axes, events
+
+
 def summary_stats(df_kelly):
 
     bets_df = df_kelly[df_kelly['choice_ev'] > 0]
@@ -309,16 +474,6 @@ def plot_backtest(df_results, init_bankroll, path=None):
     df_group_profit = df_results.groupby('date')['event_payout_money_line'].first().reset_index()
     per_fight_net = np.cumsum(df_group_profit['event_payout_money_line'].values)
 
-    # MONEY LINE NET ODDS 
-    df_event_odds = df_results.groupby('date')['event_ml_net_odds'].first().reset_index()
-    event_net_vals = df_event_odds['event_ml_net_odds'].values
-    event_odds_cumsum = np.cumsum(event_net_vals)
-
-    # PARLAY NET ODDS 
-    df_parlay_odds = df_results.groupby('date')['parlay_net_odds'].first().reset_index()
-    parlay_net_vals = df_parlay_odds['parlay_net_odds'].values
-    parlay_odds_cumsum = np.cumsum(parlay_net_vals)
-
     # COMPUTE CUMULATIVE PARLAY
     df_parlay_daily = df_results.groupby('date')['parlay_net'].first().reset_index()
     parlay_vals = df_parlay_daily['parlay_net'].values
@@ -326,8 +481,8 @@ def plot_backtest(df_results, init_bankroll, path=None):
     x_parlay = np.arange(len(df_parlay_daily))
 
 
-    # CREATE FIGURE WITH 5 SUBPLOTS
-    fig, axs = plt.subplots(5, 1, figsize=(14, 16), sharex=True)
+    # CREATE FIGURE WITH 3 SUBPLOTS
+    fig, axs = plt.subplots(3, 1, figsize=(14, 11), sharex=True)
     label_every = 5  # show every 5th date
 
     axs[0].plot(x_positions, bankroll_history, marker='o', label='Bankroll')
@@ -373,16 +528,6 @@ def plot_backtest(df_results, init_bankroll, path=None):
     axs[2].set_ylabel("Cumulative Profit")
     axs[2].legend()
 
-    axs[3].plot(event_odds_cumsum, marker='o', color='green', label='Cumulative Event Net Odds')
-    axs[3].set_title("Cumulative Event Net Odds")
-    axs[3].set_ylabel("Cumulative Odds")
-    axs[3].legend()
-
-    axs[4].plot(parlay_odds_cumsum, marker='o', color='purple', label='Cumulative Parlay Net Odds')
-    axs[4].set_title("Cumulative Parlay Net Odds")
-    axs[4].set_ylabel("Cumulative Odds")
-    axs[4].legend()
-
     # Correct shared date labeling for ALL subplots
     label_every = 5
 
@@ -409,54 +554,106 @@ def plot_backtest(df_results, init_bankroll, path=None):
     return fig, axs
 
 
-def plot_bankroll_distributions(group_stats_, df_parlay):
+def plot_bankroll_distributions(group_stats_, df_parlay=None, *, bins=30,
+                                include_diagnostics=False):
+    """Plot event bankroll-return distributions from simulate_and_plot outputs.
+
+    Event totals repeat on fight rows, so retain one row per date. Returns are
+    normalized from fractional or percent input to percentages on the plots. The parlay contribution
+    is already in group_stats_; never sum the repeated ticket legs in df_parlay.
+    Moneyline/parlay bottom panels show cumulative actual dollar profit divided
+    by initial bankroll. Combined overlays compounded return and geometric growth
+    per event. Component contributions add to combined return when there are no
+    deposits/withdrawals; combined chains event returns to exclude cash flows.
+    No-bet events count. Initial bankroll is inferred from the first event.
+    Legacy edge/odds diagnostics are optional and require df_parlay.
+    Returns the distribution figure and its axes.
+    """
+    required = {'date', 'bankroll_pct_change', 'bankroll_postevent',
+                'event_payout_money_line', 'parlay_net'}
+    missing = required - set(group_stats_.columns)
+    if missing:
+        raise ValueError(f'Missing event-return columns: {sorted(missing)}')
+    if group_stats_.empty:
+        raise ValueError('No backtest events to plot')
     group_stats = group_stats_.copy()
+    group_stats['date'] = pd.to_datetime(group_stats['date'], errors='raise')
+    if group_stats['date'].isna().any():
+        raise ValueError('Event dates must not be missing')
     group_stats = group_stats.sort_values('date')
-    group_stats['date'] = pd.to_datetime(group_stats['date'])
-
-    numeric_cols = [
-        'pct_bankroll_gain_per',
-        'pct_bankroll_gain_parlay',
-        'pct_bankroll_gain_total'
-    ]
-
-    daily = (
-        group_stats.groupby('date')[numeric_cols]
-        .mean()
-        .reset_index()
-    )
-
-    daily['cum_per'] = daily['pct_bankroll_gain_per'].cumsum()
-    daily['cum_parlay'] = daily['pct_bankroll_gain_parlay'].cumsum()
-    daily['cum_total'] = daily['pct_bankroll_gain_total'].cumsum()
-
-    base_cols = ['pct_bankroll_gain_per', 'pct_bankroll_gain_parlay', 'pct_bankroll_gain_total']
-    cum_cols  = ['cum_per',              'cum_parlay',              'cum_total']
-
-    titles     = ['Per Bet Gain',        'Parlay Gain',             'Total Gain']
-    cum_titles = ['Cumulative Per Bet',  'Cumulative Parlay',       'Cumulative Total']
+    daily = group_stats.drop_duplicates('date').copy()
+    values = daily[list(required - {'date'})].to_numpy(dtype=float)
+    if not np.isfinite(values).all():
+        raise ValueError('Event returns and bankrolls must be finite')
+    # Reconstruct the actual starting balance, including any replenishments.
+    before = (daily['bankroll_postevent'] - daily['event_payout_money_line']
+              - daily['parlay_net']).to_numpy(float)
+    ml = daily['event_payout_money_line'].to_numpy(float)
+    pl = daily['parlay_net'].to_numpy(float)
+    if np.any((before <= 0) & ((ml != 0) | (pl != 0))):
+        raise ValueError('Nonpositive starting bankroll with nonzero event profit')
+    if before[0] <= 0:
+        raise ValueError('Initial bankroll must be positive')
+    daily['moneyline_return'] = np.divide(ml, before, out=np.zeros_like(ml), where=before > 0)
+    daily['parlay_return'] = np.divide(pl, before, out=np.zeros_like(pl), where=before > 0)
+    daily['total_return'] = daily['bankroll_pct_change']
+    combined = daily.moneyline_return + daily.parlay_return
+    if not np.allclose(combined, daily.total_return):
+        if np.allclose(combined * 100, daily.total_return):
+            daily['total_return'] = daily.total_return / 100
+        else:
+            raise ValueError('Moneyline and parlay returns do not match bankroll_pct_change')
 
     fig, axes = plt.subplots(2, 3, figsize=(20, 10))
-
-    # --- top row: histograms ---
-    for ax, col, title in zip(axes[0], base_cols, titles):
-        sns.histplot(daily[col], kde=True, ax=ax, color='skyblue', edgecolor='black')
-        ax.set_title(title)
-        ax.grid(True, alpha=0.3)
-
-    # --- bottom row: cumulative time series ---
-    for ax, col, title in zip(axes[1], cum_cols, cum_titles):
-        sns.lineplot(x='date', y=col, data=daily, ax=ax)
-        ax.set_title(title)
-        ax.grid(True, alpha=0.3)
-
-        # --- format x axis ---
-        ax.xaxis.set_major_locator(mdates.AutoDateLocator())
-        ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
-        ax.tick_params(axis='x', rotation=45)
-
-    plt.tight_layout()
+    for col, title, top, bottom in zip(
+            ('moneyline_return', 'parlay_return', 'total_return'),
+            ('Moneylines', 'Parlays', 'Combined'), axes[0], axes[1]):
+        percentages = daily[col] * 100
+        sns.histplot(percentages, bins=bins, kde=percentages.nunique() > 1,
+                     ax=top, color='skyblue', edgecolor='black')
+        top.axvline(0, color='black', linestyle='--', linewidth=1)
+        top.set(title=f'{title}: event return distribution',
+                xlabel='Event bankroll return (%)', ylabel='Number of events')
+        if col != 'total_return':
+            profits = ml if col == 'moneyline_return' else pl
+            contribution = 100 * np.cumsum(profits) / before[0]
+            bottom.plot(daily['date'], contribution, color='tab:blue',
+                        label='Cumulative actual profit / initial bankroll')
+            bottom.set(title=f'{title}: actual profit contribution',
+                       xlabel='Event date', ylabel='Contribution to initial bankroll (%)')
+            bottom.legend(loc='best')
+        else:
+            returns = daily[col].to_numpy(float)
+            wealth = np.cumprod(1 + returns)
+            compounded = 100 * (wealth - 1)
+            # Geometric growth is undefined after losses beyond the bankroll.
+            valid = np.logical_and.accumulate(1 + returns >= 0)
+            geometric = np.full(len(returns), np.nan)
+            geometric[valid] = 100 * (np.power(wealth[valid], 1 / np.arange(1, len(returns) + 1)[valid]) - 1)
+            cumulative_line, = bottom.plot(daily['date'], compounded, color='tab:blue',
+                                           label='Cumulative compounded return')
+            growth_axis = bottom.twinx()
+            growth_line, = growth_axis.plot(daily['date'], geometric, color='tab:orange',
+                                           linestyle='--', label='Geometric growth per event')
+            bottom.set(title='Combined: compounded growth',
+                       xlabel='Event date', ylabel='Cumulative compounded return (%)')
+            growth_axis.set_ylabel('Geometric average growth per event (%)', color='tab:orange')
+            bottom.tick_params(axis='y', labelcolor='tab:blue')
+            growth_axis.tick_params(axis='y', labelcolor='tab:orange')
+            bottom.legend(handles=[cumulative_line, growth_line], loc='best')
+        bottom.axhline(0, color='gray', linestyle=':', linewidth=1)
+        bottom.xaxis.set_major_locator(mdates.AutoDateLocator())
+        bottom.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+        bottom.tick_params(axis='x', rotation=45)
+        top.grid(True, alpha=.3)
+        bottom.grid(True, alpha=.3)
+    fig.tight_layout()
     plt.show()
+    if not include_diagnostics:
+        return fig, axes
+    distribution_figure, distribution_axes = fig, axes
+    if df_parlay is None:
+        raise ValueError('df_parlay is required for include_diagnostics=True')
 
     filtered = group_stats[group_stats['choice_edge'] > 0].copy()
     filtered['edge_bins'] = pd.qcut(filtered['choice_edge'], q=4)
@@ -524,6 +721,9 @@ def plot_bankroll_distributions(group_stats_, df_parlay):
 
     plt.tight_layout()
     plt.show()
+
+
+    return distribution_figure, distribution_axes
 
 
 def kelly_analysis(df_kelly, x_vars, y_var, bins=8):

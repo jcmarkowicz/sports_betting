@@ -28,15 +28,25 @@ class ParlayBandsTests(unittest.TestCase):
                 cache = np.column_stack([sized.f_star_scaled,p*odds-1,
                     np.where(winners==1,odds-1,-1),p-1/fair,
                     np.maximum(p-.5*se-1/fair,0),p,odds,np.ones(count)])[None,:,:]
-                expected, realized, stake = evaluate_parlays(cache,data)
+                horizon = 750 if count == 8 else 1490
+                parlay_mdd = .25 if count == 8 else .4
+                z = None if count == 2 else .5
+                expected, realized, stake = evaluate_parlays(cache,data,
+                    N_parlay=horizon, mdd_parlay=parlay_mdd, z=z)
                 results, tickets = simulate_kelly(data,
                     prob_cols=['blue','red'], fair_decimal_cols=['fair_blue','fair_red'],
                     real_decimal_cols=['odds_blue','odds_red'], pred_winner_col='pred_winner',
-                    init_bankroll=500, max_drawdown=.4, N=250, parlay_mdd=.4,
-                    N_parlay=1490, calc_parlay=True, z=.5, prediction_se_col='se')
+                    init_bankroll=500, max_drawdown=.4, N=250, parlay_mdd=parlay_mdd,
+                    N_parlay=horizon, calc_parlay=True, z=z, prediction_se_col='se')
                 np.testing.assert_allclose(realized[0], results.regular_parlay_net.iloc[0]/500, atol=1e-12)
                 np.testing.assert_allclose(stake[0], tickets.fstar_parlay.iloc[0], atol=1e-12)
                 np.testing.assert_allclose(expected[0], tickets.fstar_parlay.iloc[0]*tickets.parlay_ev.iloc[0], atol=1e-12)
+                combined_ev, combined_return, exposure = evaluate_parlays(cache,data,
+                    N_parlay=horizon,mdd_parlay=parlay_mdd,z=z,combined=True)
+                np.testing.assert_allclose(combined_return[0],
+                    (results.bankroll_postevent.iloc[0]-500)/500,atol=1e-12)
+                self.assertLessEqual(exposure[0],1+1e-12)
+                self.assertGreaterEqual(combined_ev[0],expected[0])
 
     def test_ties_and_nonpositive_ev_match_top_ev(self):
         group = pd.DataFrame(dict(winner=[1,0,1,1], fighter_red=list('abcd'),

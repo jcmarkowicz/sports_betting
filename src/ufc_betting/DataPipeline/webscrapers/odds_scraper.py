@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 
 import pandas as pd
 from dateutil import parser
@@ -14,6 +15,26 @@ import random
 import time
 import undetected_chromedriver as uc
 
+def _search_result_snapshot(driver):
+    """Read names and URLs atomically; retry if navigation invalidates a row."""
+    try:
+        if driver.execute_script('return document.readyState') != 'complete':
+            return False
+        try:
+            table = driver.find_element(By.CSS_SELECTOR, "table.content-list")
+        except NoSuchElementException:
+            # A unique match can navigate directly to a fighter's odds page.
+            # Preserve the original fallback, including pages with no odds rows.
+            return ('fighter', [])
+        matches = []
+        for row in table.find_elements(By.TAG_NAME, "tr"):
+            link = row.find_element(By.CSS_SELECTOR, "td a")
+            matches.append((link.text.lower(), link.get_attribute('href')))
+        return ('search', matches)
+    except StaleElementReferenceException:
+        return False
+
+
 def fighter_odds_search(red_fighter, blue_fighters, event_dates, driver):
 
     search_name = red_fighter
@@ -21,33 +42,31 @@ def fighter_odds_search(red_fighter, blue_fighters, event_dates, driver):
     search_box.clear()
     search_box.send_keys(search_name)
     search_box.send_keys(Keys.RETURN)
+    wait = WebDriverWait(driver, 10)
+    wait.until(EC.staleness_of(search_box))
+    page_type, matches = wait.until(_search_result_snapshot)
 
-    try: 
-        table = driver.find_element(By.CSS_SELECTOR, "table.content-list")
-    except:
+    if page_type == 'fighter':
         # print(f"Found ONE matches: {red_fighter}")
         odds_dic = scrape_odds(driver, blue_fighters, event_dates)
         # print(f'Confirming return vals: {odds_dic}')
         driver.back()  # Go back to the search results page
         return odds_dic
 
-    rows = table.find_elements(By.TAG_NAME, "tr")
     possible_matches = []
 
-    for row in rows:
-        fighter_link = row.find_element(By.CSS_SELECTOR, "td a")
-        fighter_name = fighter_link.text.lower()
+    for fighter_name, fighter_url in matches:
 
         # Check if all parts of the search name are in the fighter's name
         if all(term in clean_string(fighter_name) for term in clean_string(search_name)) or \
             all(term in clean_string(search_name) for term in clean_string(fighter_name)):
-            possible_matches.append(fighter_link)
+            possible_matches.append(fighter_url)
 
     if possible_matches:
         # print(f"Found possible matches: {[link.text for link in possible_matches]}")
         odds_dic = defaultdict(list)
-        for link in possible_matches:
-            link.click()
+        for fighter_url in possible_matches:
+            driver.get(fighter_url)
             return_dic = scrape_odds(driver, blue_fighters, event_dates)
             
             for key, value in return_dic.items():

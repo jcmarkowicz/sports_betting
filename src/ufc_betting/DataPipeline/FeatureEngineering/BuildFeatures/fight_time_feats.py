@@ -131,12 +131,9 @@ def td_attempted(dat):
     tda = int(dat.split()[2])
     return tda 
 
-def td_defense(opponents_td):
-    if opponents_td == '---':
-        return .55 #prior if no prio attempts on fighter 
-    else:
-        opponent_percent = td_percent(opponents_td) #decimal value 
-        return 1 - opponent_percent
+def td_defended(dat):
+    """Count takedowns stopped from the opponent's 'landed of attempted' stat."""
+    return td_attempted(dat) - td_landed(dat)
     
 def sub_attemtped(subatt):
     "submissions attempted per round"
@@ -151,10 +148,16 @@ def reverse(reverse):
 def minsecs_to_float(time_str):
     """
     Convert a 'min:secs' string to total minutes as a float.
+    Unavailable times remain missing rather than being counted as zero.
     
     Example:
         '3:30' -> 3.5
     """
+    if pd.isna(time_str):
+        return float('nan')
+    time_str = time_str.strip()
+    if time_str in ('', '--', '---'):
+        return float('nan')
     minutes, seconds = map(int, time_str.split(":"))
     return minutes + seconds / 60
 
@@ -231,7 +234,11 @@ def single_event_features(webscrape_df):
     ufc_df["event_location"] = ufc_df["event_location"].apply(get_event_country)
     ufc_df["event_age"] = ufc_df["event_date"].apply(lambda x: get_years_past(x, current_year))
     ufc_df["date"] = ufc_df["event_date"].apply(parse_date)
-    ufc_df["fight_minutes"] = ufc_df['fight_time'].apply(minsecs_to_float)
+    # Scraped fight_time is elapsed time in the final round (five-minute rounds).
+    ufc_df["fight_minutes"] = (
+        (pd.to_numeric(ufc_df['round'], errors='raise') - 1) * 5
+        + ufc_df['fight_time'].apply(minsecs_to_float)
+    )
     ufc_df['title_fight'] = ufc_df['title_fight'].astype(float)
 
     # --- BASIC FIGHTER ATTRIBUTES ---
@@ -269,7 +276,9 @@ def single_event_features(webscrape_df):
         grappling_features.update({
             f"td_landed_{color}": lambda row, c=color: td_landed(row[f"td_{c}"]),
             f"td_attempted_{color}": lambda row, c=color: td_attempted(row[f"td_{c}"]),
-            f"td_defended_{color}": lambda row, c=color, o=opp_color: td_defense(row[f"td_pct_{o}"]),
+
+            f"td_defended_{color}": lambda row, o=opp_color: td_defended(row[f"td_{o}"]),
+            f"td_absorbed_{color}": lambda row, o=opp_color: td_landed(row[f"td_{o}"]),
 
             f"control_{color}": lambda row, c=color: minsecs_to_float(row[f"ctrl_{c}"]),
             f"sub_att_{color}": lambda row, c=color: sub_attemtped(row[f"sub_att_{c}"]),

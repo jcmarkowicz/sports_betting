@@ -13,9 +13,9 @@ class UFC_Webscraper:
     def __init__(self):
         pass
 
-    def scrape_until(self, date, upcoming=False):
-        """If date==None, scrape all events"""
-        updated_df = scrape_ufc(date, get_upcoming=upcoming) # if upcoming is True, scrape the upcoming fight card only 
+    def scrape_until(self, date, upcoming=False, *, start_page=1, end_page=None):
+        """date=None removes the date cutoff; end_page=None visits all pages."""
+        updated_df = scrape_ufc(date, get_upcoming=upcoming, start_page=start_page, end_page=end_page)
         # updated_df.sort_values(by='event_date', ascending=True).reset_index(drop=True)
         # updated_df.to_csv(file_path, index=False)
         return updated_df

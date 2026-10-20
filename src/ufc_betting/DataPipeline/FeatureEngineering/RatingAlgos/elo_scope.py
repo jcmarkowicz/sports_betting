@@ -137,6 +137,11 @@ def run_elo_on_matches(df, base_k=20.0,
         pa = expected_prob(ra, rb, scale=scale)
         expected_probs.append(pa)
 
+        # Draws/no contests (2) and unknown results (3) preserve ratings.
+        # Keep their predictions above, but do not advance the regression counter.
+        if sa in (2, 3):
+            continue
+
         # margin of victory
         w = abs(row['score_a'] - row['score_b'])
         # ensure w>0 for some functions

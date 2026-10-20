@@ -7,11 +7,12 @@ from sklearn.metrics import brier_score_loss
 from ufc_betting.Results.returns import (
     _event_return_fractions,
     accuracy_analysis,
+    prepare_return_plot_data,
     returns_by_date,
 )
 
 
-BET_TYPES = ("open", "close1_stack", "close2_stack")
+BET_TYPES = ("open", "close1", "close2")
 
 
 def return_frames() -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -26,6 +27,32 @@ def return_frames() -> tuple[pd.DataFrame, pd.DataFrame]:
 
 
 class ReturnTests(unittest.TestCase):
+    def test_plot_inputs_preserve_losses_and_actual_bankroll_contributions(self):
+        moneylines, parlays = return_frames()
+        moneylines['fighter_red'] = ['a', 'c']
+        moneylines['fighter_blue'] = ['b', 'd']
+        moneylines['winner_bool'] = [0, 1]
+        moneylines['pred_winner_open'] = [1, 0]
+        moneylines['open_red'] = [-150, 130]
+        moneylines['open_blue'] = [130, -150]
+        moneylines['net_stake_open'] = [-0.8, -0.8]
+        parlays['choice_fighter_name_open'] = ['a', 'd']
+        parlays['net_stake_open'] = [-0.5, -0.5]
+        balances = pd.DataFrame({
+            'date': ['2026-01-01'], 'bankroll_open': [0.0],
+            'profits_open': [-1000.0],
+        })
+        events, ml, pl = prepare_return_plot_data(
+            moneylines, parlays, balances, 'open',
+        )
+        self.assertAlmostEqual(events.event_payout_money_line.iloc[0], -1000 * 1.6 / 2.1)
+        self.assertAlmostEqual(events.parlay_net.iloc[0], -1000 * 0.5 / 2.1)
+        self.assertEqual(events.bankroll_pct_change.iloc[0], -1)
+        self.assertEqual(ml.choice_fstar.tolist(), [0.8, 0.8])
+        self.assertEqual(pl.fstar_parlay.tolist(), [0.5, 0.5])
+        self.assertAlmostEqual(ml.dec_open_red.iloc[0], 1 + 100 / 150)
+        self.assertNotIn('choice_fstar', moneylines)
+
     def test_event_return_is_deduplicated_and_floored_at_full_loss(self) -> None:
         moneylines, parlays = return_frames()
         moneylines = pd.concat([moneylines, moneylines], ignore_index=True)
@@ -121,8 +148,8 @@ class ReturnTests(unittest.TestCase):
         moneylines, parlays = return_frames()
         for bet_type, odds_type in (
             ("open", "open"),
-            ("close1_stack", "close1"),
-            ("close2_stack", "close2"),
+            ("close1", "close1"),
+            ("close2", "close2"),
         ):
             moneylines[f"pred_winner_{bet_type}"] = [1, 0]
             moneylines[f"choice_proba_{bet_type}"] = [1.0, pd.NA]

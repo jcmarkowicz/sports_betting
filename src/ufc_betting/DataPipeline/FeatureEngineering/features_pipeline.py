@@ -23,17 +23,22 @@ class FeatureEngineering:
         return all_features
     
     def build_all_stats(self, stats_df, upcoming_stats, odds_df, upcoming_odds, ignore_upcoming=False):
+        """Build features while preserving scraped bout_position and event metadata.
+
+        Positions must come from the original complete cards in stats_df (and
+        upcoming_stats when used); they are never inferred from dataframe order.
+        """
 
         # combine odds history and upcoming odds, build odds features
         # combine upcoming odds and odds history
         total_odds = pd.concat([odds_df, upcoming_odds]).reset_index(drop=True) if not ignore_upcoming else odds_df 
         total_odds = build_odds_features(total_odds)
-        total_odds.to_csv(settings.data_dir / 'features_test_files/all_odds_features.csv', index=False)
+        # total_odds.to_csv(settings.data_dir / 'features_test_files/all_odds_features.csv', index=False)
 
         # compute features for past events
         past_event_stats = single_event_features(stats_df.copy())
         past_event_stats = past_event_stats.loc[:, ~past_event_stats.columns.str.contains('^Unnamed')]
-        past_event_stats.to_csv(settings.data_dir / 'features_test_files/ufc_single_event_features.csv', index=False)
+        # past_event_stats.to_csv(settings.data_dir / 'features_test_files/ufc_single_event_features.csv', index=False)
         print(f'Fight time feats shape" {past_event_stats.shape}')
 
         if ignore_upcoming:
@@ -64,6 +69,10 @@ class FeatureEngineering:
                 if col in empty_df.columns and col in upcoming_single_event.columns:
                     empty_df[col] = upcoming_single_event[col]
 
+            for col in ('bout_position', 'event_name', 'event_type'):
+                if col in upcoming_single_event.columns:
+                    empty_df[col] = upcoming_single_event[col]
+
             # Make sure event_date is datetime
             empty_df['date'] = pd.to_datetime(empty_df['event_date'], format="%Y-%m-%d")
             upcoming_count = upcoming_stats.shape[0]
@@ -72,12 +81,12 @@ class FeatureEngineering:
         # compute rolling stats
         rolling_fp = settings.data_dir / 'features_test_files/ufc_new_rolling.csv'
         rolling_df = apply_rolling_stats(combined_df) #sort here
-        rolling_df.to_csv(rolling_fp, index=False)
+        # rolling_df.to_csv(rolling_fp, index=False)
         print('Rolling features shape:', rolling_df.shape)
 
         # compute non rolling stats
         total_df = non_rolling_stats(rolling_df)
-        total_df.to_csv(settings.data_dir / 'features_test_files/new_combined.csv', index=False)
+        # total_df.to_csv(settings.data_dir / 'features_test_files/new_combined.csv', index=False)
         total_df = total_df.copy()
         print('Total features shape:', total_df.shape)
 
@@ -173,9 +182,14 @@ class FeatureEngineering:
             'Juan Puig': 'Juan Manuel Puig',
             'Jun Yong Park': 'JunYong Park',
             'K.J. Noons': 'KJ Noons',
-            'Kai Kamaka III': 'Kai Kamaka',
+            'Kai Kamaka': 'Kai Kamaka III',
+            'Kai Kamaka III': 'Kai Kamaka III',
+            'Kai Kamaka Iii.': 'Kai Kamaka III',
             'Luiz Dutra Jr.': 'Luiz Dutra',
-            'Magomed Bibulatov': 'Bibulatov Magomed',
+            'Bibulatov Magomed': 'Magomed Bibulatov',
+            'Magomed Bibulatov': 'Magomed Bibulatov',
+            'Patricio Freire': 'Patricio Pitbull',
+            'Zachary Reese': 'Zach Reese',
             'Manny Gamburyan': 'Manvel Gamburyan',
             'Marcio Alexandre Jr.': 'Marcio Alexandre Junior',
             'Marcus Levesseur': 'Marcus LeVesseur',
@@ -288,13 +302,17 @@ class FeatureEngineering:
             "Junyong Park": "JunYong Park",
             "K.B. Bhullar": "KB Bhullar",
             "K.J. Noons": "KJ Noons",
-            "Kai Kamaka III": "Kai Kamaka",
-            "Kai Kamaka Iii.": "Kai Kamaka",
+            "Kai Kamaka": "Kai Kamaka III",
+            "Kai Kamaka III": "Kai Kamaka III",
+            "Kai Kamaka Iii.": "Kai Kamaka III",
             "Kb Bhullar": "KB Bhullar",
             "Larissa Moreira Pacheco": "Larissa Pacheco",
             "Lipeng Zhang": "Zhang Lipeng",
             "Luiz Dutra Jr.": "Luiz Dutra",
-            "Magomed Bibulatov": "Bibulatov Magomed",
+            "Bibulatov Magomed": "Magomed Bibulatov",
+            "Magomed Bibulatov": "Magomed Bibulatov",
+            "Patricio Freire": "Patricio Pitbull",
+            "Zachary Reese": "Zach Reese",
             "Manny Gamburyan": "Manvel Gamburyan",
             "Marcio Alexandre Jr.": "Marcio Alexandre Junior",
             "Marcus Levesseur": "Marcus LeVesseur",

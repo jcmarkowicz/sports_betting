@@ -18,6 +18,7 @@ def parlay_frame() -> pd.DataFrame:
     frame["choice_fighter_bool_open"] = [1, 0]
     frame["parlay_fstar_open"] = [0.1, 0.1]
     frame["parlay_odds_open"] = [3.0, 3.0]
+    frame["parlay_ev_open"] = [0.5, 0.5]
 
     frame["choice_fighter_name_close1"] = [
         "Red One",
@@ -26,6 +27,7 @@ def parlay_frame() -> pd.DataFrame:
     frame["choice_fighter_bool_close1"] = [1, 0]
     frame["parlay_fstar_close1"] = [0.2, 0.2]
     frame["parlay_odds_close1"] = [2.5, 2.5]
+    frame["parlay_ev_close1"] = [0.2, 0.2]
 
     frame["choice_fighter_name_close2"] = pd.Series(
         [pd.NA, pd.NA],
@@ -40,6 +42,10 @@ def parlay_frame() -> pd.DataFrame:
         dtype="Float64",
     )
     frame["parlay_odds_close2"] = pd.Series(
+        [pd.NA, pd.NA],
+        dtype="Float64",
+    )
+    frame["parlay_ev_close2"] = pd.Series(
         [pd.NA, pd.NA],
         dtype="Float64",
     )
@@ -60,6 +66,56 @@ def event_results() -> pd.DataFrame:
 
 
 class ParlayDataFrameTests(unittest.TestCase):
+    def test_event_ev_counts_repeated_ticket_once_and_reports_percent(self) -> None:
+        frame = parlay_frame()
+        frame["parlay_fstar_open"] = [0.2, 0.2]
+        frame["parlay_ev_open"] = [0.5, 0.5]
+        frame["parlay_fstar_close1"] = [0.1, 0.1]
+        frame["parlay_ev_close1"] = [0.5, 0.5]
+        frame["parlay_fstar_close2"] = [0.25, 0.25]
+        frame["parlay_ev_close2"] = [0.2, 0.2]
+        parlays = ParlayDataFrame.from_generated(frame, "2026-08-01")
+
+        event_ev = parlays.event_ev().set_index("date")
+        percentages = parlays.percent_of_opening_ev().set_index("date")
+        date = pd.Timestamp("2026-08-01")
+
+        self.assertAlmostEqual(event_ev.loc[date, "event_ev_open"], 0.1)
+        self.assertAlmostEqual(event_ev.loc[date, "event_ev_close1"], 0.05)
+        self.assertAlmostEqual(event_ev.loc[date, "event_ev_close2"], 0.05)
+        self.assertAlmostEqual(
+            percentages.loc[date, "pct_opening_ev_open"], 100
+        )
+        self.assertAlmostEqual(
+            percentages.loc[date, "pct_opening_ev_close1"], 50
+        )
+        self.assertAlmostEqual(
+            percentages.loc[date, "pct_opening_ev_close2"], 50
+        )
+
+    def test_event_ev_rejects_inconsistent_repeated_ticket_values(self) -> None:
+        frame = parlay_frame()
+        frame["parlay_ev_open"] = [0.5, 0.6]
+        parlays = ParlayDataFrame.from_generated(frame, "2026-08-01")
+
+        with self.assertRaisesRegex(
+            ParlayIntegrityError, "multiple values"
+        ):
+            parlays.event_ev()
+
+    def test_percent_of_opening_ev_is_missing_for_zero_opening_ev(self) -> None:
+        frame = parlay_frame()
+        frame["parlay_fstar_open"] = 0.0
+        frame["parlay_fstar_close2"] = [0.1, 0.1]
+        frame["parlay_ev_close2"] = [0.2, 0.2]
+        parlays = ParlayDataFrame.from_generated(frame, "2026-08-01")
+
+        percentages = parlays.percent_of_opening_ev()
+
+        self.assertTrue(
+            percentages.filter(like="pct_opening_ev_").isna().all().all()
+        )
+
     def test_generated_parlays_preserve_unsettled_rows(self) -> None:
         parlays = ParlayDataFrame.from_generated(
             parlay_frame(),

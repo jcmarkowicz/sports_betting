@@ -1,0 +1,3 @@
+odds_type,days_out,opening,closing,observations,outside_observed_range,probability_below_open,probability_between_endpoints
+close1,6,2.0,1.6,428,False,0.7297694161400499,0.2861201400794145
+close2,6,2.0,1.6,428,False,0.6555316377521475,0.33434682756560147

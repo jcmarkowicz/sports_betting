@@ -19,15 +19,7 @@ from ufc_betting.DataPipeline.FeatureEngineering.BuildFeatures.odds_features imp
 KEY = ["date", "fighter_red", "fighter_blue"]
 
 
-def interpolate_prices(closing, opening, fraction):
-    if not 0 <= fraction <= 1:
-        raise ValueError("fraction must be between 0 and 1")
-    closing, opening = np.asarray(closing, float), np.asarray(opening, float)
-    if closing.shape != opening.shape or not np.isfinite([closing, opening]).all():
-        raise ValueError("Prices must be finite and aligned")
-    if (closing <= 1).any() or (opening <= 1).any():
-        raise ValueError("Decimal odds must exceed 1")
-    return closing + fraction * (opening - closing)
+from ufc_betting.BettingStrategy.Convergence.odds_scenarios import interpolate_prices
 
 
 def fair_probabilities(prices):

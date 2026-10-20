@@ -15,7 +15,7 @@ from ufc_betting.Models.RiskManagement.delayed_bayesian_search import (
 from ufc_betting.Models.RiskManagement.delayed_walk_forward_logit import (
     window_masks, train_opening_bundle, predict_odds, run_delayed_walk_forward,
     chronological_folds, prepare_history, validate_alpha_history,
-    predict_from_alpha_history, search_alpha_history,
+    predict_from_alpha_history, search_alpha_history, kelly_simulation_input,
 )
 
 
@@ -54,6 +54,147 @@ PARAMS = dict(mdd=.3, N=250, mdd_parlay=.3, N_parlay=500, z=0.,
 
 
 class DelayedWalkForwardTests(unittest.TestCase):
+    def test_all_betting_searches_run_concurrently_with_saved_models(self):
+        from threading import Barrier
+        from ufc_betting.Models.RiskManagement import delayed_walk_forward_logit as module
+        barrier = Barrier(3)
+        configs = [dict(odds_type=odds, opening_results_dir='saved_models',
+                        output_dir=f'betting_{odds}', betting_trials=trials)
+                   for odds, trials in [('open', 2), ('close1', 3), ('close2', 4)]]
+
+        def search(**kwargs):
+            barrier.wait(timeout=10)
+            return kwargs
+
+        with patch.object(module, 'run_search', side_effect=search), patch.object(
+                module, 'run_opening_model', side_effect=AssertionError('No model training')):
+            results = module.run_all_betting_searches(*configs)
+        self.assertEqual(list(results), ['open', 'close1', 'close2'])
+        for config in configs:
+            self.assertEqual(results[config['odds_type']], config)
+        with self.assertRaisesRegex(ValueError, 'training is disabled'):
+            module.run_all_betting_searches({**configs[0], 'opening_results_dir': None},
+                                           configs[1], configs[2])
+        with self.assertRaisesRegex(ValueError, 'distinct output folders'):
+            module.run_all_betting_searches(configs[0],
+                                           {**configs[1], 'output_dir': configs[0]['output_dir']},
+                                           configs[2])
+
+    def test_upper_moneyline_bound_is_not_searched(self):
+        trial = optuna.trial.FixedTrial({**{k: v for k, v in PARAMS.items()
+                                           if k != 'moneyline_max_american'},
+                                        'moneyline_min_american': -300})
+        params = FrozenBettingSearch.suggest(trial)
+        self.assertNotIn('moneyline_max_american', params)
+        search = FrozenBettingSearch(betting_predictions(), k=10)
+        pd.testing.assert_frame_equal(search.event_returns(params),
+                                      search.event_returns({**params, 'moneyline_max_american': np.inf}))
+
+    def test_model_only_outputs_reusable_without_betting_or_refitting(self):
+        from ufc_betting.Models.RiskManagement import delayed_walk_forward_logit as module
+        with tempfile.TemporaryDirectory() as directory:
+            with patch.object(module, 'FrozenBettingSearch',
+                              side_effect=AssertionError('Model-only must not run betting')):
+                result = module.run_opening_model(
+                    self.data, output_dir=directory, test_start='2021-01-01',
+                    test_end='2021-04-01', features=self.features,
+                    model_trials=1, n_splits=3)
+            self.assertEqual(len(result['alpha_history']), 3)
+            self.assertEqual(len(result['models']), 3)
+            self.assertTrue((Path(directory) / 'run_config.json').is_file())
+            self.assertFalse((Path(directory) / 'betting_data.csv').exists())
+            self.assertFalse((Path(directory) / 'best_params.csv').exists())
+            self.assertEqual({p.name for p in Path(directory).rglob('*.csv')},
+                             {'alpha_history.csv', 'best_alpha.csv'})
+            with patch.object(module, 'fit_opening_bundle',
+                              side_effect=AssertionError('Must reuse saved models')), patch.object(
+                              module, 'train_opening_bundle',
+                              side_effect=AssertionError('Must not search alpha')):
+                closing = module.run_search(
+                    self.data, opening_results_dir=directory,
+                    output_dir=Path(directory) / 'close1', odds_type='close1',
+                    betting_lookback_months=1, betting_refit_months=1,
+                    betting_trials=1, n_paths=10)
+            self.assertEqual(len(closing['windows']), 2)
+            self.assertTrue(closing['predictions'].odds_type.eq('close1').all())
+            winners_path = Path(directory) / 'close1_best_params.csv'
+            winners = pd.read_csv(winners_path)
+            self.assertEqual(len(winners), 2)
+            self.assertEqual(winners.run_id.nunique(), 1)
+            self.assertTrue(winners.best_trial_number.eq(0).all())
+            self.assertTrue(winners.odds_type.eq('close1').all())
+            self.assertTrue({'mdd', 'N', 'score', 'test_start', 'tuning_start',
+                             'run_started_utc', 'output_dir'} <= set(winners))
+            module.run_search(
+                self.data, opening_results_dir=directory,
+                output_dir=Path(directory) / 'close1', odds_type='close1',
+                betting_lookback_months=1, betting_refit_months=1,
+                betting_trials=1, n_paths=10)
+            winners = pd.read_csv(winners_path)
+            self.assertEqual(len(winners), 4)
+            self.assertEqual(winners.run_id.nunique(), 2)
+
+    def test_python_entrypoint_accepts_csv_paths_and_returns_results(self):
+        from ufc_betting.Models.RiskManagement import delayed_walk_forward_logit as module
+        with tempfile.TemporaryDirectory() as directory:
+            data_path = Path(directory) / 'fights.csv'
+            alpha_path = Path(directory) / 'alphas.csv'
+            self.data.to_csv(data_path, index=False)
+            pd.DataFrame(dict(effective_date=['2021-01-01'],
+                              training_cutoff=['2021-01-01'], alpha=[.5])).to_csv(alpha_path, index=False)
+            expected = {'betting_data': pd.DataFrame()}
+            with patch.object(module, 'run_delayed_walk_forward', return_value=expected) as run:
+                actual = module.run_search(data_path, alpha_history=alpha_path,
+                                           odds_type='close2', output_dir=directory)
+            self.assertIs(actual, expected)
+            self.assertIsInstance(run.call_args.args[0], pd.DataFrame)
+            self.assertIsInstance(run.call_args.kwargs['alpha_history'], pd.DataFrame)
+            self.assertEqual(run.call_args.kwargs['odds_type'], 'close2')
+
+    def test_equal_ev_legs_and_bankroll_match_kelly_simulator(self):
+        from ufc_betting.BettingStrategy.Backtest.backtest_functions import simulate_kelly
+        # The original unstable date sort reversed the middle event's rows,
+        # replacing its winning first two legs with two losing legs.
+        for fights_per_event in (10, 20):
+            with self.subTest(fights_per_event=fights_per_event):
+                count = 3 * fights_per_event
+                frame = pd.DataFrame(dict(
+                    date=np.repeat(pd.date_range('2020-01-01', periods=3), fights_per_event),
+                    winner=np.tile([1, 1] + [0] * (fights_per_event - 2), 3),
+                    proba_red=.8, proba_blue=.2, risk_red_proba=.8,
+                    prediction_se=.01, pred_winner=1,
+                    dec_open_red=2., dec_open_blue=2.,
+                    dec_fair_open_red=2., dec_fair_open_blue=2.,
+                    fighter_red=[str(i) for i in range(count)], fighter_blue='b',
+                ))
+                for name, value in PARAMS.items():
+                    frame[f'best_{name}'] = value
+                search = FrozenBettingSearch(frame, k=20)
+                original = search.engine.parlay_returns
+                search_legs = []
+
+                def capture(*args, **kwargs):
+                    tickets = original(*args, **kwargs)
+                    for ids in tickets.selected_ids:
+                        search_legs.append(search.frame.iloc[ids].fighter_red.tolist())
+                    return tickets
+
+                with patch.object(search.engine, 'parlay_returns', side_effect=capture):
+                    events = search.event_returns(PARAMS)
+                betting, kwargs = kelly_simulation_input(frame)
+                sim, tickets = simulate_kelly(betting, **kwargs)
+                expected = [[str(i), str(i + 1)] for i in range(0, count, fights_per_event)]
+                self.assertEqual(search_legs, expected)
+                self.assertEqual(tickets.groupby('date').choice_fighter_name.apply(list).tolist(), expected)
+                np.testing.assert_allclose(
+                    sim.groupby('date').bankroll_pct_change.first(), events.event_return,
+                    rtol=1e-12,
+                )
+                np.testing.assert_allclose(
+                    sim.groupby('date').bankroll_postevent.first(),
+                    500 * (1 + events.event_return).cumprod(), rtol=1e-12,
+                )
+
     @classmethod
     def setUpClass(cls):
         optuna.logging.set_verbosity(optuna.logging.WARNING)
@@ -112,7 +253,7 @@ class DelayedWalkForwardTests(unittest.TestCase):
         filtered, split = prepare_history(data, features=self.features)
         self.assertEqual(len(filtered), len(data))
         self.assertLess(split['dates_train'].max(), split['dates_test'].min())
-        target = int(.85 * len(data))
+        target = int(.7 * len(data))
         self.assertLessEqual(len(split['train_df']), target)
         self.assertLess(target - len(split['train_df']), 4)
 
@@ -191,7 +332,7 @@ class DelayedWalkForwardTests(unittest.TestCase):
         np.testing.assert_allclose(
             paths['moneyline_cumulative_returns'] + paths['parlay_cumulative_returns'],
             paths['bankroll'][:, 1:] / 500 - 1)
-        score = paths['terminal_returns'].mean() / paths['terminal_returns'].std(ddof=1)
+        score = paths['terminal_returns'].mean() - .25 * paths['terminal_returns'].std(ddof=1)
         self.assertAlmostEqual(terminal_return_score(paths['terminal_returns']), score)
 
     def test_bootstrap_is_reproducible_and_reuses_scenarios(self):
@@ -211,7 +352,11 @@ class DelayedWalkForwardTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             log_growth([-1.01])
         self.assertEqual(terminal_return_score([0, 0]), 0)
-        self.assertEqual(terminal_return_score([.2, .2]), -np.inf)
+        self.assertEqual(terminal_return_score([.2, .2]), .2)
+        self.assertEqual(terminal_return_score([-1., -1.]), -1.)
+        # Setting the penalty to zero preserves the previous pure-profit objective.
+        self.assertGreater(terminal_return_score([-.5, 1.5], 0),
+                           terminal_return_score([.19, .21], 0))
         events = pd.DataFrame(dict(event_return=[-1., .5]))
         result = simulate_bankroll_paths(events, np.array([[0, 1]]))
         np.testing.assert_array_equal(result['bankroll'], [[500, 0, 0]])
@@ -226,7 +371,12 @@ class DelayedWalkForwardTests(unittest.TestCase):
         with patch('statsmodels.api.Logit', side_effect=AssertionError('Must stay frozen')):
             with patch.object(search.engine, 'calculate_fight_returns', side_effect=capture):
                 study = search.run(n_trials=2)
-        self.assertEqual(set(study.best_params), set(PARAMS))
+        self.assertEqual(set(study.best_params), set(PARAMS) - {'moneyline_max_american'})
+        self.assertEqual(study.user_attrs['objective'],
+                         'mean_terminal_return - risk_penalty * std_terminal_return')
+        for trial in study.trials:
+            self.assertAlmostEqual(trial.value, trial.user_attrs['mean_terminal_return']
+                                   - .25 * trial.user_attrs['std_terminal_return'])
         self.assertAlmostEqual(study.best_value, terminal_return_score(
             search.simulate(study.best_params)['terminal_returns']))
 
@@ -267,7 +417,7 @@ class DelayedWalkForwardTests(unittest.TestCase):
     def test_end_to_end_refits_and_reuses_historical_alphas(self):
         with tempfile.TemporaryDirectory() as directory:
             result = run_delayed_walk_forward(
-                self.data, '2021-01-01', '2021-07-01', directory,
+                self.data, '2020-10-01', '2021-07-01', directory,
                 features=self.features, n_splits=3, model_trials=2, betting_trials=2, k=30)
             self.assertEqual(len(result['windows']), 2)
             self.assertFalse(result['events'].date.duplicated().any())
@@ -276,15 +426,41 @@ class DelayedWalkForwardTests(unittest.TestCase):
             first = joblib.load(Path(directory) / 'models/2021-01-01/opening_model.joblib')
             self.assertEqual(first['training_cutoff'], '2021-01-01')
             tune = pd.read_csv(Path(directory) / '2021-01-01/tuning_predictions.csv')
-            self.assertTrue(tune.model_training_cutoff.eq('2020-10-01').all())
+            self.assertEqual(sorted(tune.model_training_cutoff.unique().tolist()),
+                             ['2020-10-01', '2020-11-01', '2020-12-01'])
+            self.assertTrue((result['betting_data'].date >= pd.Timestamp('2021-01-01')).all())
+            self.assertTrue((result['calibration_predictions'].date < pd.Timestamp('2021-01-01')).all())
+            self.assertEqual(len(result['alpha_history']), 9)
             self.assertTrue((Path(directory) / '2021-04-01/bootstrap_paths.npz').exists())
             with patch('ufc_betting.Models.RiskManagement.delayed_walk_forward_logit.train_opening_bundle',
                        side_effect=AssertionError('Must not rerun alpha search')):
                 again = run_delayed_walk_forward(
-                    self.data, '2021-01-01', '2021-07-01', Path(directory) / 'reuse',
+                    self.data, '2020-10-01', '2021-07-01', Path(directory) / 'reuse',
                     features=self.features, betting_trials=2, k=30,
                     alpha_history=result['alpha_history'], odds_type='close2')
             self.assertTrue(again['predictions'].odds_type.eq('close2').all())
+            from ufc_betting.Models.RiskManagement.delayed_walk_forward_logit import run_search
+            with patch('ufc_betting.Models.RiskManagement.delayed_walk_forward_logit.fit_opening_bundle',
+                       side_effect=AssertionError('Must not refit saved models')), patch(
+                       'ufc_betting.Models.RiskManagement.delayed_walk_forward_logit.train_opening_bundle',
+                       side_effect=AssertionError('Must not search alpha')):
+                reused = run_search(
+                    self.data, opening_results_dir=directory,
+                    output_dir=Path(directory) / 'saved_close2', odds_type='close2',
+                    betting_lookback_months=3, betting_refit_months=2,
+                    betting_trials=2, n_paths=30)
+                self.assertEqual(len(reused['windows']), 3)
+                np.testing.assert_allclose(reused['model_predictions'].proba_red,
+                                           again['model_predictions'].proba_red)
+                with self.assertRaisesRegex(ValueError, 'omit alpha_history and model settings'):
+                    run_search(self.data, opening_results_dir=directory, model_trials=1)
+                with self.assertRaisesRegex(ValueError, 'separate output_dir'):
+                    run_search(self.data, opening_results_dir=directory, output_dir=directory)
+                missing = Path(directory) / 'models/2020-10-01/opening_model.joblib'
+                missing.rename(missing.with_suffix('.unavailable'))
+                with self.assertRaisesRegex(FileNotFoundError, 'Saved opening model missing'):
+                    run_search(self.data, opening_results_dir=directory,
+                               output_dir=Path(directory) / 'missing_model')
             from ufc_betting.BettingStrategy.Backtest.backtest_functions import simulate_kelly
             for run in (result, again):
                 betting_data = run['betting_data']
@@ -308,16 +484,105 @@ class DelayedWalkForwardTests(unittest.TestCase):
             result = run_delayed_walk_forward(
                 self.data, output_dir=directory, features=self.features, n_splits=3,
                 model_trials=1, betting_trials=1, k=20)
-            self.assertEqual(result['windows'].iloc[0].test_start, str(start.date()))
+            self.assertEqual(result['windows'].iloc[0].test_start,
+                             str((start + pd.DateOffset(months=3)).date()))
             self.assertTrue(result['windows'].iloc[-1].partial_test_window)
 
-    def test_month_end_warmup_does_not_add_an_extra_refit(self):
+    def test_default_output_folder_saves_all_result_dataframes(self):
+        from ufc_betting.Models.RiskManagement import delayed_walk_forward_logit as module
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / 'search_results'
+            with patch.object(module, 'DEFAULT_OUTPUT_DIR', output):
+                result = run_delayed_walk_forward(
+                    self.data, '2020-10-01', '2021-04-01',
+                    features=self.features, n_splits=3,
+                    model_trials=1, betting_trials=1, k=20)
+            for name, value in result.items():
+                if isinstance(value, pd.DataFrame):
+                    saved = pd.read_csv(output / f'{name}.csv')
+                    self.assertEqual(len(saved), len(value))
+            for name in ('best_params', 'tuning_predictions', 'tuning_events',
+                         'bootstrap_terminal_returns', 'test_predictions', 'test_events'):
+                self.assertTrue((output / '2021-01-01' / f'{name}.csv').is_file())
+            self.assertTrue((output / 'models/2021-01-01/best_alpha.csv').is_file())
+            self.assertFalse(list(output.rglob('*trials.csv')))
+            self.assertEqual(len(pd.read_csv(output / 'best_params.csv')), 1)
+
+    def test_risk_penalty_is_configurable_and_not_optimized(self):
+        returns = np.array([-.5, .2, 1.])
+        self.assertAlmostEqual(terminal_return_score(returns, 0), returns.mean())
+        self.assertAlmostEqual(terminal_return_score(returns, .7),
+                               returns.mean() - .7 * returns.std(ddof=1))
+        for invalid in (-1, np.inf, np.nan):
+            with self.assertRaises(ValueError):
+                FrozenBettingSearch(betting_predictions(), risk_penalty=invalid)
+        search = FrozenBettingSearch(betting_predictions(), k=20, risk_penalty=.7)
+        study = search.run(n_trials=2)
+        self.assertNotIn('risk_penalty', study.best_params)
+        self.assertEqual(study.user_attrs['risk_penalty'], .7)
+        self.assertAlmostEqual(study.best_value, terminal_return_score(
+            search.simulate(study.best_params)['terminal_returns'], .7))
+
+    def test_period_logs_show_historical_training_cutoffs_for_reused_alphas(self):
+        import contextlib
+        import io
+        dates = pd.date_range('2020-10-01', '2021-03-01', freq='MS')
+        history = pd.DataFrame(dict(effective_date=dates, training_cutoff=dates, alpha=.5))
+        with tempfile.TemporaryDirectory() as directory:
+            logs = io.StringIO()
+            with contextlib.redirect_stdout(logs):
+                result = run_delayed_walk_forward(
+                    self.data, '2020-10-01', '2021-04-01', directory,
+                    features=self.features, alpha_history=history, odds_type='close1',
+                    betting_trials=1, k=20, risk_penalty=.6)
+            text = logs.getvalue()
+            self.assertIn('[close1] validation [2021-01-01, 2021-04-01)', text)
+            self.assertIn('alpha effective 2021-01-01; opening training [2019-01-01, 2021-01-01)', text)
+            self.assertIn('alpha effective 2020-10-01', text)
+            row = result['windows'].iloc[0]
+            self.assertAlmostEqual(row.tuning_objective_score,
+                row.tuning_mean_terminal_return - .6 * row.tuning_std_terminal_return)
+
+    def test_month_end_model_schedule_stays_anchored(self):
         with tempfile.TemporaryDirectory() as directory:
             result = run_delayed_walk_forward(
-                self.data, '2021-05-31', '2021-06-30', directory,
+                self.data, '2021-01-31', '2021-06-30', directory,
                 features=self.features, n_splits=3, model_trials=1, betting_trials=1, k=20)
             self.assertEqual(result['alpha_history'].effective_date.dt.strftime('%Y-%m-%d').tolist(),
-                             ['2021-02-28', '2021-05-31'])
+                             ['2021-01-31', '2021-02-28', '2021-03-31',
+                              '2021-04-30', '2021-05-31'])
+
+    def test_independent_betting_schedule_uses_only_trailing_test_predictions(self):
+        with tempfile.TemporaryDirectory() as directory:
+            result = run_delayed_walk_forward(
+                self.data, '2020-07-01', '2021-07-01', directory,
+                features=self.features, n_splits=3, model_trials=1, betting_trials=1,
+                betting_lookback_months=3, betting_refit_months=2, n_paths=20)
+            self.assertEqual(result['windows'].test_start.tolist(),
+                             ['2020-10-01', '2020-12-01', '2021-02-01', '2021-04-01', '2021-06-01'])
+            self.assertEqual(result['windows'].tuning_start.tolist(),
+                             ['2020-07-01', '2020-09-01', '2020-11-01', '2021-01-01', '2021-03-01'])
+            self.assertEqual(len(result['alpha_history']), 12)
+            self.assertTrue(result['alpha_history'].training_rows.is_monotonic_increasing)
+            all_predictions = result['model_predictions'].set_index(['date', 'fighter_red'])
+            for window in result['windows'].itertuples():
+                tune = pd.read_csv(Path(directory) / window.test_start / 'tuning_predictions.csv',
+                                   parse_dates=['date']).set_index(['date', 'fighter_red'])
+                np.testing.assert_allclose(tune.proba_red, all_predictions.loc[tune.index].proba_red)
+                np.testing.assert_allclose(tune.prediction_se, all_predictions.loc[tune.index].prediction_se)
+            self.assertFalse(any(p.name in ('train.csv', 'train_df.csv', 'training_data.csv')
+                                 for p in Path(directory).rglob('*.csv')))
+
+    def test_short_holdout_and_old_alpha_schedule_fail_before_betting(self):
+        with tempfile.TemporaryDirectory() as directory:
+            with self.assertRaisesRegex(ValueError, 'holdout'):
+                run_delayed_walk_forward(self.data, '2021-01-01', '2021-04-01', directory,
+                                         features=self.features)
+            old = pd.DataFrame(dict(effective_date=['2020-10-01'],
+                                    training_cutoff=['2020-10-01'], alpha=[.5]))
+            with self.assertRaisesRegex(ValueError, 'every model refit boundary'):
+                run_delayed_walk_forward(self.data, '2020-10-01', '2021-07-01', directory,
+                                         features=self.features, alpha_history=old)
 
     def test_only_regular_within_event_parlay_is_settled(self):
         frame = betting_predictions().iloc[:2].copy()

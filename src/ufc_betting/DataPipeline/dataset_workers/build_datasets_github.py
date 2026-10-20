@@ -1,3 +1,4 @@
+import os
 import pandas as pd 
 from datetime import datetime 
 
@@ -14,19 +15,32 @@ from ufc_betting.DataPipeline.webscrapers.scraping_pipeline import (
 )
 from ufc_betting.config import config, settings
 
+history_dir = settings.data_dir / "scraped" / "historic"
+history_dir.mkdir(parents=True, exist_ok=True)
 
 # find the most recent stats and odds history with most recent timestamp 
 # recent date from last merger with missing stats
 # from Data/HISTORY folder 
 date_today = datetime.now().strftime("%Y-%m-%d") 
 
-get_all_stats = False
-get_all_odds = False
+def env_bool(name, default):
+    """Read a boolean workflow flag without treating the string 'false' as true."""
+    value = os.getenv(name)
+    if value is None:
+        return default
+    value = value.strip().lower()
+    if value in ("true", "1", "yes"):
+        return True
+    if value in ("false", "0", "no"):
+        return False
+    raise ValueError(f"{name} must be true or false")
 
-get_next_fight_stats_odds = True
 
-get_missing_stats = False
-generate_model_df = True 
+get_all_stats = env_bool("GET_ALL_STATS", False)
+get_all_odds = env_bool("GET_ALL_ODDS", False)
+generate_historical_feats = env_bool("GENERATE_HISTORICAL_FEATS", False)
+get_next_fight_stats_odds = env_bool("GET_NEXT_FIGHT_STATS_ODDS", True)
+generate_model_df = env_bool("GENERATE_MODEL_DF", True)
 
 
 stats_repo = StatsRepository(
@@ -39,8 +53,8 @@ odds_repo = OddsRepository(
     non_merged_odds_file=settings.non_merged_odds_file,
 )
 
-stats_history = stats_repo.load_combined()
-odds_history = odds_repo.load_combined()
+stats_history = None if get_all_stats else stats_repo.load_combined()
+odds_history = None if get_all_odds else odds_repo.load_combined()
 
 
 if __name__ == "__main__":
@@ -48,16 +62,36 @@ if __name__ == "__main__":
     features = FeatureEngineering()
 
     # scrape all stats
-    if get_all_stats is True: 
-        df_entire_stats_history = scraper.scrape_until(date=None)
-        df_entire_stats_history.to_csv(f'{config.stats_history_file_string}_{date_today}.csv')
-        stats_history = df_entire_stats_history
-    
-    # scrape all odds based on stats history 
-    if get_all_odds is True: 
-        df_entire_odds_history = scraper.get_fighter_odds(stats_history)
-        df_entire_odds_history.to_csv(f'{config.odds_history_file_string}_{date_today}.csv')
-        odds_history = df_entire_odds_history
+    if get_all_stats:
+        stats_history = scraper.scrape_until(date=None)
+        stats_history.to_csv(
+            history_dir / f"stats_history_{date_today}.csv",
+            index=False,
+        )
+
+    if get_all_odds:
+        odds_history = scraper.get_fighter_odds(stats_history)
+        odds_history.to_csv(
+            history_dir / f"odds_history_{date_today}.csv",
+            index=False,
+        )
+
+    if generate_historical_feats: 
+        all_feats, _ = features.build_all_stats(
+            stats_df=stats_history,
+            upcoming_stats=None,
+            odds_df=odds_history,
+            upcoming_odds=None,
+            ignore_upcoming=True,
+        )
+
+        output_dir = settings.data_dir / "train_val_test" / "all_feats"
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        all_feats.to_csv(
+            output_dir / f"entire_odds_stats_{date_today}.csv",
+            index=False,
+        )
 
 
     # get upcoming fight stats

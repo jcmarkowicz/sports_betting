@@ -16,3 +16,9 @@ ufc_strat.ipynb
 .vscode/
 
 ModelStrategy/LogisticRegression/AutogluonModels/
+
+# Local generated datasets, large model, and dependency cache
+/Data/bootstrapped_paths/
+/Data/train_val_test/
+/Data/saved_models/glm_open_train.joblib
+/.fixed-open-deps/

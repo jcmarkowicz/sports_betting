@@ -46,6 +46,11 @@ jobs:
 
       - name: Run script
         env:
+          GET_ALL_STATS: "false"
+          GET_ALL_ODDS: "false"
+          GENERATE_HISTORICAL_FEATS: "false"
+          GET_NEXT_FIGHT_STATS_ODDS: "true"
+          GENERATE_MODEL_DF: "true"
           EMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
         run: |

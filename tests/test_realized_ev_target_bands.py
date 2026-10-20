@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from ufc_betting.Models.RiskManagement.realized_ev_target_bands import aggregate, qualifying, advance
+from ufc_betting.BettingStrategy.Convergence.realized_ev_target_bands import aggregate, qualifying, advance
 
 
 class RealizedBandsTests(unittest.TestCase):

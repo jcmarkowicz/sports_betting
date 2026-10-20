@@ -5,9 +5,13 @@ import numpy as np
 import pandas as pd
 
 from ufc_betting.BettingStrategy.Backtest.backtest_functions import simulate_kelly
+from ufc_betting.BettingStrategy.betting_params import BettingParams
 from ufc_betting.DataPipeline.dataframes.moneylines import MoneylineDataFrame
 from ufc_betting.DataPipeline.dataframes.parlays import ParlayDataFrame
-from ufc_betting.UpcomingPicks.betting_pipeline import betting_pipeline
+from ufc_betting.UpcomingPicks.betting_pipeline import (
+    betting_pipeline,
+    build_event_ev_table,
+)
 from ufc_betting.UpcomingPicks.model_helpers import logit_predict
 
 
@@ -23,13 +27,16 @@ class LiveBacktestParityTests(unittest.TestCase):
                  close1_blue=100., close2_red=-125., close2_blue=100.)
             for i, winner in enumerate([2, 0, 1, 1, 1])
         ])
-        predictions = (data.pred_winner, data.proba_red, data.proba_blue)
+        predictions = (data.pred_winner, data.proba_red, data.proba_blue,
+                       pd.Series(0., index=data.index))
         with patch('ufc_betting.UpcomingPicks.betting_pipeline.logit_predict',
                    return_value=predictions), patch('builtins.print'):
             ml, parlay = betting_pipeline(
                 data, [['signal']], [None], [None], [None], ['open'],
                 [['dec_fair_open_blue', 'dec_fair_open_red']],
-                [['dec_open_blue', 'dec_open_red']], 500, [.3], [.5], [250], [500],
+                [['dec_open_blue', 'dec_open_red']], 500,
+                betting_params={'open': BettingParams(z=None, mdd=.3, mdd_parlay=.5,
+                                                     N=250, N_parlay=500)},
             )
         results, tickets = simulate_kelly(
             data, prob_cols=['proba_blue', 'proba_red'],
@@ -47,6 +54,26 @@ class LiveBacktestParityTests(unittest.TestCase):
                 if column.endswith('_open'):
                     for stage in ('close1', 'close2'):
                         frame[column[:-4] + stage] = frame[column]
+        event_ev = build_event_ev_table(ml, parlay).set_index("bet_type")
+        expected_ml_ev = 100 * (
+            results.choice_fstar * results.choice_ev
+        ).sum()
+        expected_parlay_ev = 100 * (
+            tickets.fstar_parlay.iloc[0] * tickets.parlay_ev.iloc[0]
+        )
+        self.assertAlmostEqual(
+            event_ev.loc["Moneyline", "open_ev_pct"], expected_ml_ev
+        )
+        self.assertAlmostEqual(
+            event_ev.loc["Parlay", "open_ev_pct"], expected_parlay_ev
+        )
+        self.assertAlmostEqual(
+            event_ev.loc["Combined", "open_ev_pct"],
+            expected_ml_ev + expected_parlay_ev,
+        )
+        self.assertAlmostEqual(
+            event_ev.loc["Combined", "close1_pct_opening_ev"], 100
+        )
         settled_ml = MoneylineDataFrame(ml).with_results(data).frame
         settled_parlay = ParlayDataFrame(
             parlay.assign(date='2026-01-01')

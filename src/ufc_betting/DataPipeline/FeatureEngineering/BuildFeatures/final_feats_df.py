@@ -22,6 +22,25 @@ def compute_differences(df, feature, type):
         df[f'{feature}_diff'] = df[f'{feature}_red'] - df[f'{feature}_blue']
     return df
 
+def fill_attributes_from_prior_dates(df):
+    """Fill attributes from observed values in the same class on earlier dates."""
+    df = df.copy()
+    dates = pd.to_datetime(df['date']).dt.normalize()
+    keys = pd.MultiIndex.from_arrays([df['weight_class'], dates],
+                                     names=['weight_class', 'date'])
+    for col in ['reach_red', 'reach_blue', 'age_red', 'age_blue', 'height_red', 'height_blue']:
+        observations = pd.DataFrame({
+            'weight_class': df['weight_class'].to_numpy(),
+            'date': dates.to_numpy(),
+            'value': df[col].to_numpy(),
+        })
+        daily = observations.groupby(['weight_class', 'date'], observed=True)['value'].agg(['sum', 'count'])
+        prior = daily.groupby(level='weight_class').cumsum().groupby(level='weight_class').shift(1)
+        means = prior['sum'] / prior['count'].where(prior['count'] > 0)
+        df[col] = df[col].fillna(pd.Series(means.reindex(keys).to_numpy(), index=df.index))
+    return df
+
+
 def non_rolling_stats(df_):
     """
     Take in df with rolling features, compute non rolling features that dont depend on time series.
@@ -34,11 +53,19 @@ def non_rolling_stats(df_):
         df (pd.DataFrame): DataFrame with non rolling features computed
     """
 
-    df = df_.copy()
+    df = fill_attributes_from_prior_dates(df_)
     feats = {}
 
+    # Include every adjusted stat type with a red/blue pair, including future
+    # adjusted features supplied by the rolling-feature pipeline.
+    for column in df.columns:
+        if column.startswith('adjusted_') and column.endswith('_red'):
+            feature = column[:-4]
+            if f'{feature}_blue' in df.columns:
+                feats[f'{feature}_diff'] = df[column] - df[f'{feature}_blue']
+
     striking_features = ['kd', 'sig_str_landed', 'sig_str_absorbed', 'sig_str_attempted' , 'leg_str', 'head_str', 'body_str', 'clinch_str']
-    grapling_features = ['td_landed', 'td_attempted', 'control', 'sub_att', 'reverse']
+    grapling_features = ['td_landed', 'td_attempted', 'td_defended', 'control', 'sub_att', 'reverse']
     striking_grapling_types = ['total', 'pm']
     fighter_attr = ['age', 'height', 'reach']
 
@@ -49,17 +76,16 @@ def non_rolling_stats(df_):
     for attr in fighter_attr: 
         df = compute_differences(df, attr, None)
 
+    for feature in ('td', 'sig_str'):
+        for stat_type in ('total_attempted_against', 'total_landed_against'):
+            df = compute_differences(df, feature, stat_type)
+
     striking_features = ['sig_str_defense', 'sig_str_accuracy']
     grapling_features = ['td_accuracy', 'td_defense']
     striking_grapling_types = ['pct']
     for feature in striking_features + grapling_features: 
         for type in striking_grapling_types:
             df = compute_differences(df, feature, type)
-
-    for col in ['reach_red', 'reach_blue', 'age_red', 'age_blue', 'height_red', 'height_blue']:
-        df[col] = df[col].fillna(
-            df.groupby('weight_class')[col].transform('mean')
-        )
 
     # opponents history
     red_opp_age, blue_opp_age = opponent_avg_features(df, 'age').T
@@ -68,6 +94,8 @@ def non_rolling_stats(df_):
     feats['opp_age_blue'] = blue_opp_age
     feats['opp_reach_red'] = red_opp_reach
     feats['opp_reach_blue'] = blue_opp_reach
+    feats['opp_age_diff'] = red_opp_age - blue_opp_age
+    feats['opp_reach_diff'] = red_opp_reach - blue_opp_reach
 
     # efficiency, does fighter outperform average wc stats 
     # red_expected_td, blue_expected_td = expected_value_stats(df, 'td_attempted_pm', 'td_landed_pm').T
@@ -158,11 +186,15 @@ def non_rolling_stats(df_):
     feats['win_pct_diff'] = wp_r - wp_b
 
     # number of observations per fighter
-    (obs_red, obs_blue) = obs_per_fighter(pd.DataFrame({"num_wins_red": nw_r, 
-                                                        "num_wins_blue": nw_b,
-                                                        'num_losses_red':nl_r,
-                                                        'num_losses_blue':nl_b
-                                                        })).T
+    (obs_red, obs_blue) = obs_per_fighter(
+        pd.DataFrame(
+            {"num_wins_red": nw_r, 
+            "num_wins_blue": nw_b,
+            'num_losses_red':nl_r,
+            'num_losses_blue':nl_b
+            }
+        )).T
+    
     feats['obs_red'] = obs_red
     feats['obs_blue'] = obs_blue
 

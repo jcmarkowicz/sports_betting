@@ -42,4 +42,10 @@ def get_missing_stats(prev_fight_date):
 
     odds_stats_df, upcoming_df = features.build_all_stats(all_stats, missing_stats.iloc[:5], all_odds, missing_odds.iloc[:5], ignore_upcoming=True)
 
+    commit_if_changed(
+        odds_stats_df,
+        settings.all_feats_dir / 'all_feats_running.csv',
+        f'Updating All Features for fight date: {prev_fight_date}'
+    )
+
     return missing_stats, missing_odds, odds_stats_df[odds_stats_df['date'] >= prev_fight_date]

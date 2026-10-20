@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd 
 
 import statsmodels.api as sm
+from ufc_betting.Models.LogisticRegression.inference import predict_logit
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 from sklearn.metrics import brier_score_loss, accuracy_score, f1_score
 
@@ -84,21 +85,22 @@ def expected_calibration_error(y_true, y_prob, n_bins=10):
 
 
 
-def run_logit_model(
+def train_logit_model(
         X_train, y_train,
         X_test, y_test, 
         cov_type="HC3",
         reg= False,
         alpha=0, #
-        method="l1"
+        method="l1",
+        evaluation_label="TEST",
     ):
     """
     https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.Logit.fit_regularized.html  
     """
 
     # --- add constant ---
-    X_train_sm = sm.add_constant(X_train.copy())
-    X_test_sm = sm.add_constant(X_test.copy())
+    X_train_sm = sm.add_constant(X_train.copy(), has_constant='add')
+    X_test_sm = sm.add_constant(X_test.copy(), has_constant='add')
     # X_train_sm = X_train.copy()
     # X_test_sm = X_test.copy()
 
@@ -106,23 +108,23 @@ def run_logit_model(
     if reg is False: 
         model = sm.Logit(y_train, X_train_sm).fit(cov_type=cov_type, disp=False)
 
-        train_pred = model.predict(X_train_sm)
-        train_class = (train_pred >= 0.5).astype(int)
-
-        test_pred = model.predict(X_test_sm)
-        test_class = (test_pred >= 0.5).astype(int)
-        
     else:
         model = sm.Logit(y_train, X_train_sm).fit_regularized(
             method=method,     
             alpha=alpha # to multiply l1 penalty term     
         )
 
-        train_pred = model.predict(X_train_sm)
-        train_class = (train_pred >= 0.5).astype(int)
+    if reg:
+        trimmed = np.asarray(model.mle_retvals["trimmed"])
+        selected = model.params.index[~trimmed]
+        inference_model = sm.Logit(y_train, X_train_sm[selected]).fit(disp=False)
+    else:
+        inference_model = model
 
-        test_pred = model.predict(X_test_sm)
-        test_class = (test_pred >= 0.5).astype(int)
+    train_predictions = predict_logit(X_train, model, inference_model)
+    test_predictions = predict_logit(X_test, model, inference_model)
+    train_pred, train_class = train_predictions['proba_red'], train_predictions['pred_winner']
+    test_pred, test_class = test_predictions['proba_red'], test_predictions['pred_winner']
 
     # --- metrics ---
     accuracy = accuracy_score(y_test, test_class)
@@ -135,17 +137,6 @@ def run_logit_model(
 
     check_vif(X_train)
 
-    trimmed = np.asarray(model.mle_retvals["trimmed"])
-    selected = model.params.index[~trimmed]
-    inference_model = sm.Logit(
-        y_train,
-        X_train_sm[selected],
-    ).fit(disp=False)
-
-    proba_se_test = inference_model.get_prediction(X_test_sm[selected]).summary_frame()
-    proba_se_train = inference_model.get_prediction(X_train_sm[selected]).summary_frame()
-    print(proba_se_test)
-
     cov = model.cov_params()
 
     print("Any NaN in cov:", np.isnan(cov).any().any())
@@ -157,14 +148,14 @@ def run_logit_model(
         "test_pred_proba": test_pred,
         "test_pred_class": test_class,
         "train_pred_class": train_class,
-        "proba_train_se": proba_se_train['se'],
-        'proba_test_se':proba_se_test['se'],
+        "proba_train_se": train_predictions['proba_se'],
+        'proba_test_se':test_predictions['proba_se'],
         'model': model,
         'model_se': inference_model
     }
     
     print(model.summary())
-    print(f'TEST STATS: Accuracy: {accuracy}, Brier: {brier}, F1: {f1_test}')
+    print(f'{evaluation_label} STATS: Accuracy: {accuracy}, Brier: {brier}, F1: {f1_test}')
     print(f'TRAIN STATS: Accuracy: {accuracy_train}, Brier: {brier_train}, F1: {f1_train}')
 
     return results

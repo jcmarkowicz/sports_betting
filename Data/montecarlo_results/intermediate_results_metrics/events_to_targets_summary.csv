@@ -1,0 +1,4 @@
+Prices,Target ($),Paths,Mean ending bankroll,Mean total return (%),Reached (%),Not reached (%),Mean events (reached only),P05 events (reached only),Median events (reached only),P95 events (reached only)
+intermediate,5000,5000,81903.88188490289,16280.77637698058,90.02,9.98,38.36436347478338,18.0,37.0,65.0
+intermediate,10000,5000,81903.88188490289,16280.77637698058,79.28,20.72,46.312058526740664,25.0,46.0,68.0
+intermediate,25000,5000,81903.88188490289,16280.77637698058,57.92,42.08,54.14053867403315,35.0,55.0,71.0

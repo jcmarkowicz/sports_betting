@@ -15,7 +15,9 @@ def bayesian_smoothing(df, hero_total, villain_total, feature_hero, feature_vill
         return None
 
     # PRE FIGHT STATS INCLUDE CURR DATE 
-    df_weight_class = df[(df['weight_class'] == weight_class) & (df['date'] <= date)].dropna()# [[feature_villian, feature hero, date]] ISSUE WITH DIVIDE BY ZERO WIT
+    df_weight_class = df[
+        (df['weight_class'] == weight_class) & (df['date'] <= date)
+    ].dropna(subset=[feature_hero, feature_villain])
    
     # number of prev obs
     n_hero = len(hero_total)

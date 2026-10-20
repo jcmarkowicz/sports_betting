@@ -1,6 +1,6 @@
 """Betting-only search on frozen historical model predictions.
 
-Score = mean terminal cumulative return / sample standard deviation across
+Score = mean terminal cumulative return minus risk_penalty times its standard deviation across
 equal-bankroll bootstrap paths. Whole events are sampled with replacement and
 shuffled. Moneylines and within-event parlays settle together after each event.
 """
@@ -22,15 +22,14 @@ def log_growth(returns):
     return float(np.log1p(returns).sum())
 
 
-def terminal_return_score(returns):
-    """Cash scores zero; nonzero constant returns have an undefined ratio."""
+def terminal_return_score(returns, risk_penalty=.25):
+    """Mean final fractional return minus a fixed volatility penalty."""
+    if not np.isfinite(risk_penalty) or risk_penalty < 0:
+        raise ValueError('risk_penalty must be finite and nonnegative')
     returns = np.asarray(returns, dtype=float)
     if len(returns) < 2 or not np.isfinite(returns).all():
         raise ValueError('Need at least two finite terminal returns')
-    mean, std = float(returns.mean()), float(returns.std(ddof=1))
-    if std <= 1e-12:
-        return 0.0 if np.all(np.abs(returns) <= 1e-12) else -np.inf
-    return mean / std
+    return float(returns.mean() - risk_penalty * returns.std(ddof=1))
 
 
 def bootstrap_event_indices(n_events, k=1000, seed=42):
@@ -73,7 +72,10 @@ class FrozenBettingSearch:
     """No alpha selection or model fitting occurs inside betting trials."""
 
     def __init__(self, predictions, odds_type='open', *, k=1000,
-                 initial_bankroll=500.0, seed=42):
+                 initial_bankroll=500.0, seed=42, risk_penalty=.25):
+        if not np.isfinite(risk_penalty) or risk_penalty < 0:
+            raise ValueError('risk_penalty must be finite and nonnegative')
+        self.risk_penalty = float(risk_penalty)
         if odds_type not in ODDS_TYPES:
             raise ValueError(f'odds_type must be one of {ODDS_TYPES}')
         self.frame = predictions.copy()
@@ -109,13 +111,12 @@ class FrozenBettingSearch:
     @staticmethod
     def suggest(trial):
         return dict(
-            mdd=trial.suggest_float('mdd', .15, .70, step=.01),
-            N=trial.suggest_int('N', 200, 1500, log=True),
-            mdd_parlay=trial.suggest_float('mdd_parlay', .15, .70, step=.01),
-            N_parlay=trial.suggest_int('N_parlay', 200, 2500, log=True),
-            z=trial.suggest_float('z', 0.0, 2.5, step=.1),
-            moneyline_min_american=trial.suggest_int('moneyline_min_american', -600, -100, step=25),
-            moneyline_max_american=trial.suggest_int('moneyline_max_american', 100, 500, step=25),
+            mdd=trial.suggest_float('mdd', .2, .45, step=.01),
+            N=trial.suggest_int('N', 200, 1200, log=True),
+            mdd_parlay=trial.suggest_float('mdd_parlay', .2, .4, step=.01),
+            N_parlay=trial.suggest_int('N_parlay', 200, 1250, log=True),
+            z=trial.suggest_float('z', 0.05, 0.65, step=.05),
+            moneyline_min_american=trial.suggest_int('moneyline_min_american', -450, -225, step=25),
         )
 
     def event_returns(self, params):
@@ -124,7 +125,7 @@ class FrozenBettingSearch:
             risk_red_proba=self.frame.risk_red_proba.to_numpy(),
             se=self.frame.prediction_se.to_numpy(),
             winner_fold=self.frame.winner.to_numpy(), val_idx=np.arange(len(self.frame)),
-            param=params, include_parlays=True,
+            param={'moneyline_max_american': np.inf, **params}, include_parlays=True,
             include_heavy_favorite_parlays=False, return_components=True,
         )
         log_growth(events.event_return)
@@ -137,9 +138,11 @@ class FrozenBettingSearch:
     def run(self, n_trials=100, seed=42):
         if n_trials < 1:
             raise ValueError('n_trials must be positive')
+        optuna.logging.set_verbosity(optuna.logging.WARNING)
         study = optuna.create_study(direction='maximize',
                                    sampler=optuna.samplers.TPESampler(seed=seed))
-        study.set_user_attr('objective', 'mean_terminal_cumulative_return / sample_std')
+        study.set_user_attr('objective', 'mean_terminal_return - risk_penalty * std_terminal_return')
+        study.set_user_attr('risk_penalty', self.risk_penalty)
         study.set_user_attr('k', len(self.path_indices))
         study.set_user_attr('odds_type', self.odds_type)
 
@@ -148,9 +151,9 @@ class FrozenBettingSearch:
             trial.set_user_attr('mean_terminal_return', float(terminal.mean()))
             trial.set_user_attr('std_terminal_return', float(terminal.std(ddof=1)))
             trial.set_user_attr('loss_probability', float((terminal < 0).mean()))
-            return terminal_return_score(terminal)
+            return terminal_return_score(terminal, self.risk_penalty)
 
         study.optimize(objective, n_trials=n_trials)
         if not np.isfinite(study.best_value):
-            raise ValueError('No trial has a defined terminal-return ratio; increase window or k')
+            raise ValueError('No trial has a finite mean terminal cumulative return')
         return study

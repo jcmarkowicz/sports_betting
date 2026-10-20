@@ -3,6 +3,10 @@ import numpy as np
 import pandas as pd 
 import statsmodels.api as sm
 from ufc_betting.Models.LogisticRegression.train_test_builder import TrainTestBuilder
+from ufc_betting.Models.LogisticRegression.inference import predict_logit
+from ufc_betting.BettingStrategy.model_statistics import (
+    align_model_columns, model_covariance_and_variance, probability_standard_error,
+)
 
 def logit_predict(
         model, 
@@ -15,7 +19,9 @@ def logit_predict(
         scaler,
         cat_encoder, 
         required_df_idx,
-        rename_odds=None
+        rename_odds=None,
+        model_se=None,
+        return_se=False,
 ):
 
     if rename_odds:
@@ -65,7 +71,19 @@ def logit_predict(
 
     # ensure no duplicate 'const' column
     assert X_valid.columns.duplicated().sum() == 0, "Duplicate columns found in X_valid"
-    train_cols = model.model.exog_names 
+    train_cols = model.model.exog_names
+    if return_se:
+        X_valid = align_model_columns(
+            X_valid, train_cols, fallback=df.loc[valid_mask],
+            aliases={'elo_pred_1': 'elo_pred', 'elo_pred1': 'elo_pred'},
+        )
+        predictions = predict_logit(X_valid, model, model_se)
+        if model_se is None:
+            _, variance = model_covariance_and_variance(model, X_valid)
+            predictions['proba_se'] = probability_standard_error(predictions.proba_red, variance)
+        predictions = predictions.reindex(required_df_idx)
+        return (predictions.pred_winner, predictions.proba_red,
+                1 - predictions.proba_red, predictions.proba_se)
     
 
     # test if missing or extra columns 

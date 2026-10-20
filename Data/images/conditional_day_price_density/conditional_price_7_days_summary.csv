@@ -1,0 +1,3 @@
+odds_type,days_out,opening,closing,probability_below_open,probability_between_endpoints,effective_samples
+close1,7,2.0,1.6,0.7121316649950408,0.33587875510679555,74.90680905909306
+close2,7,2.0,1.6,0.8403640805686698,0.6274125240561483,9.557444452513376

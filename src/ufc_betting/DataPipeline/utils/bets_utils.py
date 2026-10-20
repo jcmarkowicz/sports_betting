@@ -1,4 +1,3 @@
-from xgboost import XGBClassifier
 import statsmodels.api as sm
 
 import joblib
@@ -7,23 +6,22 @@ from ufc_betting.config import config
 from ufc_betting.UpcomingPicks.betting_pipeline import betting_pipeline, seperate_bets_dfs
 
 
-model_open = sm.load(config.model_open_path)
-model_close1 = sm.load(config.model_close1_path)
-model_close2 = sm.load(config.model_close2_path)
+# Use the train + validation fit and its matching preprocessing artifacts.
+model_open = sm.load(config.model_open_test_path)
+model_open_se = sm.load(config.model_open_test_se_path)
+scaler_open = joblib.load(config.scaler_open_test_path)
 
-xgboost_stack = XGBClassifier()
-# xgboost_stack.load_model(config.xgb_stack_path)
-
-scaler_open = joblib.load(config.scaler_open_path)
-scaler_close1 = joblib.load(config.scaler_close1_path)
-scaler_close2 = joblib.load(config.scaler_close2_path)
-
-encoder_open = joblib.load(config.encoder_open_path)
+encoder_open = joblib.load(config.encoder_open_test_path)
 encoder_list = [encoder_open, encoder_open, encoder_open] # using same encoder for all models since they have same features
 
 model_list = [model_open, model_open, model_open]
 scaler_list = [scaler_open, scaler_open, scaler_open]
-feats_list = [config.open_feats, config.open_close1_feats, config.open_close2_feats]
+# The saved model's fitted inputs supersede the older feature lists in config.
+opening_features = list(scaler_open.feature_names_in_) + list(encoder_open.feature_names_in_)
+feats_list = [
+    [name.replace('open', stage) for name in opening_features]
+    for stage in ('open', 'close1', 'close2')
+]
 
 # defines the odds on streamlit page
 type_list = ['open', 'close1', 'close2']
@@ -37,15 +35,16 @@ real_odds_list = [['dec_open_blue', 'dec_open_red'],
                   ['dec_close1_blue', 'dec_close1_red'], 
                   ['dec_close2_blue', 'dec_close2_red']]
 
-def generate_bets(df, select_odds=None):
+def generate_bets(df, select_odds=None, return_event_ev=False):
     """ handles categorical columns before generating bets """
 
-    cat_cols = ['math_red', 'math_blue', 'elo_pred', 'womens_fight']
+    df = df.copy()
+    cat_cols = encoder_open.feature_names_in_
     for col in cat_cols:
         if col in df.columns:
             df[col] = df[col].astype('category')
 
-    df_bets_all, df_parlay_all = betting_pipeline(
+    pipeline_results = betting_pipeline(
         upcoming_df=df, 
         feats_list=feats_list, 
         model_list=model_list,
@@ -55,11 +54,13 @@ def generate_bets(df, select_odds=None):
         fair_odds_list=fair_odds_list, 
         real_odds_list=real_odds_list, 
         bankroll=config.bankroll, 
-        mdd_ml_arr=config.mdd_ml,
-        mdd_parlay_arr=config.mdd_parlay, 
-        N_ml_arr=config.N_ml,
-        N_parlay_arr=config.N_parlay,
+        model_se_list=[model_open_se] * len(type_list),
+        return_event_ev=return_event_ev,
     )
+    if return_event_ev:
+        df_bets_all, df_parlay_all, df_event_ev = pipeline_results
+    else:
+        df_bets_all, df_parlay_all = pipeline_results
     
     df_bets_arr, df_parlay_arr = seperate_bets_dfs(df_bets_all, df_parlay_all, type_list)
     
@@ -71,4 +72,6 @@ def generate_bets(df, select_odds=None):
         df_bets = df_bets_all
         df_parlay = df_parlay_all
 
+    if return_event_ev:
+        return df_bets, df_parlay, df_event_ev
     return df_bets, df_parlay 

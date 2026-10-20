@@ -1,80 +1,62 @@
-import os
-print(os.getcwd())
-
+import pandas as pd
 import streamlit as st
-from utils import show_image
-from ufc_betting.config import config, settings
+from utils import display_paginated_df, show_image
+from ufc_betting.config import settings, VAL_START_DATE, TEST_START_DATE
 
+st.title("AI Training and Testing")
+st.markdown(
+    "The opening model is logistic regression with L1 regularization. Its inputs "
+    "contain information available before the fight, and its output estimates "
+    "the probability that the red fighter wins."
+)
+st.markdown(
+    f"The data is split chronologically: training precedes {VAL_START_DATE}, "
+    f"validation runs from {VAL_START_DATE} up to {TEST_START_DATE}, and test "
+    f"starts on {TEST_START_DATE}. The Betting Simulation page shows validation backtests."
+)
+st.markdown(
+    "Each metrics figure shows calibration, a confusion matrix, ROC discrimination, "
+    "and F1 across probability thresholds. Calibration compares predicted probabilities "
+    "with observed win frequencies; classification accuracy alone does not measure calibration."
+)
 
-st.markdown('<h2>Motivation</h2>', unsafe_allow_html=True)
+st.subheader("Model Results and Coefficients")
+st.markdown(
+    "Validation metrics use the model fitted on training data. Test metrics and "
+    "the coefficient tables use the model fitted on training plus validation data. "
+    "The three variants share fitted coefficients and use opening, close1, or "
+    "close2 odds inputs; input_feature identifies the input used by each variant."
+)
+st.markdown("Coefficient significance: *** p < 0.001; ** p < 0.01; * p < 0.05. Missing statistics are shown as —.")
+metrics_dir = settings.plot_pngs_dir
+coefficients_dir = settings.data_dir / "model_results" / "coefficients"
+for market in ("open", "close1", "close2"):
+    model_type = f"open_with_{market}"
+    st.subheader(model_type)
+    for split, split_label in (("val", "Validation"), ("test", "Test")):
+        # Preserve the opening validation filename used by the training workflow.
+        filename = ("val_open_model_metrics.png" if split == "val" and market == "open"
+                    else f"{split}_{model_type}_model_metrics.png")
+        path = metrics_dir / filename
+        if path.is_file():
+            show_image(path, title=f"{split_label} Split | Model: {model_type}")
+        else:
+            st.info(f"Run results_visuals.ipynb to export {path}")
 
-st.markdown("""
-            <p style="font-size:18px; line-height:1.6;">
-            In order to seperate winners from loosers in future UFC events, data needs to be properly managed to ensure accurate and robust results. 
-            The first order of business is to establish restraints which define the ways in which data goes into some 'AI', and then how the resulting output can be interpreted.
-            The process of predicting future outcomes is inherently a time series problem in which some data from previous events has been recorded, and within that data
-            is expected to be signals or relevant information which an AI can look at to form its decisions for future events. Therefore, all data used to predict an outcome must be set prior to the match, otherwise
-            the AI will be cheating and future events for which there is no data cannot be modeled.  
-            </p> 
-""", unsafe_allow_html=True)
-
-st.markdown("""
-            <p style="font-size:18px; line-height:1.6;">
-            Once all the relevant predictors of fight outcomes have been created, the AI, or rather the function f(X)=y, can be built. 
-            The creation of all AI models follows simple patterns which seperate the entire process into segments with clear motivations. AI must be trained and tested in order to establish the reliability 
-            and limitations imposed by the underlying problem. In this instance, train test data followed an 85/15 percent split, where the AI was optimized on 85% of the data and the remaining 15% was used 
-            as an out of sample test. The important detail to note is that once the AI is optimized, it cannot be changed and the test data will never be used to optimize the model. The results shown in the betting simulation
-            page are all derived from test sample data ensuring the integrity and validity of results. Essentially, test results boil down to an estimation of unleashing AI on data it has never seen; AI draws upon
-            its pre existing knowledge to infer outcomes and arrive at optimized predictions. 
-            </p> 
-""", unsafe_allow_html=True)
-
-st.markdown('<h2>Results Analysis</h2>', unsafe_allow_html=True)
-
-st.markdown("""
-            <p style="font-size:18px; line-height:1.6;">
-            There are many choices for the type of AI model to be used, and I elected for a simple Logistic Regression with lasso regularization. The details of the model will not be explained here, but the 
-            curious reader might want to see <a href="https://en.wikipedia.org/wiki/Logistic_regression" target="_blank">Wikipedia </a>. The important thing to note is the AI will make a binary prediction; either
-            1 for fighter A wins, or 0 for fighter A loses. Its trivial to derive the results for fighter B, and because the result is a floating point between 0 and 1, that output can be interpreted as a probability.
-            </p> 
-""", unsafe_allow_html=True)
-
-st.markdown("""
-            <p style="font-size:18px; line-height:1.6;">
-            The results displayed below are standard for AI evaluation, and the details of each are obmitted due the already vast information online explaining each. However, one notable aspect of the model training 
-            was probability calibration, which in short has the objective of making probability scores reliable. If there are 10 predictions that report 80% accuracy then a calibrated predictor will correctly 
-            predict the outcome 80% of the time (8 out of 10 times). The better the calibration, the better the betting algorithmns performed. See the first plot to the left for evalution of calibration.
-            <a href="https://en.wikipedia.org/wiki/Calibration_(statistics)" target="_blank">Calibration_wiki </a>. <a href="https://en.wikipedia.org/wiki/Confusion_matrix" target="_blank">confusion_matrix_wiki </a>.
-            <a href="https://en.wikipedia.org/wiki/F-score" target="_blank">F1_score_wiki</a>
-            </p> 
-""", unsafe_allow_html=True)
-
-
-st.markdown("""
-            <p style="font-size:18px; line-height:1.6;">
-            As displayed below, there are several subsets of train test results marked by the odds type(open, close1, close2). I elected to train a seperate model per odds type due to the high influence
-            each type's derived probability had on the outcome of the model. Interesting to note, the open model had the highest test accuracy despite not having the signal of market movement which is 
-            encoded in the close1 and 2 odds. This can be for a number of reasons, but my best guess is that sports bettors are not always optimal and the line movement can be more noise than signal. 
-            Also, this is GREAT for the opening model because it validates its edge; the model can predict the optimal winner before the market does and thus place bets with the highest amount of equity before line movement wipes it out. 
-            </p> 
-""", unsafe_allow_html=True)
-
-
-train_open_fp = settings.data_dir/ "plot_pngs" / "train_open_model_metrics.png" 
-test_open_fp = settings.data_dir/  "plot_pngs" / "test_open_model_metrics.png" 
-
-show_image(train_open_fp, title='Train Open Results')
-show_image(test_open_fp, title='Test Open Results')
-
-
-train_close1_fp = settings.data_dir/  "plot_pngs" / "train_close1_model_metrics.png" 
-test_close1_fp = settings.data_dir/  "plot_pngs" / "test_close1_model_metrics.png" 
-
-show_image(train_close1_fp, title='Train Close1 Results')
-show_image(test_close1_fp, title='Test Close1 Results')
-
-train_close2_fp = settings.data_dir/ "plot_pngs" / "train_close2_model_metrics.png" 
-test_close2_fp = settings.data_dir/ "plot_pngs" / "test_close2_model_metrics.png" 
-
-show_image(train_close2_fp, title='Train Close2 Results')
-show_image(test_close2_fp, title='Test Close2 Results')
+    # Explicit filenames exclude older fits and inference-model exports.
+    table_path = coefficients_dir / f"{model_type}_trainval_coefficients.csv"
+    if table_path.is_file():
+        coefficients = pd.read_csv(table_path, keep_default_na=False)
+        if coefficients.empty:
+            st.info(f"No coefficients in {table_path.name}")
+        else:
+            for column in ("coefficient", "std_error", "z", "p_value", "ci_lower", "ci_upper"):
+                values = pd.to_numeric(coefficients[column], errors="coerce")
+                coefficients[column] = values.map(lambda value: f"{value:.4f}" if pd.notna(value) else "—")
+            display_paginated_df(
+                coefficients,
+                title=f"{model_type} Coefficients — Train + Validation Fit",
+                key_prefix=f"coefficients_{model_type}_trainval",
+            )
+    else:
+        st.info(f"Run results_visuals.ipynb to export {table_path}")

@@ -1,6 +1,6 @@
 import os 
 from pathlib import Path
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 def find_project_root() -> Path:
     """Find the repository directory containing pyproject.toml."""
@@ -17,33 +17,99 @@ def find_project_root() -> Path:
 PROJECT_ROOT = find_project_root()
 DATA_DIR = PROJECT_ROOT / "Data"
 
+# TrainTestBuilder excludes this lower date boundary from the training history.
+TRAIN_START_YEAR = 2010
+TRAIN_START_MONTH = 2
+TRAIN_START_DAY = 26
+VAL_START_DATE = "2024-05-11"
+TEST_START_DATE = "2026-02-21"
+
 @dataclass(frozen=True)
 class Settings:
-    data_dir: Path = field(
-        default_factory=lambda: Path(
-            os.getenv(
-                "SPORTS_BETTING_DATA_DIR",
-                str(PROJECT_ROOT / "Data"),
-            )
-        ).expanduser().resolve()
-    )
     db_scrape_date: str = "2026-02-26"
+
+    @property
+    def project_root(self) -> Path:
+        return PROJECT_ROOT
+
+    @property
+    def data_dir(self) -> Path:
+        return Path(
+            os.getenv("SPORTS_BETTING_DATA_DIR", str(self.project_root / "Data"))
+        ).expanduser().resolve()
+
+    @property
+    def feature_selection_dir(self) -> Path:
+        return self.data_dir / "feature_selection"
+
+    @property
+    def saved_models_dir(self) -> Path: 
+        return (
+            self.data_dir
+            / "saved_models"
+        )
 
     @property
     def stats_history_file(self) -> Path:
         return (
             self.data_dir
-            / "scraped_data_main"
-            / f"stats_history_{self.db_scrape_date}.csv"
+            / "scraped"
+            / "historic"
+            / f"stats_history_2026-10-04.csv"
         )
-
+    
     @property
     def odds_history_file(self) -> Path:
         return (
             self.data_dir
-            / "scraped_data_main"
-            / f"odds_history_{self.db_scrape_date}.csv"
+            / "scraped"
+            / "historic"
+            / f"odds_history_2026-10-04.csv"
         )
+    
+    @property
+    def all_feats_dir(self) -> Path: 
+        return (
+            self.data_dir
+            / "train_val_test"
+            / "all_feats"
+        )
+
+    @property
+    def split_feats_dir(self) -> Path:
+        return(
+            self.data_dir
+            / "train_val_test"
+            / "splits"
+        )
+
+    @property 
+    def images_dir(self) -> Path:
+        return (
+            self.data_dir
+            / "images"
+        )
+
+    @property
+    def plot_pngs_dir(self) -> Path:
+        return self.images_dir / "plot_pngs"
+
+    @property
+    def bankroll_returns_plot_file(self) -> Path:
+        return self.plot_pngs_dir / "bankroll_returns_live.png"
+
+    @property
+    def model_predictions_folder(self) -> Path: 
+        return(
+            self.data_dir
+            / "model_predictions"
+        )
+
+
+
+    @property
+    def bets_dir(self) -> Path:
+        return self.data_dir / "bets"
 
     @property
     def betting_results_dir(self) -> Path:
@@ -87,11 +153,11 @@ class Settings:
 
     @property
     def ml_bets_dir(self) -> Path:
-        return self.upcoming_events_dir / "straight_bets"
+        return self.bets_dir / "straight_bets"
 
     @property
     def parlay_bets_dir(self) -> Path:
-        return self.upcoming_events_dir / "parlays"
+        return self.bets_dir / "parlays"
 
     @property
     def event_features_dir(self) -> Path:
@@ -104,12 +170,12 @@ class Settings:
     @property
     def ml_bets_dir(self) -> Path:
         """Directory containing event-specific moneyline bet files."""
-        return self.upcoming_events_dir / "straight_bets"
+        return self.bets_dir / "straight_bets"
 
     @property
     def parlay_bets_dir(self) -> Path:
         """Directory containing event-specific parlay bet files."""
-        return self.upcoming_events_dir / "parlays"
+        return self.bets_dir / "parlays"
 
     @property
     def upcoming_event_features_dir(self) -> Path:
@@ -139,6 +205,8 @@ settings = Settings()
 
 @dataclass
 class config:
+
+    odds_types = ('open', 'close1', 'close2')
     
     # --- Bet Params ---
     bankroll:int = 3500
@@ -175,25 +243,31 @@ class config:
     # test feats folder
     test_feats_file = settings.data_dir / "test_data" / "test_data.csv"
 
-    # folder for model 
-    ml_bets_folder = settings.data_dir / "upcoming_events" / "straight_bets" 
-    parlay_bets_folder = settings.data_dir/ "upcoming_events" / "parlays"
+    # folder for in use models 
+    ml_bets_folder = settings.ml_bets_dir
+    parlay_bets_folder = settings.parlay_bets_dir
 
-    model_open_path = settings.data_dir/ "saved_models" / "logit_model_open.pkl"
-    model_open_se_path = settings.data_dir/ "saved_models" / "logit_model_se_open.pkl"
+    model_open_path = settings.saved_models_dir / "logit_model_open.pkl"
+    model_open_se_path = settings.saved_models_dir / "logit_model_se_open.pkl"
 
-    model_close1_path = settings.data_dir/ "saved_models" / "logit_model_close1.pkl"
+    model_open_test_path = settings.saved_models_dir / "logit_model_test_open.pkl"
+    model_open_test_se_path = settings.saved_models_dir / "logit_model_test_se_open.pkl"
+
+    model_close1_path = settings.saved_models_dir / "logit_model_close1.pkl"
     model_close2_path = settings.data_dir / "saved_models" / "logit_model_close2.pkl"
-    xgb_path = settings.data_dir/ "saved_models" / "xgboosted.pkl"
+    xgb_path = settings.saved_models_dir / "xgboosted.pkl"
 
-    scaler_open_path = settings.data_dir/ "saved_models" / "scaler_open.pkl"
-    scaler_close1_path = settings.data_dir/ "saved_models" / "scaler_close1.pkl"
-    scaler_close2_path = settings.data_dir/ "saved_models" / "scaler_close2.pkl"
+    scaler_open_path = settings.saved_models_dir / "scaler_open.pkl"
+    scaler_open_test_path = settings.saved_models_dir / "scaler_open_test.pkl"
 
-    encoder_open_path = settings.data_dir/ "saved_models" / "encoder_open.pkl"
+    scaler_close1_path = settings.saved_models_dir / "scaler_close1.pkl"
+    scaler_close2_path = settings.saved_models_dir / "scaler_close2.pkl"
 
-    ml_folder = settings.data_dir/ "upcoming_events" / "straight_bets"
-    parlay_folder = settings.data_dir/ "upcoming_events" / "parlays" 
+    encoder_open_path = settings.saved_models_dir / "encoder_open.pkl"
+    encoder_open_test_path = settings.saved_models_dir / "encoder_open_test.pkl"
+
+    ml_folder = settings.ml_bets_dir
+    parlay_folder = settings.parlay_bets_dir
 
     # --- Results Tracking Params ---
     ml_history_fp =settings.data_dir/ 'betting_results' / 'moneyline_results.csv'
@@ -225,106 +299,128 @@ class config:
     
 
     # --- Model Params ---
+    # open_feats = [
+    #         'proba_fair_open_diff', 'reach_diff', 
+            
+    #         'sub_att_pm_red', 'sub_att_pm_blue',
+    #         'ratio_control_diff',
+
+    #         'td_landed_pm_diff',  
+    #         'ratio_td_diff', 
+    #         'adjusted_td_red', 'adjusted_td_blue',
+
+    #         'sig_str_absorbed_total_diff', 
+    #         'sig_str_accuracy_pct_diff',
+    #         'sig_str_defense_pct_diff',
+    #         'adjusted_sig_str_blue', 'adjusted_sig_str_red', 
+            
+    #         'win_pct_red', 'win_pct_blue',
+    #         'win_streak_diff', 'lose_streak_diff',
+    #         'elo_red', 'elo_blue', 'elo_pred', 'age_red', 'age_blue'
+    #     ]
+
+
     open_feats = [
             'proba_fair_open_diff', 'reach_diff', 
             
             'sub_att_pm_red', 'sub_att_pm_blue',
-            'ratio_control_diff',
 
-            'td_landed_pm_diff',  
-            'ratio_td_diff', 
-            'adjusted_td_red', 'adjusted_td_blue',
+            'td_attempted_pm_diff', 'td_defended_pm_diff',
+            
+            'adjusted_td_diff', 'adjusted_control_diff', 'adjusted_sig_str_diff',
 
-            'sig_str_absorbed_total_diff', 
+            'sig_str_absorbed_pm_diff', 'kd_total_diff',
+
             'sig_str_accuracy_pct_diff',
+
             'sig_str_defense_pct_diff',
-            'adjusted_sig_str_blue', 'adjusted_sig_str_red', 
             
             'win_pct_red', 'win_pct_blue',
             'win_streak_diff', 'lose_streak_diff',
-            'elo_red', 'elo_blue', 'elo_pred', 'age_red', 'age_blue'
+            'elo_red', 'elo_blue', 'elo_pred', 'age_red', 'age_blue', 'opp_age_red', 'opp_age_blue'
         ]
+
 
     open_close1_feats = [
             'proba_fair_close1_diff', 'reach_diff', 
             
             'sub_att_pm_red', 'sub_att_pm_blue',
-            'ratio_control_diff',
 
-            'td_landed_pm_diff',  
-            'ratio_td_diff', 
-            'adjusted_td_red', 'adjusted_td_blue',
+            'td_attempted_pm_diff', 'td_defended_pm_diff',
+            
+            'adjusted_td_diff', 'adjusted_control_diff', 'adjusted_sig_str_diff',
 
-            'sig_str_absorbed_total_diff', 
+            'sig_str_absorbed_pm_diff', 'kd_total_diff',
+
             'sig_str_accuracy_pct_diff',
+
             'sig_str_defense_pct_diff',
-            'adjusted_sig_str_blue', 'adjusted_sig_str_red', 
             
             'win_pct_red', 'win_pct_blue',
             'win_streak_diff', 'lose_streak_diff',
-            'elo_red', 'elo_blue', 'elo_pred', 'age_red', 'age_blue'
+            'elo_red', 'elo_blue', 'elo_pred', 'age_red', 'age_blue', 'opp_age_red', 'opp_age_blue'
         ]
     
     open_close2_feats = [
             'proba_fair_close2_diff', 'reach_diff', 
             
             'sub_att_pm_red', 'sub_att_pm_blue',
-            'ratio_control_diff',
 
-            'td_landed_pm_diff',  
-            'ratio_td_diff', 
-            'adjusted_td_red', 'adjusted_td_blue',
+            'td_attempted_pm_diff', 'td_defended_pm_diff',
+            
+            'adjusted_td_diff', 'adjusted_control_diff', 'adjusted_sig_str_diff',
 
-            'sig_str_absorbed_total_diff', 
+            'sig_str_absorbed_pm_diff', 'kd_total_diff',
+
             'sig_str_accuracy_pct_diff',
+
             'sig_str_defense_pct_diff',
-            'adjusted_sig_str_blue', 'adjusted_sig_str_red', 
             
             'win_pct_red', 'win_pct_blue',
             'win_streak_diff', 'lose_streak_diff',
-            'elo_red', 'elo_blue', 'elo_pred', 'age_red', 'age_blue'
+            'elo_red', 'elo_blue', 'elo_pred', 'age_red', 'age_blue', 'opp_age_red', 'opp_age_blue'
         ]
     
     
-    close1_feats = [
-                  'proba_fair_close1_diff', 'proba_fair_open_diff', 'reach_diff', 
+    # close1_feats = [
+    #               'proba_fair_close1_diff', 'proba_fair_open_diff', 'reach_diff', 
                   
-                  'sub_att_pm_red', 'sub_att_pm_blue',
-                  'ratio_control_diff',
+    #               'sub_att_pm_red', 'sub_att_pm_blue',
+    #               'ratio_control_diff',
 
-                  'td_landed_pm_diff',  
-                  'ratio_td_diff', 
-                  'adjusted_td_red', 'adjusted_td_blue',
+    #               'td_landed_pm_diff',  
+    #               'ratio_td_diff', 
+    #               'adjusted_td_red', 'adjusted_td_blue',
 
-                  'sig_str_absorbed_total_diff', 
-                  'sig_str_accuracy_pct_diff',
-                  'sig_str_defense_pct_diff',
-                  'adjusted_sig_str_blue', 'adjusted_sig_str_red', 
+    #               'sig_str_absorbed_total_diff', 
+    #               'sig_str_accuracy_pct_diff',
+    #               'sig_str_defense_pct_diff',
+    #               'adjusted_sig_str_blue', 'adjusted_sig_str_red', 
                   
-                  'win_pct_red', 'win_pct_blue',
-                  'win_streak_diff', 'lose_streak_diff',
-                  'elo_red', 'elo_blue', 'elo_pred', 'age_red', 'age_blue',
-        ]
+    #               'win_pct_red', 'win_pct_blue',
+    #               'win_streak_diff', 'lose_streak_diff',
+    #               'elo_red', 'elo_blue', 'elo_pred', 'age_red', 'age_blue',
+    #     ]
     
-    close2_feats = [
-                  'proba_fair_close2_diff', 'proba_fair_open_diff', 'reach_diff', 
+    # close2_feats = [
+    #               'proba_fair_close2_diff', 'proba_fair_open_diff', 'reach_diff', 
                   
-                  'sub_att_pm_red', 'sub_att_pm_blue',
-                  'ratio_control_diff',
+    #               'sub_att_pm_red', 'sub_att_pm_blue',
+    #               'ratio_control_diff',
 
-                  'td_landed_pm_diff',  
-                  'ratio_td_diff', 
-                  'adjusted_td_red', 'adjusted_td_blue',
+    #               'td_landed_pm_diff',  
+    #               'ratio_td_diff', 
+    #               'adjusted_td_red', 'adjusted_td_blue',
 
-                  'sig_str_absorbed_total_diff', 
-                  'sig_str_accuracy_pct_diff',
-                  'sig_str_defense_pct_diff',
-                  'adjusted_sig_str_blue', 'adjusted_sig_str_red', 
+    #               'sig_str_absorbed_total_diff', 
+    #               'sig_str_accuracy_pct_diff',
+    #               'sig_str_defense_pct_diff',
+    #               'adjusted_sig_str_blue', 'adjusted_sig_str_red', 
                   
-                  'win_pct_red', 'win_pct_blue',
-                  'win_streak_diff', 'lose_streak_diff',
-                  'elo_red', 'elo_blue', 'elo_pred', 'age_red', 'age_blue',
-        ]
+    #               'win_pct_red', 'win_pct_blue',
+    #               'win_streak_diff', 'lose_streak_diff',
+    #               'elo_red', 'elo_blue', 'elo_pred', 'age_red', 'age_blue',
+    #     ]
     
 
     # --- Display Params ---
@@ -342,3 +438,21 @@ class config:
                         'choice_fighter_name_close1', 'parlay_odds_close1', 'parlay_ev_close1', 'stake_close1',
                         'choice_fighter_name_close2', 'parlay_odds_close2', 'parlay_ev_close2', 'stake_close2',
                         'parlay_prob_open', 'parlay_prob_close1', 'parlay_prob_close2']
+
+
+    non_feats = [
+        'date','event_date','event_location','fighter_blue','fighter_red',
+        'method','og_blue_name','og_red_fighter', 'red_fighter_stats', 'blue_fighter_stats',
+        'pimp_close1_blue','pimp_close1_red','pimp_close2_blue','pimp_close2_red',
+        'juice_close1_blue','juice_close1_red','juice_close2_blue','juice_close2_red',
+        'winner_name',
+        
+        'red_fighter_odds','blue_fighter_odds',
+        'dec_close1_blue','dec_close1_red','dec_close2_blue','dec_close2_red',
+        'dec_fair_close1_blue','dec_fair_close1_red','dec_fair_close2_blue','dec_fair_close2_red',
+        'red_ud_to_fav_close1','red_ud_to_fav_close2','blue_ud_to_fav_close1','blue_ud_to_fav_close2',
+        'red_stayed_fav_close1','red_stayed_fav_close2','blue_stayed_fav_close1','blue_stayed_fav_close2',
+        'red_fav_to_ud_close1','red_fav_to_ud_close2','blue_fav_to_ud_close1','blue_fav_to_ud_close2',
+        'red_stayed_dog_close1','red_stayed_dog_close2','blue_stayed_dog_close1','blue_stayed_dog_close2',
+        'performance_bonus_winner', 'fight_otn_bonus'
+    ] 

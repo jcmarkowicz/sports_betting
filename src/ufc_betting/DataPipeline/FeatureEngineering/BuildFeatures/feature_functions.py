@@ -436,14 +436,8 @@ def win_lose_streak(df):
             wins[red].append(0)
             wins[blue].append(1)
 
-        else:
-            # Optional: handle draw/no contest etc.
-            fighter_dic[red]['win_streak'].append(0)
-            fighter_dic[red]['lose_streak'].append(0)
-            fighter_dic[blue]['win_streak'].append(0)
-            fighter_dic[blue]['lose_streak'].append(0)
-            wins[red].append(0)
-            wins[blue].append(0)
+        # Draws/no contests (2) and unknown outcomes (3) leave history unchanged.
+        # Their pre-fight values have already been recorded above.
 
     return np.column_stack([
         red_win_streak,

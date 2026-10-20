@@ -899,75 +899,33 @@ class BayesianSearchLR:
                                        parlay_return=0.0, event_return=0.0))
                 continue
 
-            p_vegas = 1 / group["fair_odds"].to_numpy()
+            from ufc_betting.BettingStrategy.betting_returns import BettingReturnCalculator as Calculator
+            p_vegas = 1 / group['fair_odds'].to_numpy()
             p_model = group['risk_proba'].to_numpy()
-            pred_se = group['se'].to_numpy()
-
-            raw_edges = np.maximum(
-                p_model - p_vegas,
-                0,
-            )
-            conservative_edges = np.maximum(
-                p_model - param['z'] * pred_se - p_vegas,
-                0,
-            )
-
-            uncertainty_weights = group['fstar'].to_numpy(
-                dtype=float, copy=True
-            )
-            group_ids = group.index.to_numpy()
+            raw_edges = np.maximum(p_model - p_vegas, 0.)
+            conservative_edges = np.maximum(p_model - (param['z'] or 0.) * group['se'].to_numpy() - p_vegas, 0.)
+            enabled = param['z'] is not None
+            single_risk = Calculator.risk_multiplier(group.fstar, raw_edges, conservative_edges, enabled)
+            ml_return = np.sum(group.pct_return.fillna(0).to_numpy() * single_risk)
+            exposure = np.sum(group.fstar.to_numpy() * single_risk)
+            ticket_returns = []
             for result in (parlay_result, heavy_parlay_result):
-                if result.empty or result['fstar'].iloc[0] <= 0:
+                if result.empty:
                     continue
-                selected_ids = result['selected_ids'].iloc[0]
-                if not selected_ids:
-                    continue
-                leg_weight = result['fstar'].iloc[0] / len(selected_ids)
-                uncertainty_weights += (
-                    np.isin(group_ids, selected_ids) * leg_weight
-                )
-
-            raw_score = np.sum(uncertainty_weights * raw_edges)
-            conservative_score = np.sum(
-                uncertainty_weights * conservative_edges
-            )
-                
-            uncertainty_multiplier = (
-                np.clip(conservative_score / raw_score, 0, 1)
-                if raw_score > 0
-                else 0.0
-            )
-            event_return = moneyline_returns.sum()
-            if pd.notna(parlay_return):
-                event_return += parlay_return
-            if pd.notna(heavy_parlay_return):
-                event_return += heavy_parlay_return
-
-            exposure_after_uncertainty = (
-                total_fstar * uncertainty_multiplier
-            )
-            exposure_multiplier = (
-                min(1.0, 1.0 / exposure_after_uncertainty)
-                if exposure_after_uncertainty > 0
-                else 1.0
-            )
-            if uncertainty_multiplier * exposure_multiplier > 0:
-                for ticket_return in (parlay_return, heavy_parlay_return):
-                    if pd.notna(ticket_return):
-                        parlay_outcomes.append(bool(ticket_return > 0))
-            event_returns.append(
-                event_return
-                * uncertainty_multiplier
-                * exposure_multiplier
-            )
-            multiplier = uncertainty_multiplier * exposure_multiplier
-            components.append(dict(
-                date=date,
-                moneyline_return=float(moneyline_returns.sum() * multiplier),
-                parlay_return=float(sum(value for value in
-                    (parlay_return, heavy_parlay_return) if pd.notna(value)) * multiplier),
-                event_return=float(event_returns[-1]),
-            ))
+                ticket = result.iloc[0]
+                selected = np.isin(group.index.to_numpy(), ticket.selected_ids)
+                ratio = float(Calculator.ticket_risk_multiplier(
+                    raw_edges[selected], conservative_edges[selected], enabled)) if selected.any() else 1.
+                exposure += ticket.fstar * ratio
+                if pd.notna(ticket.pct_return):
+                    ticket_returns.append(ticket.pct_return * ratio)
+                    if ticket.fstar * ratio > 0:
+                        parlay_outcomes.append(bool(ticket.pct_return > 0))
+            cap = Calculator._exposure_multiplier(exposure)
+            pl_return = sum(ticket_returns)
+            event_returns.append(float((ml_return + pl_return) * cap))
+            components.append(dict(date=date, moneyline_return=float(ml_return * cap),
+                                   parlay_return=float(pl_return * cap), event_return=event_returns[-1]))
 
         if return_components:
             return pd.DataFrame(components)
@@ -992,13 +950,13 @@ class BayesianSearchLR:
             if strategy == 'top_ev':
                 candidates = group
                 selected = candidates.sort_values(
-                    sort_column, ascending=False
+                    sort_column, ascending=False, kind='stable'
                 ).head(2)
             elif strategy == 'heavy_favorite':
                 candidates = group.loc[
                     (group['choice_ev'] > 0)
                     & (group['choice_american_odds'] <= param['heavy_favorite_cutoff'])
-                ].sort_values(sort_column, ascending=False)
+                ].sort_values(sort_column, ascending=False, kind='stable')
                 selected = candidates.head(
                     param['heavy_parlay_max_legs']
                 )
