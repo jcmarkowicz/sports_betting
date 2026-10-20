@@ -12,7 +12,7 @@ from ufc_betting.BettingStrategy.Backtest.backtest_plots import (
 
 
 # show_image(path, title='Percent Returns')
-st.title(" Prediction and Betting Results since 2026-02-21")
+st.title("Live Results")
 
 plot_path = settings.bankroll_returns_plot_file
 if plot_path.is_file():
