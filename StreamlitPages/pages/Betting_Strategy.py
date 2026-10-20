@@ -10,7 +10,7 @@ from ufc_betting.config import settings
 
 
 def parameter_table(path):
-    """Expand nested saved controls into readable rows, including opening controls."""
+    """Expand configured controls into readable rows, omitting unset values."""
     frame = pd.read_csv(path, keep_default_na=False)
     if not {"parameter", "Best parameters"} <= set(frame.columns):
         raise ValueError("Expected parameter and Best parameters columns")
@@ -21,9 +21,12 @@ def parameter_table(path):
             for key, item in value.items():
                 append_value(f"{name}.{key}", item)
         else:
-            if value is None or value == "":
-                value = "Not set"
-            elif isinstance(value, (int, float)):
+            if value is None or (isinstance(value, str) and value.strip().lower() in
+                                 {"", "none", "null", "nan", "not set"}):
+                return
+            if pd.api.types.is_scalar(value) and pd.isna(value):
+                return
+            if isinstance(value, (int, float)):
                 value = f"{value:.4f}"
             rows.append({"Parameter": name, "Value": str(value)})
 

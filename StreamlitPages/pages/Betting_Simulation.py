@@ -48,7 +48,10 @@ st.markdown(
     "and stake sizes also matter."
 )
 
-plot_dir = settings.plot_pngs_dir
+plot_dir = getattr(settings, "plot_pngs_dir", None)
+if plot_dir is None:
+    images_dir = getattr(settings, "images_dir", settings.data_dir / "images")
+    plot_dir = images_dir / "plot_pngs"
 for market, label, backtest_file in (
     ("open", "Opening Odds", "open_backtest.png"),
     ("close1", "Close1 Odds", "close1.png"),
