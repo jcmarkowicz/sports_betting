@@ -38,7 +38,10 @@ st.markdown(
     "close2 odds inputs; input_feature identifies the input used by each variant."
 )
 st.markdown("Coefficient significance: *** p < 0.001; ** p < 0.01; * p < 0.05. Missing statistics are shown as —.")
-metrics_dir = settings.plot_pngs_dir
+metrics_dir = getattr(settings, "plot_pngs_dir", None)
+if metrics_dir is None:
+    images_dir = getattr(settings, "images_dir", settings.data_dir / "images")
+    metrics_dir = images_dir / "plot_pngs"
 coefficients_dir = settings.data_dir / "model_results" / "coefficients"
 for market in ("open", "close1", "close2"):
     model_type = f"open_with_{market}"

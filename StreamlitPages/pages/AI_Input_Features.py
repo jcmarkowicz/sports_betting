@@ -18,15 +18,11 @@ st.markdown(
 output_dir = getattr(settings, "feature_selection_dir", None)
 if output_dir is None:
     output_dir = settings.data_dir / "feature_selection"
-for filename, title in (
-    ("lasso_paths.png", "Lasso Coefficient Paths"),
-    ("lasso_importance.png", "Lasso Feature Importance"),
-):
-    path = output_dir / filename
-    if path.is_file():
-        show_image(path, title=title)
-    else:
-        st.info(f"Run lasso.ipynb to export {path}")
+path = output_dir / "lasso_paths.png"
+if path.is_file():
+    show_image(path, title="Lasso Coefficient Paths")
+else:
+    st.info(f"Run lasso.ipynb to export {path}")
 
 ranked_path = output_dir / "ranked_features.csv"
 if ranked_path.is_file():
@@ -38,7 +34,11 @@ else:
 
 
 st.subheader("Training Input Distributions")
-input_plot = settings.plot_pngs_dir / "input_plots.png"
+plot_dir = getattr(settings, "plot_pngs_dir", None)
+if plot_dir is None:
+    images_dir = getattr(settings, "images_dir", settings.data_dir / "images")
+    plot_dir = images_dir / "plot_pngs"
+input_plot = plot_dir / "input_plots.png"
 if input_plot.is_file():
     show_image(input_plot, title="Opening Model Input Features — Training Split")
 else:
