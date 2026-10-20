@@ -1,7 +1,9 @@
 import pandas as pd
 import streamlit as st
 from utils import display_paginated_df, show_image
-from ufc_betting.config import settings, VAL_START_DATE, TEST_START_DATE
+from ufc_betting import config
+
+settings = config.settings
 
 st.title("AI Training and Testing")
 st.markdown(
@@ -9,11 +11,19 @@ st.markdown(
     "contain information available before the fight, and its output estimates "
     "the probability that the red fighter wins."
 )
-st.markdown(
-    f"The data is split chronologically: training precedes {VAL_START_DATE}, "
-    f"validation runs from {VAL_START_DATE} up to {TEST_START_DATE}, and test "
-    f"starts on {TEST_START_DATE}. The Betting Simulation page shows validation backtests."
-)
+val_start_date = getattr(config, "VAL_START_DATE", None)
+test_start_date = getattr(config, "TEST_START_DATE", None)
+if val_start_date is not None and test_start_date is not None:
+    st.markdown(
+        f"The data is split chronologically: training precedes {val_start_date}, "
+        f"validation runs from {val_start_date} up to {test_start_date}, and test "
+        f"starts on {test_start_date}. The Betting Simulation page shows validation backtests."
+    )
+else:
+    st.markdown(
+        "The data is split chronologically into training, validation, and test sets. "
+        "The Betting Simulation page shows validation backtests."
+    )
 st.markdown(
     "Each metrics figure shows calibration, a confusion matrix, ROC discrimination, "
     "and F1 across probability thresholds. Calibration compares predicted probabilities "

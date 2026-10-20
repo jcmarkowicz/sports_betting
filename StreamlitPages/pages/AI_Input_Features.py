@@ -14,7 +14,10 @@ st.markdown(
     "higher ranks; ties share a rank. These ranks describe coefficient persistence, "
     "not causal effects, and depend on the penalty grid and correlated inputs."
 )
-output_dir = settings.feature_selection_dir
+# Support deployments that still have an older Settings module loaded.
+output_dir = getattr(settings, "feature_selection_dir", None)
+if output_dir is None:
+    output_dir = settings.data_dir / "feature_selection"
 for filename, title in (
     ("lasso_paths.png", "Lasso Coefficient Paths"),
     ("lasso_importance.png", "Lasso Feature Importance"),
