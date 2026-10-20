@@ -12,11 +12,37 @@ from pandas.api.types import is_float_dtype, is_integer_dtype
 Subprocess library to run shell commands for git operations. 
 """
 
+def push_with_sync(branch="main", attempts=3):
+    """Preserve remote commits before publishing generated results."""
+    # actions/checkout supplies origin authentication; keep tokens out of commands.
+    for attempt in range(attempts):
+        subprocess.run(["git", "fetch", "origin", branch], check=True)
+        rebase = subprocess.run(["git", "rebase", "FETCH_HEAD"], check=False)
+        if rebase.returncode:
+            subprocess.run(["git", "rebase", "--abort"], check=False)
+            raise RuntimeError(
+                "Cannot publish generated results: rebasing onto GitHub failed. "
+                "Check the Git output above for conflicts or uncommitted changes; "
+                "no force push was attempted."
+            )
+        push = subprocess.run(
+            ["git", "push", "origin", f"HEAD:{branch}"],
+            capture_output=True, text=True, check=False,
+        )
+        if push.returncode == 0:
+            return
+        detail = (push.stdout or "") + (push.stderr or "")
+        remote_advanced = "[rejected]" in detail and any(
+            reason in detail for reason in ("fetch first", "non-fast-forward")
+        )
+        if not remote_advanced or attempt == attempts - 1:
+            raise RuntimeError(f"Git push failed: {detail.strip()}")
+        print("GitHub advanced during publishing; fetching and rebasing before retry.")
+
+
 # Function to commit if changed
 def commit_if_changed(df, file_path, msg, branch="main"):
 
-    repo = os.environ["GITHUB_REPOSITORY"]
-    token = os.environ["GITHUB_TOKEN"]
 
     file_path = Path(file_path)
     file_path.parent.mkdir(parents=True, exist_ok=True)
@@ -48,8 +74,7 @@ def commit_if_changed(df, file_path, msg, branch="main"):
 
     subprocess.run(["git", "commit", "-m", msg], check=True)
 
-    push_url = f"https://x-access-token:{token}@github.com/{repo}.git"
-    subprocess.run(["git", "push", push_url, f"HEAD:{branch}"], check=True)
+    push_with_sync(branch)
 
 
 def numeric_changed(df_new, file_path, tol=2e-3):
@@ -97,7 +122,7 @@ def delete_and_commit(path, message):
     subprocess.run(["git", "commit", "-m", message], check=False)
 
     # 4. Push
-    subprocess.run(["git", "push"], check=False)
+    push_with_sync()
 
 
 def commit_figure_if_changed(
@@ -143,11 +168,5 @@ def commit_figure_if_changed(
         check=True,
     )
 
-    repo = os.environ["GITHUB_REPOSITORY"]
-    token = os.environ["GITHUB_TOKEN"]
-    push_url = f"https://x-access-token:{token}@github.com/{repo}.git"
-    subprocess.run(
-        ["git", "push", push_url, f"HEAD:{branch}"],
-        check=True,
-    )
+    push_with_sync(branch)
     return True
