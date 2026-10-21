@@ -1,0 +1,19 @@
+metric,Bet Type Stats
+total_fav_open,143.0
+total_dog_open,21.0
+n_win_fav_open,105.0
+n_win_dog_open,14.0
+accuracy_fav_open,0.7343
+accuracy_dog_open,0.6667
+total_fav_close1,108.0
+total_dog_close1,8.0
+n_win_fav_close1,74.0
+n_win_dog_close1,4.0
+accuracy_fav_close1,0.6852
+accuracy_dog_close1,0.5
+total_fav_close2,118.0
+total_dog_close2,24.0
+n_win_fav_close2,87.0
+n_win_dog_close2,13.0
+accuracy_fav_close2,0.7373
+accuracy_dog_close2,0.5417
