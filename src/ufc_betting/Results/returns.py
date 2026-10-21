@@ -549,11 +549,10 @@ def generate_test_accuracy_results(*, prediction_dir=None, output_dir=None,
     return dict(output_dir=output_dir, artifacts=artifacts, tables=tables, table_paths=table_paths)
 
 
-def generate_test_return_plots(*, output_dir=None, publish=True):
-    """Save notebook-equivalent test plots for the read-only Live Results page."""
+def generate_return_plots(ml_results, parlay_results, bankroll_results, *, output_dir=None, publish=True):
+    """Save plots from the settled frames produced by Results Tracking."""
     from pathlib import Path
     import matplotlib.pyplot as plt
-    from ufc_betting.Results.test_simulation import simulate_saved_predictions
     from ufc_betting.BettingStrategy.Backtest.backtest_plots import (
         plot_backtest, plot_bankroll_distributions, plot_event_accuracy_distributions,
     )
@@ -562,17 +561,23 @@ def generate_test_return_plots(*, output_dir=None, publish=True):
     output_dir.mkdir(parents=True, exist_ok=True)
     saved = []
     for market in SETTLED_TYPES:
-        moneylines, parlays, *_ = simulate_saved_predictions(
-            market, initial_bankroll=500, use_decay=market != "open",
-            split="test", model_type="open",
+        events, moneylines, parlays = prepare_return_plot_data(
+            ml_results, parlay_results, bankroll_results, market,
+        )
+        if events.empty:
+            raise ValueError(f"No settled events to plot for {market}")
+        initial_bankroll = float(
+            events.iloc[0].bankroll_postevent
+            - events.iloc[0].event_payout_money_line
+            - events.iloc[0].parlay_net
         )
         for suffix, plot in (
-            ("backtest", lambda: plot_backtest(moneylines, init_bankroll=500)),
-            ("bankroll_distributions", lambda: plot_bankroll_distributions(moneylines, parlays)),
+            ("backtest", lambda: plot_backtest(events, init_bankroll=initial_bankroll)),
+            ("bankroll_distributions", lambda: plot_bankroll_distributions(events)),
             ("event_accuracy", lambda: plot_event_accuracy_distributions(moneylines, parlays, odds_type=market)),
         ):
             fig, *_ = plot()
-            path = output_dir / f"test_{market}_{suffix}.png"
+            path = output_dir / f"live_{market}_{suffix}.png"
             try:
                 fig.savefig(path, dpi=150, bbox_inches="tight")
             finally:
