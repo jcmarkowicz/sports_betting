@@ -9,6 +9,7 @@ from ufc_betting.DataPipeline.dataframes.moneylines import MoneylineDataFrame
 
 from ufc_betting.Results.returns import (
     accuracy_analysis,
+    generate_test_return_plots,
     plot_returns,
     returns_by_date,
 )
@@ -148,3 +149,5 @@ if __name__ == "__main__":
         f'Updating Bet Type Stats'
     )
 
+
+    generate_test_return_plots()

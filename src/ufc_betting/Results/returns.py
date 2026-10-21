@@ -547,3 +547,37 @@ def generate_test_accuracy_results(*, prediction_dir=None, output_dir=None,
     table_paths = {name: save_dataframe(frame, output_dir / f"{name}.csv", index=False)
                    for name, frame in tables.items()}
     return dict(output_dir=output_dir, artifacts=artifacts, tables=tables, table_paths=table_paths)
+
+
+def generate_test_return_plots(*, output_dir=None, publish=True):
+    """Save notebook-equivalent test plots for the read-only Live Results page."""
+    from pathlib import Path
+    import matplotlib.pyplot as plt
+    from ufc_betting.Results.test_simulation import simulate_saved_predictions
+    from ufc_betting.BettingStrategy.Backtest.backtest_plots import (
+        plot_backtest, plot_bankroll_distributions, plot_event_accuracy_distributions,
+    )
+
+    output_dir = Path(output_dir) if output_dir is not None else settings.data_dir / "images" / "plot_pngs"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    saved = []
+    for market in SETTLED_TYPES:
+        moneylines, parlays, *_ = simulate_saved_predictions(
+            market, initial_bankroll=500, use_decay=market != "open",
+            split="test", model_type="open",
+        )
+        for suffix, plot in (
+            ("backtest", lambda: plot_backtest(moneylines, init_bankroll=500)),
+            ("bankroll_distributions", lambda: plot_bankroll_distributions(moneylines, parlays)),
+            ("event_accuracy", lambda: plot_event_accuracy_distributions(moneylines, parlays, odds_type=market)),
+        ):
+            fig, *_ = plot()
+            path = output_dir / f"test_{market}_{suffix}.png"
+            try:
+                fig.savefig(path, dpi=150, bbox_inches="tight")
+            finally:
+                plt.close(fig)
+            if publish:
+                commit_figure_if_changed(path)
+            saved.append(path)
+    return saved
