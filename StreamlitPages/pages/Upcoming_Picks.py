@@ -90,12 +90,9 @@ for event_date in sorted(upcoming_dates):
     event_ev = build_event_ev_table(
         moneyline_bets=moneyline_table,
         parlay_bets=parlay_table,
-    ).drop(columns="date")
+    )[["bet_type", "close1_pct_opening_ev", "close2_pct_opening_ev"]]
     event_ev = event_ev.rename(columns={
         "bet_type": "Bet Type",
-        "open_ev_pct": "Open EV (% bankroll)",
-        "close1_ev_pct": "Close1 EV (% bankroll)",
-        "close2_ev_pct": "Close2 EV (% bankroll)",
         "close1_pct_opening_ev": "Close1 EV (% of open)",
         "close2_pct_opening_ev": "Close2 EV (% of open)",
     }).round(2)
