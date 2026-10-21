@@ -42,10 +42,10 @@ def get_missing_stats(prev_fight_date):
 
     odds_stats_df, upcoming_df = features.build_all_stats(all_stats, missing_stats.iloc[:5], all_odds, missing_odds.iloc[:5], ignore_upcoming=True)
 
-    commit_if_changed(
-        odds_stats_df,
-        settings.all_feats_dir / 'all_feats_running.csv',
-        f'Updating All Features for fight date: {prev_fight_date}'
-    )
+    # Intermediate training features are intentionally excluded from Git.
+    # Keep the CSV available to this run without staging the ignored directory.
+    features_path = settings.all_feats_dir / 'all_feats_running.csv'
+    features_path.parent.mkdir(parents=True, exist_ok=True)
+    odds_stats_df.to_csv(features_path, index=False)
 
     return missing_stats, missing_odds, odds_stats_df[odds_stats_df['date'] >= prev_fight_date]
