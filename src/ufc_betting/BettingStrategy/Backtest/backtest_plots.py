@@ -231,9 +231,8 @@ def summary_stats(df_kelly):
 
     # --- Event accuracy per event ---
     # 1 if pred_winner == winner else 0, then mean per event
-    event_acc = bets_group.apply(
-        lambda g: (g['pred_winner'] == g['winner']).mean()
-    )
+    scored = bets_df.loc[bets_df.winner.isin([0, 1])]
+    event_acc = scored.pred_winner.eq(scored.winner).groupby(scored.date).mean()
 
     # --- Event total sizing per event ---
     event_sizing = bets_group['choice_fstar'].sum()
@@ -248,8 +247,9 @@ def summary_stats(df_kelly):
     axes[0,0].set_ylabel('Count')
     axes[0,0].set_title(f'Event Choice Fighter Accuracy: Total Avg={np.mean(event_acc):.2f}')
 
-    r = np.corrcoef(event_acc, event_returns)[0,1]
-    sns.regplot(x=event_acc, y=event_returns, ax=axes[0,1])
+    scored_returns = event_returns.reindex(event_acc.index)
+    r = event_acc.corr(scored_returns)
+    sns.regplot(x=event_acc, y=scored_returns, ax=axes[0,1])
     axes[0,1].set_xlabel('Event Accuracy')
     axes[0,1].set_ylabel('Bankroll Pct Return')
     axes[0,1].set_title(f'AI Pred Fighter Accuracy vs Bankroll Pct Return \n r={r:.2f}')
@@ -259,7 +259,7 @@ def summary_stats(df_kelly):
     axes[1,0].set_ylabel('Count')
     axes[1,0].set_title('Distribution of Event Sizing')
 
-    r = np.corrcoef(event_acc, event_returns)[1,1]
+    r = event_sizing.corr(event_returns)
     sns.regplot(x=event_sizing, y=event_returns, ax=axes[1,1])
     axes[1,1].set_xlabel('Event total Fstar')
     axes[1,1].set_ylabel('Bankroll Pct Return')
@@ -838,8 +838,10 @@ def parlay_analysis(df_parlay, path=None):
     ax.set_ylabel("Count (scaled by 1/2)")
     ax.tick_params(axis='x', rotation=45)
 
-    # Define accuracy: proportion of rows where parlay_net_odds != -1
-    accuracy_per_bin = df_parlay.groupby('ev_bin')['parlay_net_odds'].apply(lambda x: (x != -1).sum() / len(x)).reset_index()
+    # A zero net return is a void ticket, not a win or loss.
+    net = df_parlay['parlay_net_odds']
+    scored = net.gt(0).astype(float).where(net.notna() & net.ne(0))
+    accuracy_per_bin = scored.groupby(df_parlay['ev_bin']).mean().reset_index()
     accuracy_per_bin.rename(columns={'parlay_net_odds': 'accuracy'}, inplace=True)
 
     sns.barplot(

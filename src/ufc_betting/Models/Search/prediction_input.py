@@ -14,7 +14,7 @@ def read_frozen_predictions(data):
     supplied betting probabilities; explicit risk columns remain separate.
     """
     frame = data.copy() if isinstance(data, pd.DataFrame) else pd.read_csv(
-        data, float_precision='round_trip')
+        data, float_precision='round_trip').copy()
     if 'prediction_se' not in frame:
         for name in ('se', 'proba_se'):
             if name in frame:

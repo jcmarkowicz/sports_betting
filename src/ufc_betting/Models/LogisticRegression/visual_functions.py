@@ -120,6 +120,13 @@ def expected_calibration_error(y_true, y_prob, n_bins=10):
     plt.show()
 
 def plot_model_metrics(y_test, y_pred, probs, suptitle='', path=None):
+    # Void outcomes receive predictions but are not classification targets.
+    scored = np.isin(np.asarray(y_test), [0, 1])
+    y_test = np.asarray(y_test)[scored].astype(int)
+    y_pred = np.asarray(y_pred)[scored]
+    probs = np.asarray(probs)[scored]
+    if len(np.unique(y_test)) < 2:
+        raise ValueError('Metric plots require both binary outcome classes after excluding void fights')
 
     # ---- Confusion Matrix ----
     cm = confusion_matrix(y_test, y_pred)

@@ -10,13 +10,14 @@ class TrainTestBuilder:
 
     def __init__(
             self, df, feats, target_col, date_col, odds_type, year, month, day,
-            required_features_only=False,
+            required_features_only=False, retain_void_evaluation=False,
     ):
 
         self.selected_feats = feats
         self.target_col = target_col
         self.date_col = date_col
         self.odds_type = odds_type
+        self.retain_void_evaluation = retain_void_evaluation
         self.start_date = pd.Timestamp(year=year, month=month, day=day)
 
         cat_cols = ['math_red', 'math_blue', 'elo_pred', 'womens_fight']
@@ -55,13 +56,16 @@ class TrainTestBuilder:
                 raise ValueError(f"Missing required columns: {sorted(missing)}")
             for col in set(cat_cols) & set(df.columns):
                 df[col] = df[col].astype('category')
-            self.all_processed_df = df.loc[df[target_col].isin([0, 1])].dropna(
+            evaluation_df = df.loc[df[target_col].isin([0, 1, 2, 3])].dropna(
                 subset=required
             ).reset_index(drop=True)
+            self.all_processed_df = evaluation_df.loc[evaluation_df[target_col].isin([0, 1])].copy()
         else:
+            evaluation_df = self.process_feats(df.copy(), valid_cols, target_col, cat_cols, retain_void=True)
             self.all_processed_df = self.process_feats(
                 df, valid_cols, target_col, cat_cols
             )
+        self.evaluation_df = evaluation_df.loc[evaluation_df[date_col] > self.start_date].copy()
         self.df = self.filter_by_date(
             self.all_processed_df.copy(),
             year=year, 
@@ -72,14 +76,15 @@ class TrainTestBuilder:
         print('PREPARE SHAPE:', self.df.shape)
 
     @staticmethod
-    def process_feats(df, valid_cols, target_col, cat_cols):
+    def process_feats(df, valid_cols, target_col, cat_cols, retain_void=False):
         
         df[cat_cols] = df[cat_cols].astype('category')
         metadata_cols = [col for col in ('bout_position', 'event_name', 'event_type')
                          if col in df.columns and col not in valid_cols]
         df = df[valid_cols + metadata_cols].copy()
         # Optional sampling metadata must not change the training cohort.
-        df = df[df[target_col] < 2].dropna(subset=valid_cols).reset_index(drop=True)
+        outcomes = [0, 1, 2, 3] if retain_void else [0, 1]
+        df = df[df[target_col].isin(outcomes)].dropna(subset=valid_cols).reset_index(drop=True)
         return df
 
     @staticmethod
@@ -282,14 +287,17 @@ class TrainTestBuilder:
         test_start = pd.Timestamp(test_start_date).normalize()
         if pd.isna(val_start) or pd.isna(test_start) or val_start >= test_start:
             raise ValueError('Dates must be valid and val_start_date must precede test_start_date')
-        dates = self.df[self.date_col]
-        masks = {'train': dates < val_start,
+        # Retain void fights for held-out predictions and betting-path exports.
+        # Training (including fitted preprocessing) uses binary outcomes only.
+        source = self.evaluation_df if self.retain_void_evaluation else self.df
+        dates = source[self.date_col]
+        masks = {'train': (dates < val_start) & source[self.target_col].isin([0, 1]),
                  'val': (dates >= val_start) & (dates < test_start),
                  'test': dates >= test_start}
         for name, mask in masks.items():
             if not mask.any():
                 raise ValueError(f'{name} split has no eligible rows; check cutoff dates and feature data')
-        frames = {name: self.df.loc[mask].copy() for name, mask in masks.items()}
+        frames = {name: source.loc[mask].copy() for name, mask in masks.items()}
         inputs = {name: frame[self.selected_feats].copy() for name, frame in frames.items()}
         num_cols = inputs['train'].select_dtypes(include='number').columns
         cat_cols = inputs['train'].select_dtypes(include='category').columns
@@ -307,7 +315,7 @@ class TrainTestBuilder:
             pkt.update({f'X_{name}': inputs[name], f'y_{name}': frame[self.target_col],
                         f'dates_{name}': frame[self.date_col], f'{name}_df': frame})
             count = len(frame)
-            percentage = 100 * count / len(self.df)
+            percentage = 100 * count / sum(len(part) for part in frames.values())
             first, last = frame[self.date_col].min(), frame[self.date_col].max()
             summaries.append(dict(split=name, rows=count, percentage=percentage,
                                   first_date=first, last_date=last))

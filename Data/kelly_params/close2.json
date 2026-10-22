@@ -1,26 +1,26 @@
 {
-  "z": 1.1,
-  "N": 218,
-  "N_parlay": 68,
-  "mdd": 0.5700000000000001,
-  "mdd_parlay": 0.03,
+  "z": 1.06,
+  "N": 123,
+  "N_parlay": 43,
+  "mdd": 0.56,
+  "mdd_parlay": 0.26,
   "moneyline_max_american": null,
   "decay_rates": {
-    "k_down": 23.73724679964053,
-    "k_up": 0.30513125637648325,
-    "k_parlay_down": 0.08865501664706964,
-    "k_parlay_up": 1.449275366834736
+    "k_down": 38.139591603478735,
+    "k_up": 0.0019978853920430734,
+    "k_parlay_down": 1.614251913567895,
+    "k_parlay_up": 0.07383383104952941
   },
   "opening_params": {
-    "z": 0.36000000000000004,
-    "N": 1203,
-    "N_parlay": 381,
-    "mdd": 0.37000000000000005,
-    "mdd_parlay": 0.23,
+    "z": 0.32,
+    "N": 58,
+    "N_parlay": 22,
+    "mdd": 0.31,
+    "mdd_parlay": 0.17,
     "moneyline_max_american": null,
     "decay_rates": null,
     "opening_params": null,
-    "moneyline_min_american": -550.0
+    "moneyline_min_american": -500.0
   },
   "moneyline_min_american": -200.0
 }

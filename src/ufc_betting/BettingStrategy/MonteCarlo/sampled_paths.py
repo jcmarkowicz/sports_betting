@@ -120,7 +120,14 @@ def attach_path_predictions(paths, predictions, *, odds_type, n_paths=None, rand
         if (not np.isfinite(values).all() or (values < 0).any()
                 or (col != 'prediction_se' and (values > 1).any())):
             raise ValueError(f'Invalid prediction values: {col}')
-    lookup = predictions.set_index(keys)
+    # Full inference exports may contain hundreds of unrelated feature columns.
+    # Reindex only prediction fields and the prices/outcomes checked below.
+    lookup_columns = keys + ['proba_red', 'risk_red_proba', 'prediction_se']
+    lookup_columns += [col for col in (
+        'winner', *(f'{prefix}_{odds_type}_{side}'
+                    for prefix in ('dec', 'dec_fair') for side in ('red', 'blue'))
+    ) if col in predictions]
+    lookup = predictions[lookup_columns].set_index(keys)
     outputs = []
     for frame in load_sampled_paths(paths, n_paths=n_paths, random_state=random_state):
         if (frame.attrs.get('generation', {}).get('sample_prices', False)
@@ -212,8 +219,8 @@ def simulate_sampled_predictions(paths, odds_type, *, controls, policies,
         for side in ('red', 'blue'):
             if f'open_{side}' not in data:
                 data[f'open_{side}'] = data[f'dec_open_{side}'].map(decimal_to_american)
-        if not data.winner.isin([0, 1]).all():
-            raise ValueError('Saved prediction paths require settled binary outcomes')
+        if not data.winner.isin([0, 1, 2, 3]).all():
+            raise ValueError('Saved prediction paths require settled outcomes (0/1 or 2/3 for void)')
         if policies is not None:
             for market in ('close1', 'close2'):
                 for side in ('red', 'blue'):

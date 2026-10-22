@@ -318,10 +318,8 @@ def simulate(fights=None, odds_type='close1', *, kelly_kwargs=None,
     for stage in required_stages:
         prices=source[[f'dec_{stage}_red',f'dec_{stage}_blue']].to_numpy(float)
         if not np.isfinite(prices).all() or (prices<=1).any():raise ValueError(f'Invalid {stage} prices')
-    if not source.winner.isin([0,1,2]).all():raise ValueError('Settled outcomes required (0/1 or 2 for void)')
+    if not source.winner.isin([0,1,2,3]).all():raise ValueError('Settled outcomes required (0/1 or 2/3 for void)')
     if policies is not None:
-        if not source.winner.isin([0, 1]).all():
-            raise ValueError('Closing policy selection requires settled binary outcomes')
         for stage in ('close1', 'close2'):
             for side in ('red', 'blue'):
                 source[f'recorded_{stage}_{side}'] = source[f'dec_{stage}_{side}']

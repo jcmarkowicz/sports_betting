@@ -78,7 +78,7 @@ class LiveBacktestParityTests(unittest.TestCase):
         settled_parlay = ParlayDataFrame(
             parlay.assign(date='2026-01-01')
         ).with_results(data).frame
-        self.assertTrue(settled_parlay.net_odds_open.isna().all())
+        self.assertTrue(settled_parlay.net_odds_open.eq(0).all())
         live_profit = (settled_ml.net_stake_open.abs() * settled_ml.net_odds_open).sum() * 500
         self.assertAlmostEqual(500 + live_profit, results.bankroll_postevent.iloc[0])
 

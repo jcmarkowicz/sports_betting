@@ -27,6 +27,39 @@ def return_frames() -> tuple[pd.DataFrame, pd.DataFrame]:
 
 
 class ReturnTests(unittest.TestCase):
+    def test_tracking_metrics_are_unchanged_by_draws_and_no_contests(self):
+        moneylines, parlays = return_frames()
+        moneylines['winner_bool'] = [1, 0]
+        for market in BET_TYPES:
+            moneylines[f'pred_winner_{market}'] = [1, 0]
+            moneylines[f'choice_proba_{market}'] = [.8, .7]
+            moneylines[f'{market}_red'] = [-150, -150]
+            moneylines[f'{market}_blue'] = [130, 130]
+        expected, expected_types = accuracy_analysis(moneylines, parlays)
+        void_ml = moneylines.copy()
+        void_ml['winner_bool'] = [2, 3]
+        void_ml['date'] = pd.to_datetime(['2026-02-01', '2026-03-01'])
+        void_pl = parlays.copy()
+        void_pl['date'] = void_ml.date
+        for market in BET_TYPES:
+            void_ml[f'net_odds_{market}'] = 0.
+            void_pl[f'net_odds_{market}'] = 0.
+        actual, actual_types = accuracy_analysis(
+            pd.concat([moneylines, void_ml], ignore_index=True),
+            pd.concat([parlays, void_pl], ignore_index=True))
+        expected = expected.set_index('metric').Accuracies
+        actual = actual.set_index('metric').Accuracies
+        for market in BET_TYPES:
+            for metric in ('preds_all', 'bets', 'vegas', 'brier_all', 'brier_bets', 'brier_vegas', 'parlays'):
+                key = f'{metric}_{market}'
+                self.assertEqual(actual[key], expected[key], key)
+        pd.testing.assert_frame_equal(actual_types, expected_types)
+        void_scores, _ = accuracy_analysis(void_ml, void_pl)
+        void_scores = void_scores.set_index('metric').Accuracies
+        for market in BET_TYPES:
+            for metric in ('preds_all', 'bets', 'vegas', 'brier_all', 'brier_bets', 'brier_vegas', 'parlays'):
+                self.assertTrue(pd.isna(void_scores[f'{metric}_{market}']))
+
     def test_plot_inputs_preserve_losses_and_actual_bankroll_contributions(self):
         moneylines, parlays = return_frames()
         moneylines['fighter_red'] = ['a', 'c']

@@ -98,6 +98,8 @@ def train_logit_model(
     https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.Logit.fit_regularized.html  
     """
 
+    if not np.isin(np.asarray(y_train), [0, 1]).all():
+        raise ValueError('Model fitting requires binary outcomes; exclude draws/no contests from training')
     # --- add constant ---
     X_train_sm = sm.add_constant(X_train.copy(), has_constant='add')
     X_test_sm = sm.add_constant(X_test.copy(), has_constant='add')
@@ -127,13 +129,15 @@ def train_logit_model(
     test_pred, test_class = test_predictions['proba_red'], test_predictions['pred_winner']
 
     # --- metrics ---
-    accuracy = accuracy_score(y_test, test_class)
-    brier = brier_score_loss(y_test, test_pred)
+    scored = np.isin(np.asarray(y_test), [0, 1])
+    actual = np.asarray(y_test)[scored]
+    accuracy = accuracy_score(actual, np.asarray(test_class)[scored]) if scored.any() else float('nan')
+    brier = brier_score_loss(actual, np.asarray(test_pred)[scored]) if scored.any() else float('nan')
     
     accuracy_train = accuracy_score(y_train, train_class)
     brier_train = brier_score_loss(y_train, train_pred)
     f1_train = f1_score(y_train, train_class)
-    f1_test = f1_score(y_test, test_class)
+    f1_test = f1_score(actual, np.asarray(test_class)[scored]) if scored.any() else float('nan')
 
     check_vif(X_train)
 

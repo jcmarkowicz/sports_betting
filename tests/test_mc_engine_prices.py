@@ -33,6 +33,19 @@ def kelly(frame,**kwargs):
 
 
 class McPriceTests(unittest.TestCase):
+    @patch(PREDICT, side_effect=predict)
+    def test_void_fights_reach_settlement_with_closing_policies(self, pred):
+        from ufc_betting.BettingStrategy.betting_params import BettingParams
+        policies = dict(close1=BettingParams(), close2=BettingParams())
+        for outcome in (2, 3):
+            with self.subTest(outcome=outcome):
+                result = simulate(self.fights.assign(winner=outcome),
+                    closing_params=policies, use_decay=False, **self.args)
+                np.testing.assert_allclose(result[0], 0)
+                np.testing.assert_allclose(result[1], 0)
+                for detail in result[3]:
+                    self.assertTrue(detail['inputs'].winner.eq(outcome).all())
+
     def test_decay_requires_complete_saved_policies_before_sampling(self):
         from ufc_betting.BettingStrategy.betting_params import BettingParams
         params = BettingParams()

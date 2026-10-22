@@ -10,6 +10,8 @@ def fighter_prediction_stats(df, pred_col='pred_winner', red_col='fighter_red', 
         red_fighter = row[red_col]
         blue_fighter = row[blue_col]
         winner = row[winner_col]
+        if winner not in (0, 1):
+            continue
         pred = row[pred_col]
         if pred == winner :
             stats[red_fighter]['correct'] += 1

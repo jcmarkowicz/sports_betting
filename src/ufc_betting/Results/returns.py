@@ -277,6 +277,12 @@ def plot_returns(ml_results, parlay_results, bankroll_results):
 
 
 def accuracy_analysis(ml_results, parlay_results):
+    """Score only binary fight outcomes and nonvoid settled tickets.
+
+    Draws/no contests remain in the return accounting, but never in model,
+    Vegas, favorite/underdog accuracy or Brier denominators. A zero-net-odds
+    parlay is a refunded ticket and is excluded from parlay accuracy.
+    """
 
     accuracies = {}
     bet_types = {}
@@ -299,7 +305,7 @@ def accuracy_analysis(ml_results, parlay_results):
     
     for type_, odds_type in type_to_odds.items():
 
-        no_draws = ml_results[ml_results[f'winner_bool'] < 2].dropna(subset=[f'{odds_type}_red', f'{odds_type}_blue'])
+        no_draws = ml_results[ml_results['winner_bool'].isin([0, 1])].dropna(subset=[f'{odds_type}_red', f'{odds_type}_blue'])
         all_preds = no_draws.dropna(subset=[f'pred_winner_{type_}'])
         bets_only = all_preds[
             all_preds[f'net_stake_{type_}'].notna()
@@ -351,6 +357,7 @@ def accuracy_analysis(ml_results, parlay_results):
         parlay_net = parlay_events.loc[
             placed_parlays, f'net_odds_{type_}'
         ].dropna()
+        parlay_net = parlay_net.loc[parlay_net.ne(0)]  # Voided tickets are not losses.
         parlay_accuracy = (parlay_net > 0).mean()
         accuracies[f'parlays_{type_}'] = parlay_accuracy 
 

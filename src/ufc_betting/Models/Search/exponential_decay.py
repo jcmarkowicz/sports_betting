@@ -122,8 +122,8 @@ class MoneylineDecaySearch:
         cols=[f'dec_{reference_odds_type}_{s}' for s in ('blue','red')]
         ref=reference[keys+cols].rename(columns={c:'reference_'+c for c in cols})
         frame=frame.merge(ref,on=keys,how='left',validate='one_to_one')
-        if not frame.winner.isin([0,1]).all() or not frame.pred_winner.isin([0,1]).all():
-            raise ValueError('Settled binary outcomes and predictions required')
+        if not frame.winner.isin([0,1,2,3]).all() or not frame.pred_winner.isin([0,1]).all():
+            raise ValueError('Settled outcomes (0/1 or 2/3 for void) and binary predictions required')
         real=[f'dec_{odds_type}_{s}' for s in ('blue','red')]
         fair=[f'dec_fair_{odds_type}_{s}' for s in ('blue','red')]
         sides=frame.pred_winner.to_numpy(int)
@@ -155,7 +155,7 @@ class MoneylineDecaySearch:
         self.frame=frame
         self.opening_prices,self.current_prices=opening,current
         self.opening_stakes,self.closing_stakes=allocations
-        self.unit_profit=np.where(sides==frame.winner.to_numpy(),current-1,-1)
+        self.unit_profit=BettingReturnCalculator.moneyline_unit_profit(current, sides, frame.winner.to_numpy())
         self.dates=np.sort(frame.date.unique())
         self.event_ids=pd.Index(self.dates).get_indexer(frame.date)
         self.path_indices=frozen.path_indices

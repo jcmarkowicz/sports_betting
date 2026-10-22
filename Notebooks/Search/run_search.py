@@ -216,9 +216,9 @@ if __name__ == "__main__":
     # risk_penalty is used only for mean_std and event_mean_std.
     score_kwargs = {
         "score_type": "event_log_growth",
-        "drawdown_penalty": 0.067,  # 40% tail-average drawdown subtracts 0.0268.
-        "ulcer_penalty": 0.02,  # Starting weight: mean Ulcer Index of 20% subtracts 0.002.
-        "drawdown_tail_fraction": 0.33,  # Average the worst 40% of path drawdowns.
+        "drawdown_penalty": 0.05,  # 40% tail-average drawdown subtracts 0.0268.
+        "ulcer_penalty": 0.015,  # Starting weight: mean Ulcer Index of 20% subtracts 0.002.
+        "drawdown_tail_fraction": 0.4,  # Average the worst 40% of path drawdowns.
         "wealth_floor": 0.001,  # Scoring floor: 0.1% of initial bankroll.
     }
     # Other objectives: "mean_std" (terminal returns), "log_growth", "event_mean_std".
@@ -230,7 +230,7 @@ if __name__ == "__main__":
             paths_path=paths_path,
             n_paths=None,                    # Select 100 saved paths; None uses all.
             seed=42,                        # Same subset for every market.
-            n_trials=300,
+            n_trials=500,
             risk_penalty=risk_penalty[market],
             initial_bankroll=500,
             prediction_model_type="open",  # Inference model for sampled prices.

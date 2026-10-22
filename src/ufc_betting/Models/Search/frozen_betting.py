@@ -261,8 +261,8 @@ class FrozenBettingSearch:
         se = self.frame.prediction_se.to_numpy(float)
         if not np.isfinite(se).all() or (se < 0).any():
             raise ValueError('Invalid inference probability SE')
-        if not self.frame.winner.isin([0, 1]).all():
-            raise ValueError('Betting evaluation requires binary settled outcomes')
+        if not self.frame.winner.isin([0, 1, 2, 3]).all():
+            raise ValueError('Betting evaluation requires settled outcomes (0/1 or 2/3 for void)')
         if 'odds_type' in self.frame and not self.frame.odds_type.eq(odds_type).all():
             raise ValueError('Prediction odds_type differs from execution odds_type')
         
@@ -377,7 +377,7 @@ class FrozenBettingSearch:
             values = frame[columns].to_numpy(float)
             if not np.isfinite(values).all():
                 raise ValueError('Saved fight inputs must be finite')
-            if (not frame.winner.isin([0, 1]).all()
+            if (not frame.winner.isin([0, 1, 2, 3]).all()
                     or not frame.proba_red.between(0, 1).all()
                     or not frame.risk_red_proba.between(0, 1).all()
                     or (frame.prediction_se < 0).any()

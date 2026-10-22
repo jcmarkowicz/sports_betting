@@ -139,7 +139,7 @@ class ParlayDataFrameTests(unittest.TestCase):
         self.assertIsNotNone(settled)
         assert settled is not None
         self.assertTrue(settled.frame["winner_bool_open"].isna().all())
-        self.assertTrue(settled.frame["net_odds_open"].isna().all())
+        self.assertTrue(settled.frame["net_odds_open"].eq(0).all())
         self.assertEqual(
             settled.frame["winner_bool_close1"].tolist(),
             [1, 0],
@@ -150,7 +150,7 @@ class ParlayDataFrameTests(unittest.TestCase):
         )
         self.assertEqual(
             settled.frame["net_odds_close1"].tolist(),
-            [2.5, 2.5],
+            [1.5, 1.5],
         )
 
     def test_all_nonbinary_parlay_types_return_empty_dataframe(self) -> None:
@@ -171,15 +171,15 @@ class ParlayDataFrameTests(unittest.TestCase):
         self.assertEqual(len(settled.frame), 2)
         self.assertTrue(settled.frame['date'].eq(pd.Timestamp('2026-08-01')).all())
         for bet_type in SETTLED_TYPES:
-            self.assertTrue(settled.frame[f'net_odds_{bet_type}'].isna().all())
+            self.assertTrue(settled.frame[f'net_odds_{bet_type}'].fillna(0).eq(0).all())
 
         old = parlays.frame.copy()
         old['net_odds_open'] = -1.0
         old['net_stake_open'] = -0.1
         combined = ParlayDataFrame.concatenate(ParlayDataFrame(old), settled)
         self.assertEqual(len(combined.frame), 2)
-        self.assertTrue(combined.frame['net_odds_open'].isna().all())
-        self.assertTrue(combined.frame['net_stake_open'].isna().all())
+        self.assertTrue(combined.frame['net_odds_open'].eq(0).all())
+        self.assertTrue(combined.frame['net_stake_open'].eq(0.1).all())
 
     def test_extra_and_reordered_event_rows_match_by_fighter(self) -> None:
         parlays = ParlayDataFrame.from_generated(
@@ -297,15 +297,15 @@ class ParlayDataFrameTests(unittest.TestCase):
         self.assertEqual(len(settled.frame), 2)
         self.assertTrue(settled.frame['date'].eq(pd.Timestamp('2026-08-01')).all())
         for bet_type in SETTLED_TYPES:
-            self.assertTrue(settled.frame[f'net_odds_{bet_type}'].isna().all())
+            self.assertTrue(settled.frame[f'net_odds_{bet_type}'].fillna(0).eq(0).all())
 
         old = parlays.frame.copy()
         old['net_odds_open'] = -1.0
         old['net_stake_open'] = -0.1
         combined = ParlayDataFrame.concatenate(ParlayDataFrame(old), settled)
         self.assertEqual(len(combined.frame), 2)
-        self.assertTrue(combined.frame['net_odds_open'].isna().all())
-        self.assertTrue(combined.frame['net_stake_open'].isna().all())
+        self.assertTrue(combined.frame['net_odds_open'].eq(0).all())
+        self.assertTrue(combined.frame['net_stake_open'].eq(0.1).all())
 
     def test_concatenate_ignores_empty_parlay(self) -> None:
         history_frame = parlay_frame()

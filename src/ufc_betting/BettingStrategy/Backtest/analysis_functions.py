@@ -41,10 +41,11 @@ def pick_accuracy(df_):
     df= df_.copy()
 
     df_choice = df[df['choice_fstar'] > 0]
+    scored = df_choice.loc[df_choice['winner'].isin([0, 1])]
 
     event_accuracy = (
-    (df_choice['pred_winner'] == df_choice['winner'])
-    .groupby(df_choice['date'])
+    (scored['pred_winner'] == scored['winner'])
+    .groupby(scored['date'])
     .mean()
     )
     n_picks = df_choice.groupby('date').size()
@@ -71,7 +72,8 @@ def pick_accuracy(df_):
 
 def bin_parlay_prob(df_parlay_):
     df = df_parlay_.copy()
-    df['parlay_win'] = (df['parlay_net_odds'] > 0).astype(int)
+    net = df['parlay_net_odds']
+    df['parlay_win'] = net.gt(0).astype(float).where(net.notna() & net.ne(0))
 
     # --- bin probabilities ---
     df['prob_bin'] = pd.cut(
@@ -90,7 +92,7 @@ def bin_parlay_prob(df_parlay_):
         .agg(
             expected_net_odds=('parlay_net_odds', 'mean'),
             accuracy=('parlay_win', 'mean'),
-            count=('parlay_win', 'size')
+            count=('parlay_win', 'count')
         )
         .reset_index()
     )

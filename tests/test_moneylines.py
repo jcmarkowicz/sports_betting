@@ -87,7 +87,7 @@ class MoneylineDataFrameTests(unittest.TestCase):
         self.assertEqual(len(moneylines.frame), 2)
         self.assertTrue(moneylines.frame["winner_bool"].isna().all())
 
-    def test_results_match_by_fighters_and_drop_ties(self) -> None:
+    def test_results_match_by_fighters_and_refund_ties(self) -> None:
         moneylines = MoneylineDataFrame.from_generated(moneyline_frame())
         event = pd.DataFrame(
             {
@@ -102,11 +102,12 @@ class MoneylineDataFrameTests(unittest.TestCase):
 
         self.assertIsNotNone(settled)
         assert settled is not None
-        self.assertEqual(settled.frame["fighter_red"].tolist(), ["Red One"])
-        self.assertEqual(settled.frame["winner_bool"].tolist(), [1])
-        self.assertEqual(settled.frame["win_bet_open"].tolist(), [True])
+        self.assertEqual(settled.frame["fighter_red"].tolist(), ["Red One", "Red Two"])
+        self.assertEqual(settled.frame["winner_bool"].tolist(), [1, 2])
+        self.assertTrue(settled.frame["win_bet_open"].iloc[0])
+        self.assertEqual(settled.frame["net_odds_open"].iloc[1], 0.0)
 
-    def test_all_nonbinary_results_return_none(self) -> None:
+    def test_void_and_pending_results_are_preserved(self) -> None:
         moneylines = MoneylineDataFrame.from_generated(moneyline_frame())
         event = pd.DataFrame(
             {
@@ -117,7 +118,10 @@ class MoneylineDataFrameTests(unittest.TestCase):
             }
         )
 
-        self.assertIsNone(moneylines.with_results(event))
+        settled = moneylines.with_results(event).frame
+        self.assertEqual(len(settled), 2)
+        self.assertEqual(settled.net_odds_open.iloc[0], 0.0)
+        self.assertTrue(pd.isna(settled.net_odds_open.iloc[1]))
 
     def test_missing_moneyline_fight_raises(self) -> None:
         moneylines = MoneylineDataFrame.from_generated(moneyline_frame())

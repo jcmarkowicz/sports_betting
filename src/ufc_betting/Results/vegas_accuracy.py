@@ -51,6 +51,9 @@ def load_accuracy_data(path, market):
 
 
 def score_predictions(data, source):
+    data = data.loc[data['winner'].isin([0, 1])]
+    if data.empty:
+        return {'accuracy': np.nan, 'f1': np.nan, 'brier': np.nan}
     return {
         "accuracy": accuracy_score(data["winner"], data[f"{source}_prediction"]),
         "f1": f1_score(data["winner"], data[f"{source}_prediction"], zero_division=0),
@@ -59,6 +62,7 @@ def score_predictions(data, source):
 
 
 def metrics_over_time(data):
+    data = data.loc[data['winner'].isin([0, 1])]
     period = data["date"]
     rows = []
     for value, group in data.groupby(period, sort=True):

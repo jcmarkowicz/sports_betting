@@ -1,3 +1,4 @@
+from ufc_betting.BettingStrategy.betting_returns import BettingReturnCalculator
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Self
@@ -106,8 +107,8 @@ class ParlayDataFrame:
         """
         Return a new parlay frame populated with available fight results.
 
-        A betting type is excluded from settlement when any selected fight
-        is a draw, no-contest, null result, or other non-binary outcome.
+        A draw or no-contest in any selected leg refunds the entire ticket
+        at zero net profit. Missing outcomes remain unsettled.
         Other betting types may still settle when they reference unaffected
         fights. Settlement values are repeated for each parlay leg, matching
         the row-oriented representation used by the generated DataFrame.
@@ -235,10 +236,17 @@ class ParlayDataFrame:
                     f"{invalid_values}"
                 )
 
-            # One tied, missing, or otherwise non-binary leg voids this
-            # parlay type without affecting other independently selected types.
+            # Settle fixed legs; never replace a selected void fight with another pick.
+            unit_profit = BettingReturnCalculator.parlay_unit_profit(
+                pd.to_numeric(settled[odds_column], errors="coerce").iloc[0],
+                choices.to_numpy(dtype=float, na_value=float('nan')),
+                winners.to_numpy(dtype=float, na_value=float('nan')),
+            )
             if not winners.isin([0, 1]).all():
                 self._clear_settlement(settled, bet_type)
+                if winners.isin([2, 3]).any():
+                    settled[f"net_stake_{bet_type}"] = pd.to_numeric(settled[fstar_column]).astype("Float64")
+                    settled[f"net_odds_{bet_type}"] = 0.0
                 continue
 
             winners = winners.astype("Int64")
@@ -255,11 +263,7 @@ class ParlayDataFrame:
                 dtype="string",
             )
 
-            parlay_won = bool(
-                choices.reset_index(drop=True)
-                .eq(winners.reset_index(drop=True))
-                .all()
-            )
+            parlay_won = bool(unit_profit > 0)
 
             settled[f"win_parlay_{bet_type}"] = pd.Series(
                 parlay_won,
@@ -290,7 +294,7 @@ class ParlayDataFrame:
                 dtype="Float64",
             )
             settled[f"net_odds_{bet_type}"] = pd.Series(
-                odds if parlay_won else -1.0,
+                float(unit_profit),
                 index=settled.index,
                 dtype="Float64",
             )

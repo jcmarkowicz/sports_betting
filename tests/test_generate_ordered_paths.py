@@ -16,6 +16,26 @@ from ufc_betting.BettingStrategy.betting_params import BettingParams
 
 
 class GeneratedPathsTests(unittest.TestCase):
+    def test_void_outcomes_survive_generation_search_and_monte_carlo(self):
+        source = self.frame().assign(winner=[2, 3] * 3)
+        paths = generate_ordered_paths(source, n_paths=2, progress_every=0)
+        for path in paths:
+            self.assertEqual(len(path), len(source))
+            np.testing.assert_array_equal(path.winner, source.iloc[path.source_row_position].winner)
+        for market in ('open', 'close1', 'close2'):
+            with self.subTest(market=market):
+                searched = optimize_kelly_params(validation_data={market: source},
+                    sampled_paths=paths, n_trials=1, parallel=False)
+                result = simulate(sampled_paths=paths, odds_type=market, use_decay=False,
+                    kelly_kwargs={'betting_params': searched['betting_params']})
+                np.testing.assert_allclose(result[0], 0)
+                np.testing.assert_allclose(result[1], 0)
+                np.testing.assert_allclose(result[2], 500)
+                np.testing.assert_allclose(result[2], searched['sampled_bankroll_paths'])
+        policies = dict(close1=BettingParams(), close2=BettingParams())
+        result = simulate(sampled_paths=paths, closing_params=policies, use_decay=False)
+        np.testing.assert_allclose(result[2], 500)
+
     def frame(self):
         return JointKellyDecayTests().frame().assign(bout_position=[1, 2] * 3, event_name='UFC 300')
 

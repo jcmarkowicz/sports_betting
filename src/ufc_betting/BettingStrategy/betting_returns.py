@@ -25,6 +25,33 @@ class BettingReturnCalculator:
         self.dates = dates
 
     @staticmethod
+    def moneyline_unit_profit(decimal_odds, selections, outcomes):
+        """Net profit per unit staked: win=d-1, loss=-1, void=0.
+
+        Outcomes 2 (draw/NC) and 3 (NC) are void; missing outcomes stay unsettled.
+        """
+        odds, sides, winners = np.broadcast_arrays(
+            np.asarray(decimal_odds, float), np.asarray(selections, float),
+            np.asarray(outcomes, float))
+        if not np.isin(winners[~np.isnan(winners)], [0, 1, 2, 3]).all():
+            raise ValueError("Outcomes must be 0/1, 2/3 for void, or missing")
+        return np.where(np.isnan(winners) | np.isnan(sides), np.nan,
+                        np.where(np.isin(winners, [2, 3]), 0.,
+                                 np.where(sides == winners, odds - 1., -1.)))
+
+    @staticmethod
+    def parlay_unit_profit(decimal_odds, selections, outcomes):
+        """Settle fixed ticket legs along the last axis; any void refunds the ticket."""
+        sides, winners = np.broadcast_arrays(np.asarray(selections, float),
+                                             np.asarray(outcomes, float))
+        # Validate outcomes with the same rules used by singles.
+        BettingReturnCalculator.moneyline_unit_profit(2., sides, winners)
+        return np.where(np.isin(winners, [2, 3]).any(axis=-1), 0.,
+                        np.where((np.isnan(winners) | np.isnan(sides)).any(axis=-1), np.nan,
+                                 np.where((sides == winners).all(axis=-1),
+                                          np.asarray(decimal_odds, float) - 1., -1.)))
+
+    @staticmethod
     def settle_allocations(stakes, expected_profit, realized_profit):
         """Sum expected return, realized return, and exposure along the bet axis."""
         stakes, expected_profit, realized_profit = np.broadcast_arrays(
@@ -85,7 +112,7 @@ class BettingReturnCalculator:
             raise ValueError('policies must supply close1 and close2')
         policies = {stage: BettingParams.from_value(value) for stage, value in policies.items()}
         data = group.reset_index(drop=True).copy()
-        if not data.winner.isin([0, 1, 2]).all():
+        if not data.winner.isin([0, 1, 2, 3]).all():
             raise ValueError('Market-policy simulation requires outcomes 0, 1, or 2 (void)')
         side = data.pred_winner.to_numpy(int)
         rows = np.arange(len(data))
@@ -179,7 +206,7 @@ class BettingReturnCalculator:
         """
         params = BettingParams.from_value(params)
         sides = data.pred_winner.to_numpy(int)
-        if not np.isin(sides, [0, 1]).all() or not data.winner.isin([0, 1, 2]).all():
+        if not np.isin(sides, [0, 1]).all() or not data.winner.isin([0, 1, 2, 3]).all():
             raise ValueError('Scenario inputs require binary predictions and settled outcomes')
         p = np.where(sides == 1, data.proba_red, data.proba_blue)
         fair = data[[f'dec_fair_{odds_type}_{s}' for s in ('blue', 'red')]].to_numpy()[np.arange(len(data)), sides]
@@ -205,8 +232,7 @@ class BettingReturnCalculator:
             stakes[active] = scale_kelly_for_mdd(
                 p[active], fair[active], full[active], params.N, params.mdd)
         return np.column_stack([
-            stakes, ev, np.where(data.winner.to_numpy() == 2, 0.,
-                                 np.where(sides == data.winner.to_numpy(), offered - 1, -1)),
+            stakes, ev, cls.moneyline_unit_profit(offered, sides, data.winner.to_numpy()),
             np.maximum(risk - 1 / fair, 0),
             np.maximum(risk - (params.z or 0) * np.asarray(se) - 1 / fair, 0),
             p, offered, sides,
@@ -240,9 +266,7 @@ class BettingReturnCalculator:
             ev = expected_value(probability, odds)
             full = np.maximum(ev / (odds - 1), 0)
             stake = scale_kelly_for_mdd(probability, odds, full, params.N_parlay, params.mdd_parlay)
-            won = (legs[:, :, 7] == winners[rows, order]).all(axis=1)
-            profit = np.where((winners[rows, order] == 2).any(axis=1), 0.,
-                              np.where(won, odds - 1, -1))
+            profit = cls.parlay_unit_profit(odds, legs[:, :, 7], winners[rows, order])
         result = dict(moneyline_stakes=selected[:, :, 0].copy(),
                       parlay_stakes=stake, multiplier=np.ones(count),
                       parlay_ev=ev, parlay_profit=profit, legs=order)
@@ -430,7 +454,7 @@ class BettingReturnCalculator:
             'risk_proba': np.where(choice == 1, risk_red_proba, 1 - risk_red_proba),
             'se': se,
             'pred_win': choice == np.asarray(winners),
-            'is_void': np.asarray(winners) == 2,
+            'is_void': np.isin(np.asarray(winners), [2, 3]),
         })
 
     def calculate_moneyline_stakes(self, red_proba, risk_red_proba, se,
@@ -492,8 +516,8 @@ class BettingReturnCalculator:
         results['fstar'] = stakes
         results['pct_return'] = np.where(
             stakes > 0,
-            np.where(bets.get('is_void', False), 0.,
-                     np.where(bets.pred_win, stakes * (bets.choice_real_odds - 1), -stakes)),
+            stakes * BettingReturnCalculator.moneyline_unit_profit(
+                bets.choice_real_odds, 1, np.where(bets.get('is_void', False), 2, bets.pred_win.astype(int))),
             np.nan,
         )
         return results
@@ -576,20 +600,15 @@ class BettingReturnCalculator:
             leg_outcomes = winner_id.set_index('id')['pred_win'].reindex(selected_ids)
             parlay_fstar = parlay_df['parlay_fstar_open'].iloc[0]
             parlay_net_odds = parlay_df['parlay_odds_open'].iloc[0]
-            parlay_wins = (
-                leg_outcomes.notna().all()
-                and leg_outcomes.all()
-            )
 
             if not np.isfinite(parlay_fstar) or parlay_fstar <= 0:
                 pct_return_parlay = np.nan
-            elif selected.get('is_void', pd.Series(False, index=selected.index)).any():
-                # Refund the whole ticket, retaining its pre-fight stake and legs.
-                pct_return_parlay = 0.
-            elif parlay_wins:
-                pct_return_parlay = parlay_fstar * parlay_net_odds
             else:
-                pct_return_parlay = -parlay_fstar
+                outcomes = np.where(selected.get('is_void', False), 2,
+                                    leg_outcomes.to_numpy(dtype=float))
+                pct_return_parlay = parlay_fstar * float(self.parlay_unit_profit(
+                    parlay_net_odds + 1., np.ones(len(selected)), outcomes))
+
             pct_returns.append({
                 'date': date,
                 'pct_return': pct_return_parlay,

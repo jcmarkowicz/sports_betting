@@ -113,7 +113,7 @@ class Settings:
 
     @property
     def betting_results_dir(self) -> Path:
-        return self.data_dir / "betting_results"
+        return self.bets_dir / "betting_results"
 
     @property
     def ml_history_file(self) -> Path:
@@ -270,16 +270,16 @@ class config:
     parlay_folder = settings.parlay_bets_dir
 
     # --- Results Tracking Params ---
-    ml_history_fp =settings.data_dir/ 'betting_results' / 'moneyline_results.csv'
-    parlay_history_fp =settings.data_dir/ 'betting_results' / 'parlay_results.csv'
+    ml_history_fp =settings.betting_results_dir / 'moneyline_results.csv'
+    parlay_history_fp =settings.betting_results_dir / 'parlay_results.csv'
     event_features_folder = settings.data_dir/ "upcoming_events" / "event_features" 
 
     non_merged_stats_fp = settings.data_dir/ "non_merged_features" / "non_merged_stats.csv"
     non_merged_odds_fp = settings.data_dir/ "non_merged_features" / "non_merged_odds.csv"
 
-    ml_returns_fp =settings.data_dir/ 'betting_results' / 'ml_returns.csv'
-    parlay_returns_fp =settings.data_dir/ 'betting_results' / 'parlay_returns.csv'
-    bankroll_returns_fp =settings.data_dir/ 'betting_results' / 'bankroll_returns.csv'
+    ml_returns_fp =settings.betting_results_dir / 'ml_returns.csv'
+    parlay_returns_fp =settings.betting_results_dir / 'parlay_returns.csv'
+    bankroll_returns_fp =settings.betting_results_dir / 'bankroll_returns.csv'
 
     # email params
     sender_email = "jcmarkufc@gmail.com"

@@ -163,8 +163,8 @@ def generate_ordered_paths(
         raise ValueError('Density price sampling requires a closing search market')
     if not isinstance(fights, pd.DataFrame) or fights.empty:
         raise ValueError('fights must be a nonempty DataFrame')
-    if 'winner' not in fights or not fights.winner.isin([0, 1]).all():
-        raise ValueError('Supply settled binary outcomes for search-compatible paths')
+    if 'winner' not in fights or not fights.winner.isin([0, 1, 2, 3]).all():
+        raise ValueError('Supply settled outcomes (0/1 or 2/3 for void) for search-compatible paths')
     if storage not in ('pickle', 'compact'):
         raise ValueError('storage must be pickle or compact')
     if storage == 'compact' and output_path is None:

@@ -35,14 +35,30 @@ def generate_path_run(
 if __name__ == "__main__":
     # Edit these arguments, then run this file in your editor.
     # Use a NEW output directory for each saved run.
+    # paths = generate_path_run(
+    #     validation_path=settings.split_feats_dir / "val.csv",
+    #     output_path=settings.data_dir / "bootstrapped_paths" / " sampled_events_prices_765_val",
+    #     n_paths=10000,
+    #     sample_fights=True,             # True: resample fights. False: shuffle intact cards.
+    #     sample_prices=True,            # True: sample prices. False: keep recorded prices.
+    #     days_out=(7, 6, 5),              # Used only when sample_prices=True.
+    #     strict_numbered_months=False,   # False: allow extra numbered cards in some months.                                # True: require exactly one numbered card per month.
+    #     seed=42,
+    # )
+    # paths.close()  # Release the saved arrays' file handles after generation.
+
+
     paths = generate_path_run(
         validation_path=settings.split_feats_dir / "val.csv",
-        output_path=settings.data_dir / "bootstrapped_paths" / " sampled_events_prices_765_val",
-        n_paths=10000,
-        sample_fights=True,             # True: resample fights. False: shuffle intact cards.
-        sample_prices=True,            # True: sample prices. False: keep recorded prices.
-        days_out=(7, 6, 5),              # Used only when sample_prices=True.
-        strict_numbered_months=False,   # False: allow extra numbered cards in some months.                                # True: require exactly one numbered card per month.
+        output_path=(
+            settings.data_dir
+            / "bootstrapped_paths"
+            / "sampled_fights_recorded_prices_val"
+        ),
+        n_paths=3000,
+        sample_fights=True,
+        sample_prices=False,
+        strict_numbered_months=False,
         seed=42,
     )
-    paths.close()  # Release the saved arrays' file handles after generation.
+    paths.close()

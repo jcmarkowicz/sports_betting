@@ -1,3 +1,4 @@
+from ufc_betting.BettingStrategy.betting_returns import BettingReturnCalculator as Calculator
 import numpy as np 
 import pandas as pd
 from itertools import combinations
@@ -50,15 +51,9 @@ def run_per_bet_scaling(
                 return_sigma=True,
             )
             stake = bankroll * f_final
-            if winner == 2:
-                # Refund draws/no-contests without changing pre-fight sizing.
-                win = pd.NA
-                profit = 0.0
-                net_odds = 0.0
-            else:
-                win = int(winner) == int(bet_idx)
-                profit = stake * (real_odds - 1) if win else -stake
-                net_odds = (real_odds - 1) if win else -1
+            net_odds = float(Calculator.moneyline_unit_profit(real_odds, bet_idx, winner))
+            profit = stake * net_odds
+            win = pd.NA if winner in (2, 3) else int(winner) == int(bet_idx)
 
         group_profit += profit
         rows.append({ 
@@ -113,19 +108,9 @@ def parlay_top_ev(
 
         # profit and win 
         stake = bankroll * parlay_kelly
-        parlay_win = (df_top_n['winner'] == df_top_n['pred_winner']).all()
-        net_odds = parlay_odds - 1
-
-        if df_top_n['winner'].eq(2).any():
-            # Match tracking: a draw/no-contest voids the whole ticket.
-            # Keep the selected legs and stake; do not reselect using outcomes.
-            profit = 0.0
-            net_odds = 0.0
-        elif parlay_win:
-            profit = stake * net_odds
-        else:
-            profit = -stake
-            net_odds = -1
+        net_odds = float(Calculator.parlay_unit_profit(
+            parlay_odds, df_top_n['pred_winner'], df_top_n['winner']))
+        profit = stake * net_odds
 
     else:
         # fully zeroed, but schema preserved
@@ -304,7 +289,7 @@ def finalize_event_stats(
 
     kelly_valid = np.where(positive_ev, scaled_fstar, 0.0)
     group_stats['fstar_net'] = np.where(
-        winners == 2, 0.0,
+        np.isin(winners, [2, 3]), 0.0,
         np.where(pred_winner == winners, kelly_valid, -kelly_valid),
     )
     return group_stats, new_bankroll

@@ -139,13 +139,13 @@ if __name__ == "__main__":
 
     commit_if_changed(
         accuracy_results, 
-        settings.data_dir / 'betting_results' / 'prediction_accuracies.csv', 
+        settings.betting_results_dir / 'prediction_accuracies.csv', 
         f'Updating Bets Accuracies'
     )
 
     commit_if_changed(
         bet_type_results, 
-        settings.data_dir / 'betting_results' / 'bet_types.csv',
+        settings.betting_results_dir / 'bet_types.csv',
         f'Updating Bet Type Stats'
     )
 

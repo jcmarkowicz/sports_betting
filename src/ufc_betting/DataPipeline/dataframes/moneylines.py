@@ -1,3 +1,4 @@
+from ufc_betting.BettingStrategy.betting_returns import BettingReturnCalculator
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Self
@@ -119,9 +120,8 @@ class MoneylineDataFrame:
         Return a new moneyline frame populated with available results.
 
         Results are matched by normalized fighter names rather than row
-        position. Draws, no-contests, null results, and other non-binary
-        outcomes are excluded because they cannot settle as a moneyline win
-        or loss. Rows remain unsettled when a model prediction is unavailable.
+        position. Draws and no-contests retain their allocations and settle at zero net
+        profit. Missing outcomes or model predictions remain unsettled.
         """
         required_event_columns = {
             "fighter_red",
@@ -228,13 +228,8 @@ class MoneylineDataFrame:
                 f"{invalid_values}"
             )
 
-        # Ties and other non-binary outcomes cannot settle a moneyline bet.
-        binary_results = winners.isin([0, 1])
-        settled = settled.loc[binary_results].copy()
-        if settled.empty:
-            return None
-
-        winners = winners.loc[binary_results].astype("Int64")
+        # Preserve void fights and their original allocations for settlement.
+        winners = winners.astype("Int64")
         settled["winner_bool"] = winners
         settled["winner_name"] = settled[
             "_event_winner_name"
@@ -290,11 +285,14 @@ class MoneylineDataFrame:
                 chosen_odds > 0,
                 1 + 100 / chosen_odds.abs(),
             )
-            net_stake = fstar.where(win_bet, -fstar).where(qualifying_bet)
-            net_odds = (decimal_odds - 1).where(
-                win_bet,
-                -1.0,
-            ).where(qualifying_bet)
+            unit_profit = BettingReturnCalculator.moneyline_unit_profit(
+                decimal_odds.to_numpy(dtype=float, na_value=float('nan')),
+                predictions.to_numpy(dtype=float, na_value=float('nan')),
+                winners.to_numpy(dtype=float, na_value=float('nan')),
+            )
+            net_odds = pd.Series(unit_profit, index=settled.index).where(qualifying_bet)
+            net_stake = fstar.where(net_odds.ge(0), -fstar).where(qualifying_bet)
+            win_bet = win_bet.mask(winners.isin([2, 3]))
 
             settled[f"chosen_odds_{bet_type}"] = chosen_odds.astype(
                 "Float64"
@@ -356,10 +354,9 @@ class MoneylineDataFrame:
         """Validate identity, betting, date, and nullable result fields."""
         invalid_winner = (
             self.frame["winner_bool"].notna()
-            & ~self.frame["winner_bool"].isin([0, 1])
+            & ~self.frame["winner_bool"].isin([0, 1, 2, 3])
         )
-        # Preserve unsettled nulls, but exclude ties and other outcomes that
-        # cannot settle as a moneyline win or loss.
+        # Preserve pending and void results; remove unsupported outcome codes.
         self.frame = self.frame.loc[~invalid_winner].copy()
 
         if self.frame.empty:
@@ -498,7 +495,7 @@ class MoneylineDataFrame:
         else:
             raw_winners = self.frame["winner_bool"]
             numeric_winners = pd.to_numeric(raw_winners, errors="coerce")
-            keep_winner = raw_winners.isna() | numeric_winners.isin([0, 1])
+            keep_winner = raw_winners.isna() | numeric_winners.isin([0, 1, 2, 3])
             self.frame = self.frame.loc[keep_winner].copy()
             self.frame["winner_bool"] = numeric_winners.loc[
                 keep_winner
