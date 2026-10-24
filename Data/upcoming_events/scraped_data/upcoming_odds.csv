@@ -1,38 +1,19 @@
-blue_fighter,open_blue,close1_blue,close2_blue,red_fighter,open_red,close1_red,close2_red,og_blue_name,event_date,og_red_fighter
-Losene Keita,145,110,135,Aaron Pico,-165,-165,-138,Losene Keita,2026-10-24,Aaron Pico
-Jacob Malkoun,132,119,135,Abubakar Vagaev,-155,-160,-139,Jacob Malkoun,2026-10-24,Abubakar Vagaev
-Cam Rowston,-110,-103,105,Abus Magomedov,-106,-125,-118,Cam Rowston,2026-10-24,Abus Magomedov
-Movsar Evloev,-110,-112,-102,Alexander Volkanovski,-120,-116,-104,Movsar Evloev,2026-10-24,Alexander Volkanovski
-Rizvan Kuniev,222,-105,108,Alexander Volkov,-270,-126,-120,Rizvan Kuniev,2026-10-24,Alexander Volkov
-Alessandro Costa,250,333,400,Amir Albazi,-300,-525,-425,Alessandro Costa,2022-12-17,Amir Albazi
-Andre Petroski,350,300,300,Azamat Bekoev,-450,-400,-400,Andre Petroski,2026-11-01,Azamat Bekoev
-Dominick Reyes,173,154,175,Azamat Murzakanov,-205,-225,-182,Dominick Reyes,2026-10-24,Azamat Murzakanov
-Daniel Santos,-155,-120,-102,Bolaji Oki,132,-114,-105,Daniel Santos,2026-10-24,
-Diego Lopes,145,120,126,Charles Oliveira,-190,-162,-143,Diego Lopes,2026-12-13,Charles Oliveira
-Josh Hokit,130,200,216,Ciryl Gane,-150,-275,-260,Josh Hokit,2026-11-15,Ciryl Gane
-Jairzinho Rozenstruik,250,185,200,Ciryl Gane,-300,-250,-225,Josh Hokit,2021-02-27,Ciryl Gane
-Asaf Chopurov,-500,-650,-549,Colby Thicknesse,387,400,482,Asaf Chopurov,2026-10-24,Colby Thicknesse
-Dakota Hope,177,211,211,Francis Marshall,-205,-255,-255,Dakota Hope,2026-11-01,Francis Marshall
-Nurullo Aliev,-106,-110,-102,Grant Dawson,-110,-121,-110,Nurullo Aliev,2026-10-24,Grant Dawson
-Karolina Kowalkiewicz,154,280,320,Iasmin Lucindo,-185,-435,-355,Nicolle Caliari,2024-05-05,Iasmin Lucindo
-Nicolle Caliari,354,310,333,Lasmin Lucindo,-450,-450,-400,Nicolle Caliari,2026-10-24,Iasmin Lucindo
-Farman Hasanov,153,200,200,Jean Paul Lebosnoyani,-175,-240,-240,Farman Hasanov,2026-11-01,Jean-Paul Lebosnoyani
-Bo Nickal,-250,160,169,Joe Pyfer,208,-200,-200,Bo Nickal,2026-12-13,Joe Pyfer
-Jeongyeong Lee,-200,-175,-175,Julian Erosa,174,153,153,JeongYeong Lee,2026-11-01,Julian Erosa
-Amanda Nunes,177,150,163,Kayla Harrison,-210,-210,-190,Amanda Nunes,2026-11-15,Kayla Harrison
-Amanda Nunes,136,130,190,Kayla Harrison,-162,-245,-155,Amanda Nunes,2026-01-25,Kayla Harrison
-Noah Gugnon,128,120,135,Kody Steele,-150,-162,-148,Noah Gugnon,2026-10-24,Kody Steele
-Ramazan Temirov,135,-110,-104,Loneer Kavanagh,-155,-115,-108,Ramazan Temirov,2026-10-24,Lone'er Kavanagh
-Tainara Lisboa,316,415,415,Lucia Szabova,-400,-550,-550,Tainara Lisboa,2026-11-01,Lucia Szabova
-Joseph Kropschot,-350,-310,-310,Nick Klein,280,252,252,Joe Kropschot,2026-11-01,Nick Klein
-Abdul Rakhman Yakhyaev,-600,-600,-525,Nikita Krylov,451,380,430,Abdul Rakhman Yakhyaev,2026-10-24,Nikita Krylov
-Ed Herman,160,200,205,Nikita Krylov,-210,-240,-240,Abdul Rakhman Yakhyaev,2016-07-30,Nikita Krylov
-Cody Durden,153,106,106,Ode Osbourne,-175,-126,-126,Cody Durden,2026-11-01,Ode Osbourne
-Merab Dvalishvili,150,125,136,Petr Yan,-175,-163,-150,Merab Dvalishvili,2026-10-24,Petr Yan
-Merab Dvalishvili,-330,-440,150,Petr Yan,240,-175,340,Merab Dvalishvili,2025-12-07,Petr Yan
-Merab Dvalishvili,150,200,220,Petr Yan,-175,-286,-240,Merab Dvalishvili,2023-03-11,Petr Yan
-Tom Nolan,-125,-125,-115,Renato Moicano,105,-105,105,Tom Nolan,2026-11-01,Renato Moicano
-Theodor Berggren,186,157,157,Rodrigo Sezinando,-220,-180,-180,Theodor Berggren,2026-11-01,Rodrigo Sezinando
-Alex Pereira,110,158,178,Sergei Pavlovich,-140,-211,-200,Alex Pereira,2026-12-13,Sergei Pavlovich
-Piera Rodriguez,-225,-255,-255,Talita Alencar,189,211,211,Piera Rodriguez,2026-11-01,Talita Alencar
-Luana Santos,-170,-200,-200,Yana Santos,149,174,174,Luana Santos,2026-11-01,Yana Santos
+red_fighter,blue_fighter,open_blue,close1_blue,close2_blue,open_red,close1_red,close2_red,og_blue_name,event_date,og_red_fighter
+Amir Albazi,Alessandro Costa,250,333,400,-300,-525,-425,Alessandro Costa,2022-12-17,Amir Albazi
+Charles Oliveira,Diego Lopes,145,120,126,-190,-162,-143,Diego Lopes,2026-12-13,Charles Oliveira
+Ciryl Gane,Josh Hokit,130,200,212,-150,-275,-255,Josh Hokit,2026-11-15,Ciryl Gane
+Ciryl Gane,Jairzinho Rozenstruik,250,185,200,-300,-250,-225,Josh Hokit,2021-02-27,Ciryl Gane
+Francis Marshall,Dakota Hope,177,185,215,-205,-290,-220,Dakota Hope,2026-11-01,Francis Marshall
+Jean Paul Lebosnoyani,Farman Hasanov,153,195,224,-175,-270,-245,Farman Hasanov,2026-11-01,Jean-Paul Lebosnoyani
+Joe Pyfer,Bo Nickal,-250,160,169,208,-200,-200,Bo Nickal,2026-12-13,Joe Pyfer
+Julian Erosa,Jeongyeong Lee,-200,-185,-175,174,143,155,JeongYeong Lee,2026-11-01,Julian Erosa
+Kayla Harrison,Amanda Nunes,177,150,163,-210,-210,-190,Amanda Nunes,2026-11-15,Kayla Harrison
+Kayla Harrison,Amanda Nunes,136,130,190,-162,-245,-155,Amanda Nunes,2026-01-25,Kayla Harrison
+Lucia Szabova,Tainara Lisboa,316,400,400,-400,-620,-550,Tainara Lisboa,2026-11-01,Lucia Szabova
+Nick Klein,Joseph Kropschot,-350,-330,-305,280,230,252,Joe Kropschot,2026-11-01,Nick Klein
+Ode Osbourne,Cody Durden,153,102,108,-175,-127,-126,Cody Durden,2026-10-24,Ode Osbourne
+Renato Moicano,Tom Nolan,-125,-136,-125,105,102,111,Tom Nolan,2026-11-01,Renato Moicano
+Rodrigo Sezinando,Theodor Berggren,186,146,157,-220,-188,-180,Theodor Berggren,2026-11-01,Rodrigo Sezinando
+Sergei Pavlovich,Alex Pereira,110,158,189,-140,-225,-200,Alex Pereira,2026-12-13,Sergei Pavlovich
+Talita Alencar,Piera Rodriguez,-225,-290,-250,189,208,215,Piera Rodriguez,2026-11-01,Talita Alencar
+Yana Santos,Luana Santos,-170,-220,-195,149,155,184,Luana Santos,2026-11-01,Yana Santos
