@@ -1,0 +1,28 @@
+raw combined (8934, 55) (8659, 11) 1993-11-12 00:00:00 2026-10-17 00:00:00
+C:\Users\jcmar\my_files\SportsBetting\src\ufc_betting\DataPipeline\FeatureEngineering\RatingAlgos\glicko2.py:40: RuntimeWarning: divide by zero encountered in scalar divide
+  return 1.0 / s
+C:\Users\jcmar\my_files\SportsBetting\src\ufc_betting\DataPipeline\FeatureEngineering\RatingAlgos\glicko2.py:54: RuntimeWarning: invalid value encountered in scalar subtract
+  num = ex * (delta**2 - phi**2 - v - ex)
+C:\Users\jcmar\my_files\SportsBetting\src\ufc_betting\DataPipeline\FeatureEngineering\RatingAlgos\glicko2.py:49: RuntimeWarning: invalid value encountered in scalar multiply
+  return v * s
+C:\Users\jcmar\my_files\SportsBetting\src\ufc_betting\DataPipeline\FeatureEngineering\RatingAlgos\glicko2.py:54: RuntimeWarning: overflow encountered in scalar multiply
+  num = ex * (delta**2 - phi**2 - v - ex)
+C:\Users\jcmar\my_files\SportsBetting\src\ufc_betting\DataPipeline\FeatureEngineering\RatingAlgos\glicko2.py:55: RuntimeWarning: overflow encountered in scalar power
+  den = 2.0 * (phi**2 + v + ex)**2
+C:\Users\jcmar\my_files\SportsBetting\src\ufc_betting\DataPipeline\FeatureEngineering\RatingAlgos\glicko2.py:56: RuntimeWarning: invalid value encountered in scalar divide
+  return num / den - (x - a) / (TAU**2)
+C:\Users\jcmar\my_files\SportsBetting\src\ufc_betting\DataPipeline\FeatureEngineering\RatingAlgos\glicko2.py:73: RuntimeWarning: overflow encountered in scalar power
+  if delta**2 > phi**2 + v:
+C:\Users\jcmar\my_files\SportsBetting\src\ufc_betting\DataPipeline\FeatureEngineering\RatingAlgos\glicko2.py:74: RuntimeWarning: overflow encountered in scalar power
+  B = np.log(delta**2 - phi**2 - v)
+C:\Users\jcmar\my_files\SportsBetting\src\ufc_betting\DataPipeline\FeatureEngineering\RatingAlgos\glicko2.py:54: RuntimeWarning: overflow encountered in scalar power
+  num = ex * (delta**2 - phi**2 - v - ex)
+Fight time feats shape" (8934, 91)
+Rolling features shape: (8934, 108)
+Total features shape: (8934, 239)
+Merged df shape: (8934, 308)
+Shapes of fav counts:
+(8934,) (8934,) (8934,) (8934,)
+old_vs_test rows 8909 417 matched 392 differences [{'feature': 'reach_diff', 'differences': 2, 'max_abs_difference': 1.0}, {'feature': 'elo_red', 'differences': 297, 'max_abs_difference': 1.4274049384068803}, {'feature': 'elo_blue', 'differences': 275, 'max_abs_difference': 1.3270591375587628}]
+old_vs_rebuilt rows 8909 8934 matched 8909 differences [{'feature': 'proba_fair_open_diff', 'differences': 3, 'max_abs_difference': 0.9283950366261385}, {'feature': 'reach_diff', 'differences': 2, 'max_abs_difference': 1.0}, {'feature': 'sub_att_pm_red', 'differences': 133, 'max_abs_difference': 0.8866995073891626}, {'feature': 'sub_att_pm_blue', 'differences': 90, 'max_abs_difference': 0.5015650111208194}, {'feature': 'td_attempted_pm_diff', 'differences': 133, 'max_abs_difference': 1.3583259291796352}, {'feature': 'td_defended_pm_diff', 'differences': 132, 'max_abs_difference': 0.9461447978506705}, {'feature': 'adjusted_td_diff', 'differences': 222, 'max_abs_difference': 0.26284111711920133}, {'feature': 'adjusted_control_diff', 'differences': 1, 'max_abs_difference': 0.029558864372411398}, {'feature': 'adjusted_sig_str_diff', 'differences': 246, 'max_abs_difference': 0.07363613577017036}, {'feature': 'sig_str_absorbed_pm_diff', 'differences': 134, 'max_abs_difference': 1.5743805440012864}, {'feature': 'kd_total_diff', 'differences': 24, 'max_abs_difference': 1.0}, {'feature': 'sig_str_accuracy_pct_diff', 'differences': 134, 'max_abs_difference': 0.21735240190596558}, {'feature': 'sig_str_defense_pct_diff', 'differences': 135, 'max_abs_difference': 0.2426494596394673}, {'feature': 'win_pct_red', 'differences': 43, 'max_abs_difference': 1.0}, {'feature': 'win_pct_blue', 'differences': 24, 'max_abs_difference': 1.0}, {'feature': 'win_streak_diff', 'differences': 69, 'max_abs_difference': 4.0}, {'feature': 'lose_streak_diff', 'differences': 54, 'max_abs_difference': 2.0}, {'feature': 'elo_red', 'differences': 5668, 'max_abs_difference': 80.4128876399584}, {'feature': 'elo_blue', 'differences': 4764, 'max_abs_difference': 90.33341196669699}, {'feature': 'elo_pred', 'differences': 34, 'max_abs_difference': 1.0}, {'feature': 'opp_age_red', 'differences': 145, 'max_abs_difference': 6.449999999999999}, {'feature': 'opp_age_blue', 'differences': 95, 'max_abs_difference': 1.4231038861883114}, {'feature': 'proba_fair_close1_diff', 'differences': 3, 'max_abs_difference': 0.04747427337932364}, {'feature': 'proba_fair_close2_diff', 'differences': 3, 'max_abs_difference': 0.030076814575397903}]
+test_vs_rebuilt rows 417 8934 matched 417 differences []

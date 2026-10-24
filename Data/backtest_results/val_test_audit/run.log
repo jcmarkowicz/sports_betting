@@ -1,0 +1,66 @@
+C:\Users\jcmar\my_files\SportsBetting\src\ufc_betting\BettingStrategy\Backtest\backtest_plots.py:221: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+C:\Users\jcmar\my_files\SportsBetting\src\ufc_betting\BettingStrategy\Backtest\backtest_plots.py:651: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+{"split": "val", "market": "open", "fights": 671, "events": 72, "first": "2024-05-11 00:00:00", "last": "2026-02-07 00:00:00", "final_bankroll": 1116283.0355934505, "ml_min": -28.924775173551335, "ml_max": 51.502450822476156, "ml_mean": 10.528290289602518, "ml_std": 19.005768114253637, "ml_median": 10.247385109910748, "mean_exposure_pct": 72.99905083193406, "placed": 338, "placed_accuracy": 0.7248520710059172, "mean_pick_accuracy": 0.7406415343915344, "mean_vegas_accuracy": 0.6873666456999791, "mean_wagered_vegas_accuracy": 0.6865410052910054, "max_stake": 0.3571583040717855, "max_proba": 0.9789267369096631}
+            ml_return_pct  pl_return_pct  event_total_fstar
+date                                                       
+2025-10-11     -28.924775      -6.790124           0.906737
+2025-04-12     -27.921347      -4.129000           1.000000
+2024-11-02      40.737439      16.368691           0.453449
+2024-05-11      51.502451      19.645054           0.544869
+C:\Users\jcmar\my_files\SportsBetting\src\ufc_betting\BettingStrategy\Backtest\backtest_plots.py:221: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+C:\Users\jcmar\my_files\SportsBetting\src\ufc_betting\BettingStrategy\Backtest\backtest_plots.py:651: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+{"split": "val", "market": "close1", "fights": 671, "events": 72, "first": "2024-05-11 00:00:00", "last": "2026-02-07 00:00:00", "final_bankroll": 11867.439982891572, "ml_min": -17.049399708922632, "ml_max": 38.46893628014248, "ml_mean": 4.9098790628140705, "ml_std": 10.512438847778819, "ml_median": 3.722712515531677, "mean_exposure_pct": 22.75849326220007, "placed": 219, "placed_accuracy": 0.6986301369863014, "mean_pick_accuracy": 0.730952380952381, "mean_vegas_accuracy": 0.7069467184050517, "mean_wagered_vegas_accuracy": 0.7017006802721089, "max_stake": 0.29965211892126264, "max_proba": 0.9836812135880673}
+            ml_return_pct  pl_return_pct  event_total_fstar
+date                                                       
+2025-03-08     -17.049400      -0.356897           0.352319
+2025-09-13     -16.867138      -0.191475           0.345508
+2024-05-11      26.955932       0.351225           0.364531
+2025-02-01      38.468936       0.381920           0.325038
+C:\Users\jcmar\my_files\SportsBetting\src\ufc_betting\BettingStrategy\Backtest\backtest_plots.py:221: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+C:\Users\jcmar\my_files\SportsBetting\src\ufc_betting\BettingStrategy\Backtest\backtest_plots.py:651: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+{"split": "val", "market": "close2", "fights": 671, "events": 72, "first": "2024-05-11 00:00:00", "last": "2026-02-07 00:00:00", "final_bankroll": 80774.98664114263, "ml_min": -19.62831298023824, "ml_max": 58.34859235128191, "ml_mean": 7.282773695359658, "ml_std": 14.431136015489855, "ml_median": 6.633234745960101, "mean_exposure_pct": 37.06064417793455, "placed": 264, "placed_accuracy": 0.6893939393939394, "mean_pick_accuracy": 0.7099319727891157, "mean_vegas_accuracy": 0.7086723076306409, "mean_wagered_vegas_accuracy": 0.686343537414966, "max_stake": 0.34292974302768736, "max_proba": 0.9829532711784682}
+            ml_return_pct  pl_return_pct  event_total_fstar
+date                                                       
+2025-03-08     -19.628313      -4.825552           0.514098
+2025-09-13     -19.612799      -4.819529           0.469539
+2024-05-11      40.448555      14.419084           0.507852
+2025-02-01      58.348592      17.657759           0.448681
+C:\Users\jcmar\my_files\SportsBetting\src\ufc_betting\BettingStrategy\Backtest\backtest_plots.py:221: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+C:\Users\jcmar\my_files\SportsBetting\src\ufc_betting\BettingStrategy\Backtest\backtest_plots.py:651: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+{"split": "test", "market": "open", "fights": 295, "events": 33, "first": "2026-02-21 00:00:00", "last": "2026-10-17 00:00:00", "final_bankroll": 386.97647890615735, "ml_min": -63.61563992634932, "ml_max": 46.0113512970712, "ml_mean": 5.604874514285613, "ml_std": 28.780227837845818, "ml_median": 2.728050432167031, "mean_exposure_pct": 78.95653853875854, "placed": 157, "placed_accuracy": 0.7197452229299363, "mean_pick_accuracy": 0.7123015873015872, "mean_vegas_accuracy": 0.6580338012156195, "mean_wagered_vegas_accuracy": 0.6452741702741702, "max_stake": 0.36270516048175244, "max_proba": 0.9187726246660997}
+            ml_return_pct  pl_return_pct  event_total_fstar
+date                                                       
+2026-10-17     -63.615640      -9.987195           0.736028
+2026-04-25     -49.095441      -7.175386           0.605779
+2026-03-07      44.191876      14.961714           0.919028
+2026-05-02      46.011351      16.258920           0.791986
+C:\Users\jcmar\my_files\SportsBetting\src\ufc_betting\BettingStrategy\Backtest\backtest_plots.py:221: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+C:\Users\jcmar\my_files\SportsBetting\src\ufc_betting\BettingStrategy\Backtest\backtest_plots.py:651: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+{"split": "test", "market": "close1", "fights": 295, "events": 33, "first": "2026-02-21 00:00:00", "last": "2026-10-17 00:00:00", "final_bankroll": 281.7950158743759, "ml_min": -50.53647933052362, "ml_max": 26.50190377318201, "ml_mean": 0.2930116414686439, "ml_std": 18.84297322634334, "ml_median": 1.9007196097351113, "mean_exposure_pct": 29.876254205122827, "placed": 120, "placed_accuracy": 0.675, "mean_pick_accuracy": 0.6984375, "mean_vegas_accuracy": 0.720390552208734, "mean_wagered_vegas_accuracy": 0.6901041666666666, "max_stake": 0.2668005042883232, "max_proba": 0.9278203175753116}
+            ml_return_pct  pl_return_pct  event_total_fstar
+date                                                       
+2026-05-16     -50.536479      -0.092175           0.506287
+2026-04-25     -35.025831      -0.153302           0.393168
+2026-06-27      26.411395       0.348224           0.215777
+2026-09-26      26.501904       0.297804           0.473314
+C:\Users\jcmar\my_files\SportsBetting\src\ufc_betting\BettingStrategy\Backtest\backtest_plots.py:221: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+C:\Users\jcmar\my_files\SportsBetting\src\ufc_betting\BettingStrategy\Backtest\backtest_plots.py:651: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+{"split": "test", "market": "close2", "fights": 295, "events": 33, "first": "2026-02-21 00:00:00", "last": "2026-10-17 00:00:00", "final_bankroll": 643.2990479682331, "ml_min": -60.167220388158015, "ml_max": 38.44114016611999, "ml_mean": 3.5455913299093855, "ml_std": 23.111691383795126, "ml_median": 5.406071859038034, "mean_exposure_pct": 46.726315569067836, "placed": 136, "placed_accuracy": 0.6985294117647058, "mean_pick_accuracy": 0.711038961038961, "mean_vegas_accuracy": 0.724002428547883, "mean_wagered_vegas_accuracy": 0.7196248196248196, "max_stake": 0.3161446855319057, "max_proba": 0.9249273397553059}
+            ml_return_pct  pl_return_pct  event_total_fstar
+date                                                       
+2026-05-16     -60.167220      -4.049178           0.642164
+2026-04-25     -44.545076      -6.007120           0.580060
+2026-03-14      37.363000       9.564438           0.948247
+2026-05-02      38.441140      13.396816           0.667721
