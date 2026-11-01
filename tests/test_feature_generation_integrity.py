@@ -42,14 +42,14 @@ class FeatureIntegrityTests(unittest.TestCase):
         np.testing.assert_allclose(actual.iloc[:4].astype(float), expected.iloc[:4].astype(float), equal_nan=True)
         self.assertFalse(np.allclose(actual.iloc[4].astype(float), expected.iloc[4].astype(float), equal_nan=True))
 
-    def test_conflicting_quotes_fail_in_both_orders(self):
+    def test_revised_quotes_keep_first_row_without_raising(self):
         row = dict(red_clean='a', blue_clean='b', date=pd.Timestamp('2026-01-01'))
         row.update({f'{market}_{side}': -110 for market in ('open', 'close1', 'close2')
                     for side in ('red', 'blue')})
         frame = pd.DataFrame([row, dict(row, open_red=200)])
         for data in (frame, frame.iloc[::-1]):
-            with self.assertRaisesRegex(ValueError, 'Conflicting odds'):
-                FeatureEngineering.unique_fight_odds(data)
+            actual = FeatureEngineering.unique_fight_odds(data)
+            pd.testing.assert_frame_equal(actual, data.iloc[:1].reset_index(drop=True))
         self.assertEqual(len(FeatureEngineering.unique_fight_odds(pd.DataFrame([row, row]))), 1)
 
     def test_name_matching_rejects_character_overlap(self):

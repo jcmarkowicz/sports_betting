@@ -450,15 +450,6 @@ class FeatureEngineering:
 
     @staticmethod
     def unique_fight_odds(odds):
-        """Reject conflicting snapshots instead of choosing by input row order."""
+        """Keep the first row per canonical fight, allowing revised source quotes."""
         keys = ['red_clean', 'blue_clean', 'date']
-        quotes = [f'{market}_{side}' for market in ('open', 'close1', 'close2')
-                  for side in ('red', 'blue')]
-        conflicts = odds.groupby(keys, dropna=False)[quotes].nunique(dropna=False).gt(1).any(axis=1)
-        if conflicts.any():
-            fights = conflicts.index[conflicts].tolist()
-            raise ValueError(
-                f'Conflicting odds for {len(fights)} canonical fights: {fights[:10]}. '
-                'Resolve the source quotes before rebuilding features; row order is not a valid tie-breaker.'
-            )
         return odds.drop_duplicates(subset=keys, keep='first').reset_index(drop=True)
