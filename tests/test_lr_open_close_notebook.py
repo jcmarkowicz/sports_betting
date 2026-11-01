@@ -64,19 +64,21 @@ class NotebookInferenceTests(unittest.TestCase):
             sm=SimpleNamespace(load=artifacts.__getitem__),
             joblib=SimpleNamespace(load=artifacts.__getitem__),
         )
-        notebook = Path(__file__).resolve().parents[1] / 'Notebooks/Models/training/lr_open_close.ipynb'
-        cells = json.loads(notebook.read_text(encoding='utf-8'))['cells']
-        for cell in cells:
-            if cell['cell_type'] == 'code':
-                tree = ast.parse(''.join(cell['source']))
-                tree.body = [node for node in tree.body if isinstance(node, ast.FunctionDef)]
-                exec(compile(tree, str(notebook), 'exec'), self.env)
+        module = Path(__file__).resolve().parents[1] / 'Notebooks/Models/training/lr_workflow.py'
+        tree = ast.parse(module.read_text(encoding='utf-8'))
+        tree.body = [node for node in tree.body if isinstance(node, ast.FunctionDef)]
+        self.env.update(TRAIN_START_YEAR=2010, TRAIN_START_MONTH=2, TRAIN_START_DAY=26)
+        exec(compile(tree, str(module), 'exec'), self.env)
+        original = self.env['workflow']
+        self.env['workflow'] = lambda *args, **kwargs: original(*args,
+            df_model=self.frame, results_dir=self.env['results_dir'],
+            plots_dir=self.env['plots_dir'], **kwargs)
 
     def infer(self, df, odds_type, *, model_type='open', save_path=None, **kwargs):
         return self.env['run_inference'](
             df, model_path='model', model_se_path='model_se',
             scaler_path='scaler', encoder_path='encoder',
-            model_type=model_type, odds_type=odds_type, save_path=save_path, **kwargs,
+            model_type=model_type, odds_type=odds_type, pred_save_path=save_path, **kwargs,
         )
 
     def test_optional_metrics_exclude_nonbinary_outcomes_and_align_plot_inputs(self):
@@ -225,7 +227,7 @@ class NotebookInferenceTests(unittest.TestCase):
 
     def test_inference_accepts_unlabelled_rows_without_splitting_filtering_or_fitting(self):
         supplied = self.frame.iloc[[31, 7, 19]][
-            ['proba_fair_close1_diff', 'reach_diff', 'elo_pred']
+            ['proba_fair_close1_diff', 'reach_diff', 'elo_pred', 'dec_close1_red', 'dec_close1_blue']
         ].copy()
         supplied.index = [100, 100, 42]
         original = supplied.copy(deep=True)
@@ -276,7 +278,8 @@ class NotebookInferenceTests(unittest.TestCase):
             np.testing.assert_allclose(saved['proba_red'], result['proba_red'])
             np.testing.assert_allclose(saved['proba_se'], result['proba_se'])
             saver.assert_called_once()
-            self.assertEqual(saver.call_args.args[2], path)
+            self.assertIsNone(saver.call_args.kwargs['fp'])
+            self.assertTrue(path.exists())
             self.assertTrue({'correct_pred', 'prob_winner', 'pred_winner'} <= set(saved))
             np.testing.assert_array_equal(saved['correct_pred'],
                                           (saved.pred_winner == saved.winner).astype(int))
@@ -290,10 +293,14 @@ class NotebookInferenceTests(unittest.TestCase):
         unlabelled = self.infer(rows.drop(columns=['outcome', 'date']), 'open')
         self.assertTrue(unlabelled.correct_pred.isna().all())
 
-    def test_invalid_inputs_raise_instead_of_silently_dropping_rows(self):
+    def test_missing_features_are_filtered_and_invalid_values_raise(self):
         supplied = self.frame.copy()
         supplied.loc[5, 'proba_fair_close1_diff'] = np.nan
-        with self.assertRaisesRegex(ValueError, 'finite'):
+        result = self.infer(supplied, 'close1')
+        self.assertEqual(len(result), len(supplied) - 1)
+        self.assertNotIn(5, result.index)
+        supplied.loc[5, 'proba_fair_close1_diff'] = np.inf
+        with self.assertRaisesRegex(ValueError, 'finite|infinity|too large'):
             self.infer(supplied, 'close1')
         with self.assertRaisesRegex(ValueError, 'odds_type'):
             self.infer(self.frame, 'invalid')

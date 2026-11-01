@@ -57,7 +57,7 @@ def pmf_plot(df_kelly):
     plt.show()
 
 
-def plot_event_accuracy_distributions(moneylines, parlays=None, *, odds_type=None, bins=10):
+def plot_event_accuracy_distributions(moneylines, parlays=None, *, odds_type=None, bins=10, show=True):
     """Histogram event accuracy and percentage of total bankroll wagered.
 
     Vegas picks the shorter decimal price. Tied prices have no favorite and
@@ -218,7 +218,8 @@ def plot_event_accuracy_distributions(moneylines, parlays=None, *, odds_type=Non
     for ax in axes:
         ax.set_ylabel('Number of events')
     fig.tight_layout()
-    plt.show()
+    if show:
+        plt.show()
     return fig, axes, events
 
 
@@ -440,7 +441,7 @@ def plot_event_odds_stats(df_results, path=None):
     # }
 
 
-def plot_backtest(df_results, init_bankroll, path=None):
+def plot_backtest(df_results, init_bankroll, path=None, *, show=True):
     # Older moneyline-only backtests may omit the parlay columns entirely.
     df_results = df_results.copy()
     for column in ('parlay_net', 'parlay_net_odds'):
@@ -550,12 +551,13 @@ def plot_backtest(df_results, init_bankroll, path=None):
             dpi=300,
             bbox_inches="tight")
 
-    plt.show()
+    if show:
+        plt.show()
     return fig, axs
 
 
 def plot_bankroll_distributions(group_stats_, df_parlay=None, *, bins=30,
-                                include_diagnostics=False):
+                                include_diagnostics=False, show=True):
     """Plot event bankroll-return distributions from simulate_and_plot outputs.
 
     Event totals repeat on fight rows, so retain one row per date. Returns are
@@ -648,7 +650,8 @@ def plot_bankroll_distributions(group_stats_, df_parlay=None, *, bins=30,
         top.grid(True, alpha=.3)
         bottom.grid(True, alpha=.3)
     fig.tight_layout()
-    plt.show()
+    if show:
+        plt.show()
     if not include_diagnostics:
         return fig, axes
     distribution_figure, distribution_axes = fig, axes
@@ -670,7 +673,8 @@ def plot_bankroll_distributions(group_stats_, df_parlay=None, *, bins=30,
     axes[1].tick_params(axis='x', rotation=45)
 
     plt.tight_layout()
-    plt.show()
+    if show:
+        plt.show()
 
 
     filtered_parlay = df_parlay[df_parlay['parlay_net_odds'] != 0].copy()
@@ -720,7 +724,8 @@ def plot_bankroll_distributions(group_stats_, df_parlay=None, *, bins=30,
         format_bins(ax)
 
     plt.tight_layout()
-    plt.show()
+    if show:
+        plt.show()
 
 
     return distribution_figure, distribution_axes

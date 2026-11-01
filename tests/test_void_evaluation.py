@@ -19,9 +19,8 @@ from ufc_betting.Models.LogisticRegression.visual_functions import plot_model_me
 
 class VoidEvaluationTests(unittest.TestCase):
     def test_notebook_filters_metrics_before_calling_plotter(self):
-        notebook = json.loads((Path(__file__).resolve().parents[1] /
-            'Notebooks/Models/training/lr_open_close.ipynb').read_text(encoding='utf-8'))
-        tree = ast.parse(''.join(notebook['cells'][2]['source']))
+        module = Path(__file__).resolve().parents[1] / 'Notebooks/Models/training/lr_workflow.py'
+        tree = ast.parse(module.read_text(encoding='utf-8'))
         function = next(node for node in tree.body if isinstance(node, ast.FunctionDef)
                         and node.name == 'workflow')
         pkt = {}
@@ -44,7 +43,7 @@ class VoidEvaluationTests(unittest.TestCase):
                   save_results=lambda rows, *args: rows)
         exec(compile(ast.Module(body=[function], type_ignores=[]), 'workflow', 'exec'), ns)
         with patch('pathlib.Path.mkdir'):
-            outputs = ns['workflow']([], 'open')
+            outputs = ns['workflow']([], 'open', df_model=pd.DataFrame(), results_dir=Path('unused'), plots_dir=Path('unused'))
         self.assertEqual(scored_counts, [2, 2, 2])
         self.assertEqual([len(frame) for frame in outputs], [2, 4, 4])
 

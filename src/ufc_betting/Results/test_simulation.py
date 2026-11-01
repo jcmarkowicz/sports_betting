@@ -11,7 +11,7 @@ def simulate_saved_predictions(
     odds_type, initial_bankroll=500, *, use_decay=True,
     split="val", model_type="open",
     prediction_template="{split}_logit_{model_type}_with_{odds_type}.csv",
-    predictions_path=None, opening_predictions_path=None,
+    predictions_path=None, opening_predictions_path=None, params_dir=None,
 ):
     """Run the shared notebook/dashboard simulation from frozen predictions."""
     if odds_type not in ("open", "close1", "close2"):
@@ -28,7 +28,8 @@ def simulate_saved_predictions(
                 f"Prediction CSV not found: {path}. Check split/model_type, "
                 "edit prediction_template, or pass predictions_path explicitly.")
         return path
-    params_path = data_dir / "kelly_params" / f"{odds_type}.json"
+    params_root = Path(params_dir).expanduser() if params_dir is not None else data_dir / "kelly_params"
+    params_path = params_root / f"{odds_type}.json"
     prediction_path = resolve_prediction_path(
         predictions_path if predictions_path is not None else prediction_template.format(
             split=split, model_type=model_type, odds_type=odds_type))

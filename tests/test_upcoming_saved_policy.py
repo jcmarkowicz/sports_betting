@@ -31,6 +31,7 @@ class UpcomingSavedPolicyTests(unittest.TestCase):
         return data
 
     def run_pipeline(self, data, **options):
+        options.setdefault('params_dir', settings.data_dir / 'kelly_params')
         def predict(**kwargs):
             red = data.signal.where(kwargs['valid_mask'])
             sides = (red >= .5).astype(float).where(red.notna())

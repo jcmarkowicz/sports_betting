@@ -13,7 +13,6 @@ from collections import defaultdict
 
 import random 
 import time
-import undetected_chromedriver as uc
 
 def _search_result_snapshot(driver):
     """Read names and URLs atomically; retry if navigation invalidates a row."""
@@ -48,7 +47,7 @@ def fighter_odds_search(red_fighter, blue_fighters, event_dates, driver):
 
     if page_type == 'fighter':
         # print(f"Found ONE matches: {red_fighter}")
-        odds_dic = scrape_odds(driver, blue_fighters, event_dates)
+        odds_dic = scrape_odds(driver, blue_fighters, event_dates, expected_red=red_fighter)
         # print(f'Confirming return vals: {odds_dic}')
         driver.back()  # Go back to the search results page
         return odds_dic
@@ -58,8 +57,7 @@ def fighter_odds_search(red_fighter, blue_fighters, event_dates, driver):
     for fighter_name, fighter_url in matches:
 
         # Check if all parts of the search name are in the fighter's name
-        if all(term in clean_string(fighter_name) for term in clean_string(search_name)) or \
-            all(term in clean_string(search_name) for term in clean_string(fighter_name)):
+        if names_match(fighter_name, search_name):
             possible_matches.append(fighter_url)
 
     if possible_matches:
@@ -67,7 +65,7 @@ def fighter_odds_search(red_fighter, blue_fighters, event_dates, driver):
         odds_dic = defaultdict(list)
         for fighter_url in possible_matches:
             driver.get(fighter_url)
-            return_dic = scrape_odds(driver, blue_fighters, event_dates)
+            return_dic = scrape_odds(driver, blue_fighters, event_dates, expected_red=red_fighter)
             
             for key, value in return_dic.items():
                 if len(value)!=0:
@@ -83,7 +81,7 @@ def fighter_odds_search(red_fighter, blue_fighters, event_dates, driver):
         # print(f"No match found for '{search_name}'.")
 
 
-def scrape_odds(driver, blue_fighters, dates):
+def scrape_odds(driver, blue_fighters, dates, expected_red=None):
 
     red_fighter_row = driver.find_elements(By.CSS_SELECTOR, "tr.main-row") #red fighter row 
     odds_dic = {
@@ -95,10 +93,11 @@ def scrape_odds(driver, blue_fighters, dates):
     for i in range(0, len(red_fighter_row)):
 
         red_name = red_fighter_row[i].find_element(By.CSS_SELECTOR, "th.oppcell").text
+        if expected_red is not None and not names_match(red_name, expected_red):
+            continue
         blue_row = red_fighter_row[i].find_element(By.XPATH, "following-sibling::tr[1]")
         blue_name = blue_row.find_element(By.CSS_SELECTOR, "th.oppcell a").text
         # blue_name = clean_string_simple(blue_name)
-        match, og_blue_name = is_two_way_partial_match(blue_name, blue_fighters)
         try:
             event_date_elements = blue_row.find_elements(By.CSS_SELECTOR, "td.item-non-mobile")
             current_event_date = event_date_elements[0].text.strip()
@@ -106,6 +105,13 @@ def scrape_odds(driver, blue_fighters, dates):
             dt = str(dt)
         except:
             dt = None
+
+        # Match the opponent AND its requested date, not an unrelated historical
+        # bout against any opponent from the fighter's page.
+        candidates = [name for name, date in zip(blue_fighters, dates)
+                      if dt is not None and pd.notna(date)
+                      and abs((pd.Timestamp(dt) - pd.Timestamp(date).normalize()).days) <= 1]
+        match, og_blue_name = is_two_way_partial_match(blue_name, candidates)
         
         if match == 'True': 
             #case when page values give n/a, see Allan Nascimento
@@ -139,18 +145,21 @@ def scrape_odds(driver, blue_fighters, dates):
 def clean_string(s):
     return s.lower().replace(" ", " ").replace("-", " ").replace(".", "").replace("'","")
 
+
+def names_match(first, second):
+    """Compare complete name tokens; character membership admits unrelated names."""
+    a, b = set(clean_string(first).split()), set(clean_string(second).split())
+    return bool(a and b) and (a <= b or b <= a)
+
 def is_two_way_partial_match(scraped_name, search_names):
     
-    scraped_parts = clean_string(scraped_name)
-    
     for name in search_names:
-        search_parts = clean_string(name)
-        if all(part in scraped_parts for part in search_parts) or \
-           all(part in search_parts for part in scraped_parts):
+        if names_match(scraped_name, name):
             return 'True', name  # Match found
     return 'False', 'None'  # No match found
 
 def get_fighter_odds(fighter_df):
+    import undetected_chromedriver as uc
     
     url = 'https://www.bestfightodds.com'
     user_agents = [

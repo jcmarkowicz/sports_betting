@@ -1,0 +1,11 @@
+fit_mode,split,probability_model,calibration_plot
+train,test,inference,C:\Users\jcmar\my_files\SportsBetting\Data\model_comparisons\lr_open_close\plots\train_test_inference_calibration.png
+train,test,regularized,C:\Users\jcmar\my_files\SportsBetting\Data\model_comparisons\lr_open_close\plots\train_test_regularized_calibration.png
+train,train,inference,C:\Users\jcmar\my_files\SportsBetting\Data\model_comparisons\lr_open_close\plots\train_train_inference_calibration.png
+train,train,regularized,C:\Users\jcmar\my_files\SportsBetting\Data\model_comparisons\lr_open_close\plots\train_train_regularized_calibration.png
+train,val,inference,C:\Users\jcmar\my_files\SportsBetting\Data\model_comparisons\lr_open_close\plots\train_val_inference_calibration.png
+train,val,regularized,C:\Users\jcmar\my_files\SportsBetting\Data\model_comparisons\lr_open_close\plots\train_val_regularized_calibration.png
+trainval,test,inference,C:\Users\jcmar\my_files\SportsBetting\Data\model_comparisons\lr_open_close\plots\trainval_test_inference_calibration.png
+trainval,test,regularized,C:\Users\jcmar\my_files\SportsBetting\Data\model_comparisons\lr_open_close\plots\trainval_test_regularized_calibration.png
+trainval,train,inference,C:\Users\jcmar\my_files\SportsBetting\Data\model_comparisons\lr_open_close\plots\trainval_train_inference_calibration.png
+trainval,train,regularized,C:\Users\jcmar\my_files\SportsBetting\Data\model_comparisons\lr_open_close\plots\trainval_train_regularized_calibration.png

@@ -22,3 +22,12 @@ ModelStrategy/LogisticRegression/AutogluonModels/
 /Data/train_val_test/
 /Data/saved_models/glm_open_train.joblib
 /.fixed-open-deps/
+
+
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.log
+
+/Data/kelly_params/inference_market_models/search_results/
+/Data/backtest_results/val_test_audit/features/chronological_stats.pkl

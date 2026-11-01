@@ -119,7 +119,7 @@ def betting_pipeline(
 ):
     """Generate one card with saved Kelly policies and existing output columns.
 
-    Defaults to Data/kelly_params/{open,close1,close2}.json. betting_params
+    Defaults to Data/kelly_params/inference_market_models/{open,close1,close2}.json. betting_params
     optionally maps stages to BettingParams, dictionaries, or JSON paths.
     Closing stages blend their embedded opening policy at current predictions
     and prices, then apply closing uncertainty and a joint exposure cap.
@@ -142,7 +142,7 @@ def betting_pipeline(
     df = upcoming_df.copy().reset_index(drop=True)
     if df.empty or df.date.isna().any() or pd.to_datetime(df.date).dt.normalize().nunique() != 1:
         raise ValueError('betting_pipeline requires exactly one nonempty event date')
-    params_dir = Path(params_dir) if params_dir is not None else settings.data_dir / 'kelly_params'
+    params_dir = Path(params_dir) if params_dir is not None else settings.data_dir / 'kelly_params/inference_market_models'
     policies = {
         stage: (BettingParams.load(params_dir / f'{stage}.json') if betting_params is None
                 else BettingParams.from_value(betting_params[stage]))
@@ -180,7 +180,7 @@ def betting_pipeline(
                 model=model_list[i], df=df, y_hat=pd.Series(np.nan, index=df.index),
                 feats=feats, num_feats=num_feats, cat_feats=cat_feats, valid_mask=valid,
                 scaler=scaler_list[i], cat_encoder=encoder_list[i], required_df_idx=df.index,
-                rename_odds=stage if stage != 'open' else None,
+                rename_odds=None,
                 model_se=None if model_se_list is None else model_se_list[i], return_se=True,
             )
             data = df.loc[valid].copy()

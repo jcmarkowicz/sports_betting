@@ -18,3 +18,5 @@ joblib
 cvxopt
 
 pyarrow
+
+plotly>=5.18

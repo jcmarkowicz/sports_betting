@@ -12,3 +12,5 @@ scikit-learn
 seaborn
 matplotlib
 pyarrow
+plotly>=5.18
+streamlit>=1.51

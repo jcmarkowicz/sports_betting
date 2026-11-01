@@ -1,0 +1,26 @@
+{
+  "z": 0.16,
+  "N": 503,
+  "N_parlay": 35,
+  "mdd": 0.1784824829702686,
+  "mdd_parlay": 0.3054627182537779,
+  "moneyline_max_american": null,
+  "decay_rates": {
+    "k_down": 0.00031125012412097424,
+    "k_up": 7.935386156682709,
+    "k_parlay_down": 1.7643685603439327,
+    "k_parlay_up": 0.2173995565432818
+  },
+  "opening_params": {
+    "z": 0.16,
+    "N": 104,
+    "N_parlay": 139,
+    "mdd": 0.4781802397545916,
+    "mdd_parlay": 0.18929029502092518,
+    "moneyline_max_american": null,
+    "decay_rates": null,
+    "opening_params": null,
+    "moneyline_min_american": -200.0
+  },
+  "moneyline_min_american": -500.0
+}

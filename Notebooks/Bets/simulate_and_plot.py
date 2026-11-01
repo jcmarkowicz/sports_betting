@@ -14,7 +14,7 @@ def simulate_and_plot(
     prediction_template="{split}_logit_{model_type}_with_{odds_type}.csv",
     predictions_path=None, opening_predictions_path=None,
     show_conservative_edge_returns=False,
-    plot_path=None,
+    plot_path=None, params_dir=None,
 ):
     """Load saved market parameters and selected predictions, simulate, and plot.
 
@@ -29,6 +29,8 @@ def simulate_and_plot(
     the saved closing Kelly controls with decay disabled.
     plot_path optionally saves the backtest figure (parent folders are created).
     Returns the moneyline and parlay result DataFrames.
+    params_dir selects the folder containing open.json/close1.json/close2.json;
+    None uses the original Data/kelly_params folder.
     """
     from ufc_betting.Results.test_simulation import simulate_saved_predictions
     from pathlib import Path
@@ -36,6 +38,7 @@ def simulate_and_plot(
         odds_type, initial_bankroll, use_decay=use_decay, split=split,
         model_type=model_type, prediction_template=prediction_template,
         predictions_path=predictions_path, opening_predictions_path=opening_predictions_path,
+        params_dir=params_dir,
     )
     print(f"Predictions: {prediction_path}")
     print(f"{odds_type}: decay {'enabled' if betting_params.decay_rates is not None else 'disabled'}")

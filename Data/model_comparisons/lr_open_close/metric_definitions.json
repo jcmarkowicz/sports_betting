@@ -1,0 +1,10 @@
+{
+  "accuracy": "Fraction of settled fights with correct predicted winner.",
+  "f1": "Binary F1 with red win as positive class and threshold 0.5.",
+  "brier": "Mean squared error of red-win probabilities.",
+  "expected_calibration_error": "Count-weighted mean absolute calibration gap across fixed equal-width bins.",
+  "mean_calibration_error": "Unweighted mean absolute calibration gap across nonempty bins.",
+  "maximum_calibration_error": "Largest absolute calibration gap across nonempty bins; legacy mce.",
+  "parlay_accuracy_pct": "Percentage of winning settled tickets with positive stakes from the shared Kelly simulation and current market-specific kelly_params; opening has no decay, closing uses configured decay. Count each date/strategy ticket once; exclude refunded and unplaced tickets.",
+  "units": "Parlay accuracy is a percentage [0,100]; other metrics are fractions [0,1]. Undefined parlay accuracy is blank (NaN)."
+}

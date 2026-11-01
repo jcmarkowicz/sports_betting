@@ -21,13 +21,20 @@ import matplotlib.pyplot as plt
 from optuna.visualization.matplotlib import plot_optimization_history, plot_param_importances
 
 def load_search_paths(paths_path, predictions_path, *, search_market, n_paths=100,
-                      seed=42, prediction_model_type="open"):
+                      seed=42, prediction_model_type="open", probability_model=None,
+                      prediction_artifacts_dir=None):
     """Select saved paths first, then attach/infer predictions for their prices.
 
     Compact inputs are the DIRECTORY containing metadata.json, source.pkl and
     .npy arrays. Legacy trusted .pkl files are also supported, but load in full.
     n_paths=None selects all paths. No fights or prices are resampled here.
     """
+    if probability_model not in (None, 'regularized', 'inference'):
+        raise ValueError('Unknown probability_model')
+    if probability_model is not None:
+        reference = pd.read_csv(predictions_path)
+        if 'probability_model' not in reference or reference.empty or not reference.probability_model.eq(probability_model).all():
+            raise ValueError('Reference CSV does not match the requested probability_model')
     paths_path = Path(paths_path)
     if not paths_path.exists():
         raise FileNotFoundError(
@@ -56,14 +63,28 @@ def load_search_paths(paths_path, predictions_path, *, search_market, n_paths=10
         if prediction_model_type not in ('open', 'close1', 'close2'):
             raise ValueError('prediction_model_type must be open, close1, or close2')
         model = prediction_model_type
+        if probability_model is not None:
+            if prediction_artifacts_dir is None:
+                raise ValueError('Explicit probability source requires prediction_artifacts_dir for sampled prices')
+            directory = Path(prediction_artifacts_dir)
+            model_path = directory / ('model_se.pkl' if probability_model == 'inference' else 'model.pkl')
+            se_path = directory / 'model_se.pkl'
+            scaler_path, encoder_path = directory / 'scaler.pkl', directory / 'encoder.pkl'
+            for artifact in (model_path, se_path, scaler_path, encoder_path):
+                if not artifact.is_file():
+                    raise FileNotFoundError(artifact)
+        else:
+            model_path = getattr(config, f'model_{model}_path')
+            se_path = getattr(config, f'model_{model}_se_path', None)
+            scaler_path = getattr(config, f'scaler_{model}_path')
+            encoder_path = getattr(config, f'encoder_{model}_path', settings.saved_models_dir / f'encoder_{model}.pkl')
         print(f"{search_market}: inferring predictions for saved sampled prices using {model} model", flush=True)
         return predict_intermediate_paths(
             paths, search_market=search_market, prediction_model_type=model,
-            prediction_model=getattr(config, f"model_{model}_path"),
-            prediction_se_model=getattr(config, f"model_{model}_se_path", None),
-            prediction_scalers={model: getattr(config, f"scaler_{model}_path")},
-            prediction_encoders={model: getattr(config, f"encoder_{model}_path",
-                                                settings.saved_models_dir / f"encoder_{model}.pkl")},
+            prediction_model=model_path,
+            prediction_se_model=se_path,
+            prediction_scalers={model: scaler_path},
+            prediction_encoders={model: encoder_path},
         )
     print(f"{search_market}: attaching recorded-price predictions from {predictions_path}", flush=True)
     return attach_path_predictions(paths, predictions_path, odds_type=search_market)
@@ -72,6 +93,7 @@ def load_search_paths(paths_path, predictions_path, *, search_market, n_paths=10
 def run_search(search_market, risk_penalty=0.4, n_trials=100, n_paths=1000,
                initial_bankroll=500, paths_path=None, *, seed=42,
                predictions_path=None, prediction_model_type="open", params_dir=None,
+               probability_model=None, prediction_artifacts_dir=None,
                opening_params_path=None, score_type="mean_std", wealth_floor=.001, negative_mean_penalty=1000., drawdown_penalty=0., drawdown_tail_fraction=.1, ulcer_penalty=0.):
     """Search selected saved paths; detects recorded or sampled prices from the data.
 
@@ -119,6 +141,7 @@ def run_search(search_market, risk_penalty=0.4, n_trials=100, n_paths=1000,
     paths = load_search_paths(
         paths_path, predictions_path, search_market=search_market, n_paths=n_paths,
         seed=seed, prediction_model_type=prediction_model_type,
+        probability_model=probability_model, prediction_artifacts_dir=prediction_artifacts_dir,
     )
     save_path = params_dir / "search_results" / f"{search_market}_search_results.pkl"
     save_path.parent.mkdir(parents=True, exist_ok=True)
@@ -144,6 +167,9 @@ def run_search(search_market, risk_penalty=0.4, n_trials=100, n_paths=1000,
         paths_path=str(paths_path.resolve()), n_paths=len(paths), seed=seed,
         sample_prices=bool(paths[0].attrs.get("generation", {}).get("sample_prices", False)),
         prediction_model_type=prediction_model_type,
+        probability_model=probability_model,
+        predictions_path=str(predictions_path.resolve()),
+        prediction_artifacts_dir=str(Path(prediction_artifacts_dir).resolve()) if prediction_artifacts_dir else None,
     )
     pd.to_pickle(search_results, save_path)
     print(f"{search_market}: saved full search results to {save_path}", flush=True)

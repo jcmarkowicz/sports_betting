@@ -336,11 +336,11 @@ class FrozenBettingSearch:
     @staticmethod
     def suggest(trial):
         return dict(
-            mdd=trial.suggest_float('mdd', .02, .99, step=.01),
+            mdd=trial.suggest_float('mdd', .02, .99, log=True),
             N=trial.suggest_int('N', 10, 2000, log=True),
-            mdd_parlay=trial.suggest_float('mdd_parlay', .01, .99, step=.01),
+            mdd_parlay=trial.suggest_float('mdd_parlay', .01, .99, log=True),
             N_parlay=trial.suggest_int('N_parlay', 10, 2000, log=True),
-            z=trial.suggest_float('z', 0.01, 3.00, step=.01),
+            z=trial.suggest_float('z', 0.00, 3.00, step=.01),
             moneyline_min_american=trial.suggest_int('moneyline_min_american', -600, -200, step=25),
         )
 

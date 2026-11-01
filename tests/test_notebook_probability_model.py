@@ -26,13 +26,11 @@ class ProbabilityModelTests(unittest.TestCase):
                 pd.DataFrame({'se': np.full(len(x), .03)})))
         self.loader = Mock(side_effect={'regularized': regularized, 'inference': inference}.__getitem__)
         self.env = dict(Path=Path, predict_logit=predict_logit, save_results=save_results,
-            sm=SimpleNamespace(load=self.loader), joblib=SimpleNamespace(load=lambda p: None),
+            sm=SimpleNamespace(load=self.loader), joblib=SimpleNamespace(load=lambda p: SimpleNamespace(feature_names_in_=['feature'] if p == 'scaler' else [])),
             TrainTestBuilder=SimpleNamespace(prepare_inference_data=lambda frame, **kw: frame[['feature']]),
             plot_model_metrics=Mock())
-        file = Path(__file__).resolve().parents[1] / 'Notebooks/Models/training/lr_open_close.ipynb'
-        cells = json.loads(file.read_text(encoding='utf-8'))['cells']
-        source = next(''.join(c['source']) for c in cells if 'def run_inference(' in ''.join(c['source']))
-        tree = ast.parse(source)
+        file = Path(__file__).resolve().parents[1] / 'Notebooks/Models/training/lr_workflow.py'
+        tree = ast.parse(file.read_text(encoding='utf-8'))
         tree.body = [n for n in tree.body if isinstance(n, ast.FunctionDef)
                      and n.name in ('run_inference', 'parlay_accuracy_metrics')]
         exec(compile(tree, str(file), 'exec'), self.env)

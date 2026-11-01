@@ -5,6 +5,7 @@ from collections import defaultdict
 
 from ufc_betting.DataPipeline.FeatureEngineering.BuildFeatures.stats_ratios import control_pr_ratio, td_ratio, sig_strikes_ratio
 from ufc_betting.DataPipeline.FeatureEngineering.BuildFeatures.adjusted_performance import compute_adjusted_performance
+from ufc_betting.DataPipeline.FeatureEngineering.BuildFeatures.chronology import chronological_fights
 
 import time
 
@@ -262,9 +263,7 @@ def apply_rolling_stats(ufc_features):
     df_dict = defaultdict(list)
 
     # datetime and sorted values should be handled prior 
-    per_fight_features = ufc_features.copy()
-    per_fight_features['date'] = pd.to_datetime(per_fight_features['date'])
-    per_fight_features = per_fight_features.sort_values(by='date', ascending=True).reset_index(drop=True)
+    per_fight_features = chronological_fights(ufc_features)
 
     # per minute rates, total counts
     striking_features = ['kd', 'sig_str_landed', 'sig_str_absorbed', 'sig_str_attempted', 'leg_str', 'head_str', 'body_str', 'clinch_str']

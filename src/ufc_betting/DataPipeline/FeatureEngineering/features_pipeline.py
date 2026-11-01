@@ -407,7 +407,8 @@ class FeatureEngineering:
         stats['date'] = pd.to_datetime(stats['date'])
 
         odds = odds.dropna(subset=['date']) # remove rows based on rows in 'date' that are NA 
-        odds = odds.drop_duplicates(subset=['red_fighter', 'blue_fighter', 'date'], keep='first').reset_index(drop=True)
+        # Do not discard conflicting quotes before aliases/dates are resolved.
+        odds = odds.drop_duplicates().reset_index(drop=True)
 
         # clean names in stats col 
         stats['red_clean'] = self.clean_col(stats['fighter_red']) # clean names so that the names in odds and stats match 
@@ -429,7 +430,7 @@ class FeatureEngineering:
         odds['blue_fighter_odds'] = odds['blue_fighter']
 
         odds = self.standardize_dates(stats, odds)
-        odds = odds.drop_duplicates(subset=['red_clean', 'blue_clean', 'date'], keep='first').reset_index(drop=True)
+        odds = self.unique_fight_odds(odds)
         # odds.to_csv(settings.data_dir /'features_test_files/look_at_odds.csv')
 
         # drop duplicate columns before merge
@@ -446,3 +447,18 @@ class FeatureEngineering:
         new_df = new_df.sort_values(by='date', ascending=True).reset_index(drop=True)
 
         return new_df
+
+    @staticmethod
+    def unique_fight_odds(odds):
+        """Reject conflicting snapshots instead of choosing by input row order."""
+        keys = ['red_clean', 'blue_clean', 'date']
+        quotes = [f'{market}_{side}' for market in ('open', 'close1', 'close2')
+                  for side in ('red', 'blue')]
+        conflicts = odds.groupby(keys, dropna=False)[quotes].nunique(dropna=False).gt(1).any(axis=1)
+        if conflicts.any():
+            fights = conflicts.index[conflicts].tolist()
+            raise ValueError(
+                f'Conflicting odds for {len(fights)} canonical fights: {fights[:10]}. '
+                'Resolve the source quotes before rebuilding features; row order is not a valid tie-breaker.'
+            )
+        return odds.drop_duplicates(subset=keys, keep='first').reset_index(drop=True)

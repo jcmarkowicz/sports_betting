@@ -138,6 +138,7 @@ def optimize_kelly_params(*, validation_data, n_trials=100, k=1000,
         penalties[market] = value
     
     def run_market(odds_type):
+        print(f'{odds_type}: reading reference predictions', flush=True)
         predictions = read_frozen_predictions(validation_data[odds_type])
         predictions['proba_blue'] = 1 - predictions.proba_red
         predictions['pred_winner'] = (predictions.proba_red >= .5).astype(int)
@@ -145,12 +146,14 @@ def optimize_kelly_params(*, validation_data, n_trials=100, k=1000,
         search_type = JointDecayBettingSearch if use_decay else FrozenBettingSearch
         extra = dict(opening_params=opening_params, opening_data=opening_data,
                      max_decay=max_decay) if use_decay else {}
+        print(f'{odds_type}: preparing search inputs', flush=True)
         search = search_type(
             predictions, odds_type, k=k, initial_bankroll=initial_bankroll,
             seed=seed, risk_penalty=penalties[odds_type], score_type=score_type, wealth_floor=wealth_floor, negative_mean_penalty=negative_mean_penalty, drawdown_penalty=drawdown_penalty, drawdown_tail_fraction=drawdown_tail_fraction, ulcer_penalty=ulcer_penalty,
             sample_with_replacement=sample_with_replacement, bootstrap_mode=bootstrap_mode,
             bootstrap_dir=bootstrap_root / odds_type if bootstrap_root is not None else None,
             sampled_paths=sampled_paths[odds_type] if isinstance(sampled_paths, Mapping) else sampled_paths, **extra)
+        print(f'{odds_type}: entering optimization (trial progress prints after each trial)', flush=True)
         study = search.run(n_trials=n_trials, seed=seed)
         controls = search.betting_params(study.best_params)
         params_path = None
