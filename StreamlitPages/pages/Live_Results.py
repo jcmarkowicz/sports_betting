@@ -6,6 +6,7 @@ from utils import display_paginated_df
 from ufc_betting.config import settings
 from ufc_betting.Results.live_plotly import live_figures
 
+st.set_page_config(page_title="Live Results", layout="wide")
 
 @st.cache_data(show_spinner=False)
 def cached_csv(path, version):
@@ -13,7 +14,7 @@ def cached_csv(path, version):
 
 
 @st.cache_data(show_spinner=False, max_entries=12)
-def cached_figures(market, versions):
+def cached_figures(market, versions, style_version=2):
     frames = [cached_csv(path, version) for path, version in versions]
     return live_figures(*frames, market)
 
@@ -44,7 +45,7 @@ for tab, market in zip(st.tabs(["Opening", "Close1", "Close2"]),
         if versions is not None:
             try:
                 with st.spinner("Loading live charts…"):
-                    figures = cached_figures(market, versions)
+                    figures = cached_figures(market, versions, style_version=2)
                 for name, title in (
                     ('calibration', None),
                     ('backtest', 'Bankroll and cumulative results'),
@@ -53,7 +54,7 @@ for tab, market in zip(st.tabs(["Opening", "Close1", "Close2"]),
                 ):
                     if title:
                         st.subheader(title)
-                    st.plotly_chart(figures[name], width="stretch",
+                    st.plotly_chart(figures[name], width="stretch", theme=None,
                                     key=f'live_{market}_{name}',
                                     config={'displaylogo': False, 'scrollZoom': False})
             except (OSError, ValueError, KeyError, IndexError) as error:

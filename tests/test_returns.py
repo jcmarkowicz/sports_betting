@@ -97,38 +97,28 @@ class ReturnTests(unittest.TestCase):
         for bet_type in BET_TYPES:
             self.assertEqual(event_returns[bet_type].iloc[0], -1.0)
 
-    @patch("ufc_betting.Results.returns.commit_if_changed")
-    @patch("ufc_betting.Results.returns.pd.read_csv")
-    @patch("ufc_betting.Results.returns.ParlayDataFrame")
-    @patch("ufc_betting.Results.returns.MoneylineDataFrame")
-    def test_bankroll_replenishment_is_counted(
-        self,
-        moneyline_class,
-        parlay_class,
-        read_csv,
-        commit_if_changed,
-    ) -> None:
-        moneylines, parlays = return_frames()
-        read_csv.side_effect = [moneylines, parlays]
-        moneyline_class.return_value.frame = moneylines
-        parlay_class.return_value.frame = parlays
-
-        results = returns_by_date(
-            starting_bankroll=500,
-            bankroll_floor=100,
-            replenishment_amount=1000,
-        )
-
-        for bet_type in BET_TYPES:
-            self.assertEqual(results[f"multiplier_{bet_type}"].iloc[0], 0.0)
-            self.assertFalse(results[f"profitable_event_{bet_type}"].iloc[0])
-            self.assertTrue(results[f"replenished_{bet_type}"].iloc[0])
-            self.assertEqual(
-                results[f"replenishment_count_{bet_type}"].iloc[0],
-                1,
-            )
-            self.assertEqual(results[f"bankroll_{bet_type}"].iloc[0], 0.0)
-        commit_if_changed.assert_called_once()
+    def test_bankroll_never_replenishes_and_rejects_negative_before_publish(self):
+        dates = pd.Series(pd.to_datetime(['2026-01-01', '2026-01-08']))
+        for returns, expected in (([-.9, 1.], [50., 100.]), ([-1., 1.], [0., 0.]),
+                                  ([-1.1, 0.], None)):
+            singles = {m: pd.Series(returns) for m in BET_TYPES}
+            parlays = {m: pd.Series([0., 0.]) for m in BET_TYPES}
+            with patch('ufc_betting.Results.returns.pd.read_csv'), \
+                 patch('ufc_betting.Results.returns.MoneylineDataFrame'), \
+                 patch('ufc_betting.Results.returns.ParlayDataFrame'), \
+                 patch('ufc_betting.Results.returns._event_return_components',
+                       return_value=(dates, singles, parlays, {})), \
+                 patch('ufc_betting.Results.returns.commit_if_changed') as publish:
+                if expected is None:
+                    with self.assertRaisesRegex(ValueError, 'open bankroll.*2026-01-01'):
+                        returns_by_date()
+                    publish.assert_not_called()
+                else:
+                    result = returns_by_date()
+                    for market in BET_TYPES:
+                        self.assertEqual(result[f'bankroll_{market}'].tolist(), expected)
+                    self.assertFalse(any('replenish' in c for c in result))
+                    publish.assert_called_once()
 
     def test_accuracy_reports_profitable_event_percentage(self) -> None:
         moneylines, parlays = return_frames()

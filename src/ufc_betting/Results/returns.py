@@ -100,100 +100,36 @@ def _event_return_fractions(
 
 
 
-def returns_by_date(
-    starting_bankroll: float = 500,
-    bankroll_floor: float | None = 100,
-    replenishment_amount: float = 500,
-) -> pd.DataFrame:
-    """
-    Calculate bankroll history from settled moneyline and parlay data.
-
-    Each betting type has an independent bankroll. Moneyline returns are
-    summed across fights on each date. Each parlay is counted once even
-    though its result is repeated across its leg rows.
-    """
-    df_ml = MoneylineDataFrame(
-        pd.read_csv(settings.ml_history_file)
-    ).frame
-
-    df_parlay = ParlayDataFrame(
-        pd.read_csv(settings.parlay_history_file)
-    ).frame
-
-    if starting_bankroll < 0:
-        raise ValueError("starting_bankroll must be nonnegative")
-    if bankroll_floor is not None and bankroll_floor < 0:
-        raise ValueError("bankroll_floor must be nonnegative or None")
-    if replenishment_amount <= 0:
-        raise ValueError("replenishment_amount must be positive")
-
-    all_dates, event_returns = _event_return_fractions(
-        df_ml,
-        df_parlay,
-    )
-
-    bankroll_results = pd.DataFrame({
-        "date": all_dates,
-    })
-
+def returns_by_date(starting_bankroll: float = 500) -> pd.DataFrame:
+    """Compound settled returns without replenishment; reject negative balances."""
+    if not np.isfinite(starting_bankroll) or starting_bankroll < 0:
+        raise ValueError("starting_bankroll must be finite and nonnegative")
+    df_ml = MoneylineDataFrame(pd.read_csv(settings.ml_history_file)).frame
+    df_parlay = ParlayDataFrame(pd.read_csv(settings.parlay_history_file)).frame
+    all_dates, ml_returns, pl_returns, _ = _event_return_components(df_ml, df_parlay)
+    bankroll_results = pd.DataFrame({'date': all_dates})
     for bet_type in SETTLED_TYPES:
+        # Use uncapped returns so a loss beyond the bankroll is not hidden.
+        event_return = ml_returns[bet_type] + pl_returns[bet_type]
         bankroll = float(starting_bankroll)
-        replenishment_count = 0
-        profit_history: list[float] = []
-        bankroll_history: list[float] = []
-        replenished_history: list[bool] = []
-        replenishment_history: list[float] = []
-        replenishment_count_history: list[int] = []
-
-        for return_fraction in event_returns[bet_type]:
-            multiplier = max(0.0, 1.0 + float(return_fraction))
-            profit = bankroll * (multiplier - 1.0)
-            bankroll += profit
-
-            replenished = (
-                bankroll_floor is not None
-                and bankroll < bankroll_floor
-            )
-            amount_added = 0.0
-            if replenished:
-                amount_added = float(replenishment_amount)
-                replenishment_count += 1
-
-            profit_history.append(profit)
-            bankroll_history.append(bankroll)
-            replenished_history.append(replenished)
-            replenishment_history.append(amount_added)
-            replenishment_count_history.append(replenishment_count)
-
-            if replenished:
-                bankroll = amount_added
-
-        event_return = event_returns[bet_type]
-        bankroll_results[f"return_fraction_{bet_type}"] = (
-            event_return.to_numpy()
-        )
-        bankroll_results[f"multiplier_{bet_type}"] = (
-            1.0 + event_return.to_numpy()
-        )
-        bankroll_results[f"profitable_event_{bet_type}"] = (
-            event_return.gt(0).to_numpy()
-        )
-        bankroll_results[f"profits_{bet_type}"] = profit_history
-        bankroll_results[f"replenished_{bet_type}"] = replenished_history
-        bankroll_results[
-            f"replenishment_amount_{bet_type}"
-        ] = replenishment_history
-        bankroll_results[
-            f"replenishment_count_{bet_type}"
-        ] = replenishment_count_history
-        bankroll_results[f"bankroll_{bet_type}"] = bankroll_history
-
-    commit_if_changed(
-        bankroll_results,
-        settings.bankroll_returns_file,
-        "Saving Bankroll Results",
-    )
-
+        profits, balances = [], []
+        for date, fraction in zip(all_dates, event_return):
+            profit = bankroll * float(fraction)
+            next_bankroll = bankroll + profit
+            if not np.isfinite(next_bankroll) or next_bankroll < 0:
+                raise ValueError(
+                    f'{bet_type} bankroll is negative or nonfinite on {date}: '
+                    f'{next_bankroll} (starting balance={bankroll}, event return={fraction})'
+                )
+            bankroll = next_bankroll
+            profits.append(profit)
+            balances.append(bankroll)
+        bankroll_results[f'return_fraction_{bet_type}'] = event_return.to_numpy()
+        bankroll_results[f'multiplier_{bet_type}'] = 1 + event_return.to_numpy()
+        bankroll_results[f'profitable_event_{bet_type}'] = event_return.gt(0).to_numpy()
+        bankroll_results[f'profits_{bet_type}'] = profits
+        bankroll_results[f'bankroll_{bet_type}'] = balances
+    commit_if_changed(bankroll_results, settings.bankroll_returns_file, 'Saving Bankroll Results')
     return bankroll_results
 
 

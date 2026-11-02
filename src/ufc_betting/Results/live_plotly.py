@@ -5,6 +5,8 @@ import matplotlib.dates as dates
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import plotly.graph_objects as go
+import textwrap
+from types import SimpleNamespace
 
 
 def _color(value):
@@ -23,7 +25,15 @@ def to_plotly(source):
     for index, ax in enumerate(source.axes, 1):
         suffix = '' if index == 1 else str(index)
         xref, yref = 'x' + suffix, 'y' + suffix
-        pos = ax.get_position()
+        spec = ax.get_subplotspec()
+        rows, columns = spec.get_gridspec().get_geometry()
+        # Browser-sized spacing instead of Matplotlib's print-sized margins.
+        gap_x, gap_y = .12, .23 if rows == 2 else .16
+        cell_width = (.94 - gap_x * (columns - 1)) / columns
+        cell_height = (.94 - gap_y * (rows - 1)) / rows
+        x0 = .02 + spec.colspan.start * (cell_width + gap_x)
+        y1 = .96 - spec.rowspan.start * (cell_height + gap_y)
+        pos = SimpleNamespace(x0=x0, x1=x0+cell_width, y0=y1-cell_height, y1=y1)
         is_date = isinstance(ax.xaxis.get_major_locator(), dates.DateLocator)
         def xvalues(values):
             values = np.asarray(values)
@@ -31,7 +41,8 @@ def to_plotly(source):
                 return [d.isoformat() for d in dates.num2date(values)]
             return values.tolist()
         xaxis = dict(domain=[pos.x0, pos.x1], anchor=yref,
-                     title=dict(text=ax.get_xlabel()), showgrid=True, gridcolor='#edf1f7')
+                     title=dict(text=ax.get_xlabel(), standoff=12), showgrid=False,
+                     zeroline=False, automargin=True)
         if is_date:
             xaxis.update(type='date', tickformat='%Y-%m-%d')
         else:
@@ -43,14 +54,17 @@ def to_plotly(source):
         if not ax.get_xticklabels():
             xaxis['showticklabels'] = False
         yaxis = dict(domain=[pos.y0, pos.y1], anchor=xref, range=list(ax.get_ylim()),
-                     title=dict(text=ax.get_ylabel()), showgrid=True, gridcolor='#edf1f7')
+                     title=dict(text=ax.get_ylabel(), standoff=10), showgrid=True,
+                     gridcolor='rgba(148,163,184,0.13)', gridwidth=1,
+                     zeroline=False, automargin=True)
         if ax.yaxis.get_label_position() == 'right':
             yaxis.update(side='right', showgrid=False)
         fig.update_layout(**{'xaxis'+suffix: xaxis, 'yaxis'+suffix: yaxis})
         if ax.get_title():
             fig.add_annotation(x=(pos.x0+pos.x1)/2, y=pos.y1, xref='paper', yref='paper',
-                               text=ax.get_title().replace('\n', '<br>'), showarrow=False,
-                               yanchor='bottom', font=dict(size=13))
+                               text='<br>'.join(textwrap.fill(part, width=34 if columns == 3 else 65).replace('\n', '<br>')
+                                                 for part in ax.get_title().split('\n')), showarrow=False,
+                               yanchor='bottom', yshift=12, font=dict(size=13))
         for line in ax.lines:
             label = line.get_label()
             visible = bool(label and not label.startswith('_') and label not in legend_names)
@@ -60,10 +74,10 @@ def to_plotly(source):
             x, y = line.get_xdata(orig=False), line.get_ydata(orig=False)
             if line.get_transform() == ax.get_xaxis_transform():
                 fig.add_shape(type='line', x0=float(x[0]), x1=float(x[-1]), y0=0, y1=1,
-                              xref=xref, yref=yref+' domain', line=dict(color=_color(line.get_color()), dash=dash))
+                              xref=xref, yref=yref+' domain', line=dict(color=_color(line.get_color()), dash=dash, width=1))
             elif line.get_transform() == ax.get_yaxis_transform():
                 fig.add_shape(type='line', x0=0, x1=1, y0=float(y[0]), y1=float(y[-1]),
-                              xref=xref+' domain', yref=yref, line=dict(color=_color(line.get_color()), dash=dash))
+                              xref=xref+' domain', yref=yref, line=dict(color=_color(line.get_color()), dash=dash, width=1))
             else:
                 fig.add_trace(go.Scatter(x=xvalues(x), y=np.asarray(y).tolist(), xaxis=xref, yaxis=yref,
                     mode='lines+markers' if line.get_marker() not in ('None', None, '', ' ') else 'lines',
@@ -88,8 +102,9 @@ def to_plotly(source):
                 yref=yref+' domain' if domain else yref, text=text.get_text().replace('\n', '<br>'),
                 showarrow=False, xanchor='left' if x > 1 else 'center',
                 bgcolor='rgba(255,255,255,.9)', font=dict(size=11))
-    fig.update_layout(template='plotly_white', height=int(source.get_figheight()*85),
-        margin=dict(l=20, r=150 if len(source.axes)==3 else 40, t=25, b=90),
+    fig.update_layout(template='plotly_white', height=1080 if rows == 3 else 900 if rows == 2 else 480,
+        autosize=True,
+        margin=dict(l=55, r=180 if len(source.axes)==3 else 80, t=85, b=120),
         font=dict(family='Arial, sans-serif', size=12, color='#334155'),
         legend=dict(orientation='h', y=-.08, x=0), hovermode='closest', bargap=0)
     if source._suptitle:
