@@ -54,7 +54,7 @@ def to_plotly(source):
         if not ax.get_xticklabels():
             xaxis['showticklabels'] = False
         yaxis = dict(domain=[pos.y0, pos.y1], anchor=xref, range=list(ax.get_ylim()),
-                     title=dict(text=ax.get_ylabel(), standoff=10), showgrid=True,
+                     title=dict(text=ax.get_ylabel(), standoff=10), showgrid=False,
                      gridcolor='rgba(148,163,184,0.13)', gridwidth=1,
                      zeroline=False, automargin=True)
         if ax.yaxis.get_label_position() == 'right':
@@ -109,6 +109,9 @@ def to_plotly(source):
         legend=dict(orientation='h', y=-.08, x=0), hovermode='closest', bargap=0)
     if source._suptitle:
         fig.update_layout(title=dict(text=source._suptitle.get_text(), x=.5))
+    # Override template defaults on every axis, including secondary axes.
+    fig.update_xaxes(showgrid=False, zeroline=False, minor=dict(showgrid=False))
+    fig.update_yaxes(showgrid=False, zeroline=False, minor=dict(showgrid=False))
     return fig
 
 

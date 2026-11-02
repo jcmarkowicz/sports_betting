@@ -14,7 +14,7 @@ def cached_csv(path, version):
 
 
 @st.cache_data(show_spinner=False, max_entries=12)
-def cached_figures(market, versions, style_version=2):
+def cached_figures(market, versions, style_version=3):
     frames = [cached_csv(path, version) for path, version in versions]
     return live_figures(*frames, market)
 
@@ -45,7 +45,7 @@ for tab, market in zip(st.tabs(["Opening", "Close1", "Close2"]),
         if versions is not None:
             try:
                 with st.spinner("Loading live charts…"):
-                    figures = cached_figures(market, versions, style_version=2)
+                    figures = cached_figures(market, versions, style_version=3)
                 for name, title in (
                     ('calibration', None),
                     ('backtest', 'Bankroll and cumulative results'),
