@@ -67,6 +67,13 @@ def to_plotly(source):
                                yanchor='bottom', yshift=12, font=dict(size=13))
         for line in ax.lines:
             label = line.get_label()
+            # Plotly uses one legend for the whole figure; Matplotlib's local
+            # mean labels need their panel context retained in that legend.
+            if label.startswith('Mean event accuracy:'):
+                panel = ax.get_title().split('\n')[0]
+                label = f'{panel} — {label}'
+            elif label.startswith('Mean wagered:'):
+                label = f'Total bankroll wagered — {label}'
             visible = bool(label and not label.startswith('_') and label not in legend_names)
             if visible:
                 legend_names.add(label)
