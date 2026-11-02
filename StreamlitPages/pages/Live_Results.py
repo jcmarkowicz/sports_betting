@@ -54,7 +54,15 @@ for tab, market in zip(st.tabs(["Opening", "Close1", "Close2"]),
                 ):
                     if title:
                         st.subheader(title)
-                    st.plotly_chart(figures[name], width="stretch", theme=None,
+                    figure = figures[name]
+                    # Apply presentation rules outside the cache, including to
+                    # figures produced by an older imported plotting module.
+                    figure.update_layout(template='none', plot_bgcolor='white', paper_bgcolor='white')
+                    for axis in (*figure.select_xaxes(), *figure.select_yaxes()):
+                        axis.update(showgrid=False, gridcolor='rgba(0,0,0,0)',
+                                    zeroline=False, showline=False,
+                                    minor=dict(showgrid=False, gridcolor='rgba(0,0,0,0)'))
+                    st.plotly_chart(figure, width="stretch", theme=None,
                                     key=f'live_{market}_{name}',
                                     config={'displaylogo': False, 'scrollZoom': False})
             except (OSError, ValueError, KeyError, IndexError) as error:
