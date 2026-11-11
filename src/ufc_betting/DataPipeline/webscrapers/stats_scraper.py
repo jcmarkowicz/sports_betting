@@ -199,6 +199,8 @@ def scrape_ufc(end_date=None, get_upcoming=False, start_page=1, end_page=None):
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")
+    # Allow UFCStats HTTP navigation in headless Chrome (avoids ERR_BLOCKED_BY_CLIENT).
+    options.add_argument("--disable-features=HttpsFirstBalancedModeAutoEnable")
     driver = webdriver.Chrome(options=options)
     try:
         return _scrape_ufc(driver, end_date, get_upcoming, start_page, end_page)
