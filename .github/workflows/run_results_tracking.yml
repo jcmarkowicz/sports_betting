@@ -57,3 +57,11 @@ jobs:
         run: |
           python -m ufc_betting.Results.results_tracking
 
+      - name: Upload scraper diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scraper-debug
+          path: scraper_debug/
+          if-no-files-found: ignore
+          retention-days: 7

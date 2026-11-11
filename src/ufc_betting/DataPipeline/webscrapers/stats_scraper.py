@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException, TimeoutException, StaleElementReferenceException
 from contextlib import contextmanager
+from .scrape_diagnostics import save_listing_diagnostics
 
 import time
 from datetime import datetime 
@@ -230,6 +231,7 @@ def _scrape_ufc(driver, end_date, get_upcoming, start_page, end_page):
                 if attempt < 3:
                     driver.get(listing_url)
         if event_rows is None:
+            save_listing_diagnostics(driver, page_number=page_num, upcoming=get_upcoming)
             print(f'Skipping unavailable event listing page {page_num}; this is NOT the end of the event list.')
             consecutive_failed_pages += 1
             if consecutive_failed_pages >= 3 or get_upcoming:
