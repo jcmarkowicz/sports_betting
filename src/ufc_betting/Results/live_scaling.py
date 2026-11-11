@@ -37,14 +37,14 @@ def live_source_features(moneylines, parlays, balances, market, warmup_fights,
                 event_history=history,trend_scale=scale,historical_events=past)
 
 
-def scaled_live_paths(events, opening, closing=None):
+def scaled_live_paths(events, opening, closing=None, *, closing_market="close2"):
     """Raw plus requested gates/scalers; all flat gates use opening history."""
     events=events.sort_index()
     dates=events.index
     pd.testing.assert_index_equal(dates,opening['features'].index)
     keep=opening['features'].trend.isin(['Uptrend','Downtrend'])
     paths={'Raw':pd.Series(1.,index=dates),'Flat only | gate open':keep.astype(float)}
-    sources=[('open',opening)] + ([('close2',closing)] if closing is not None else [])
+    sources=[('open',opening)] + ([(closing_market,closing)] if closing is not None else [])
     for label,source in sources:
         pd.testing.assert_index_equal(dates,source['scalers'].index)
         scalers=source['scalers']

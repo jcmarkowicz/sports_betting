@@ -395,11 +395,16 @@ def _closing_report(market):
     fig.suptitle(f'{market}: combined strategy, crossed sources | EWMA-5 +/-0.02')
     _capture(fig,figures)
 
-    # All five curves below use this closing market's own history, never opening filters.
-    own=sources[market];active=own['filtered']
-    variants={'Raw unfiltered':target.return_pct,'Remove flat only':active.return_pct,
-              'Volatility only':active['Volatility only'],'Prior-Brier only':active['Prior-Brier reductions'],
-              'Combined':active['Combined']}
+    # Closing returns, opening event selection, and the requested scaler source.
+    own=sources[market]
+    scaler_source='open' if market=='close1' else 'close2'
+    keep=sources['open']['events'].opening_keep
+    multipliers=sources[scaler_source]['all_scalers']
+    variants={'Raw unfiltered':target.return_pct,
+              'Remove flat only':target.return_pct.where(keep,0.),
+              'Volatility only':(target.return_pct*multipliers.vol_multiplier).where(keep,0.),
+              'Prior-Brier only':(target.return_pct*multipliers.brier_multiplier).where(keep,0.),
+              'Combined':(target.return_pct*multipliers.combined_multiplier).where(keep,0.)}
     bankroll_rows=[]
     fig,axes=plt.subplots(2,1,figsize=(15,10),constrained_layout=True)
     for ax,period in zip(axes,['Validation','Test']):
@@ -408,10 +413,10 @@ def _closing_report(market):
             returns=series.reindex(dates,fill_value=0)
             path=pd.Series(np.r_[500.,500*(1+returns/100).cumprod()],index=[dates.min()-pd.Timedelta(days=1),*dates])
             ax.plot(path.index,path,label=f'{label}: {path.iloc[-1]:,.0f}')
-            bankroll_rows.append(dict(period=period,strategy=label,ending_bankroll=path.iloc[-1]))
-        ax.set(title=f'{period}: closing history, initial bankroll 500',ylabel='Bankroll',xlabel='Event date')
+            bankroll_rows.append(dict(period=period,strategy=label,gate='open',scalers=scaler_source,ending_bankroll=path.iloc[-1]))
+        ax.set(title=f'{period}: gate open, scalers {scaler_source}, initial bankroll 500',ylabel='Bankroll',xlabel='Event date')
         ax.legend(fontsize=9);ax.grid(alpha=.2)
-    fig.suptitle(f'{market}: EWMA-5 +/-0.02 | Closing history filters and scalers')
+    fig.suptitle(f'{market}: EWMA-5 +/-0.02 | Gate open, scalers {scaler_source}')
     _capture(fig,figures)
 
     train_end=pd.to_datetime(pd.read_csv(PREDICTIONS/'train/open/inference/train_with_open.csv').date).max()
@@ -424,7 +429,7 @@ def _closing_report(market):
     ax.axvline(target.index[target.split.eq('Validation')].min(),color='gray',ls='--',label='Validation starts')
     ax.axvline(target.index[target.split.eq('Test')].min(),color='black',ls=':',label='Test / model refit')
     ax.axhline(0,color='gray',lw=.7)
-    ax.set(title=f'{market}: 100-fight rolling Brier advantage — closing history',ylabel='Vegas Brier minus model Brier',xlabel='Event date')
+    ax.set(title=f'{market}: 100-fight rolling Brier advantage â€” closing history',ylabel='Vegas Brier minus model Brier',xlabel='Event date')
     ax.legend();ax.grid(alpha=.2)
     _capture(fig,figures)
     return dict(figures=figures,crossed=crossed,bankroll=pd.DataFrame(bankroll_rows))

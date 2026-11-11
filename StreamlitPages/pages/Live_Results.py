@@ -20,7 +20,7 @@ def cached_sources(versions, history_signature):
     frames = [cached_csv(path, version) for path, version in versions]
     train_end = pd.to_datetime(pd.read_csv(PREDICTIONS / 'train/open/inference/train_with_open.csv').date).max()
     sources = {}
-    for market in ['open', 'close2']:
+    for market in ['open', 'close1', 'close2']:
         historical = load_market(market)['events']
         warm = pd.read_csv(PREDICTIONS / f'trainval/open/inference/train_with_{market}.csv')
         sources[market] = live_source_features(*frames, market, warm, historical, train_end)
@@ -28,11 +28,11 @@ def cached_sources(versions, history_signature):
 
 
 @st.cache_data(show_spinner=False, max_entries=12)
-def cached_figures(market, versions, history_signature, style_version=5):
+def cached_figures(market, versions, history_signature, style_version=7):
     frames = [cached_csv(path, version) for path, version in versions]
     sources = cached_sources(versions, history_signature)
     return scaled_live_figures(*frames, market, sources['open'],
-                               sources['close2'] if market == 'close2' else None)
+                               sources[market] if market in ('close1', 'close2') else None)
 
 
 def file_version(path):
@@ -52,7 +52,7 @@ for tab, market in zip(st.tabs(["Opening", "Close1", "Close2"]),
     with tab:
         st.subheader("Prediction calibration")
         st.caption(
-            "Selected picks have positive moneyline stakes. All predictions includes "
+            "All predictions includes "
             "zero-stake picks. Model and Vegas use the same settled fights in each panel; "
             "draws, no-contests, and missing probabilities or odds are excluded. "
             "Red-win probabilities, ten equal-width bins, and no-vig Vegas probabilities "
@@ -61,7 +61,7 @@ for tab, market in zip(st.tabs(["Opening", "Close1", "Close2"]),
         if versions is not None:
             try:
                 with st.spinner("Loading live chartsâ€¦"):
-                    result = cached_figures(market, versions, source_signature(), style_version=5)
+                    result = cached_figures(market, versions, source_signature(), style_version=7)
                     figures = result['figures']
                 for name, title in (
                     ('calibration', None),

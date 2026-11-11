@@ -158,7 +158,7 @@ def scaled_live_figures(moneylines, parlays, balances, market, opening, closing=
     events,ml,pl=prepare_return_plot_data(moneylines,parlays,balances,market)
     events=events.sort_values('date')
     initial=events.iloc[0].bankroll_postevent-events.iloc[0].event_payout_money_line-events.iloc[0].parlay_net
-    paths=scaled_live_paths(events.set_index('date'),opening,closing)
+    paths=scaled_live_paths(events.set_index('date'),opening,closing,closing_market=market)
     best=paths['winner'];factor=paths['multipliers'][best]
     selected=reconstruct_scaled_events(events,factor,initial)
     # Exclude filtered/zero-allocation events from diagnostic denominators.
@@ -170,20 +170,22 @@ def scaled_live_figures(moneylines, parlays, balances, market, opening, closing=
     pl['fstar_parlay']*=pl.date.map(factor)
     for col in ['bankroll_postevent','event_payout_money_line','parlay_net','bankroll_pct_change']:
         ml[col]=ml.date.map(selected.set_index('date')[col])
-    fig=make_subplots(rows=2,cols=1,shared_xaxes=True,
-        subplot_titles=['Compounded bankroll (no replenishments)','Cumulative compounded return (%)'],vertical_spacing=.16)
+    fig=go.Figure()
+    from plotly.colors import qualitative
     for i,name in enumerate(paths['wealth']):
         wealth=paths['wealth'][name]
         dates=[events.date.min()-pd.Timedelta(days=1),*wealth.index]
-        from plotly.colors import qualitative
-        color=qualitative.Plotly[i%len(qualitative.Plotly)]
-        for row,y in [(1,np.r_[initial,initial*wealth]),(2,np.r_[0,100*(wealth-1)])]:
-            fig.add_trace(go.Scatter(x=dates,y=y,mode='lines',name=name,legendgroup=name,showlegend=row==1,
-                line=dict(color=color,width=3 if name==best else 1.8,dash='dash' if 'scalers close2' in name else 'solid')),row=row,col=1)
-    fig.update_layout(height=850,title=f'{market}: EWMA-5 +/-0.02 live scaling',legend=dict(orientation='h',y=-.15),margin=dict(b=170),hovermode='x unified')
-    fig.update_yaxes(title_text='Bankroll',row=1,col=1);fig.update_yaxes(title_text='Return (%)',row=2,col=1)
+        final_bankroll=initial*wealth.iloc[-1]
+        final_return=100*(wealth.iloc[-1]-1)
+        fig.add_trace(go.Scatter(x=dates,y=np.r_[initial,initial*wealth],mode='lines',
+            name=f'{name}: ${final_bankroll:,.2f} ({final_return:+,.2f}%)',
+            line=dict(color=qualitative.Plotly[i%len(qualitative.Plotly)],width=3 if name==best else 1.8,
+                      dash='dash' if 'scalers close' in name else 'solid')))
+    fig.update_layout(height=650,title=f'{market}: EWMA-5 +/-0.02 live bankroll (no replenishments)',
+        legend=dict(orientation='v',x=.01,y=.99,xanchor='left',yanchor='top',font=dict(size=11)),
+        margin=dict(b=60),hovermode='x unified',xaxis_title='Event date',yaxis_title='Bankroll')
     figures={'backtest':fig}
-    for name,build in [('calibration',lambda:plot_live_calibration(moneylines,market)),
+    for name,build in [('calibration',lambda:plot_live_calibration(moneylines,market,include_selected=False)),
         ('bankroll_distributions',lambda:plot_bankroll_distributions(selected,show=False)[0]),
         ('event_accuracy',lambda:plot_event_accuracy_distributions(ml,pl,odds_type=market,show=False)[0])]:
         if name != 'calibration' and selected.empty:

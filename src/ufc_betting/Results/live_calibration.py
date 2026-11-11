@@ -32,14 +32,14 @@ def calibration_rows(history, market):
     })
 
 
-def plot_live_calibration(history, market):
+def plot_live_calibration(history, market, *, include_selected=True):
     """Two reliability panels, comparing identical fights within each panel."""
     rows = calibration_rows(history, market)
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.5), constrained_layout=True)
-    for ax, (title, data) in zip(axes, [
-        ('Selected moneyline picks', rows.loc[rows.selected]),
-        ('All predictions', rows),
-    ]):
+    panels = [('All predictions', rows)]
+    if include_selected:
+        panels.insert(0, ('Selected moneyline picks', rows.loc[rows.selected]))
+    fig, axes = plt.subplots(1, len(panels), figsize=(11 if include_selected else 8, 4.5), constrained_layout=True)
+    for ax, (title, data) in zip(np.atleast_1d(axes), panels):
         ax.plot([0, 1], [0, 1], '--', color='gray', label='Perfect calibration')
         for source, label, color in [('model', 'Model', '#2563eb'), ('vegas', 'Vegas (no vig)', '#ea580c')]:
             if not data.empty:

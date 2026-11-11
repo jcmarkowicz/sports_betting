@@ -200,18 +200,18 @@ def plot_event_accuracy_distributions(moneylines, parlays=None, *, odds_type=Non
         if len(values):
             ax.hist(values, bins=np.linspace(0, 100, bins + 1), edgecolor='black', alpha=.75)
             ax.axvline(values.mean(), color='tab:orange', linestyle='--',
-                       label=f'Mean event accuracy: {values.mean():.1f}%')
+                       label=f'Mean event accuracy: {values.mean():.2f}%')
             ax.legend()
         else:
             ax.text(.5, .5, 'No eligible events', transform=ax.transAxes, ha='center')
-        ax.set(title=f'{label}\n{len(values)} events', xlabel='Event accuracy (%)', xlim=(0, 100))
+        ax.set(title=f'{label}\nMean: {values.mean():.2f}% | {len(values)} events', xlabel='Event accuracy (%)', xlim=(0, 100))
         ax.grid(axis='y', alpha=.25)
     values = events['bankroll_wagered_pct']
     axes[3].hist(values, bins=np.linspace(0, max(100., values.max()), bins + 1),
                  edgecolor='black', alpha=.75, color='tab:green')
     axes[3].axvline(values.mean(), color='tab:orange', linestyle='--',
                     label=f'Mean wagered: {values.mean():.1f}%')
-    axes[3].set(title=f'Total bankroll wagered: singles + parlays\n{len(values)} events',
+    axes[3].set(title=f'Total bankroll wagered: singles + parlays\nMean: {values.mean():.2f}% | {len(values)} events',
                 xlabel='Starting total bankroll wagered (%)', xlim=(0, max(100., values.max())))
     axes[3].legend()
     axes[3].grid(axis='y', alpha=.25)
