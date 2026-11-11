@@ -1,5 +1,6 @@
 """Preserve the live report's calculated artists and subplot layout in Plotly."""
 import numpy as np
+import pandas as pd
 import matplotlib.colors as colors
 import matplotlib.dates as dates
 import matplotlib.pyplot as plt
@@ -143,3 +144,55 @@ def live_figures(moneylines, parlays, balances, market):
         finally:
             plt.close(source)
     return figures
+
+
+def scaled_live_figures(moneylines, parlays, balances, market, opening, closing=None):
+    """Compare live overlays; use the best ending compounded path for diagnostics."""
+    from plotly.subplots import make_subplots
+    from ufc_betting.Results.live_calibration import plot_live_calibration
+    from ufc_betting.Results.returns import prepare_return_plot_data
+    from ufc_betting.Results.live_scaling import scaled_live_paths, reconstruct_scaled_events
+    from ufc_betting.BettingStrategy.Backtest.backtest_plots import (
+        plot_bankroll_distributions, plot_event_accuracy_distributions,
+    )
+    events,ml,pl=prepare_return_plot_data(moneylines,parlays,balances,market)
+    events=events.sort_values('date')
+    initial=events.iloc[0].bankroll_postevent-events.iloc[0].event_payout_money_line-events.iloc[0].parlay_net
+    paths=scaled_live_paths(events.set_index('date'),opening,closing)
+    best=paths['winner'];factor=paths['multipliers'][best]
+    selected=reconstruct_scaled_events(events,factor,initial)
+    # Exclude filtered/zero-allocation events from diagnostic denominators.
+    selected=selected.loc[selected.date.map(factor).gt(0)]
+    selected_dates=selected.date
+    ml=ml.loc[ml.date.isin(selected_dates)].copy()
+    pl=pl.loc[pl.date.isin(selected_dates)].copy()
+    ml['choice_fstar']*=ml.date.map(factor)
+    pl['fstar_parlay']*=pl.date.map(factor)
+    for col in ['bankroll_postevent','event_payout_money_line','parlay_net','bankroll_pct_change']:
+        ml[col]=ml.date.map(selected.set_index('date')[col])
+    fig=make_subplots(rows=2,cols=1,shared_xaxes=True,
+        subplot_titles=['Compounded bankroll (no replenishments)','Cumulative compounded return (%)'],vertical_spacing=.16)
+    for i,name in enumerate(paths['wealth']):
+        wealth=paths['wealth'][name]
+        dates=[events.date.min()-pd.Timedelta(days=1),*wealth.index]
+        from plotly.colors import qualitative
+        color=qualitative.Plotly[i%len(qualitative.Plotly)]
+        for row,y in [(1,np.r_[initial,initial*wealth]),(2,np.r_[0,100*(wealth-1)])]:
+            fig.add_trace(go.Scatter(x=dates,y=y,mode='lines',name=name,legendgroup=name,showlegend=row==1,
+                line=dict(color=color,width=3 if name==best else 1.8,dash='dash' if 'scalers close2' in name else 'solid')),row=row,col=1)
+    fig.update_layout(height=850,title=f'{market}: EWMA-5 +/-0.02 live scaling',legend=dict(orientation='h',y=-.15),margin=dict(b=170),hovermode='x unified')
+    fig.update_yaxes(title_text='Bankroll',row=1,col=1);fig.update_yaxes(title_text='Return (%)',row=2,col=1)
+    figures={'backtest':fig}
+    for name,build in [('calibration',lambda:plot_live_calibration(moneylines,market)),
+        ('bankroll_distributions',lambda:plot_bankroll_distributions(selected,show=False)[0]),
+        ('event_accuracy',lambda:plot_event_accuracy_distributions(ml,pl,odds_type=market,show=False)[0])]:
+        if name != 'calibration' and selected.empty:
+            empty=go.Figure()
+            empty.add_annotation(text='This path allocates no stakes; no retained events to summarize.',showarrow=False)
+            figures[name]=empty
+            continue
+        source=build()
+        try:figures[name]=to_plotly(source)
+        finally:plt.close(source)
+    return dict(figures=figures,winner=best,ending_return_pct=100*(paths['wealth'].iloc[-1][best]-1),
+                selected_events=len(selected),total_events=len(events),multipliers=paths['multipliers'])

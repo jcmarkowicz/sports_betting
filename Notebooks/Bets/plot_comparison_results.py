@@ -5,6 +5,7 @@ module does not run a simulation or write files.
 """
 from Notebooks.Bets.simulate_and_plot import simulate_and_plot
 from ufc_betting.config import settings
+from ufc_betting.Results.comparison_calibration import plot_comparison_calibration
 from ufc_betting.BettingStrategy.Backtest.backtest_plots import (
     plot_bankroll_distributions,
     plot_event_accuracy_distributions,
@@ -27,6 +28,10 @@ def plot_comparison_results(
     recent inference search use settings.data_dir / 'kelly_params/inference_market_models'.
     None preserves the original parameters. Custom parameter folders get a
     separate output subfolder when output_dir is omitted.
+    Diagnostic panels compare placed choices' actual win rate against no-vig
+    Vegas probability and show rolling predicted/realized edge and calibration
+    gap with event-bootstrap intervals over event dates,
+    saving a *_calibration.png figure.
     """
     from pathlib import Path
     import pandas as pd
@@ -88,5 +93,10 @@ def plot_comparison_results(
         moneylines, parlays, odds_type=odds_type)
     accuracy_fig.savefig(destination / f'{tag}_event_accuracy.png',
                          dpi=300, bbox_inches='tight')
+    calibration_fig, _ = plot_comparison_calibration(
+        moneylines, odds_type=odds_type, period_label={
+            "val": "Validation", "test": "Test", "train": "Training"}[split])
+    calibration_fig.savefig(destination / f'{tag}_calibration.png',
+                            dpi=300, bbox_inches='tight')
     print(f'Saved moneylines, parlays, and plots: {destination.resolve()} / {tag}_*')
     return moneylines, parlays

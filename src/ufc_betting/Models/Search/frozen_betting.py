@@ -221,8 +221,17 @@ class FrozenBettingSearch:
     def __init__(self, predictions, odds_type='open', *, k=1000,
                  initial_bankroll=500.0, seed=42, risk_penalty=.25,
                  sample_with_replacement=True, bootstrap_mode='generate', bootstrap_dir=None,
-                 sampled_paths=None, _fixed_path_indices=None, score_type="mean_std", wealth_floor=.001, negative_mean_penalty=1000., drawdown_penalty=0., drawdown_tail_fraction=.1, ulcer_penalty=0.):
+                 sampled_paths=None, _fixed_path_indices=None, score_type="mean_std", wealth_floor=.001, negative_mean_penalty=1000., drawdown_penalty=0., drawdown_tail_fraction=.1, ulcer_penalty=0.,
+                 brier_penalty=0., brier_target_gap=.01, brier_window_bets=100):
         validate_score_settings(score_type, wealth_floor, risk_penalty, negative_mean_penalty, drawdown_penalty, drawdown_tail_fraction, ulcer_penalty)
+        for name, value in [('brier_penalty', brier_penalty), ('brier_target_gap', brier_target_gap)]:
+            if isinstance(value, (bool, np.bool_)) or not np.isfinite(value) or value < 0:
+                raise ValueError(f'{name} must be finite and nonnegative')
+        if isinstance(brier_window_bets, (bool, np.bool_)) or not isinstance(brier_window_bets, (int, np.integer)) or brier_window_bets < 2:
+            raise ValueError('brier_window_bets must be an integer >= 2')
+        self.brier_penalty = float(brier_penalty)
+        self.brier_target_gap = float(brier_target_gap)
+        self.brier_window_bets = int(brier_window_bets)
         self.drawdown_tail_fraction = float(drawdown_tail_fraction)
         self.drawdown_penalty = float(drawdown_penalty)
         self.ulcer_penalty = float(ulcer_penalty)
@@ -445,6 +454,39 @@ class FrozenBettingSearch:
         """Decode a trial into portable strategy controls."""
         return BettingParams.from_value(trial_params)
 
+    def brier_diagnostics(self, params):
+        """Score trial-selected singles on the original chronological reference data."""
+        from ufc_betting.Models.Search.rolling_brier import rolling_brier_shortfall
+        controls = self.betting_params(params)
+        inputs = self.frame.assign(proba_blue=1 - self.frame.proba_red,
+                                   pred_winner=(self.frame.proba_red >= .5).astype(int))
+        cache = BettingReturnCalculator.calculate_scenario_cache(inputs, controls, self.odds_type)
+        selected = np.zeros(len(self.frame), dtype=bool)
+        wealth = self.initial_bankroll
+        for _, ids in self.frame.groupby('date', sort=True).indices.items():
+            if wealth <= 0:
+                break
+            current = cache[None, ids]
+            winners = self.frame.winner.to_numpy()[ids]
+            if isinstance(self, JointDecayBettingSearch):
+                alloc = BettingReturnCalculator.decay_scenario_allocations(
+                    self.opening_cache[None, ids], current,
+                    self.frame[['dec_open_red', 'dec_open_blue']].to_numpy()[ids], winners,
+                    self.opening_params, controls, controls.decay_rates, include_parlay=True)
+            else:
+                alloc = BettingReturnCalculator.scenario_allocations(current, winners, controls, include_parlay=True)
+            stakes = alloc['moneyline_stakes'][0]
+            selected[ids] = stakes > 0
+            event_return = (stakes * current[0, :, 2]).sum() + float(
+                alloc['parlay_stakes'][0] * alloc['multiplier'][0] * alloc['parlay_profit'][0])
+            wealth *= 1 + event_return
+        frame = self.frame.loc[selected & self.frame.winner.isin([0, 1])].copy()
+        red = 1 / frame[f'dec_{self.odds_type}_red']
+        blue = 1 / frame[f'dec_{self.odds_type}_blue']
+        gap = (red / (red + blue) - frame.winner) ** 2 - (frame.proba_red - frame.winner) ** 2
+        return rolling_brier_shortfall(frame.date, gap, window_bets=self.brier_window_bets,
+                                       target=self.brier_target_gap)
+
     def run(self, n_trials=100, seed=42):
         if n_trials < 1:
             raise ValueError('n_trials must be positive')
@@ -481,8 +523,8 @@ class FrozenBettingSearch:
             study.set_user_attr('bootstrap_dir', str(self.bootstrap_dir))
             study.set_user_attr('dataset_sha256', self.bootstrap_metadata['dataset_sha256'])
 
-        def objective(trial):
-            simulation = self.simulate(self.suggest(trial))
+        def base_objective(trial, params):
+            simulation = self.simulate(params)
             terminal = simulation['terminal_returns']
             trial.set_user_attr('mean_terminal_return', float(terminal.mean()))
             trial.set_user_attr('std_terminal_return', float(terminal.std(ddof=1)))
@@ -527,7 +569,32 @@ class FrozenBettingSearch:
             return terminal_return_score(terminal, self.risk_penalty,
                                          score_type=self.score_type, wealth_floor=self.wealth_floor)
 
+        for name in ('brier_penalty', 'brier_target_gap', 'brier_window_bets'):
+            study.set_user_attr(name, getattr(self, name))
+        if self.brier_penalty:
+            study.set_user_attr('objective', study.user_attrs['objective'] +
+                ' - brier_penalty * mean_full_windows(max(brier_target_gap - (vegas_brier - model_brier), 0))')
+            study.set_user_attr('brier_basis', 'reference validation chronology; selected settled moneylines; equal event endpoints')
+
+        def objective(trial):
+            params = self.suggest(trial)
+            score = base_objective(trial, params)
+            if not self.brier_penalty:
+                return score
+            try:
+                diagnostics = self.brier_diagnostics(params)
+            except ValueError as exc:
+                raise optuna.TrialPruned(str(exc)) from exc
+            amount = self.brier_penalty * diagnostics['brier_mean_shortfall']
+            trial.set_user_attr('base_objective_score', float(score))
+            for name, value in diagnostics.items():
+                trial.set_user_attr(name, value)
+            trial.set_user_attr('brier_penalty_amount', amount)
+            return score - amount
+
         def report_progress(study, trial):
+            if 'brier_penalty_amount' in trial.user_attrs:
+                print(f"  Brier mean gap={trial.user_attrs['brier_mean_gap']:.6g}; penalty={trial.user_attrs['brier_penalty_amount']:.6g}", flush=True)
             print(f'{self.odds_type}: trial {trial.number + 1}/{n_trials} '
                   f'{trial.state.name}, objective={trial.value}', flush=True)
             if self.score_type == 'event_log_growth' and 'mean_max_drawdown' in trial.user_attrs:

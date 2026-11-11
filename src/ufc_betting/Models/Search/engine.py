@@ -23,7 +23,8 @@ def optimize_kelly_params(*, validation_data, n_trials=100, k=1000,
                  bootstrap_mode='generate', bootstrap_dir=None,
                  sample_with_replacement=True, use_decay=False,
                  opening_params=None, opening_data=None, max_decay=50., params_dir=None,
-                 sampled_paths=None, score_type="mean_std", wealth_floor=.001, negative_mean_penalty=1000., drawdown_penalty=0., drawdown_tail_fraction=.1, ulcer_penalty=0.):
+                 sampled_paths=None, score_type="mean_std", wealth_floor=.001, negative_mean_penalty=1000., drawdown_penalty=0., drawdown_tail_fraction=.1, ulcer_penalty=0.,
+                 brier_penalty=0., brier_target_gap=.01, brier_window_bets=100):
     """Optimize Kelly controls, optionally jointly with four decay rates.
 
     "event_mean_std" averages total event bankroll returns within each path,
@@ -52,6 +53,15 @@ def optimize_kelly_params(*, validation_data, n_trials=100, k=1000,
     "mean_std" uses terminal returns; "log_growth" uses mean log wealth ratio.
     wealth_floor is a positive wealth ratio below 1, used only in log scoring;
     risk_penalty applies to mean_std and event_mean_std. Actual bankrolls are never floored.
+    brier_penalty optionally subtracts weight * mean(max(brier_target_gap - gap, 0)),
+    where gap is rolling Vegas Brier minus model Brier on trial-selected settled
+    moneylines in reference validation chronology. Whole-event trailing windows
+    require brier_window_bets bets (default 100); incomplete windows are omitted
+    and trials with insufficient bets are pruned. No-vig Vegas uses normalized
+    reciprocal execution prices. Defaults: weight 0 (disabled), target .01.
+    Applies to all score types; its weight is in the base objective's units.
+    This evaluates selection, not stake sizing or parlay calibration. With saved
+    sampled paths, this term still uses reference validation_data, not those paths.
     parallel is retained for call compatibility; a single study runs directly.
     First call with {'open': ...}, use_decay=False. Then call separately for closing
     markets with use_decay=True and the fixed opening_params (BettingParams,
@@ -152,6 +162,7 @@ def optimize_kelly_params(*, validation_data, n_trials=100, k=1000,
             seed=seed, risk_penalty=penalties[odds_type], score_type=score_type, wealth_floor=wealth_floor, negative_mean_penalty=negative_mean_penalty, drawdown_penalty=drawdown_penalty, drawdown_tail_fraction=drawdown_tail_fraction, ulcer_penalty=ulcer_penalty,
             sample_with_replacement=sample_with_replacement, bootstrap_mode=bootstrap_mode,
             bootstrap_dir=bootstrap_root / odds_type if bootstrap_root is not None else None,
+            brier_penalty=brier_penalty, brier_target_gap=brier_target_gap, brier_window_bets=brier_window_bets,
             sampled_paths=sampled_paths[odds_type] if isinstance(sampled_paths, Mapping) else sampled_paths, **extra)
         print(f'{odds_type}: entering optimization (trial progress prints after each trial)', flush=True)
         study = search.run(n_trials=n_trials, seed=seed)
@@ -244,17 +255,24 @@ def optimize_kelly_params(*, validation_data, n_trials=100, k=1000,
             result['objective_breakdown']['drawdown_tail_fraction'] = float(drawdown_tail_fraction)
             result['objective_breakdown']['geometric_growth_per_event_pct'] = 100 * result['geometric_growth_per_event']
         elif score_type == 'log_growth':
-            result['objective_breakdown']['mean_log_growth'] = study.best_value
+            result['objective_breakdown']['mean_log_growth'] = study.best_trial.user_attrs.get('base_objective_score', study.best_value)
         elif score_type in ('event_mean_std', 'path_mean_sharpe', 'log_mean_roi'):
             if score_type == 'event_mean_std':
                 result['objective_breakdown']['objective_pct'] = 100 * study.best_value
             else:
-                result['objective_breakdown'][score_type] = study.best_value
+                result['objective_breakdown'][score_type] = study.best_trial.user_attrs.get('base_objective_score', study.best_value)
                 if score_type == 'log_mean_roi':
                     result['objective_breakdown']['negative_mean_penalty'] = float(negative_mean_penalty)
             metric = 'event_roi' if score_type in ('path_mean_sharpe', 'log_mean_roi') else 'event_return'
             for name in ('mean_path_mean_' + metric, 'std_path_mean_' + metric):
                 result['objective_breakdown'][name + '_pct'] = 100 * study.best_trial.user_attrs[name]
+        if brier_penalty:
+            for name in ('base_objective_score', 'brier_mean_gap', 'brier_mean_shortfall',
+                         'brier_window_count', 'brier_selected_count', 'brier_penalty_amount'):
+                result['objective_breakdown'][name] = study.best_trial.user_attrs[name]
+            result['brier_penalty'] = float(brier_penalty)
+            result['brier_target_gap'] = float(brier_target_gap)
+            result['brier_window_bets'] = int(brier_window_bets)
         if params_path is not None:
             result['params_path'] = str(params_path)
         return result

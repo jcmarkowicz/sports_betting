@@ -16,8 +16,9 @@ class ComparisonHelperTests(unittest.TestCase):
         moneylines = pd.DataFrame({'stake': [.1], 'profit': [1.]})
         parlays = pd.DataFrame({'ticket': [1], 'profit': [-1.]})
         simulator = Mock(return_value=(moneylines, parlays))
-        distribution, accuracy = Mock(), Mock()
+        distribution, accuracy, calibration = Mock(), Mock(), Mock()
         env = dict(simulate_and_plot=simulator,
+                   plot_comparison_calibration=Mock(return_value=(calibration, None)),
                    plot_bankroll_distributions=Mock(return_value=(distribution, None)),
                    plot_event_accuracy_distributions=Mock(return_value=(accuracy, None, pd.DataFrame())))
         exec(compile(tree, str(module), 'exec'), env)
@@ -38,6 +39,7 @@ class ComparisonHelperTests(unittest.TestCase):
             pd.testing.assert_frame_equal(pd.read_csv(root/'outputs'/f'{tag}_parlays.csv'),parlays)
             distribution.savefig.assert_called_once()
             accuracy.savefig.assert_called_once()
+            calibration.savefig.assert_called_once()
             with self.assertRaisesRegex(ValueError,'supports splits'):
                 env['plot_comparison_results']('trainval','open','inference','val','close1')
             with self.assertRaisesRegex(ValueError,'own odds'):

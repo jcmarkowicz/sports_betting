@@ -189,3 +189,36 @@ computing each path's RMS, not by pooling squared drawdowns across paths.
 Only event-log-growth scoring accepts a nonzero Ulcer penalty. Results include
 per-path indices, the weight, and the mean and penalty amount in
 `objective_breakdown`; trial/study metadata and progress output expose these too.
+
+
+### Optional rolling Brier advantage penalty
+
+Pass `brier_penalty`, `brier_target_gap` (default 0.01), and
+`brier_window_bets` (default 100) to `optimize_kelly_params`.
+The weight defaults to zero, preserving previous results. When enabled:
+
+```
+gap = mean((vegas_probability - outcome)**2 - (model_probability - outcome)**2)
+penalty = brier_penalty * mean(max(brier_target_gap - rolling_gap, 0))
+objective = original_objective - penalty
+```
+
+Vegas probabilities are no-vig probabilities from execution prices. Selection
+uses each trial's positive final moneyline stakes, including decay, risk controls,
+and joint exposure caps; voids and bets after reference-bankroll ruin are excluded.
+The term uses original reference validation chronology even with saved sampled paths.
+Each complete trailing window includes whole events and at least the requested
+number of selected settled bets. Event endpoints receive equal weight; individual
+bets within each window receive equal weight. Incomplete early windows are skipped;
+trials with fewer than the required bets are pruned. This avoids scoring tiny
+expanding samples but does not guarantee independent windows or profitable bets.
+
+At target 0.01, gaps of 0.01, 0.005, 0, and -0.01 contribute shortfalls of
+0, 0.005, 0.01, and 0.02. Multiply by the chosen weight. Choose the weight relative
+to the objective scale: terminal-return and per-event-log-growth scores differ.
+This regularizes selected-fight probability performance, not parlay quality or
+stake size. It does not automatically reduce future stakes when live performance
+changes. Evaluate any new search configuration on untouched future data.
+Trial metadata and `objective_breakdown` report the original score, mean rolling
+gap, mean shortfall, window/bet counts, and penalty amount. Study metadata records
+the settings. Existing parameter JSONs are not changed until a search is run.
