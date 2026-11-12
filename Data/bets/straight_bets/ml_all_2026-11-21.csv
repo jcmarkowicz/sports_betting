@@ -1,10 +1,10 @@
 date,fighter_red,fighter_blue,open_red,open_blue,close1_red,close2_red,close1_blue,close2_blue,pred_name_open,pred_winner_open,choice_proba_open,fstar_open,stake_open,edge_open,ev_open,pred_name_close1,pred_winner_close1,choice_proba_close1,fstar_close1,stake_close1,edge_close1,ev_close1,pred_name_close2,pred_winner_close2,choice_proba_close2,fstar_close2,stake_close2,edge_close2,ev_close2
-2026-11-21,jiri prochazka,navajo stirling,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-11-21,aljamain sterling,kevin vallejos,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-11-21,jiri prochazka,navajo stirling,120.0,-140.0,110.0,120.0,-141.0,-138.0,navajo stirling,0.0,0.7345137170729537,0.3179534952282481,1112.8372332988683,0.1689489682890366,0.25916637212506355,navajo stirling,0.0,0.7275808375651202,0.31202325504272344,1092.081392649532,0.17146964379496543,0.24359561598009905,navajo stirling,0.0,0.7331328192138429,0.2450834230843568,857.7919807952488,0.16946340198920817,0.2643884853108306
+2026-11-21,aljamain sterling,kevin vallejos,116.0,-135.0,-107.0,107.0,-125.0,-117.0,kevin vallejos,0.0,0.5491547988304933,0.0,0.0,-0.007597611271825233,-0.044063868702474585,kevin vallejos,0.0,0.5150755826316684,0.0,0.0,-0.004965409115110786,-0.07286395126299683,kevin vallejos,0.0,0.5227928385946209,0.0,0.0,-0.005535953274418914,-0.030375675427070592
 2026-11-21,dan hooker,brian ortega,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-11-21,jared cannonier,ikram aliskerov,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-11-21,kyoji horiguchi,asu almabayev,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-11-21,shamil gaziev,tallison teixeira,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-11-21,aleksandre topuria,santiago luna,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-11-21,asu almabayev,kyoji horiguchi,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-11-21,amir albazi,alessandro costa,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-11-21,jake matthews,tahir abdullayev,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-11-21,jared cannonier,ikram aliskerov,,,,,,,,,,,,,,,,,,,,,,,,,,,
