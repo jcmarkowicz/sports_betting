@@ -116,6 +116,7 @@ def betting_pipeline(
     betting_params=None,
     model_se_list=None,
     use_decay=True,
+    opening_model=False,
 ):
     """Generate one card with saved Kelly policies and existing output columns.
 
@@ -125,6 +126,7 @@ def betting_pipeline(
     and prices, then apply closing uncertainty and a joint exposure cap.
     Legacy mdd/N arrays are deprecated and ignored; saved policies take priority.
     model_se_list supplies companion SE models; otherwise use model covariance.
+    opening_model substitutes market features into opening-model inputs only.
     """
     if any(value is not None for value in (mdd_ml_arr, mdd_parlay_arr, N_ml_arr, N_parlay_arr)):
         warnings.warn('mdd/N arrays are ignored; use betting_params or params_dir',
@@ -155,7 +157,14 @@ def betting_pipeline(
     for i, stage in enumerate(type_list):
         params = policies[stage]
         feats = feats_list[i]
-        missing = set(feats) - set(df.columns)
+        # Substitute recorded market features only in the prediction input.
+        # Original opening prices must remain intact for closing decay.
+        inputs = df.copy()
+        if opening_model and stage != 'open':
+            for name in feats:
+                if 'open' in name:
+                    inputs[name] = df[name.replace('open', stage)]
+        missing = set(feats) - set(inputs.columns)
         if missing:
             raise ValueError(
                 f'Missing {stage} model features: {sorted(missing)}. '
@@ -169,15 +178,15 @@ def betting_pipeline(
         if stage != 'open' and use_decay and params.decay_rates is not None:
             price_cols += ['dec_open_red', 'dec_open_blue']
         prices = df[price_cols].apply(pd.to_numeric, errors='coerce')
-        valid = df[feats].notna().all(axis=1) & np.isfinite(prices).all(axis=1) & prices.gt(1).all(axis=1)
+        valid = inputs[feats].notna().all(axis=1) & np.isfinite(prices).all(axis=1) & prices.gt(1).all(axis=1)
         ml = set_ml_bets_cols(stage, {}, df.index, all_na=True)
         ticket = set_parlay_cols(stage, {}, np.arange(2), all_na=True)
         ticket[f'fight_index_{stage}'] = np.nan
         if valid.any():
-            num_feats = df[feats].select_dtypes(exclude='category').columns
-            cat_feats = df[feats].select_dtypes(include='category').columns
+            num_feats = inputs[feats].select_dtypes(exclude='category').columns
+            cat_feats = inputs[feats].select_dtypes(include='category').columns
             sides, red, blue, se = logit_predict(
-                model=model_list[i], df=df, y_hat=pd.Series(np.nan, index=df.index),
+                model=model_list[i], df=inputs, y_hat=pd.Series(np.nan, index=df.index),
                 feats=feats, num_feats=num_feats, cat_feats=cat_feats, valid_mask=valid,
                 scaler=scaler_list[i], cat_encoder=encoder_list[i], required_df_idx=df.index,
                 rename_odds=None,
@@ -224,7 +233,11 @@ def seperate_bets_dfs(df_bets, df_parlay, types):
 
     for type in types: 
 
-        columns = get_ml_bet_cols(type).values()
+        # Keep the identifying fields and source odds required by email exports.
+        context = ['date', 'fighter_red', 'fighter_blue',
+                   f'{type}_red', f'{type}_blue']
+        columns = [name for name in context if name in df_bets]
+        columns += list(get_ml_bet_cols(type).values())
         dfs.append(df_bets[columns])
 
         c_parlay = get_parlay_cols(type).values()

@@ -1,4 +1,4 @@
-"""Upcoming picks from market-matched inference models and saved policies."""
+"""Upcoming picks from the opening inference model and saved policies."""
 from pathlib import Path
 
 import joblib
@@ -11,7 +11,7 @@ from ufc_betting.UpcomingPicks.betting_pipeline import betting_pipeline, seperat
 def generate_bets(df, select_odds=None, return_event_ev=False, *,
                   comparison_dir=None, fit_mode='trainval', params_dir=None,
                   betting_params=None, bankroll=None, use_decay=True):
-    """Use each market's inference fit for probabilities and standard errors.
+    """Use the opening inference fit at each market's odds, matching Event Scaling.
 
     Live predictions default to train+validation fits. Set fit_mode='train'
     to use the train-only artifacts used by the validation parameter search.
@@ -26,7 +26,7 @@ def generate_bets(df, select_odds=None, return_event_ev=False, *,
     models, scalers, encoders, features = [], [], [], []
     frame = df.copy()
     for stage in stages:
-        directory = root / fit_mode / stage
+        directory = root / fit_mode / 'open'
         # model_se is the inference probability model, not just an SE companion.
         model = sm.load(directory / 'model_se.pkl')
         scaler = joblib.load(directory / 'scaler.pkl')
@@ -46,7 +46,7 @@ def generate_bets(df, select_odds=None, return_event_ev=False, *,
         real_odds_list=[[f'dec_{stage}_blue', f'dec_{stage}_red'] for stage in stages],
         bankroll=config.bankroll if bankroll is None else bankroll,
         model_se_list=models, params_dir=params_dir, betting_params=betting_params,
-        use_decay=use_decay, return_event_ev=return_event_ev,
+        use_decay=use_decay, return_event_ev=return_event_ev, opening_model=True,
     )
     moneylines, parlays = result[:2]
     if select_odds is not None:

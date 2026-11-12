@@ -100,12 +100,12 @@ def _event_return_fractions(
 
 
 
-def returns_by_date(starting_bankroll: float = 500) -> pd.DataFrame:
+def returns_by_date(starting_bankroll: float = 500, *, ml_results=None, parlay_results=None, persist=True) -> pd.DataFrame:
     """Compound settled returns without replenishment; reject negative balances."""
     if not np.isfinite(starting_bankroll) or starting_bankroll < 0:
         raise ValueError("starting_bankroll must be finite and nonnegative")
-    df_ml = MoneylineDataFrame(pd.read_csv(settings.ml_history_file)).frame
-    df_parlay = ParlayDataFrame(pd.read_csv(settings.parlay_history_file)).frame
+    df_ml = MoneylineDataFrame(pd.read_csv(settings.ml_history_file) if ml_results is None else ml_results).frame
+    df_parlay = ParlayDataFrame(pd.read_csv(settings.parlay_history_file) if parlay_results is None else parlay_results).frame
     all_dates, ml_returns, pl_returns, _ = _event_return_components(df_ml, df_parlay)
     bankroll_results = pd.DataFrame({'date': all_dates})
     for bet_type in SETTLED_TYPES:
@@ -129,7 +129,8 @@ def returns_by_date(starting_bankroll: float = 500) -> pd.DataFrame:
         bankroll_results[f'profitable_event_{bet_type}'] = event_return.gt(0).to_numpy()
         bankroll_results[f'profits_{bet_type}'] = profits
         bankroll_results[f'bankroll_{bet_type}'] = balances
-    commit_if_changed(bankroll_results, settings.bankroll_returns_file, 'Saving Bankroll Results')
+    if persist:
+        commit_if_changed(bankroll_results, settings.bankroll_returns_file, 'Saving Bankroll Results')
     return bankroll_results
 
 

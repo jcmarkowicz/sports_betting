@@ -32,3 +32,5 @@ __pycache__/
 /Data/kelly_params/inference_market_models/search_results/
 /Data/backtest_results/val_test_audit/features/chronological_stats.pkl
 /scraper_debug/
+
+/Data/bets/betting_results/backups/
