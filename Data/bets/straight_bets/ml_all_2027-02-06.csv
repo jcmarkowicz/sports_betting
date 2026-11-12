@@ -1,0 +1,9 @@
+date,fighter_red,fighter_blue,open_red,open_blue,close1_red,close2_red,close1_blue,close2_blue,pred_name_open,pred_winner_open,choice_proba_open,fstar_open,stake_open,edge_open,ev_open,pred_name_close1,pred_winner_close1,choice_proba_close1,fstar_close1,stake_close1,edge_close1,ev_close1,pred_name_close2,pred_winner_close2,choice_proba_close2,fstar_close2,stake_close2,edge_close2,ev_close2
+2027-02-06,bogdan guskov,robert whittaker,128.0,-150.0,110.0,120.0,-140.0,-138.0,bogdan guskov,1.0,0.5036519829281294,0.1371283433598489,479.9492017594711,0.08585432841219603,0.1483265210761352,bogdan guskov,1.0,0.5288299928466778,0.14055734237151593,491.95069830030576,0.08399794763562546,0.11054298497802328,bogdan guskov,1.0,0.5209220467440218,0.1278962747998206,447.6369617993721,0.08459146396865647,0.14602850283684798
+2027-02-06,meng bo,bohyun park,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2027-02-06,jiniushiyue,takaya suzuki,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2027-02-06,rabindra dhant,ryo tajima,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2027-02-06,george mangos,dagiisuren chagnaadorj,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2027-02-06,kaan ofli,joanderson brito,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2027-02-06,marwan rahiki,joosang yoo,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2027-02-06,quillan salkilld,benoit st denis,-200.0,169.0,-275.0,-260.0,200.0,216.0,quillan salkilld,1.0,0.7601830880371901,0.3013790958046148,1054.8268353161518,0.1099551095182364,0.14027463205578522,quillan salkilld,1.0,0.7966839633720753,3.2421941365007646e-06,0.011347679477752675,0.08961693735149945,0.08638722278010269,quillan salkilld,1.0,0.7965217695242877,0.00043225168029748277,1.5128808810411898,0.08972311238646702,0.10287629626439826
