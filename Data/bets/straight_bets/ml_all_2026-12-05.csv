@@ -1,10 +1,10 @@
 date,fighter_red,fighter_blue,open_red,open_blue,close1_red,close2_red,close1_blue,close2_blue,pred_name_open,pred_winner_open,choice_proba_open,fstar_open,stake_open,edge_open,ev_open,pred_name_close1,pred_winner_close1,choice_proba_close1,fstar_close1,stake_close1,edge_close1,ev_close1,pred_name_close2,pred_winner_close2,choice_proba_close2,fstar_close2,stake_close2,edge_close2,ev_close2
-2026-12-05,ian machado garry,yaroslav amosov,-160.0,136.0,-177.0,-171.0,140.0,145.0,ian machado garry,1.0,0.5202801029350018,0.0,0.0,-0.07735996754154262,-0.15454483273062203,ian machado garry,1.0,0.535733284135807,0.0,0.0,-0.07853180739479526,-0.1615925440360534,ian machado garry,1.0,0.5350537220127174,0.0,0.0,-0.07847895775043012,-0.15204936452955314
+2026-12-05,ian machado garry,yaroslav amosov,-160.0,136.0,-177.0,-171.0,140.0,145.0,ian machado garry,1.0,0.5202801029350018,0.0,0.0,-0.07735996754154262,-0.15454483273062203,ian machado garry,1.0,0.535733284135807,0.0,0.0,-0.07853180739479526,-0.1615925440360534,ian machado garry,1.0,0.5350537220127174,0.0,0.0,-0.07847895775043023,-0.15204936452955314
 2026-12-05,serghei spivac,mario pinto,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-12-05,levan chokheli,islam dulatov,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-12-05,mairon santos,akbar abdullaev,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-12-05,magomed tuchalov,ion cutelaba,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-12-05,israel adesanya,shara magomedov,-125.0,107.0,-163.0,-155.0,125.0,132.0,israel adesanya,1.0,0.5364921775233008,0.0,0.0,-0.0004111322748452384,-0.034314080458058505,israel adesanya,1.0,0.585703930190972,0.0,0.0,-0.004819151666737631,-0.05496850527468933,israel adesanya,1.0,0.5852875219275316,0.0,0.0,-0.004775567079480791,-0.03710762521599642
+2026-12-05,israel adesanya,shara magomedov,-125.0,107.0,-163.0,-155.0,125.0,132.0,israel adesanya,1.0,0.5364921775233008,0.0,0.0,-0.0004111322748452384,-0.034314080458058505,israel adesanya,1.0,0.585703930190972,0.0,0.0,-0.004819151666737631,-0.05496850527468933,israel adesanya,1.0,0.5852875219275315,0.0,0.0,-0.004775567079480902,-0.03710762521599659
 2026-12-05,uran satybaldiev,ivan gnizditskiy,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-12-05,marco tulio,junyong park,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-12-05,pavel andrusca,mahammadali osmanli,,,,,,,,,,,,,,,,,,,,,,,,,,,
