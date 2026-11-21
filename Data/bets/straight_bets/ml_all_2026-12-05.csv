@@ -1,10 +1,10 @@
 date,fighter_red,fighter_blue,open_red,open_blue,close1_red,close2_red,close1_blue,close2_blue,pred_name_open,pred_winner_open,choice_proba_open,fstar_open,stake_open,edge_open,ev_open,pred_name_close1,pred_winner_close1,choice_proba_close1,fstar_close1,stake_close1,edge_close1,ev_close1,pred_name_close2,pred_winner_close2,choice_proba_close2,fstar_close2,stake_close2,edge_close2,ev_close2
-2026-12-05,israel adesanya,shara magomedov,-163.0,130.0,-170.0,-157.0,125.0,145.0,israel adesanya,1.0,0.5897557521924112,0.0,0.0,-0.00525482399686672,-0.0484309029042691,israel adesanya,1.0,0.5907829221571813,0.0,0.0,-0.005366272587399301,-0.0616977118680061,israel adesanya,1.0,0.5962843654770699,0.0,0.0,-0.005978419856604966,-0.023916675620337946
+2026-12-05,israel adesanya,shara magomedov,-163.0,130.0,-177.0,-157.0,125.0,150.0,israel adesanya,1.0,0.5897557521924112,0.0,0.0,-0.00525482399686672,-0.0484309029042691,israel adesanya,1.0,0.5956571714886895,0.0,0.0,-0.005907303196436842,-0.0678133530939718,israel adesanya,1.0,0.5996106656448283,0.0,0.0,-0.006361505522208599,-0.018471712925344774
 2026-12-05,ian machado garry,yaroslav amosov,-175.0,140.0,-195.0,-175.0,140.0,157.0,ian machado garry,1.0,0.5343113875080633,0.0,0.0,-0.07844309824498175,-0.16036781963018626,ian machado garry,1.0,0.5476618225667932,0.0,0.0,-0.0795070006234857,-0.17148596073228728,ian machado garry,1.0,0.5457655943610187,0.0,0.0,-0.07935186330330823,-0.14236835171839923
 2026-12-05,serghei spivac,mario pinto,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-12-05,levan chokheli,islam dulatov,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2026-12-05,magomed tuchalov,ion cutelaba,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-12-05,mairon santos,akbar abdullaev,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2026-12-05,magomed tuchalov,ion cutelaba,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-12-05,uran satybaldiev,ivan gnizditskiy,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-12-05,marco tulio,junyong park,,,,,,,,,,,,,,,,,,,,,,,,,,,
 2026-12-05,pavel andrusca,mahammadali osmanli,,,,,,,,,,,,,,,,,,,,,,,,,,,
