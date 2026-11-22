@@ -1,7 +1,13 @@
-red_fighter,blue_fighter,open_blue,close1_blue,close2_blue,open_red,close1_red,close2_red,og_blue_name,event_date,og_red_fighter
-Alex Pereira,Sergei Pavlovich,-140,-205,-195,110,158,169,Sergei Pavlovich,2026-12-13,Alex Pereira
-Bogdan Guskov,Robert Whittaker,-150,-150,-138,128,110,120,Robert Whittaker,2027-02-06,Bogdan Guskov
-Charles Oliveira,Diego Lopes,145,120,127,-190,-162,-149,Diego Lopes,2026-12-13,Charles Oliveira
-Ian Machado Garry,Yaroslav Amosov,140,140,155,-175,-195,-175,Yaroslav Amosov,2026-12-05,Ian Machado Garry
-Israel Adesanya,Shara Magomedov,130,125,140,-163,-164,-157,Shara Magomedov,2026-12-05,Israel Adesanya
-Quillan Salkilld,Benoit Saint-Denis,169,200,284,-200,-350,-275,Benoit Saint Denis,2027-02-06,
+blue_fighter,open_blue,close1_blue,close2_blue,red_fighter,open_red,close1_red,close2_red,og_blue_name,event_date,og_red_fighter
+Hecher Sosa,128,145,145,Abdul Hussein,-150,-170,-170,Hecher Sosa,2026-12-05,Abdul Hussein
+Sergei Pavlovich,-140,-205,-190,Alex Pereira,110,158,169,Sergei Pavlovich,2026-12-13,Alex Pereira
+Robert Whittaker,-150,-150,-138,Bogdan Guskov,128,110,120,Robert Whittaker,2027-02-06,Bogdan Guskov
+Jafel Filho,-150,-135,-135,Bruno Silva,128,116,116,Jafel Filho,2026-12-05,Bruno Silva
+Diego Lopes,145,120,127,Charles Oliveira,-190,-162,-149,Diego Lopes,2026-12-13,Charles Oliveira
+Yaroslav Amosov,140,140,155,Ian Machado Garry,-175,-195,-175,Yaroslav Amosov,2026-12-05,Ian Machado Garry
+Shara Magomedov,130,125,140,Israel Adesanya,-163,-165,-157,Shara Magomedov,2026-12-05,Israel Adesanya
+Islam Dulatov,-265,-265,-265,Levan Chokheli,220,220,220,Islam Dulatov,2026-12-05,Levan Chokheli
+Ion Cutelaba,164,177,177,Magomed Tuchalov,-194,-210,-210,Ion Cutelaba,2026-12-05,Magomed Tuchalov
+Akbar Abdullaev,-260,-240,-240,Mairon Santos,216,201,201,Akbar Abdullaev,2026-12-05,Mairon Santos
+Benoit Saint-Denis,169,200,284,Quillan Salkilld,-200,-350,-275,Benoit Saint Denis,2027-02-06,
+Mario Pinto,-286,-290,-290,Serghei Spivac,236,239,239,Mario Pinto,2026-12-05,Serghei Spivac
